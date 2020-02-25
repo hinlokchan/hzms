@@ -99,7 +99,7 @@ export default {
               projNum: '房'+'202002001',
               projName: '国有土地上征拆',
               projArea: '南国商',
-              attName: '广州市政府'
+              attName: '州市政府'
             }],
             editVisible: false,
             pageTotal: 0,
