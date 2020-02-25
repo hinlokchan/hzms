@@ -20,6 +20,11 @@ export default new Router({
                     meta: { title: '系统首页' }
                 },
                 {
+                    path: '/plan',
+                    component: () => import(/* webpackChunkName: "plan" */ '../components/page/Plan.vue'),
+                    meta: { title: '项目计划录入' }
+                },
+                {
                     path: '/icon',
                     component: () => import(/* webpackChunkName: "icon" */ '../components/page/Icon.vue'),
                     meta: { title: '自定义图标' }
