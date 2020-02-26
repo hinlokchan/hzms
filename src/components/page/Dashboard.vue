@@ -11,7 +11,12 @@
                         </div>
                     </div>
                     <div class="user-work">
-                        <span>工作动态</span>
+                        <div>
+                            <div>工作动态</div>
+                            <div>
+                                <schart ref="ring" class="schart" canvasId="ring" :options="options"></schart>
+                            </div>
+                        </div>
                     </div>
                 </el-card>
             </el-col>
@@ -160,9 +165,9 @@ export default {
                 }
             ],
             options: {
-                type: 'bar',
+                type: 'ring',
                 title: {
-                    text: '最近一周各品类销售图'
+                    text: '本月完成项目数'
                 },
                 xRorate: 25,
                 labels: ['周一', '周二', '周三', '周四', '周五'],
