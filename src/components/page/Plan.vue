@@ -72,7 +72,9 @@
                 </el-table-column>
                 <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
                 <el-table-column prop="level" label="紧急程度" width="80" align="center">
-
+                  <el-tag
+                    type="success"
+                    effect="dark">正常</el-tag>
                 </el-table-column>
                 <el-table-column prop="projDate" label="编制日期"></el-table-column>
                 <el-table-column prop="projNum" label="计划编号"></el-table-column>
@@ -84,12 +86,14 @@
                         <el-button
                             type="text"
                             icon="el-icon-edit"
+                            size="medium"
                             @click="handleEdit(scope.$index, scope.row)"
                         >编辑</el-button>
                         <el-button
                             type="text"
                             icon="el-icon-delete"
                             class="red"
+                            size="medium"
                             @click="handleDelete(scope.$index, scope.row)"
                         >删除</el-button>
                     </template>
@@ -196,6 +200,10 @@ export default {
         //新增操作
         handleAdd() {
             console.log('新增项目事件');
+        },
+        //编辑操作
+        handleEdit() {
+            console.log('编辑项目事件');
         },
         // 删除操作
         handleDelete(index, row) {
