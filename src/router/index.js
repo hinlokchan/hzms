@@ -25,6 +25,11 @@ export default new Router({
                     meta: { title: '项目计划录入' }
                 },
                 {
+                    path: '/planform',
+                    component: () => import(/* webpackChunkName: "planform" */ '../components/page/PlanForm.vue'),
+                    meta: { title: '表单' }
+                },
+                {
                     path: '/icon',
                     component: () => import(/* webpackChunkName: "icon" */ '../components/page/Icon.vue'),
                     meta: { title: '自定义图标' }
