@@ -2,7 +2,7 @@
     <div>
         <el-row :gutter="20">
             <el-col :span="9">
-                <el-card shadow="hover" class="mgb20" style="height:525px;">
+                <el-card shadow="hover" class="mgb20" style="height:150px;">
                     <div class="user-info">
                         <img src="../../assets/img/img.jpg" class="user-avator" alt />
                         <div class="user-info-cont">
@@ -10,78 +10,39 @@
                             <div>{{role}}</div>
                         </div>
                     </div>
-                    <div class="user-work">
-                        <div>
-                            <div>工作动态</div>
-                            <div>
-                                <schart ref="ring" class="schart" canvasId="ring" :options="options"></schart>
-                            </div>
+                </el-card>
+                <el-card shadow="hover" :body-style="{padding: '0px'}">
+                    <div class="grid-content grid-con-1">
+                        <i class="el-icon-lx-remind grid-con-icon"></i>
+                        <div class="grid-cont-right">
+                            <div class="grid-num">1234</div>
+                            <div>待完成项目数</div>
+                        </div>
+                    </div>
+                </el-card>
+                <el-card shadow="hover" :body-style="{padding: '0px'}" style="margin-top: 10px;">
+                    <div class="grid-content grid-con-2">
+                        <i class="el-icon-lx-notice grid-con-icon"></i>
+                        <div class="grid-cont-right">
+                            <div class="grid-num">321</div>
+                            <div>系统消息</div>
+                        </div>
+                    </div>
+                </el-card>
+                <el-card shadow="hover" :body-style="{padding: '0px'}" style="margin-top: 10px;">
+                    <div class="grid-content grid-con-3">
+                        <i class="el-icon-lx-warn grid-con-icon"></i>
+                        <div class="grid-cont-right">
+                            <div class="grid-num">50</div>
+                            <div>紧急项目数</div>
                         </div>
                     </div>
                 </el-card>
             </el-col>
             <el-col :span="15">
-                <el-row :gutter="20" class="mgb20">
-                    <el-col :span="8">
-                        <el-card shadow="hover" :body-style="{padding: '0px'}">
-                            <div class="grid-content grid-con-1">
-                                <i class="el-icon-lx-remind grid-con-icon"></i>
-                                <div class="grid-cont-right">
-                                    <div class="grid-num">1234</div>
-                                    <div>待完成项目数</div>
-                                </div>
-                            </div>
-                        </el-card>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-card shadow="hover" :body-style="{padding: '0px'}">
-                            <div class="grid-content grid-con-2">
-                                <i class="el-icon-lx-notice grid-con-icon"></i>
-                                <div class="grid-cont-right">
-                                    <div class="grid-num">321</div>
-                                    <div>系统消息</div>
-                                </div>
-                            </div>
-                        </el-card>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-card shadow="hover" :body-style="{padding: '0px'}">
-                            <div class="grid-content grid-con-3">
-                                <i class="el-icon-lx-warn grid-con-icon"></i>
-                                <div class="grid-cont-right">
-                                    <div class="grid-num">50</div>
-                                    <div>紧急项目数</div>
-                                </div>
-                            </div>
-                        </el-card>
-                    </el-col>
-                </el-row>
-                <el-card shadow="hover" style="height:403px;">
-                    <div slot="header" class="clearfix">
-                        <span>待办事项</span>
-                        <el-button style="float: right; padding: 3px 0" type="text">添加</el-button>
-                    </div>
-                    <el-table :show-header="false" :data="todoList" style="width:100%;">
-                        <el-table-column width="40">
-                            <template slot-scope="scope">
-                                <el-checkbox v-model="scope.row.status"></el-checkbox>
-                            </template>
-                        </el-table-column>
-                        <el-table-column>
-                            <template slot-scope="scope">
-                                <div
-                                    class="todo-item"
-                                    :class="{'todo-item-del': scope.row.status}"
-                                >{{scope.row.title}}</div>
-                            </template>
-                        </el-table-column>
-                        <el-table-column width="60">
-                            <template>
-                                <i class="el-icon-edit"></i>
-                                <i class="el-icon-delete"></i>
-                            </template>
-                        </el-table-column>
-                    </el-table>
+                <el-card shadow="hover" style="height:100%;">
+                    <el-calendar v-model="value" id="calendar">
+                    </el-calendar>
                 </el-card>
             </el-col>
         </el-row>
@@ -187,7 +148,7 @@ export default {
                 ]
             },
             options2: {
-                type: 'line',
+                type: 'ring',
                 title: {
                     text: '最近几个月各品类销售趋势图'
                 },
@@ -207,7 +168,7 @@ export default {
                     }
                 ]
             }
-        };
+        }
     },
     components: {
         Schart
@@ -314,20 +275,12 @@ export default {
 .user-info {
     display: flex;
     align-items: center;
-    padding-bottom: 20px;
-    border-bottom: 2px solid #ccc;
     margin-bottom: 20px;
 }
 
-.user-work {
-    display: flex;
-    font-size: 20px;
-    font-weight: bold;
-}
-
 .user-avator {
-    width: 120px;
-    height: 120px;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
 }
 
@@ -360,4 +313,5 @@ export default {
     width: 100%;
     height: 300px;
 }
+
 </style>
