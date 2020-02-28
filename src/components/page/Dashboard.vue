@@ -128,7 +128,7 @@ export default {
             options: {
                 type: 'ring',
                 title: {
-                    text: '本月完成项目数'
+                    text: '本周完成项目数'
                 },
                 xRorate: 25,
                 labels: ['周一', '周二', '周三', '周四', '周五'],
@@ -150,7 +150,7 @@ export default {
             options2: {
                 type: 'ring',
                 title: {
-                    text: '最近几个月各品类销售趋势图'
+                    text: '本月完成项目数'
                 },
                 labels: ['6月', '7月', '8月', '9月', '10月'],
                 datasets: [
