@@ -1,15 +1,37 @@
 <template>
     <div>
-        <div class="crumbs">
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item>
-                    <i class="el-icon-lx-calendar"></i> 表单
-                </el-breadcrumb-item>
-                <el-breadcrumb-item>基本表单</el-breadcrumb-item>
-            </el-breadcrumb>
-        </div>
         <div class="container">
+            <div class="crumbs">
+                <el-breadcrumb separator="/">
+                    <el-breadcrumb-item>
+                        <i class="el-icon-lx-calendar"></i> 项目
+                    </el-breadcrumb-item>
+                    <el-breadcrumb-item>新增项目计划</el-breadcrumb-item>
+                </el-breadcrumb>
+            </div>
             <div class="form-box">
+                <el-row :gutter="20">
+                    <el-form ref="form" :model="form" label-width="80px">
+                        <el-col :span="6">
+                        <el-form-item label="项目类型">
+                            <el-select v-model="form.region">
+                                <el-option label="房地产" value="house"></el-option>
+                                <el-option label="土地" value="house"></el-option>
+                                <el-option label="资产" value="house"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        </el-col>
+                        <el-col :span="6">
+                        <el-form-item label="项目类型">
+                            <el-select v-model="form.region">
+                                <el-option label="房地产" value="house"></el-option>
+                                <el-option label="土地" value="house"></el-option>
+                                <el-option label="资产" value="house"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        </el-col>
+                    </el-form>
+                </el-row>
                 <el-form ref="form" :model="form" label-width="80px">
                     <el-form-item label="表单名称">
                         <el-input v-model="form.name"></el-input>
