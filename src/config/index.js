@@ -1,5 +1,6 @@
 const config = {}
 
-config.baseUrl = 'http://test.com'
-config.pathUrl = 'ProManageAPIServer'
+// config.baseUrl = 'http://demo.hinlok.com'
+config.baseUrl = '/api'
+config.pathUrl = ''
 export const host = config

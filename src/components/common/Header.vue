@@ -5,7 +5,7 @@
             <i v-if="!collapse" class="el-icon-s-fold"></i>
             <i v-else class="el-icon-s-unfold"></i>
         </div>
-        <div class="logo">后台管理系统</div>
+        <div class="logo">惠正评估管理系统</div>
         <div class="header-right">
             <div class="header-user-con">
                 <!-- 全屏显示 -->
@@ -50,6 +50,8 @@
 </template>
 <script>
 import bus from '../common/bus';
+import { logout } from '@/api/index'
+import Cookies from 'js-cookie'
 export default {
     data() {
         return {
@@ -61,7 +63,7 @@ export default {
     },
     computed: {
         username() {
-            let username = localStorage.getItem('ms_username');
+            let username = localStorage.getItem('staffName');
             return username ? username : this.name;
         }
     },
@@ -69,8 +71,15 @@ export default {
         // 用户名下拉菜单选择事件
         handleCommand(command) {
             if (command == 'loginout') {
-                localStorage.removeItem('ms_username');
-                this.$router.push('/login');
+                logout().then(res => {
+                    this.$message.warning('退出登录成功')
+                    Cookies.remove('JSESSIONID')
+                    localStorage.removeItem('staffId');
+                    localStorage.removeItem('staffName');
+                    this.$router.push('/login');
+                }).catch(err => {
+                    this.$message.warning('退出登录失败')
+                })
             }
         },
         // 侧边栏折叠

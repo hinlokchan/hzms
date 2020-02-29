@@ -19,15 +19,15 @@ service.interceptors.request.use(
 
 service.interceptors.response.use(
     response => {
-        if (response.status === 200) {
-            return response.data;
+        if (response.data.statusCode === '200') {
+            return Promise.resolve(response.data)
         } else {
-            Promise.reject();
+            return Promise.reject(response.data);
         }
     },
     error => {
         console.log(error);
-        return Promise.reject();
+        return Promise.reject(response.data);
     }
 );
 

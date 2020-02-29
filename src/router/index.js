@@ -16,8 +16,19 @@ export default new Router({
             children: [
                 {
                     path: '/dashboard',
+                    name: 'dashboard',
                     component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/Dashboard.vue'),
                     meta: { title: '系统首页' }
+                },
+                {
+                    path: '/plan',
+                    component: () => import(/* webpackChunkName: "plan" */ '../components/page/Plan.vue'),
+                    meta: { title: '项目计划录入' }
+                },
+                {
+                    path: '/planform',
+                    component: () => import(/* webpackChunkName: "planform" */ '../components/page/PlanForm.vue'),
+                    meta: { title: '表单' }
                 },
                 {
                     path: '/icon',
