@@ -10,24 +10,47 @@
                 </el-breadcrumb>
             </div>
             <div class="form-box">
+                <div class="form-item-title">
+                    <h3>项目信息</h3>
+                </div>
                 <el-row :gutter="20">
                     <el-form ref="form" :model="form" label-width="80px">
                         <el-col :span="6">
                         <el-form-item label="项目类型">
                             <el-select v-model="form.region">
-                                <el-option label="房地产" value="house"></el-option>
-                                <el-option label="土地" value="house"></el-option>
-                                <el-option label="资产" value="house"></el-option>
+                                <el-option key="1" label="房地产" value="1"></el-option>
+                                <el-option key="2" label="土地" value="2"></el-option>
+                                <el-option key="3" label="资产" value="3"></el-option>
                             </el-select>
                         </el-form-item>
                         </el-col>
                         <el-col :span="6">
-                        <el-form-item label="项目类型">
-                            <el-select v-model="form.region">
-                                <el-option label="房地产" value="house"></el-option>
-                                <el-option label="土地" value="house"></el-option>
-                                <el-option label="资产" value="house"></el-option>
+                        <el-form-item label="轮序/安排">
+                            <el-select v-model="form.region" placeholder="请选择">
+                                <el-option key="1" label="轮序" value="1"></el-option>
+                                <el-option key="1" label="安排" value="1"></el-option>
                             </el-select>
+                        </el-form-item>
+                        </el-col>
+                        <el-col :span="6">
+                        <el-form-item label="新/重评">
+                            <el-select v-model="form.region" placeholder="请选择">
+                                <el-option key="1" label="新项目" value="1"></el-option>
+                                <el-option key="1" label="重评项目" value="1"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        </el-col>
+                        <el-col :span="6">
+                        <el-form-item label="评估目的">
+                            <el-select v-model="form.region" placeholder="请选择">
+                                <el-option key="1" label="抵押" value="1"></el-option>
+                                <el-option key="1" label="转让" value="1"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                        <el-form-item label="项目名称">
+                            <el-input></el-input>
                         </el-form-item>
                         </el-col>
                     </el-form>
@@ -175,3 +198,12 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+.form-item-title {
+    width: 100px;
+    text-align: center;
+    margin-bottom: 20px;
+    border-left: solid 5px #409EFF;
+}
+</style>
