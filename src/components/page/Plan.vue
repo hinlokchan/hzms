@@ -89,14 +89,15 @@
         </el-table-column>
       </el-table>
       <div class="pagination">
-        <el-pagination
+        <!-- <el-pagination
           background=""
           layout="total, prev, pager, next"
           :current-page="query.pageIndex"
           :page-size="query.pageSize"
           :total="pageTotal"
           @current-change="handlePageChange"
-        ></el-pagination>
+        ></el-pagination> -->
+        <el-pagination :total="pageTotal" :page.sync="query.pagenum" :limit.sync="query.pagecount" @pagination="changePage" />
       </div>
     </div>
   </div>
@@ -110,10 +111,8 @@ export default {
     data() {
         return {
             query: {
-                projType: '',
-                projNum: '',
-                pageIndex: 1,
-                pageSize: 10
+                pagenum: 1,
+                pagecount: 10
             },
             searchData: {keyWord: '',searchType: ''},
             tableData: [],
@@ -125,7 +124,9 @@ export default {
         };
     },
     created() {
-        this.getData();
+    },
+    mounted() {
+      this.getData();
     },
     methods: {
         // 获取 easy-mock 的模拟数据
@@ -144,6 +145,11 @@ export default {
             //     this.tableData = res.list;
             //     this.pageTotal = res.pageTotal || 50;
             // });
+        },
+        changePage(data) {
+          this.query.pagenum = data.page
+          this.query.pagecount = data.limit
+          this.getData()
         },
         searchChange() {
           console.log(1)
