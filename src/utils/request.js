@@ -21,6 +21,11 @@ service.interceptors.response.use(
     response => {
         if (response.data.statusCode === '200') {
             return Promise.resolve(response.data)
+        } else if (response.data.statusCode === '4003') {
+            localStorage.removeItem('staffName')
+            localStorage.removeItem('staffId')
+            location.reload()
+            return Promise.reject(response.data);
         } else {
             return Promise.reject(response.data);
         }

@@ -45,3 +45,30 @@ export function delProject(data) {
     data: qs.stringify(data)
   })
 }
+
+export function addNewProject(data) {
+  return request({
+    url: `${ProManageAPIServer}project/add/addNewProject`,
+    headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
+
+export function getNewProjectNum(data) {
+  return request({
+    url: `${ProManageAPIServer}project/add/getNewProjectNum`,
+    headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
+
+export function isAuthenticated(data) {
+  return request({
+    url: `${ProManageAPIServer}project/isAuthenticated`,
+    headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
