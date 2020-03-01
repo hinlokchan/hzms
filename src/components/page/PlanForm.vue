@@ -10,109 +10,160 @@
                 </el-breadcrumb>
             </div>
             <div class="form-box">
-                <div class="form-item-title">
-                    <h3>项目信息</h3>
-                </div>
                 <el-row :gutter="20">
-                    <el-form ref="form" :model="form" label-width="80px">
+                    <div class="form-item-title">
+                        <h3>项目信息</h3>
+                    </div>
+                    <el-form ref="form" :model="form" label-width="140px">
                         <el-col :span="6">
-                        <el-form-item label="项目类型">
-                            <el-select v-model="form.region">
-                                <el-option key="1" label="房地产" value="1"></el-option>
-                                <el-option key="2" label="土地" value="2"></el-option>
-                                <el-option key="3" label="资产" value="3"></el-option>
-                            </el-select>
-                        </el-form-item>
+                            <el-form-item label="项目类型">
+                                <el-select v-model="form.projType">
+                                    <el-option label="房地产" value="房地产"></el-option>
+                                    <el-option label="土地" value="土地"></el-option>
+                                    <el-option label="资产" value="资产"></el-option>
+                                </el-select>
+                            </el-form-item>
                         </el-col>
                         <el-col :span="6">
-                        <el-form-item label="轮序/安排">
-                            <el-select v-model="form.region" placeholder="请选择">
-                                <el-option key="1" label="轮序" value="1"></el-option>
-                                <el-option key="1" label="安排" value="1"></el-option>
-                            </el-select>
-                        </el-form-item>
+                            <el-form-item label="轮序/安排">
+                                <el-select v-model="form.arrgType" placeholder="请选择">
+                                    <el-option label="轮序" value="轮序"></el-option>
+                                    <el-option label="安排" value="安排"></el-option>
+                                </el-select>
+                            </el-form-item>
                         </el-col>
                         <el-col :span="6">
-                        <el-form-item label="新/重评">
-                            <el-select v-model="form.region" placeholder="请选择">
-                                <el-option key="1" label="新项目" value="1"></el-option>
-                                <el-option key="1" label="重评项目" value="1"></el-option>
-                            </el-select>
-                        </el-form-item>
+                            <el-form-item label="新/重评">
+                                <el-select v-model="form.region" placeholder="请选择">
+                                    <el-option label="新项目" value="新项目"></el-option>
+                                    <el-option label="重评项目" value="重评项目"></el-option>
+                                </el-select>
+                            </el-form-item>
                         </el-col>
                         <el-col :span="6">
-                        <el-form-item label="评估目的">
-                            <el-select v-model="form.region" placeholder="请选择">
-                                <el-option key="1" label="抵押" value="1"></el-option>
-                                <el-option key="1" label="转让" value="1"></el-option>
-                            </el-select>
-                        </el-form-item>
+                            <el-form-item label="紧急程度">
+                                <el-select v-model="form.important" placeholder="请选择">
+                                    <el-option label="正常" value="正常"></el-option>
+                                    <el-option label="紧急" value="紧急"></el-option>
+                                    <el-option label="特急" value="特急"></el-option>
+                                </el-select>
+                            </el-form-item>
                         </el-col>
                         <el-col :span="12">
-                        <el-form-item label="项目名称">
-                            <el-input></el-input>
-                        </el-form-item>
+                            <el-form-item label="项目名称">
+                                <el-input></el-input>
+                            </el-form-item>
                         </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="项目范围">
+                                <el-input></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-form-item label="评估目的">
+                                <el-select v-model="form.assemGoal" placeholder="请选择">
+                                    <el-option label="转让" value="转让"></el-option>
+                                    <el-option label="拆迁" value="拆迁"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-form-item label="编制时间">
+                                <el-date-picker
+                                    type="date"
+                                    placeholder="选择日期"
+                                    v-model="form.projTime"
+                                    value-format="yyyy-MM-dd"
+                                    style="width: 100%;"
+                                ></el-date-picker>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-form-item label="基准日">
+                                <el-date-picker
+                                    type="date"
+                                    placeholder="选择日期"
+                                    v-model="form.baseTime"
+                                    value-format="yyyy-MM-dd"
+                                    style="width: 100%;"
+                                ></el-date-picker>
+                            </el-form-item>
+                        </el-col>
+                        <el-row :gutter="20">
+                            <el-col>
+                                <div class="form-item-title">
+                                    <h3>业务来源</h3>
+                                </div>
+                            </el-col>
+                            <el-col :span="6">
+                                <el-form-item label="接洽人">
+                                    <el-input></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="6">
+                                <el-form-item label="委托方">
+                                    <el-input></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="6">
+                                <el-form-item label="委托方联系人">
+                                    <el-input></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="6">
+                                <el-form-item label="委托方联系人电话">
+                                    <el-input></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row :gutter="20">
+                            <el-col>
+                                <div class="form-item-title">
+                                    <h3>项目组成员</h3>
+                                </div>
+                            </el-col>
+                            <el-col :span="6">
+                                <el-form-item label="项目负责人">
+                                    <el-input></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row :gutter="20">
+                            <el-col :span="6">
+                                <el-form-item label="项目复核人">
+                                        <el-input></el-input>
+                                        <el-input></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="6">
+                                <el-form-item label="专业复核人">
+                                        <el-input></el-input>
+                                        <el-input></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="6">
+                                <el-form-item label="项目助理">
+                                        <el-input></el-input>
+                                        <el-input></el-input>
+                                        <el-input></el-input>
+                                        <el-input></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="6">
+                                <el-form-item label="现场勘查">
+                                        <el-input></el-input>
+                                        <el-input></el-input>
+                                        <el-input></el-input>
+                                        <el-input></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-form-item>
+                            <el-button type="primary" @click="onSubmit">表单提交</el-button>
+                            <el-button>取消</el-button>
+                        </el-form-item>
                     </el-form>
                 </el-row>
-                <el-form ref="form" :model="form" label-width="80px">
-                    <el-form-item label="表单名称">
-                        <el-input v-model="form.name"></el-input>
-                    </el-form-item>
-                    <el-form-item label="选择器">
-                        <el-select v-model="form.region" placeholder="请选择">
-                            <el-option key="bbk" label="步步高" value="bbk"></el-option>
-                            <el-option key="xtc" label="小天才" value="xtc"></el-option>
-                            <el-option key="imoo" label="imoo" value="imoo"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="日期时间">
-                        <el-col :span="11">
-                            <el-date-picker
-                                type="date"
-                                placeholder="选择日期"
-                                v-model="form.date1"
-                                value-format="yyyy-MM-dd"
-                                style="width: 100%;"
-                            ></el-date-picker>
-                        </el-col>
-                        <el-col class="line" :span="2">-</el-col>
-                        <el-col :span="11">
-                            <el-time-picker
-                                placeholder="选择时间"
-                                v-model="form.date2"
-                                style="width: 100%;"
-                            ></el-time-picker>
-                        </el-col>
-                    </el-form-item>
-                    <el-form-item label="城市级联">
-                        <el-cascader :options="options" v-model="form.options"></el-cascader>
-                    </el-form-item>
-                    <el-form-item label="选择开关">
-                        <el-switch v-model="form.delivery"></el-switch>
-                    </el-form-item>
-                    <el-form-item label="多选框">
-                        <el-checkbox-group v-model="form.type">
-                            <el-checkbox label="步步高" name="type"></el-checkbox>
-                            <el-checkbox label="小天才" name="type"></el-checkbox>
-                            <el-checkbox label="imoo" name="type"></el-checkbox>
-                        </el-checkbox-group>
-                    </el-form-item>
-                    <el-form-item label="单选框">
-                        <el-radio-group v-model="form.resource">
-                            <el-radio label="步步高"></el-radio>
-                            <el-radio label="小天才"></el-radio>
-                            <el-radio label="imoo"></el-radio>
-                        </el-radio-group>
-                    </el-form-item>
-                    <el-form-item label="文本框">
-                        <el-input type="textarea" rows="5" v-model="form.desc"></el-input>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" @click="onSubmit">表单提交</el-button>
-                        <el-button>取消</el-button>
-                    </el-form-item>
-                </el-form>
             </div>
         </div>
     </div>
@@ -123,68 +174,15 @@ export default {
     name: 'planform',
     data() {
         return {
-            options: [
-                {
-                    value: 'guangdong',
-                    label: '广东省',
-                    children: [
-                        {
-                            value: 'guangzhou',
-                            label: '广州市',
-                            children: [
-                                {
-                                    value: 'tianhe',
-                                    label: '天河区'
-                                },
-                                {
-                                    value: 'haizhu',
-                                    label: '海珠区'
-                                }
-                            ]
-                        },
-                        {
-                            value: 'dongguan',
-                            label: '东莞市',
-                            children: [
-                                {
-                                    value: 'changan',
-                                    label: '长安镇'
-                                },
-                                {
-                                    value: 'humen',
-                                    label: '虎门镇'
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    value: 'hunan',
-                    label: '湖南省',
-                    children: [
-                        {
-                            value: 'changsha',
-                            label: '长沙市',
-                            children: [
-                                {
-                                    value: 'yuelu',
-                                    label: '岳麓区'
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ],
             form: {
-                name: '',
-                region: '',
-                date1: '',
-                date2: '',
-                delivery: true,
-                type: ['步步高'],
-                resource: '小天才',
-                desc: '',
-                options: []
+                projType: '',
+                projName: '',
+                projArea: '',
+                projDate: '',
+                options: [],
+                domains: [{
+                    value: ''
+                }]
             }
         };
     },
@@ -192,6 +190,7 @@ export default {
         onSubmit() {
             this.$message.success('提交成功！');
         }
+
     }
 };
 </script>
@@ -200,7 +199,7 @@ export default {
 .form-item-title {
     width: 100px;
     text-align: center;
-    margin-bottom: 20px;
-    border-left: solid 5px #409EFF;
+    margin: 20px 0 20px 0;
+    border-left: solid 5px #409eff;
 }
 </style>
