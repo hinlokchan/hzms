@@ -1,5 +1,8 @@
 import axios from 'axios';
-
+import {
+    Message,
+    MessageBox
+} from 'element-ui'
 const service = axios.create({
     // process.env.NODE_ENV === 'development' 来判断是否开发环境
     // easy-mock服务挂了，暂时不使用了
@@ -24,8 +27,17 @@ service.interceptors.response.use(
         } else if (response.data.statusCode === '4003') {
             localStorage.removeItem('staffName')
             localStorage.removeItem('staffId')
-            location.reload()
-            return Promise.reject(response.data);
+            MessageBox.confirm(
+                '你已被登出，可以取消继续留在该页面，或者重新登录',
+                '确定登出', {
+                    confirmButtonText: '重新登录',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }
+            ).then(() => {
+                location.reload()
+            })
+            // return Promise.reject(response.data);
         } else {
             return Promise.reject(response.data);
         }

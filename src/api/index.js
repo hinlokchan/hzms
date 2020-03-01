@@ -37,6 +37,15 @@ export function getAllProject(data) {
   })
 }
 
+export function searchProject(data) {
+  return request({
+    url: `${ProManageAPIServer}project/searchProject`,
+    headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
+
 export function delProject(data) {
   return request({
     url: `${ProManageAPIServer}project/deleteProjectById`,

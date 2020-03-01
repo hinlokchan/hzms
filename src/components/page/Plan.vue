@@ -21,6 +21,7 @@
           placeholder="项目类型"
           class="handle-select mr10"
           size="medium"
+          @change="searchChange"
         >
           <el-option key="1" label="房地产" value="房地产"></el-option>
           <el-option key="2" label="土地" value="土地"></el-option>
@@ -67,8 +68,8 @@
         <el-table-column prop="projDate" :formatter="formatDate" label="编制日期"></el-table-column>
         <el-table-column prop="projNum" label="计划编号"></el-table-column>
         <el-table-column prop="projName" label="评估项目名称"></el-table-column>
-        <el-table-column prop="projArea" label="评估项目范围"></el-table-column>
-        <el-table-column prop="attName" label="委托方名称"></el-table-column>
+        <el-table-column prop="assemScope" label="评估项目范围"></el-table-column>
+        <el-table-column prop="clientName" label="委托方名称"></el-table-column>
         <el-table-column label="操作" width="180" align="center">
           <template slot-scope="scope">
             <el-button
@@ -103,7 +104,7 @@
 
 <script>
 // import { fetchData } from '../../api/index';
-import { getAllProject, delProject } from '@/api/index';
+import { getAllProject, searchProject, delProject } from '@/api/index';
 export default {
     name: 'plan',
     data() {
@@ -114,6 +115,7 @@ export default {
                 pageIndex: 1,
                 pageSize: 10
             },
+            searchData: {keyWord: '',searchType: ''},
             tableData: [],
             editVisible: false,
             pageTotal: 0,
@@ -142,6 +144,9 @@ export default {
             //     this.tableData = res.list;
             //     this.pageTotal = res.pageTotal || 50;
             // });
+        },
+        searchChange() {
+          console.log(1)
         },
         formatDate(now) { 
           const time = new Date(now.projDate)

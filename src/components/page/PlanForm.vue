@@ -243,6 +243,7 @@ export default {
         onSubmit() {
             addNewProject(this.form).then(res => {
                 console.log('add>>>res', res)
+                this.goBack()
             }).catch(err => {
                 console.log('add>>>err', err)
             })
