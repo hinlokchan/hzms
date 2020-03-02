@@ -232,12 +232,14 @@ export default {
         };
     },
     created() {
-        console.log('query:', this.$route.query)
-        if(this.$route.query){
+        console.log('query:', this.$route.query.data)
+        if(this.$route.query.data == undefined){
+            console.log(2)
+            this.isEdit = false
+        }else{
+            console.log(1)
             this.form = this.$route.query.data
             this.isEdit = true
-        }else{
-            this.isEdit = false
         }
     },
     methods: {
