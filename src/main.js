@@ -12,6 +12,7 @@ import 'babel-polyfill';
 import { isAuthenticated } from '@/api/index';
 
 Vue.config.productionTip = false;
+window.router=router
 Vue.use(VueI18n);
 Vue.use(ElementUI, {
     size: 'small'

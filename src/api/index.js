@@ -64,6 +64,15 @@ export function addNewProject(data) {
   })
 }
 
+export function updateProject(data) {
+  return request({
+    url: `${ProManageAPIServer}project/update/updateProject`,
+    headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
+
 export function getNewProjectNum(data) {
   return request({
     url: `${ProManageAPIServer}project/add/getNewProjectNum`,

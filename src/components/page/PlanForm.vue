@@ -164,7 +164,7 @@
                         </el-row>
                         <el-form-item>
                             <el-button type="primary" @click="onSubmit">表单提交</el-button>
-                            <el-button>取消</el-button>
+                            <el-button @click="goBack">取消</el-button>
                         </el-form-item>
                     </el-form>
             </div>
@@ -173,11 +173,12 @@
 </template>
 
 <script>
-import { addNewProject, getNewProjectNum } from '@/api/index'
+import { addNewProject, getNewProjectNum, updateProject } from '@/api/index'
 export default {
     name: 'planform',
     data() {
         return {
+            isEdit: false,
             form: {
                 projType: '',
                 projName: '',
@@ -230,6 +231,15 @@ export default {
                 ]
         };
     },
+    created() {
+        console.log('query:', this.$route.query)
+        if(this.$route.query){
+            this.form = this.$route.query.data
+            this.isEdit = true
+        }else{
+            this.isEdit = false
+        }
+    },
     methods: {
         getNewProjectNum() {
             getNewProjectNum({ projType: this.form.projType }).then(res => {
@@ -241,13 +251,23 @@ export default {
             })
         },
         onSubmit() {
-            addNewProject(this.form).then(res => {
-                console.log('add>>>res', res)
-                this.goBack()
-            }).catch(err => {
-                console.log('add>>>err', err)
-            })
-            this.$message.success('提交成功！');
+            if(this.isEdit){
+                updateProject(this.form).then(res => {
+                    console.log('add>>>res', res)
+                    this.$message.success('提交成功！');
+                    this.goBack()
+                }).catch(err => {
+                    console.log('add>>>err', err)
+                })
+            }else{
+                addNewProject(this.form).then(res => {
+                    console.log('add>>>res', res)
+                    this.$message.success('提交成功！');
+                    this.goBack()
+                }).catch(err => {
+                    console.log('add>>>err', err)
+                })
+            }
         },
         goBack() {
             this.$router.push('/plan')

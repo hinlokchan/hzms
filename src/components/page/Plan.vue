@@ -9,26 +9,48 @@
         </el-breadcrumb>
       </div>
       <div class="handle-box">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          class="handle-add mr10"
-          size="medium"
-          @click="handleAdd"
-        >新增项目计划</el-button>
-        <el-select
-          v-model="query.address"
-          placeholder="项目类型"
-          class="handle-select mr10"
-          size="medium"
-          @change="searchChange"
-        >
-          <el-option key="1" label="房地产" value="房地产"></el-option>
-          <el-option key="2" label="土地" value="土地"></el-option>
-          <el-option key="3" label="资产" value="资产"></el-option>
-        </el-select>
-        <el-input v-model="query.name" placeholder="计划编号" class="handle-input mr10" size="medium"></el-input>
-        <el-button type="primary" icon="el-icon-search" @click="handleSearch" size="medium">搜 索</el-button>
+        <el-row :gutter="20">
+          <el-col :span="3">
+            <el-button
+              type="primary"
+              icon="el-icon-plus"
+              class="handle-add mr10"
+              size="medium"
+              @click="handleAdd"
+            >新增项目计划</el-button>
+          </el-col>
+          <!-- <el-col :span="2.5">
+            <el-select
+              v-model="searchData.searchType"
+              placeholder="项目类型"
+              class="handle-select mr10"
+              size="medium"
+            >
+              <el-option
+                v-for="item in proTypeList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-col> -->
+          <el-col :span="2.5">
+            <el-input v-model="searchData.projNum" placeholder="计划编号" size="medium"></el-input>
+          </el-col>
+          <el-col :span="2.5">
+            <el-input v-model="searchData.projName" placeholder="项目名称" size="medium"></el-input>
+          </el-col>
+          <el-col :span="2.5">
+            <el-input v-model="searchData.assemScope" placeholder="项目范围" size="medium"></el-input>
+          </el-col>
+          <el-col :span="2.5">
+            <el-input v-model="searchData.clientName" placeholder="委托方" size="medium"></el-input>
+          </el-col>
+          <el-col :span="2.5">
+            <el-input v-model="searchData.clientContact" placeholder="委托方联系人" size="medium"></el-input>
+          </el-col>
+          <el-button type="primary" icon="el-icon-search" @click="handleSearch" size="medium">搜 索</el-button>
+        </el-row>
       </div>
       <el-table
         :data="tableData"
@@ -76,7 +98,7 @@
               type="text"
               icon="el-icon-edit"
               size="medium"
-              @click="handleEdit(scope.$index, scope.row)"
+              @click="handleEdit(scope.$index)"
             >编辑</el-button>
             <el-button
               type="text"
@@ -114,7 +136,44 @@ export default {
                 pagenum: 1,
                 pagecount: 10
             },
-            searchData: {keyWord: '',searchType: ''},
+            proTypeList: [
+              {
+                  label: '全部',
+                  value: 'all'
+              },
+              {
+                  label: '房地产',
+                  value: '101'
+              },                    {
+                  label: '资产',
+                  value: '102'
+              },                    {
+                  label: '土地',
+                  value: '103'
+              },                    {
+                  label: '咨询',
+                  value: '104'
+              },                    {
+                  label: 'ppp',
+                  value: '105'
+              },                    {
+                  label: '会计',
+                  value: '106'
+              },                    {
+                  label: '外协',
+                  value: '107'
+              },                    {
+                  label: '政策修订',
+                  value: '108'
+              },                    {
+                  label: '绩效',
+                  value: '109'
+              },                    {
+                  label: '其他',
+                  value: '110'
+              }
+          ],
+            searchData: {projNum: '',projName: '',assemScope: '',clientName: '',clientContact: ''},
             tableData: [],
             editVisible: false,
             pageTotal: 0,
@@ -146,13 +205,21 @@ export default {
             //     this.pageTotal = res.pageTotal || 50;
             // });
         },
+        searchProjInfo() {
+          searchProject(this.searchData).then(res => {
+            console.log(res)
+            this.tableData = res.data
+            this.pageTotal = res.data.length
+          }).catch(err => {
+            console.log(err)
+          })
+        },
         changePage(data) {
           this.query.pagenum = data.page
           this.query.pagecount = data.limit
           this.getData()
         },
         searchChange() {
-          console.log(1)
         },
         formatDate(now) { 
           const time = new Date(now.projDate)
@@ -164,8 +231,8 @@ export default {
         },
         // 触发搜索按钮
         handleSearch() {
-            this.$set(this.query, 'pageIndex', 1);
-            // this.getData();
+            // this.$set(this.query, 'pageIndex', 1);
+            this.searchProjInfo()
         },
         //新增操作
         handleAdd() {
@@ -173,8 +240,9 @@ export default {
             this.$router.push('/planform')
         },
         //编辑操作
-        handleEdit() {
-            console.log('编辑项目事件');
+        handleEdit(index) {
+            console.log('编辑项目事件', index);
+            this.$router.push({ path: '/planform', query: { data: this.tableData[index] } })
         },
         // 删除操作
         handleDelete(index, row) {
