@@ -23,12 +23,17 @@ export default new Router({
                 {
                     path: '/plan',
                     component: () => import(/* webpackChunkName: "plan" */ '../components/page/Plan.vue'),
-                    meta: { title: '项目计划录入' }
+                    meta: { title: '项目管理' }
                 },
                 {
                     path: '/planform',
                     component: () => import(/* webpackChunkName: "planform" */ '../components/page/PlanForm.vue'),
                     meta: { title: '表单' }
+                },
+                {
+                    path: '/plancheck',
+                    component: () => import(/* webpackChunkName: "plancheck" */ '../components/page/PlanCheck.vue'),
+                    meta: { title: '项目详情' }
                 },
                 {
                     path: '/icon',
