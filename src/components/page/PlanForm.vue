@@ -234,15 +234,25 @@ export default {
     created() {
         console.log('query:', this.$route.query.data)
         if(this.$route.query.data == undefined){
-            console.log(2)
             this.isEdit = false
         }else{
-            console.log(1)
-            this.form = this.$route.query.data
+            let form = this.$route.query.data
+            form.projDate = this.formatDate(form)
+            form.projType = form.projType + ''
+            this.form = form
+            console.log('this.form>>>', this.form)
             this.isEdit = true
         }
     },
     methods: {
+        formatDate(now) { 
+            const time = new Date(now.projDate)
+            var year=time.getFullYear();  //取得4位数的年份
+            var month=time.getMonth()+1;  //取得日期中的月份，其中0表示1月，11表示12月
+            var date=time.getDate();      //返回日期月份中的天数（1到31）
+            var hour=time.getHours();     //返回日期中的小时数（0到23）
+            return year+"-"+month+"-"+date
+        },
         getNewProjectNum() {
             getNewProjectNum({ projType: this.form.projType }).then(res => {
                 console.log('>>>res', res)

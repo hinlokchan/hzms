@@ -19,7 +19,7 @@ export function login(data) {
     data: qs.stringify(data)
   })
 }
-
+// https:\/\/bjzrzy82.teleware.cn\/upload\/images\/frbs.png
 export function logout(data) {
   return request({
     url: `${ProManageAPIServer}user/logout`,
