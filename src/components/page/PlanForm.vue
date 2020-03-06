@@ -1,10 +1,10 @@
-<template>
+    <template>
     <div>
         <div class="container">
             <div class="crumbs">
                 <el-breadcrumb separator="/">
                     <el-breadcrumb-item>
-                        <i class="el-icon-lx-calendar"></i> 项目
+                        <i class="el-icon-lx-calendar"></i> 项目管理
                     </el-breadcrumb-item>
                     <el-breadcrumb-item>新增项目计划</el-breadcrumb-item>
                 </el-breadcrumb>
@@ -13,7 +13,7 @@
                     <div class="form-item-title">
                         <h3>项目信息</h3>
                     </div>
-                    <el-form ref="form" :model="form" label-width="140px">
+                    <el-form ref="form" :model="form" label-width="125px">
                         <el-row :gutter="20">
                         <el-col :span="6">
                             <el-form-item :span="6" label="项目类型">
@@ -81,7 +81,7 @@
                                 ></el-date-picker>
                             </el-form-item>
                         </el-col>
-                        <!-- <el-col :span="6">
+                        <el-col :span="6">
                             <el-form-item label="基准日">
                                 <el-date-picker
                                     type="date"
@@ -91,14 +91,31 @@
                                     style="width: 100%;"
                                 ></el-date-picker>
                             </el-form-item>
-                        </el-col> -->
+                        </el-col>
+                        <el-col :span="6">
+                            <el-form-item label="计划现勘日期">
+                                <el-date-picker
+                                    type="date"
+                                    placeholder="选择日期"
+                                    v-model="form.baseTime"
+                                    value-format="yyyy-MM-dd"
+                                    style="width: 100%;"
+                                ></el-date-picker>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-form-item label="计划完成天数">
+                                <el-input-number
+                                    v-model="form.planDay"
+                                    @change="planDayChange"
+                                    :min="1"
+                                    :max="10    "
+                                    label="完成天数"></el-input-number>
+                            </el-form-item>
+                        </el-col>
                         </el-row>
                         <el-row :gutter="20">
-                            <el-col>
-                                <div class="form-item-title">
-                                    <h3>业务来源</h3>
-                                </div>
-                            </el-col>
+                            <el-divider></el-divider>
                             <el-col :span="6">
                                 <el-form-item label="接洽人">
                                     <el-input v-model="form.projContact"></el-input>
@@ -117,6 +134,36 @@
                             <el-col :span="6">
                                 <el-form-item label="委托方联系人电话">
                                     <el-input v-model="form.clientContactInfo"></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="6">
+                                <el-form-item label="现勘联系人">
+                                    <el-input v-model="form.fldSrvyInfo"></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="6">
+                                <el-form-item label="现勘联系人电话">
+                                    <el-input v-model="form.fldSrvytInfo"></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="6">
+                                <el-form-item label="引荐人">
+                                    <el-input v-model="form.reffer"></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="6">
+                                <el-form-item label="引荐人电话">
+                                    <el-input v-model="form.refferInfo"></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="6">
+                                <el-form-item label="权属银行">
+                                    <el-cascader
+                                    :show-all-levels="false"
+                                    v-model="form.bank"
+                                    :options="bankOptions"
+                                    :props="{ expandTrigger: 'hover' }">
+                                </el-cascader>
                                 </el-form-item>
                             </el-col>
                         </el-row>
@@ -194,9 +241,30 @@ export default {
                 projProRev: '',
                 projAsst: '',
                 fieldSrvy: '',
-                options: []
+                planDay: 1,
+                bank: [],
             },
-                   proTypeList: [
+            bankOptions: [{
+                    bank: 'zhongguoyinhang',
+                    label: '中国银行',
+                    children: [{
+                        bank: 'zgyhhz',
+                        label: '中国银行惠州支行'
+                    },
+                    {
+                        bank: 'zgyhgz',
+                        label: '中国银行广州分行'
+                    }]
+                },
+                {
+                    bank: 'jianshenyinhang',
+                    label: '建设银行',
+                    children: [{
+                        bank: 'jsyhhz',
+                        label: '建设银行惠州分行'
+                    }]
+                }],
+            proTypeList: [
                     {
                         label: '房地产',
                         value: '101'
@@ -283,6 +351,9 @@ export default {
         },
         goBack() {
             this.$router.push('/plan')
+        },
+        planDayChange(value) {
+            console.log(value)
         }
 
     }

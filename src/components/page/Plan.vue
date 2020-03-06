@@ -4,7 +4,7 @@
       <div class="crumbs">
         <el-breadcrumb separator="/">
           <el-breadcrumb-item>
-            <span>项目计划录入</span>
+            <span>项目管理</span>
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
@@ -84,16 +84,27 @@
           </template>
         </el-table-column>
         <!-- <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column> -->
-        <el-table-column prop="level" label="紧急程度" width="80" align="center">
+        <el-table-column prop="projUrgency" label="紧急程度" width="80" align="center">
           <el-tag type="success" effect="dark">正常</el-tag>
+        </el-table-column>
+        <el-table-column prop="projStatus" label="项目状态" width="80" align="center">
+          <el-tag type="warning" effect="dark">滞后</el-tag>
         </el-table-column>
         <el-table-column prop="projDate" :formatter="formatDate" label="编制日期"></el-table-column>
         <el-table-column prop="projNum" label="计划编号"></el-table-column>
         <el-table-column prop="projName" label="评估项目名称"></el-table-column>
         <el-table-column prop="assemScope" label="评估项目范围"></el-table-column>
         <el-table-column prop="clientName" label="委托方名称"></el-table-column>
-        <el-table-column label="操作" width="180" align="center">
+        <el-table-column prop="projRate" label="项目进度" width="90" align="center">
+          <el-tag effect="dark">编写报告</el-tag>
+        </el-table-column>
+        <el-table-column label="操作" width="190" align="center">
           <template slot-scope="scope">
+            <el-button
+              type="text"
+              icon="el-icon-info"
+              size="meduim"
+              @click="handleCheck(scope.$index)">详情</el-button>
             <el-button
               type="text"
               icon="el-icon-edit"
@@ -243,6 +254,10 @@ export default {
         handleEdit(index) {
             console.log('编辑项目事件', index);
             this.$router.push({ path: '/planform', query: { data: this.tableData[index] } })
+        },
+        //查看操作
+        handleCheck(index) {
+          console.log('查看项目详情事件', index)
         },
         // 删除操作
         handleDelete(index, row) {

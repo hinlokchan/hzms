@@ -69,7 +69,17 @@ export default {
                 {
                     icon: 'el-icon-lx-edit',
                     index: 'plan',
-                    title: '项目计划录入'
+                    title: '项目管理',
+                    subs: [
+                        {
+                            index: 'plan',
+                            title: '查看项目'
+                        },
+                        {
+                            index: 'planform',
+                            title: '项目计划录入'
+                        }
+                    ]
                 },
                 {
                     icon: 'el-icon-lx-copy',
