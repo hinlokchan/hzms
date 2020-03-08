@@ -88,7 +88,7 @@
               <div class="projContent">2020-03-05</div>
             </el-col>
             <el-col :span="2">
-              <div class="projTitle">计划现勘日期</div>
+              <div class="projTitle">计划现勘日</div>
             </el-col>
             <el-col :span="4">
               <div class="projContent">2020-03-05</div>
@@ -136,13 +136,13 @@
               <div class="projContent">中等</div>
             </el-col>
             <el-col :span="2">
-              <div class="projTitle">报价</div>
+              <div class="projTitle">评估值报价</div>
             </el-col>
             <el-col :span="4">
               <div class="projContent">1000</div>
             </el-col>
             <el-col :span="2">
-              <div class="projTitle">收费</div>
+              <div class="projTitle">评估收费报价</div>
             </el-col>
             <el-col :span="4">
               <div class="projContent">3000</div>
@@ -154,7 +154,10 @@
             </div>
             <el-col :span="12">
               <span>当前状态</span>
-              <el-tag type="warning" size="medium">滞后</el-tag>
+              <el-tag
+                type="warning"
+                size="medium"
+              >滞后</el-tag>
             </el-col>
             <el-col :span="18">
               <el-steps
@@ -188,34 +191,72 @@
             <div class="form-item-title">
               <h3>项目组成员</h3>
             </div>
-            <el-col :span="2">
-              <div class="projTitle">项目负责人</div>
-            </el-col>
-            <el-col :span="10">
-              <div class="projContent">张小龙</div>
-            </el-col>
-            <el-col :span="2">
+            <el-row>
+              <el-col :span="3">
+                <div class="projTitle">项目负责人</div>
+              </el-col>
+              <el-col :span="9">
+                <div class="projContent">张小龙</div>
+              </el-col>
+            </el-row>
+            <el-col :span="3">
               <div class="projTitle">项目复核人</div>
             </el-col>
-            <el-col :span="10">
+            <el-col :span="9">
               <div class="projContent">张小龙 陈俊雄</div>
             </el-col>
-            <el-col :span="2">
+            <el-col :span="3">
               <div class="projTitle">专业复核人</div>
             </el-col>
-            <el-col :span="10">
+            <el-col :span="9">
               <div class="projContent">张小龙 陈俊雄</div>
             </el-col>
-            <el-col :span="2">
-              <div class="projTitle">项目助理</div>
+            <el-col :span="3">
+              <div class="projTitle">现勘调查人员</div>
             </el-col>
-            <el-col :span="10">
+            <el-col :span="9">
               <div class="projContent">张小龙 陈俊雄</div>
             </el-col>
-            <el-col :span="2">
-              <div class="projTitle">现场勘查</div>
+            <el-col :span="3">
+              <div class="projTitle">资料核查验证人员</div>
             </el-col>
-            <el-col :span="10">
+            <el-col :span="9">
+              <div class="projContent">张小龙 陈俊雄</div>
+            </el-col>
+            <el-col :span="3">
+              <div class="projTitle">市场询价调查人员</div>
+            </el-col>
+            <el-col :span="9">
+              <div class="projContent">张小龙 陈俊雄</div>
+            </el-col>
+            <el-col :span="3">
+              <div class="projTitle">助理</div>
+            </el-col>
+            <el-col :span="9">
+              <div class="projContent">张小龙 陈俊雄</div>
+            </el-col>
+            <el-col :span="3">
+              <div class="projTitle">技术说明拟稿人</div>
+            </el-col>
+            <el-col :span="9">
+              <div class="projContent">张小龙 陈俊雄</div>
+            </el-col>
+            <el-col :span="3">
+              <div class="projTitle">外聘专家</div>
+            </el-col>
+            <el-col :span="9">
+              <div class="projContent">张小龙 陈俊雄</div>
+            </el-col>
+            <el-col :span="3">
+              <div class="projTitle">报告拟稿人</div>
+            </el-col>
+            <el-col :span="9">
+              <div class="projContent">张小龙 陈俊雄</div>
+            </el-col>
+            <el-col :span="3">
+              <div class="projTitle">指导员</div>
+            </el-col>
+            <el-col :span="9">
               <div class="projContent">张小龙 陈俊雄</div>
             </el-col>
           </el-row>
