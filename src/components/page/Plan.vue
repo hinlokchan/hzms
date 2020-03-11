@@ -37,7 +37,7 @@
           <el-col :span="2.5">
             <el-input
               v-model="searchData.projNum"
-              placeholder="计划编号"
+              placeholder="初、正评号"
               size="medium"
             ></el-input>
           </el-col>
@@ -65,7 +65,7 @@
           <el-col :span="2.5">
             <el-input
               v-model="searchData.clientContact"
-              placeholder="委托方联系人"
+              placeholder="项目成员"
               size="medium"
             ></el-input>
           </el-col>
@@ -400,7 +400,7 @@ export default {
     color: #99a9bf;
 }
 .demo-table-expand .el-form-item {
-    margin-left: 0;
+    margin-right: 0;
     margin-bottom: 0;
     width: 50%;
 }

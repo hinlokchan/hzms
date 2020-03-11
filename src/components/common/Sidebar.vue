@@ -82,17 +82,21 @@ export default {
                     ]
                 },
                 {
-                    icon: "el-icon-receiving",
-                    title: "我的项目",
+                    icon: 'el-icon-receiving',
+                    title: '我的项目',
                     subs: [
                         {
-                            title: "询价记录查询"
+                            title: '询价记录查询'
                         },
                         {
-                            title: "工作台"
+                            index: 'workbranch',
+                            title: '工作台'
                         },
                         {
-                            title: "报告二维码生成"
+                            title: '报告二维码生成'
+                        },
+                        {
+                            title: '正评登记'
                         }
                     ]
                 },
