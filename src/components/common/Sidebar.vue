@@ -174,6 +174,7 @@ export default {
         }
     },
     created() {
+        console.log('权限控制')
         // 通过 Event Bus 进行组件间通信，来折叠侧边栏
         bus.$on('collapse', msg => {
             this.collapse = msg;
