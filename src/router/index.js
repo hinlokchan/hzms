@@ -36,6 +36,11 @@ export default new Router({
                     meta: { title: '项目详情' }
                 },
                 {
+                    path: '/workbranch',
+                    component: () => import(/* webpackChunkName: "plancheck" */ '../components/page/WorkBranch.vue'),
+                    meta: { title: '工作台' }
+                },
+                {
                     path: '/icon',
                     component: () => import(/* webpackChunkName: "icon" */ '../components/page/Icon.vue'),
                     meta: { title: '自定义图标' }

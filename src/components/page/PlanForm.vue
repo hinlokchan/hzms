@@ -88,10 +88,6 @@
                     label="紧急"
                     value="紧急"
                   ></el-option>
-                  <el-option
-                    label="特急"
-                    value="特急"
-                  ></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -225,7 +221,7 @@
               <el-form-item label="权属银行">
                 <el-cascader
                   :show-all-levels="false"
-                  v-model="form.bank"
+                  v-model="form.value"
                   :options="bankOptions"
                   :props="{ expandTrigger: 'hover' }"
                 >
@@ -343,25 +339,25 @@ export default {
         projRisk: '',
         fieldSrvy: '',
         planDay: 1,
-        bank: [],
+        value: []
       },
       bankOptions: [{
-        bank: 'zhongguoyinhang',
+        value: 'zhongguoyinhang',
         label: '中国银行',
         children: [{
-          bank: 'zgyhhz',
+          value: 'zgyhhz',
           label: '中国银行惠州支行'
         },
         {
-          bank: 'zgyhgz',
+          value: 'zgyhgz',
           label: '中国银行广州分行'
         }]
       },
       {
-        bank: 'jianshenyinhang',
+        value: 'jianshenyinhang',
         label: '建设银行',
         children: [{
-          bank: 'jsyhhz',
+          value: 'jsyhhz',
           label: '建设银行惠州分行'
         }]
       }],
@@ -409,7 +405,7 @@ export default {
     };
   },
   created() {
-		console.log('query:', this.$route.query.data)
+    console.log('query:', this.$route.query.data)
     if (this.$route.query.data == undefined) {
       console.log(2)
       this.isEdit = false
