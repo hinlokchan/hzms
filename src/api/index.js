@@ -30,7 +30,16 @@ export function logout(data) {
 
 export function getAllProject(data) {
   return request({
-    url: `${ProManageAPIServer}project/getAllProjectInfos`,
+    url: `${ProManageAPIServer}project/getAllAbstractProjInfoList`,
+    headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
+
+export function getDetailProjInfo(data) {
+  return request({
+    url: `${ProManageAPIServer}project/getDetailProjInfo`,
     headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},
     method: 'post',
     data: qs.stringify(data)
@@ -48,7 +57,7 @@ export function searchProject(data) {
 
 export function delProject(data) {
   return request({
-    url: `${ProManageAPIServer}project/deleteProjectById`,
+    url: `${ProManageAPIServer}project/deleteProject`,
     headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},
     method: 'post',
     data: qs.stringify(data)

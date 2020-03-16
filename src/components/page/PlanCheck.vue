@@ -19,7 +19,7 @@
               <div class="projTitle">计划编号</div>
             </el-col>
             <el-col :span="6">
-              <div class="projContent">房202003001</div>
+              <div class="projContent">{{detailData.projNum}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">初评号</div>
@@ -61,13 +61,13 @@
               <div class="projTitle">项目名称</div>
             </el-col>
             <el-col :span="10">
-              <div class="projContent">东湖花园九区</div>
+              <div class="projContent">{{detailData.projName}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">项目范围</div>
             </el-col>
             <el-col :span="10">
-              <div class="projContent">惠州东平</div>
+              <div class="projContent">{{detailData.projScope}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">评估目的</div>
@@ -268,22 +268,38 @@
 </template>
 
 <script>
-import { getAllProject } from '@/api/index'
+import { getDetailProjInfo } from '@/api/index'
 export default {
   name: 'plancheck',
   data() {
     return {
-
+      projId: '',
+      detailData: []
     }
   },
   created() {
-
+    console.log('11', this.$route.query.data)
+    this.projId = this.$route.query.data
+    this.getDetail()
   },
   mounted() {
 
   },
   methods: {
-
+    getDetail() {
+      getDetailProjInfo({ projId: this.projId }).then(res => {
+        console.log(res.data)
+        this.detailData = res.data
+      })
+    },
+    formatDate(now) {
+      const time = new Date(now.projDate)
+      var year = time.getFullYear();  //取得4位数的年份
+      var month = time.getMonth() + 1;  //取得日期中的月份，其中0表示1月，11表示12月
+      var date = time.getDate();      //返回日期月份中的天数（1到31）
+      var hour = time.getHours();     //返回日期中的小时数（0到23）
+      return year + "-" + month + "-" + date
+    },
   }
 }
 </script>

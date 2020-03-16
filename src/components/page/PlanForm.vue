@@ -275,30 +275,67 @@
           </el-row>
           <el-row :gutter="20">
             <el-col :span="6">
-              <el-form-item label="项目复核人">
-                <el-input></el-input>
+              <el-form-item
+                v-for="(item, index) in form.projReviewer"
+                :label="'项目复核人' + (index + 1)"
+                :key="index"
+                :rules="{
+                  required: true, message: '不能为空', trigger: 'blur'
+                }"
+              >
+              <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
+                <div class="flexBox"><el-input style="width:90%" v-model="item.value"></el-input><i class="el-icon-lx-roundclose" style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5" @click.prevent="removeDomain(index)"></i></div>
+              </el-form-item>
+              <el-form-item>
+                <i class="el-icon-lx-roundadd" style="font-size: 26px;color:#b5b5b5" @click="addDomain(1)"></i>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="专业复核人">
-                <el-input></el-input>
-                <el-input></el-input>
+              <el-form-item
+                v-for="(item, index) in form.projProReviewer"
+                :label="'专业复核人' + (index + 1)"
+                :key="index"
+                :rules="{
+                  required: true, message: '不能为空', trigger: 'blur'
+                }"
+              >
+              <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
+                <div class="flexBox"><el-input style="width:90%" v-model="item.value"></el-input><i class="el-icon-lx-roundclose" style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5" @click.prevent="removeDomain(index)"></i></div>
+              </el-form-item>
+              <el-form-item>
+                <i class="el-icon-lx-roundadd" style="font-size: 26px;color:#b5b5b5" @click="addDomain(2)"></i>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="项目助理">
-                <el-input></el-input>
-                <el-input></el-input>
-                <el-input></el-input>
-                <el-input></el-input>
+              <el-form-item
+                v-for="(item, index) in form.projAsst"
+                :label="'项目助理' + (index + 1)"
+                :key="index"
+                :rules="{
+                  required: true, message: '不能为空', trigger: 'blur'
+                }"
+              >
+              <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
+                <div class="flexBox"><el-input style="width:90%" v-model="item.value"></el-input><i class="el-icon-lx-roundclose" style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5" @click.prevent="removeDomain(index)"></i></div>
+              </el-form-item>
+              <el-form-item>
+                <i class="el-icon-lx-roundadd" style="font-size: 26px;color:#b5b5b5" @click="addDomain(3)"></i>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="现场勘查">
-                <el-input></el-input>
-                <el-input></el-input>
-                <el-input></el-input>
-                <el-input></el-input>
+              <el-form-item
+                v-for="(item, index) in form.filedSrvy"
+                :label="'现场勘查' + (index + 1)"
+                :key="index"
+                :rules="{
+                  required: true, message: '不能为空', trigger: 'blur'
+                }"
+              >
+              <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
+                <div class="flexBox"><el-input style="width:90%" v-model="item.value"></el-input><i class="el-icon-lx-roundclose" style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5" @click.prevent="removeDomain(index)"></i></div>
+              </el-form-item>
+              <el-form-item>
+                <i class="el-icon-lx-roundadd" style="font-size: 26px;color:#b5b5b5" @click="addDomain(4)"></i>
               </el-form-item>
             </el-col>
           </el-row>
@@ -335,10 +372,12 @@ export default {
         clientContactInfo: '',
         projLeader: '',
         projProRev: '',
-        projAsst: '',
+        projAsst: [{ value: '' }],
+        projProReviewer: [{ value: '' }],
         projRisk: '',
-        fieldSrvy: '',
+        filedSrvy: [{ value: '' }],
         planDay: 1,
+        projReviewer: [{ value: '' }],
         value: []
       },
       bankOptions: [{
@@ -416,6 +455,28 @@ export default {
     }
   },
   methods: {
+    addDomain(type) {
+      if(type == 1){
+        this.form.projReviewer.push({
+          value: ''
+        });
+      }else if(type == 2){
+        this.form.projProReviewer.push({
+          value: ''
+        });
+      }else if(type == 3){
+        this.form.projAsst.push({
+          value: ''
+        });
+      }else if(type == 4){
+        this.form.filedSrvy.push({
+          value: ''
+        });
+      }
+    },
+    removeDomain(index) {
+      this.form.projReviewer.splice(index, 1)
+    },
     getNewProjectNum() {
       getNewProjectNum({ projType: this.form.projType }).then(res => {
         console.log('>>>res', res)
@@ -426,23 +487,25 @@ export default {
       })
     },
     onSubmit() {
-      if (this.isEdit) {
-        updateProject(this.form).then(res => {
-          console.log('add>>>res', res)
-          this.$message.success('提交成功！');
-          this.goBack()
-        }).catch(err => {
-          console.log('add>>>err', err)
-        })
-      } else {
-        addNewProject(this.form).then(res => {
-          console.log('add>>>res', res)
-          this.$message.success('提交成功！');
-          this.goBack()
-        }).catch(err => {
-          console.log('add>>>err', err)
-        })
-      }
+      this.$refs.form.validate(valid => {
+          if (this.isEdit) {
+          updateProject(this.form).then(res => {
+            console.log('add>>>res', res)
+            this.$message.success('提交成功！');
+            this.goBack()
+          }).catch(err => {
+            console.log('add>>>err', err)
+          })
+        } else {
+          addNewProject(this.form).then(res => {
+            console.log('add>>>res', res)
+            this.$message.success('提交成功！');
+            this.goBack()
+          }).catch(err => {
+            console.log('add>>>err', err)
+          })
+        }
+      })
     },
     goBack() {
       this.$router.push('/plan')
@@ -461,5 +524,12 @@ export default {
     text-align: center;
     margin: 20px 0 20px 0;
     border-left: solid 5px #409eff;
+}
+.flexBox{
+  display: flex;
+  justify-content:space-between
+}
+.flexBox el-input {
+  margin-right: 5px
 }
 </style>
