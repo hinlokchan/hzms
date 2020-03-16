@@ -28,9 +28,9 @@ export function logout(data) {
   })
 }
 
-export function getAllProject(data) {
+export function getAllAbstractProject(data) {
   return request({
-    url: `${ProManageAPIServer}project/getAllProjectInfos`,
+    url: `${ProManageAPIServer}project/getAllAbstractProjInfoList`,
     headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},
     method: 'post',
     data: qs.stringify(data)
@@ -39,7 +39,7 @@ export function getAllProject(data) {
 
 export function searchProject(data) {
   return request({
-    url: `${ProManageAPIServer}project/searchProject`,
+    url: `${ProManageAPIServer}project/search`,
     headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},
     method: 'post',
     data: qs.stringify(data)
@@ -85,6 +85,15 @@ export function getNewProjectNum(data) {
 export function isAuthenticated(data) {
   return request({
     url: `${ProManageAPIServer}project/isAuthenticated`,
+    headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
+
+export function searchMyProject(data) {
+  return request({
+    url: `${ProManageAPIServer}project/searchMyProject`,
     headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},
     method: 'post',
     data: qs.stringify(data)

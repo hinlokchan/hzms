@@ -270,7 +270,7 @@
 <script>
 import { getAllProject } from '@/api/index'
 export default {
-  name: 'plancheck',
+  name: 'projcheck',
   data() {
     return {
 

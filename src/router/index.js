@@ -31,14 +31,19 @@ export default new Router({
                     meta: { title: '表单' }
                 },
                 {
-                    path: '/plancheck',
-                    component: () => import(/* webpackChunkName: "plancheck" */ '../components/page/PlanCheck.vue'),
+                    path: '/projcheck',
+                    component: () => import(/* webpackChunkName: "projcheck" */ '../components/page/ProjCheck.vue'),
                     meta: { title: '项目详情' }
                 },
                 {
                     path: '/workbranch',
                     component: () => import(/* webpackChunkName: "plancheck" */ '../components/page/WorkBranch.vue'),
                     meta: { title: '工作台' }
+                },
+                {
+                    path: '/qrcode',
+                    component: () => import(/* webpackChunkName: "qrcode" */ '../components/page/QRCode.vue'),
+                    meta: { title: '二维码生成' }
                 },
                 {
                     path: '/icon',

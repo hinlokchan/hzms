@@ -63,6 +63,7 @@
           </el-col>
         </el-row>
       </div>
+      <!-- table -->
       <el-table
         class="table"
         :data="tableData"
@@ -72,16 +73,16 @@
         :default-sort="{ prop: 'projDate', order: 'descending' }"
       >
         <el-table-column
-          prop="projDe"
+          prop="projDegree"
           label="紧急程度"
           width="80"
           align="center"
         >
-          <template slot-scope="scope">
+          <template slot-scope="props">
             <el-tag
-              :type="scope.row.projDe === '正常' ? 'success' : 'danger'"
+              :type="props.row.projDegree === '正常' ? 'success' : 'danger'"
               disable-transitions
-            >{{scope.row.projDe}}</el-tag>
+            >{{props.row.projDegree}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column
@@ -89,6 +90,7 @@
           label="编制日期"
           width="120"
           sortable
+          :formatter="formatDate"
         >
         </el-table-column>
         <el-table-column
@@ -116,13 +118,13 @@
         >
         </el-table-column>
         <el-table-column
-          prop="projProgress"
+          prop="projState"
           label="项目进度"
           width="90"
           align="center"
         >
-          <template slot-scope="scope">
-            <el-tag type="primary">{{ scope.row.projProgress }}</el-tag>
+          <template slot-scope="props">
+            <el-tag type="primary">{{ props.row.projState }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column
@@ -237,69 +239,18 @@
         </div>
       </el-dialog>
       <!-- 分配任务 -->
-      <el-drawer
-        title="分配项目组任务"
-        :visible.sync="arrMemberVisible"
-        direction="rtl"
-        size="55%"
-      >
-        <div class="arrMemberContainer">
-          <el-form>
-            <div class="arrMemberTitle">
-              <h3>现场勘查及收集资料</h3>
-            </div>
-            <el-form-item label="时间安排">
-              <el-date-picker
-                v-model="date1"
-                type="daterange"
-                range-separator="至"
-                start-placeholde="开始日期"
-                end-placeholde="结束日期"
-              ></el-date-picker>
-            </el-form-item>
-            <el-form-item
-              label="责任人"
-              label-width="70px"
-            >
-              <el-input
-                placeholder="请输入人员"
-                style="width: 200px;"
-              ></el-input>
-            </el-form-item>
-          </el-form>
-        </div>
-      </el-drawer>
+
     </div>
   </div>
 </template>
 
 <script>
+import { getAllAbstractProject, searchMyProject } from '@/api/index'
 export default {
   name: 'workbranch',
   data() {
     return {
-      tableData: [
-        {
-          projId: 101202003001,
-          projDe: '正常',
-          projDate: '2020-03-09',
-          projNum: '房202003001',
-          projName: '正佳广场',
-          projScope: '广东省广州市天河区',
-          projLeader: '吴润波',
-          projProgress: '编写报告'
-        },
-        {
-          projId: 102202003001,
-          projDe: '紧急',
-          projDate: '2020-03-08',
-          projNum: '资202003001',
-          projName: '螺蛳粉一箱',
-          projScope: '广西省柳州市',
-          projLeader: '吴润波',
-          projProgress: '现勘'
-        }
-      ],
+      tableData: [],
       typeOptions: [
         { value: '101', label: '房地产' },
         { value: '102', label: '资产' },
@@ -313,10 +264,34 @@ export default {
       date1: ''
     }
   },
+  created() {
+
+  },
+  mounted() {
+    this.getData();
+  },
   methods: {
     handleDetail() {
       console.log('跳转到plancheck');
-
+    },
+    getData() {
+      searchMyProject()
+        .then(res => {
+          console.log(res.data)
+          this.tableData = res.data
+          console.log(this.tableData)
+        })
+        .catch(err => {
+          console.log('field to search');
+        })
+    },
+    formatDate(now) {
+      const time = new Date(now.projDate)
+      var year = time.getFullYear();  //取得4位数的年份
+      var month = time.getMonth() + 1;  //取得日期中的月份，其中0表示1月，11表示12月
+      var date = time.getDate();      //返回日期月份中的天数（1到31）
+      var hour = time.getHours();     //返回日期中的小时数（0到23）
+      return year + "-" + month + "-" + date
     }
   }
 }
@@ -380,16 +355,5 @@ export default {
 }
 .search {
     margin-top: 20px;
-}
-
-.arrMemberContainer {
-    margin: 0 10px 0 10px;
-}
-.arrMemberTitle {
-    width: 100%;
-    text-align: left;
-    margin: 0 0 20px 10px;
-    border-left: solid 5px #409eff;
-    padding-left: 5px;
 }
 </style>
