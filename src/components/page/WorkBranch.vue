@@ -131,23 +131,23 @@
           label="操作"
           align="center"
         >
-          <template>
+          <template slot-scope="scope">
             <el-button
               type="text"
               icon="el-icon-info"
-              @click="handleDetail()"
+              @click="handleDetail(scope.$index)"
               size="medium"
             >项目详情</el-button>
             <el-button
               type="text"
               icon="el-icon-star-on"
-              @click="getNumVisible = true"
               size="medium"
+              @click="getNum(scope)"
             >取号</el-button>
             <el-button
               type="text"
               icon="el-icon-s-operation"
-              @click="changeNumVisible = true"
+              @click="changeNumVisible = true;"
               size="medium"
             >更改报告号类型</el-button>
             <el-button
@@ -169,7 +169,7 @@
           <div>当前项目初评号:</div>
           <div>当前项目正评号:</div>
         </div>
-        <el-form :model="getReportNum">
+        <el-form :model="creatReportNum">
           <el-form-item
             label="取号类型"
             label-width="200px"
@@ -193,7 +193,10 @@
           class="dialog-footer"
         >
           <el-button @click="getNumVisible = false">取 消</el-button>
-          <el-button type="primary">取 号</el-button>
+          <el-button
+            type="primary"
+            @click="creatReportNum"
+          >取 号</el-button>
         </div>
       </el-dialog>
       <!-- 更改报告号 -->
@@ -245,18 +248,25 @@
 </template>
 
 <script>
-import { getAllAbstractProject, searchMyProject } from '@/api/index'
+import { getAllAbstractProject, searchMyProject, getReportNum } from '@/api/index'
 export default {
   name: 'workbranch',
   data() {
     return {
       tableData: [],
       typeOptions: [
-        { value: '101', label: '房地产' },
-        { value: '102', label: '资产' },
-        { value: '101', label: '土地' }
+        { value: '1010', label: '房地产' },
+        { value: '1020', label: '资产' },
+        { value: '1030', label: '土地' },
+        { value: '1040', label: '房地产咨询' },
+        { value: '1050', label: '资产咨询' },
+        { value: '1060', label: '土地咨询' },
+        { value: '1070', label: 'PPP' },
+        { value: '1080', label: 'f' },
+        { value: '1090', label: '土地' },
+        { value: '1100', label: '土地' },
+
       ],
-      getReportNum: [],
       getNumVisible: false,
       changeNumVisible: false,
       arrMemberVisible: false,
@@ -265,24 +275,36 @@ export default {
     }
   },
   created() {
-
-  },
-  mounted() {
     this.getData();
   },
+  mounted() {
+  },
   methods: {
-    handleDetail() {
-      console.log('跳转到plancheck');
-    },
     getData() {
       searchMyProject()
         .then(res => {
           console.log(res.data)
           this.tableData = res.data
-          console.log(this.tableData)
         })
         .catch(err => {
           console.log('field to search');
+        })
+    },
+    handleDetail(index) {
+      console.log(this.tableData[index].projId);
+      this.$router.push({ path: '/projcheck', query: { data: this.tableData[index].projId } })
+    },
+    creatReportNum() {
+
+    },
+    getNum(num) {
+      console.log(num.row.projId)
+      getReportNum({ projId: num.row.projId })
+        .then(res => {
+          console.log(res)
+        })
+        .catch(err => {
+          console.log(res)
         })
     },
     formatDate(now) {

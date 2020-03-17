@@ -121,7 +121,7 @@
               <div class="projTitle">现勘联系人及联系方式</div>
             </el-col>
             <el-col :span="8">
-              <div class="projContent">{{detailData.fldSvryContact}}{{detailData.fldSvryContactInfo}}</div>
+              <div class="projContent">{{detailData.fldSrvyContact}}{{detailData.fldSrvyContactInfo}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">接洽人</div>

@@ -99,3 +99,12 @@ export function searchMyProject(data) {
     data: qs.stringify(data)
   })
 }
+
+export function getReportNum(data) {
+  return request({
+    url: `${ProManageAPIServer}project/getReportNum`,
+    headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}

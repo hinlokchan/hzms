@@ -212,7 +212,7 @@
             </el-col>
             <el-col :span="6">
               <el-form-item label="引荐人电话">
-                <el-input v-model="form.projRefererContactInfo"></el-input>
+                <el-input v-model="form.projRefererInfo"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -371,7 +371,7 @@ export default {
         clientName: '',
         projReferer: '',
         supInstruction: '',
-        projRefererContactInfo: '',
+        projRefererInfo: '',
         projScope: '',
         clientContact: '',
         fldSrvySchedule: '',
