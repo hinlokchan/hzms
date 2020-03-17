@@ -231,19 +231,19 @@
                 <el-select v-model="form.riskProfile">
                   <el-option
                     label="低"
-                    value="low"
+                    value="1001"
                   ></el-option>
                   <el-option
                     label="中等"
-                    value="medium"
+                    value="1002"
                   ></el-option>
                   <el-option
                     label="较高"
-                    value="high"
+                    value="1003"
                   ></el-option>
                   <el-option
                     label="高"
-                    value="highest"
+                    value="1004"
                   ></el-option>
                 </el-select>
               </el-form-item>

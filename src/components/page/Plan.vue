@@ -77,6 +77,7 @@
           >搜 索</el-button>
         </el-row>
       </div>
+      <!-- table -->
       <el-table
         :data="tableData"
         stripe
@@ -113,15 +114,17 @@
         </el-table-column>
         <!-- <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column> -->
         <el-table-column
-          prop="projUrgency"
+          prop="projDegree"
           label="紧急程度"
           width="80"
           align="center"
         >
+          <template slot-scope="props">
           <el-tag
             type="success"
             effect="dark"
-          >正常</el-tag>
+          >{{props.row.projDegree}}</el-tag>
+          </template>
         </el-table-column>
         <el-table-column
           prop="projStatus"
@@ -213,7 +216,7 @@
 
 <script>
 // import { fetchData } from '../../api/index';
-import { getAllProject, searchProject, delProject } from '@/api/index';
+import { getAllAbstractProject, searchProject, delProject } from '@/api/index';
 export default {
   name: 'plan',
   data() {
@@ -271,7 +274,7 @@ export default {
   },
   methods: {
     getData() {
-      getAllProject()
+      getAllAbstractProject()
         .then(res => {
           console.log(res.data);
           this.tableData = res.data;
@@ -328,7 +331,7 @@ export default {
     //查看操作
     handleCheck(index) {
       console.log('查看项目详情事件', this.tableData[index].projId);
-      this.$router.push({ path: '/plancheck', query: { data: this.tableData[index].projId } })
+      this.$router.push({ path: '/projcheck', query: { data: this.tableData[index].projId } })
     },
     // 删除操作
     handleDelete(index, row) {
