@@ -27,7 +27,6 @@
                 prop="projType"
               >
                 <el-select
-                  @change="getNewProjectNum"
                   v-model="form.projType"
                 >
                   <el-option
@@ -48,11 +47,11 @@
                 >
                   <el-option
                     label="轮序"
-                    value="轮序"
+                    value="1001"
                   ></el-option>
                   <el-option
                     label="安排"
-                    value="安排"
+                    value="1002"
                   ></el-option>
                 </el-select>
               </el-form-item>
@@ -60,16 +59,16 @@
             <el-col :span="6">
               <el-form-item label="新/重评">
                 <el-select
-                  v-model="form.region"
+                  v-model="form.newOldType"
                   placeholder="请选择"
                 >
                   <el-option
                     label="新项目"
-                    value="新项目"
+                    value="1001"
                   ></el-option>
                   <el-option
                     label="重评项目"
-                    value="重评项目"
+                    value="1002"
                   ></el-option>
                 </el-select>
               </el-form-item>
@@ -77,16 +76,16 @@
             <el-col :span="6">
               <el-form-item label="紧急程度">
                 <el-select
-                  v-model="form.important"
+                  v-model="form.projDegree"
                   placeholder="请选择"
                 >
                   <el-option
                     label="正常"
-                    value="正常"
+                    value="1001"
                   ></el-option>
                   <el-option
                     label="紧急"
-                    value="紧急"
+                    value="1002"
                   ></el-option>
                 </el-select>
               </el-form-item>
@@ -101,7 +100,7 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="项目范围">
-                <el-input v-model="form.assemScope"></el-input>
+                <el-input v-model="form.projScope"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -137,7 +136,7 @@
                 <el-date-picker
                   type="date"
                   placeholder="选择日期"
-                  v-model="form.baseTime"
+                  v-model="form.baseDate"
                   value-format="yyyy-MM-dd"
                   style="width: 100%;"
                 ></el-date-picker>
@@ -148,7 +147,7 @@
                 <el-date-picker
                   type="date"
                   placeholder="选择日期"
-                  v-model="form.baseTime"
+                  v-model="form.fldSrvySchedule"
                   value-format="yyyy-MM-dd"
                   style="width: 100%;"
                 ></el-date-picker>
@@ -157,8 +156,7 @@
             <el-col :span="6">
               <el-form-item label="计划完成天数">
                 <el-input-number
-                  v-model="form.planDay"
-                  @change="planDayChange"
+                  v-model="form.compSchedule"
                   :min="1"
                   :max="10    "
                   label="完成天数"
@@ -170,7 +168,7 @@
                 <el-input
                   type="textarea"
                   autosize
-                  v-model="form.otherIns"
+                  v-model="form.supInstruction"
                 ></el-input>
               </el-form-item>
             </el-col>
@@ -199,29 +197,29 @@
             </el-col>
             <el-col :span="6">
               <el-form-item label="现勘联系人">
-                <el-input v-model="form.fldSrvyInfo"></el-input>
+                <el-input v-model="form.fldSrvyContact"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="现勘联系人电话">
-                <el-input v-model="form.fldSrvytInfo"></el-input>
+                <el-input v-model="form.fldSrvyContactInfo"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="引荐人">
-                <el-input v-model="form.reffer"></el-input>
+                <el-input v-model="form.projReferer"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="引荐人电话">
-                <el-input v-model="form.refferInfo"></el-input>
+                <el-input v-model="form.projRefererContactInfo"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="权属银行">
+              <el-form-item label="贷款银行">
                 <el-cascader
                   :show-all-levels="false"
-                  v-model="form.value"
+                  v-model="form.lendingBank"
                   :options="bankOptions"
                   :props="{ expandTrigger: 'hover' }"
                 >
@@ -230,7 +228,7 @@
             </el-col>
             <el-col :span="6">
               <el-form-item label="风险预测">
-                <el-select v-model="form.projRisk">
+                <el-select v-model="form.riskProfile">
                   <el-option
                     label="低"
                     value="low"
@@ -251,13 +249,13 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="收费报价">
-                <el-input v-model="form.fldSrvytInfo"></el-input>
+              <el-form-item label="评估报价收费">
+                <el-input v-model="form.assemFeeQuote"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="商定收费">
-                <el-input v-model="form.fldSrvytInfo"></el-input>
+              <el-form-item label="评估值报价">
+                <el-input v-model="form.assemValueQuote"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -324,7 +322,7 @@
             </el-col>
             <el-col :span="6">
               <el-form-item
-                v-for="(item, index) in form.filedSrvy"
+                v-for="(item, index) in form.fieldSrvy"
                 :label="'现场勘查' + (index + 1)"
                 :key="index"
                 :rules="{
@@ -353,7 +351,8 @@
 </template>
 
 <script>
-import { addNewProject, getNewProjectNum, updateProject } from '@/api/index'
+import { createNewProject, editProject } from '@/api/index'
+import { getDetailProjInfo } from '@/api/index'
 export default {
   name: 'planform',
   data() {
@@ -364,21 +363,29 @@ export default {
         projName: '',
         projContact: '',
         projDate: '',
+        newOldType: '',
         arrgType: '',
-        assemScope: '',
+        projDegree: '',
+        baseDate: '',
         assemGoal: '',
         clientName: '',
+        projReferer: '',
+        supInstruction: '',
+        projRefererContactInfo: '',
+        projScope: '',
         clientContact: '',
+        fldSrvySchedule: '',
         clientContactInfo: '',
+        assemFeeQuote: '',
+        assemValueQuote:'',
         projLeader: '',
-        projProRev: '',
         projAsst: [{ value: '' }],
         projProReviewer: [{ value: '' }],
-        projRisk: '',
-        filedSrvy: [{ value: '' }],
-        planDay: 1,
+        riskProfile: '',
+        fieldSrvy: [{ value: '' }],
+        compSchedule: 2,
         projReviewer: [{ value: '' }],
-        value: []
+        lendingBank: []
       },
       bankOptions: [{
         value: 'zhongguoyinhang',
@@ -411,34 +418,34 @@ export default {
       proTypeList: [
         {
           label: '房地产',
-          value: '101'
+          value: '1010'
         }, {
           label: '资产',
-          value: '102'
+          value: '1020'
         }, {
           label: '土地',
-          value: '103'
+          value: '1030'
         }, {
           label: '咨询',
-          value: '104'
+          value: '1040'
         }, {
           label: 'ppp',
-          value: '105'
+          value: '1050'
         }, {
           label: '会计',
-          value: '106'
+          value: '1060'
         }, {
           label: '外协',
-          value: '107'
+          value: '1070'
         }, {
           label: '政策修订',
-          value: '108'
+          value: '1080'
         }, {
           label: '绩效',
-          value: '109'
+          value: '1090'
         }, {
           label: '其他',
-          value: '110'
+          value: '1100'
         }
       ]
     };
@@ -446,15 +453,115 @@ export default {
   created() {
     console.log('query:', this.$route.query.data)
     if (this.$route.query.data == undefined) {
-      console.log(2)
       this.isEdit = false
+      this.form.projDate = this.getToday()
+      this.form.baseDate = this.getToday()
     } else {
-      console.log(1)
-      this.form = this.$route.query.data
+      this.projId = this.$route.query.data
       this.isEdit = true
+      this.getDetail()
     }
   },
   methods: {
+    formatDate(now) {
+      const time = new Date(now)
+      var year = time.getFullYear();  //取得4位数的年份
+      var month = time.getMonth() + 1;  //取得日期中的月份，其中0表示1月，11表示12月
+      var date = time.getDate();      //返回日期月份中的天数（1到31）
+      var hour = time.getHours();     //返回日期中的小时数（0到23）
+      return year + "-" + month + "-" + date
+    },
+    getToday() {
+      var date = new Date();
+      var seperator1 = "-";
+      var year = date.getFullYear();
+      var month = date.getMonth() + 1;
+      var strDate = date.getDate();
+      if (month >= 1 && month <= 9) {
+          month = "0" + month;
+      }
+      if (strDate >= 0 && strDate <= 9) {
+          strDate = "0" + strDate;
+      }
+      var currentdate = year + seperator1 + month + seperator1 + strDate;
+      return currentdate;
+    },
+    getDetail() {
+      getDetailProjInfo({ projId: this.projId }).then(res => {
+        console.log(res.data)
+        this.dealEditData(res.data)
+        // this.form = res.data
+      })
+    },
+    dealEditData(data) {
+      // 项目复核人
+      if(data.projReviewer !== ''){
+        if(data.projReviewer.indexOf(',') !== -1){
+          let midData = data.projReviewer.split(',')
+          let endData = []
+          for(let i=0;i<midData.length;i++){
+            endData.push({value: midData[i]})
+          }
+          data.projReviewer = endData
+        }else{
+          data.projReviewer = [{ value: data.projReviewer }]
+        }
+      }else{
+        data.projReviewer = [{ value: '' }]
+      }
+      //  专业复核人
+      if(data.projProReviewer !== ''){
+        if(data.projProReviewer.indexOf(',') !== -1){
+          let midData = data.projProReviewer.split(',')
+          let endData = []
+          for(let i=0;i<midData.length;i++){
+            endData.push({value: midData[i]})
+          }
+          data.projProReviewer = endData
+        }else{
+          data.projProReviewer = [{ value: data.projProReviewer }]
+        }
+      }else{
+        data.projProReviewer = [{ value: '' }]
+      }
+      // 项目助理
+      if(data.projAsst !== ''){
+        if(data.projAsst.indexOf(',') !== -1){
+          let midData = data.projAsst.split(',')
+          let endData = []
+          for(let i=0;i<midData.length;i++){
+            endData.push({value: midData[i]})
+          }
+          data.projAsst = endData
+        }else{
+          data.projAsst = [{ value: data.projAsst }]
+        }
+      }else{
+        data.projAsst = [{ value: '' }]
+      }
+      // 现场勘察
+      if(data.fieldSrvy !== ''){
+        if(data.fieldSrvy.indexOf(',') !== -1){
+          let midData = data.fieldSrvy.split(',')
+          let endData = []
+          for(let i=0;i<midData.length;i++){
+            endData.push({value: midData[i]})
+          }
+          data.fieldSrvy = endData
+        }else{
+          data.fieldSrvy = [{ value: data.fieldSrvy }]
+        }
+      }else{
+        data.fieldSrvy = [{ value: '' }]
+      }
+      // this.form.projDate = this.formatDate(this.form.projDate)
+      console.log('1111',data.projDate)
+      console.log('11',this.formatDate(data.projDate))
+      data.projDate = this.formatDate(data.projDate)
+      data.baseDate = this.formatDate(data.baseDate)
+      data.fldSrvySchedule = this.formatDate(data.fldSrvySchedule)
+      this.form = data
+    },
     addDomain(type) {
       if(type == 1){
         this.form.projReviewer.push({
@@ -469,7 +576,7 @@ export default {
           value: ''
         });
       }else if(type == 4){
-        this.form.filedSrvy.push({
+        this.form.fieldSrvy.push({
           value: ''
         });
       }
@@ -477,43 +584,86 @@ export default {
     removeDomain(index) {
       this.form.projReviewer.splice(index, 1)
     },
-    getNewProjectNum() {
-      getNewProjectNum({ projType: this.form.projType }).then(res => {
-        console.log('>>>res', res)
-        this.form.projId = res.data.projId
-        this.form.projNum = res.data.projNum
-      }).catch(err => {
-        console.log('>>>err', err)
+    onSubmit() {
+      console.log(this.form)
+      this.$refs.form.validate(valid => {
+        this.transformPeop().then(res => {
+          console.log('this.form', this.form)
+          if (this.isEdit) {
+            editProject(this.form).then(res => {
+              console.log('add>>>res', res)
+              this.$message.success('提交成功！');
+              this.goBack()
+            }).catch(err => {
+              console.log('add>>>err', err)
+            })
+          } else {
+            createNewProject(this.form).then(res => {
+              console.log('add>>>res', res)
+              this.$message.success('提交成功！');
+              this.goBack()
+            }).catch(err => {
+              console.log('add>>>err', err)
+            })
+          }
+        })
       })
     },
-    onSubmit() {
-      this.$refs.form.validate(valid => {
-          if (this.isEdit) {
-          updateProject(this.form).then(res => {
-            console.log('add>>>res', res)
-            this.$message.success('提交成功！');
-            this.goBack()
-          }).catch(err => {
-            console.log('add>>>err', err)
-          })
-        } else {
-          addNewProject(this.form).then(res => {
-            console.log('add>>>res', res)
-            this.$message.success('提交成功！');
-            this.goBack()
-          }).catch(err => {
-            console.log('add>>>err', err)
-          })
+    transformPeop() {
+      var that = this
+      return new Promise(function(resolve, reject) {
+        //  银行
+        let lendingBankNew = ''
+        if(that.form.lendingBank.length){
+          lendingBankNew = that.form.lendingBank.pop()
+          that.form.lendingBank = lendingBankNew
         }
+        //  项目复核人
+        let projReviewer = that.form.projReviewer
+        let projReviewerNew = ''
+        for(let i = 0;i<projReviewer.length;i++){
+          if(projReviewer[i].value){
+            projReviewerNew = projReviewerNew + projReviewer[i].value + ','
+          }
+        }
+        console.log('projReviewerNew', projReviewerNew.substr(0, projReviewerNew.length - 1))
+        that.form.projReviewer = projReviewerNew.substr(0, projReviewerNew.length - 1)
+        //  专业复核人
+        let projProReviewer = that.form.projProReviewer
+        let projProReviewerNew = ''
+        for(let i = 0;i<projProReviewer.length;i++){
+          if(projProReviewer[i].value){
+            projProReviewerNew = projProReviewerNew + projProReviewer[i].value + ','
+          }
+        }
+        console.log('projProReviewerNew', projProReviewerNew.substr(0, projProReviewerNew.length - 1))
+        that.form.projProReviewer = projProReviewerNew.substr(0, projProReviewerNew.length - 1)
+        // 项目助理
+        let projAsst = that.form.projAsst
+        let projAsstNew = ''
+        for(let i = 0;i<projAsst.length;i++){
+          if(projAsst[i].value){
+            projAsstNew = projAsstNew + projAsst[i].value + ','
+          }
+        }
+        console.log('projAsstNew', projAsstNew.substr(0, projAsstNew.length - 1))
+        that.form.projAsst = projAsstNew.substr(0, projAsstNew.length - 1)
+        // 现场勘察
+        let fieldSrvy = that.form.fieldSrvy
+        let fieldSrvyNew = ''
+        for(let i = 0;i<fieldSrvy.length;i++){
+          if(fieldSrvy[i].value){
+            fieldSrvyNew = fieldSrvyNew + fieldSrvy[i].value + ','
+          }
+        }
+        console.log('fieldSrvyNew', fieldSrvyNew.substr(0, fieldSrvyNew.length - 1))
+        that.form.fieldSrvy = fieldSrvyNew.substr(0, fieldSrvyNew.length - 1)
+        resolve(1)
       })
     },
     goBack() {
       this.$router.push('/plan')
-    },
-    planDayChange(value) {
-      console.log(value)
     }
-
   }
 };
 </script>

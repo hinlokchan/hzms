@@ -36,7 +36,7 @@
           </el-col> -->
           <el-col :span="2.5">
             <el-input
-              v-model="searchData.projNum"
+              v-model="searchData.reportNum"
               placeholder="初、正评号"
               size="medium"
             ></el-input>
@@ -50,7 +50,7 @@
           </el-col>
           <el-col :span="2.5">
             <el-input
-              v-model="searchData.assemScope"
+              v-model="searchData.projScope"
               placeholder="项目范围"
               size="medium"
             ></el-input>
@@ -64,7 +64,7 @@
           </el-col>
           <el-col :span="2.5">
             <el-input
-              v-model="searchData.clientContact"
+              v-model="searchData.projMember"
               placeholder="项目成员"
               size="medium"
             ></el-input>
@@ -92,22 +92,21 @@
               class="demo-table-expand"
             >
               <el-form-item label="项目类型">
-                <span>{{ props.row.typeName }}</span>
+                <div v-for="item in proTypeList" :key="item.value">
+                  <span v-if="item.value == props.row.projType">{{ item.label }}</span>
+                </div>
               </el-form-item>
               <el-form-item label="项目负责人">
                 <span>{{ props.row.projLeader }}</span>
               </el-form-item>
               <el-form-item label="项目复核人">
-                <span>{{ props.row.projRev }}</span>
+                <span>{{ props.row.projReviewer }}</span>
               </el-form-item>
               <el-form-item label="专业复核人">
-                <span>{{ props.row.projProRev }}</span>
+                <span>{{ props.row.projProReviewer }}</span>
               </el-form-item>
               <el-form-item label="项目助理">
                 <span>{{ props.row.projAsst }}</span>
-              </el-form-item>
-              <el-form-item label="现场勘查">
-                <span>{{ props.row.projSrvy }}</span>
               </el-form-item>
             </el-form>
           </template>
@@ -149,7 +148,7 @@
           label="评估项目名称"
         ></el-table-column>
         <el-table-column
-          prop="assemScope"
+          prop="projScope"
           label="评估项目范围"
         ></el-table-column>
         <el-table-column
@@ -225,42 +224,38 @@ export default {
       },
       proTypeList: [
         {
-          label: '全部',
-          value: 'all'
-        },
-        {
           label: '房地产',
-          value: '101'
+          value: '1010'
         }, {
           label: '资产',
-          value: '102'
+          value: '1020'
         }, {
           label: '土地',
-          value: '103'
+          value: '1030'
         }, {
           label: '咨询',
-          value: '104'
+          value: '1040'
         }, {
           label: 'ppp',
-          value: '105'
+          value: '1050'
         }, {
           label: '会计',
-          value: '106'
+          value: '1060'
         }, {
           label: '外协',
-          value: '107'
+          value: '1070'
         }, {
           label: '政策修订',
-          value: '108'
+          value: '1080'
         }, {
           label: '绩效',
-          value: '109'
+          value: '1090'
         }, {
           label: '其他',
-          value: '110'
+          value: '1100'
         }
       ],
-      searchData: { projNum: '', projName: '', assemScope: '', clientName: '', clientContact: '' },
+      searchData: { reportNum: '', projName: '', projScope: '', clientName: '', projMember: '' },
       tableData: [],
       editVisible: false,
       pageTotal: 0,
@@ -328,7 +323,7 @@ export default {
     //编辑操作
     handleEdit(index) {
       console.log('编辑项目事件', index);
-      this.$router.push({ path: '/planform', query: { data: this.tableData[index] } })
+      this.$router.push({ path: '/planform', query: { data: this.tableData[index].projId } })
     },
     //查看操作
     handleCheck(index) {

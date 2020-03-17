@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Loading } from 'element-ui'
 import {
     Message,
     MessageBox
@@ -10,8 +11,21 @@ const service = axios.create({
     timeout: 5000
 });
 
+let loading
+function startLoading() {
+  loading = Loading.service({
+    lock: true,
+    text: '拼命加载中...',
+    background: 'rgba(0,0,0,.7)'
+  })
+}
+function endLoading() {
+    loading.close()
+}
+
 service.interceptors.request.use(
     config => {
+        startLoading()
         return config;
     },
     error => {
@@ -23,6 +37,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
     response => {
         if (response.data.statusCode === '200') {
+            endLoading()
             return Promise.resolve(response.data)
         } else if (response.data.statusCode === '4003') {
             localStorage.removeItem('staffName')
@@ -38,6 +53,7 @@ service.interceptors.response.use(
             })
             // return Promise.reject(response.data);
         } else {
+            endLoading()
             return Promise.reject(response.data);
         }
     },

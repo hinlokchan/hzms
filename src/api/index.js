@@ -48,7 +48,7 @@ export function getDetailProjInfo(data) {
 
 export function searchProject(data) {
   return request({
-    url: `${ProManageAPIServer}project/searchProject`,
+    url: `${ProManageAPIServer}project/search`,
     headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},
     method: 'post',
     data: qs.stringify(data)
@@ -64,27 +64,18 @@ export function delProject(data) {
   })
 }
 
-export function addNewProject(data) {
+export function createNewProject(data) {
   return request({
-    url: `${ProManageAPIServer}project/add/addNewProject`,
+    url: `${ProManageAPIServer}project/createNewProject`,
     headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},
     method: 'post',
     data: qs.stringify(data)
   })
 }
 
-export function updateProject(data) {
+export function editProject(data) {
   return request({
-    url: `${ProManageAPIServer}project/update/updateProject`,
-    headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},
-    method: 'post',
-    data: qs.stringify(data)
-  })
-}
-
-export function getNewProjectNum(data) {
-  return request({
-    url: `${ProManageAPIServer}project/add/getNewProjectNum`,
+    url: `${ProManageAPIServer}project/editProject`,
     headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},
     method: 'post',
     data: qs.stringify(data)
