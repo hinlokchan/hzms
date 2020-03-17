@@ -613,10 +613,12 @@ export default {
       var that = this
       return new Promise(function(resolve, reject) {
         //  银行
-        let lendingBankNew = ''
-        if(that.form.lendingBank.length){
-          lendingBankNew = that.form.lendingBank.pop()
-          that.form.lendingBank = lendingBankNew
+        if(!that.isEdit){
+          let lendingBankNew = ''
+          if(that.form.lendingBank.length){
+            lendingBankNew = that.form.lendingBank.pop()
+            that.form.lendingBank = lendingBankNew
+          }
         }
         //  项目复核人
         let projReviewer = that.form.projReviewer
