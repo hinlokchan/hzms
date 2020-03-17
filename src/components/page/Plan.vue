@@ -278,7 +278,6 @@ export default {
     this.getData();
   },
   methods: {
-    // 获取 easy-mock 的模拟数据
     getData() {
       getAllAbstractProject()
         .then(res => {
@@ -336,8 +335,8 @@ export default {
     },
     //查看操作
     handleCheck(index) {
-      console.log('查看项目详情事件', index);
-      //this.$router.push({ path: '/plancheck', query: { data: this.tableData[index] } })
+      console.log('查看项目详情事件', this.tableData[index].projId);
+      this.$router.push({ path: '/projcheck', query: { data: this.tableData[index].projId } })
     },
     // 删除操作
     handleDelete(index, row) {

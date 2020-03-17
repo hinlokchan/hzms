@@ -19,133 +19,133 @@
               <div class="projTitle">计划编号</div>
             </el-col>
             <el-col :span="6">
-              <div class="projContent">房202003001</div>
+              <div class="projContent">{{detailData.projNum}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">初评号</div>
             </el-col>
             <el-col :span="6">
-              <div class="projContent">[2020]F03001</div>
+              <div class="projContent">{{detailData.paNum}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">正评号</div>
             </el-col>
             <el-col :span="6">
-              <div class="projContent">[2020]FG03001</div>
+              <div class="projContent">{{detailData.faNUm}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">项目类型</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent">房地产</div>
+              <div class="projContent">{{detailData.projType}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">安排/轮序</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent">安排项目</div>
+              <div class="projContent">{{detailData.arrgType}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">新/重评项目</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent">新项目</div>
+              <div class="projContent">{{detailData.newOldType}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">紧急程度</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent">正常</div>
+              <div class="projContent">{{detailData.projDegree}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">项目名称</div>
             </el-col>
             <el-col :span="10">
-              <div class="projContent">东湖花园九区</div>
+              <div class="projContent">{{detailData.projName}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">项目范围</div>
             </el-col>
             <el-col :span="10">
-              <div class="projContent">惠州东平</div>
+              <div class="projContent">{{detailData.projScope}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">评估目的</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent">抵押</div>
+              <div class="projContent">{{detailData.assemGoal}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">编制时间</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent">2020-03-05</div>
+              <div class="projContent">{{formatDate(detailData.projDate)}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">基准日</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent">2020-03-05</div>
+              <div class="projContent">{{formatDate(detailData.baseDate)}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">计划现勘日</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent">2020-03-05</div>
+              <div class="projContent">{{formatDate(detailData.fldSrvySchedule)}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">委托方</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent">齐静豪</div>
+              <div class="projContent">{{detailData.clientName}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">权属银行</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent">招商银行</div>
+              <div class="projContent">{{detailData.lendingBank}}</div>
             </el-col>
             <el-col :span="4">
               <div class="projTitle">委托方联系人及联系方式</div>
             </el-col>
             <el-col :span="8">
-              <div class="projContent">齐静豪 13309098080</div>
+              <div class="projContent">{{detailData.clientContact}}{{detailData.clientContactInfo}}</div>
             </el-col>
             <el-col :span="4">
               <div class="projTitle">引荐人及联系方式</div>
             </el-col>
             <el-col :span="8">
-              <div class="projContent">齐静豪 13309098080</div>
+              <div class="projContent">{{detailData.projReferer}}{{detailData.projRefererInfo}}</div>
             </el-col>
             <el-col :span="4">
               <div class="projTitle">现勘联系人及联系方式</div>
             </el-col>
             <el-col :span="8">
-              <div class="projContent">齐静豪 13309098080</div>
+              <div class="projContent">{{detailData.fldSvryContact}}{{detailData.fldSvryContactInfo}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">接洽人</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent">李家乐</div>
+              <div class="projContent">{{detailData.projContact}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">风险预测</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent">中等</div>
+              <div class="projContent">{{detailData.riskProfile}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">评估值报价</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent">1000</div>
+              <div class="projContent">{{detailData.assemValueQuote}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">评估收费报价</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent">3000</div>
+              <div class="projContent">{{detailData.assemFeeQuote}}</div>
             </el-col>
           </el-row>
           <el-row>
@@ -161,7 +161,7 @@
             </el-col>
             <el-col :span="18">
               <el-steps
-                :active="2"
+                :active="1"
                 simple
               >
                 <el-step
@@ -196,68 +196,68 @@
                 <div class="projTitle">项目负责人</div>
               </el-col>
               <el-col :span="9">
-                <div class="projContent">张小龙</div>
+                <div class="projContent">{{detailData.projLeader}}</div>
               </el-col>
             </el-row>
             <el-col :span="3">
               <div class="projTitle">项目复核人</div>
             </el-col>
             <el-col :span="9">
-              <div class="projContent">张小龙 陈俊雄</div>
+              <div class="projContent">{{detailData.projReviewer}}</div>
             </el-col>
             <el-col :span="3">
               <div class="projTitle">专业复核人</div>
             </el-col>
             <el-col :span="9">
-              <div class="projContent">张小龙 陈俊雄</div>
+              <div class="projContent">{{detailData.projProReviewer}}</div>
             </el-col>
             <el-col :span="3">
               <div class="projTitle">现勘调查人员</div>
             </el-col>
             <el-col :span="9">
-              <div class="projContent">张小龙 陈俊雄</div>
+              <div class="projContent">{{detailData.fieldSrvy}}</div>
             </el-col>
             <el-col :span="3">
               <div class="projTitle">资料核查验证人员</div>
             </el-col>
             <el-col :span="9">
-              <div class="projContent">张小龙 陈俊雄</div>
+              <div class="projContent">{{detailData.infoVerification}}</div>
             </el-col>
             <el-col :span="3">
               <div class="projTitle">市场询价调查人员</div>
             </el-col>
             <el-col :span="9">
-              <div class="projContent">张小龙 陈俊雄</div>
+              <div class="projContent">{{detailData.marketEnquiry}}</div>
             </el-col>
             <el-col :span="3">
               <div class="projTitle">助理</div>
             </el-col>
             <el-col :span="9">
-              <div class="projContent">张小龙 陈俊雄</div>
+              <div class="projContent">{{detailData.projAsst}}</div>
             </el-col>
             <el-col :span="3">
               <div class="projTitle">技术说明拟稿人</div>
             </el-col>
             <el-col :span="9">
-              <div class="projContent">张小龙 陈俊雄</div>
+              <div class="projContent">{{detailData.techExpDrafter}}</div>
             </el-col>
             <el-col :span="3">
               <div class="projTitle">外聘专家</div>
             </el-col>
             <el-col :span="9">
-              <div class="projContent">张小龙 陈俊雄</div>
+              <div class="projContent">{{detailData.externalExpert}}</div>
             </el-col>
             <el-col :span="3">
               <div class="projTitle">报告拟稿人</div>
             </el-col>
             <el-col :span="9">
-              <div class="projContent">张小龙 陈俊雄</div>
+              <div class="projContent">{{detailData.reportDrafter}}</div>
             </el-col>
             <el-col :span="3">
               <div class="projTitle">指导员</div>
             </el-col>
             <el-col :span="9">
-              <div class="projContent">张小龙 陈俊雄</div>
+              <div class="projContent">{{detailData.instructor}}</div>
             </el-col>
           </el-row>
         </div>
@@ -268,22 +268,38 @@
 </template>
 
 <script>
-import { getAllProject } from '@/api/index'
+import { getDetailProjInfo } from '@/api/index'
 export default {
   name: 'projcheck',
   data() {
     return {
-
+      projId: '',
+      detailData: []
     }
   },
   created() {
-
+    console.log('11', this.$route.query.data)
+    this.projId = this.$route.query.data
+    this.getDetail()
   },
   mounted() {
 
   },
   methods: {
-
+    getDetail() {
+      getDetailProjInfo({ projId: this.projId }).then(res => {
+        console.log(res.data)
+        this.detailData = res.data
+      })
+    },
+    formatDate(now) {
+      const time = new Date(now)
+      var year = time.getFullYear();  //取得4位数的年份
+      var month = time.getMonth() + 1;  //取得日期中的月份，其中0表示1月，11表示12月
+      var date = time.getDate();      //返回日期月份中的天数（1到31）
+      var hour = time.getHours();     //返回日期中的小时数（0到23）
+      return year + "-" + month + "-" + date
+    },
   }
 }
 </script>
