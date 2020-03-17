@@ -333,7 +333,7 @@ export default {
       console.log('编辑项目事件', index);
       this.$router.push({ path: '/planform', query: { data: this.tableData[index] } })
     },
-    //查看操作
+    //查看详情操作
     handleCheck(index) {
       console.log('查看项目详情事件', this.tableData[index].projId);
       this.$router.push({ path: '/projcheck', query: { data: this.tableData[index].projId } })
