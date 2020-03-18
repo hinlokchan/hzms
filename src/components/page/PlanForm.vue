@@ -428,14 +428,26 @@ export default {
           label: '土地',
           value: '1030'
         }, {
-          label: '咨询',
-          value: '1040'
+          label: '房地产咨询',
+          value: '1041'
         }, {
-          label: 'ppp',
+          label: '资产咨询',
+          value: '1042'
+        }, {
+          label: '土地咨询',
+          value: '1043'
+        }, {
+          label: 'PPP',
           value: '1050'
         }, {
-          label: '会计',
-          value: '1060'
+          label: '房地产复审',
+          value: '1061'
+        }, {
+          label: '资产复审',
+          value: '1062'
+        }, {
+          label: '土地复审',
+          value: '1063'
         }, {
           label: '外协',
           value: '1070'
@@ -557,8 +569,7 @@ export default {
         data.fieldSrvy = [{ value: '' }]
       }
       // this.form.projDate = this.formatDate(this.form.projDate)
-      console.log('1111',data.projDate)
-      console.log('11',this.formatDate(data.projDate))
+      data.projType = data.projType + ''
       data.projDate = this.formatDate(data.projDate)
       data.baseDate = this.formatDate(data.baseDate)
       data.fldSrvySchedule = this.formatDate(data.fldSrvySchedule)

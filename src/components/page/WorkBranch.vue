@@ -105,13 +105,13 @@
         <el-table-column
           prop="projName"
           label="项目名称"
-          width="250"
+          width="200"
         >
         </el-table-column>
         <el-table-column
           prop="projScope"
           label="项目范围"
-          width="200"
+          width="160"
         >
         </el-table-column>
         <el-table-column
@@ -152,6 +152,7 @@
               icon="el-icon-s-operation"
               @click="changeNumVisible = true;"
               size="medium"
+              v-if="scope.row.reportNum.zph !== ''"
             >更改报告号类型</el-button>
             <el-button
               type="text"
@@ -168,38 +169,10 @@
         :visible.sync="getNumVisible"
       >
         <div>
-          <div>当前项目名:</div>
-          <div>当前项目初评号:</div>
-          <div>当前项目正评号:</div>
-        </div>
-        <el-form :model="creatReportNum">
-          <el-form-item
-            label="取号类型"
-            label-width="200px"
-          >
-            <el-radio
-              v-model="reportNumType"
-              label="pa"
-            >初评号</el-radio>
-            <el-radio
-              v-model="reportNumType"
-              label="fa"
-            >正评号</el-radio>
-            <el-radio
-              v-model="reportNumType"
-              label="ra"
-            >回函号</el-radio>
-          </el-form-item>
-        </el-form>
-        <div
-          slot="footer"
-          class="dialog-footer"
-        >
-          <el-button @click="getNumVisible = false">取 消</el-button>
-          <el-button
-            type="primary"
-            @click="creatReportNum"
-          >取 号</el-button>
+          <div>当前项目名：{{getNumData.projName}}</div>
+          <div v-if="getNumType == 1">当前项目初评号： <span v-if="getNumData.cph !== ''">{{getNumData.cph}}</span><span v-else><el-button @click="getNewNum(1)">取号</el-button></span></div>
+          <div>当前项目正评号： <span v-if="getNumData.zph !== ''">{{getNumData.zph}}</span><span v-else><el-button @click="getNewNum(2)">取号</el-button></span></div>
+          <div v-if="getNumType == 1">当前项目咨询号： <span v-if="getNumData.zxh !== ''">{{getNumData.zxh}}</span><span v-else><el-button @click="getNewNum(3)">取号</el-button></span></div>
         </div>
       </el-dialog>
       <!-- 更改报告号 -->
@@ -251,7 +224,7 @@
 </template>
 
 <script>
-import { getAllAbstractProject, searchMyProject, getReportNum } from '@/api/index'
+import { getAllAbstractProject, searchMyProject, getReportNum, createReportNum } from '@/api/index'
 export default {
   name: 'workbranch',
   data() {
@@ -274,7 +247,9 @@ export default {
       changeNumVisible: false,
       arrMemberVisible: false,
       reportNumType: 'pa',
-      date1: ''
+      date1: '',
+      getNumType: 0,
+      getNumData: {}
     }
   },
   created() {
@@ -283,6 +258,21 @@ export default {
   mounted() {
   },
   methods: {
+    getNewNum(type) {
+      console.log('>>>',this.getNumData.projType)
+      createReportNum({ projId: this.getNumData.projId, reportNumType: this.getNumData.projType + type }).then(res => {
+        console.log(res.data.reportNum)
+        if(type == 1){
+          this.getNumData.cph = res.data.reportNum
+        }else if(type == 2){
+          this.getNumData.zph = res.data.reportNum
+        }else{
+          this.getNumData.zxh = res.data.reportNum
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+    },
     getData() {
       searchMyProject()
         .then(res => {
@@ -301,14 +291,26 @@ export default {
 
     },
     getNum(num) {
-      console.log(num.row.projId)
-      getReportNum({ projId: num.row.projId })
-        .then(res => {
-          console.log(res)
-        })
-        .catch(err => {
-          console.log(res)
-        })
+      console.log(num.row)
+      this.getNumVisible = true
+      this.getNumData = num.row.reportNum
+      this.getNumData.projType = num.row.projType
+      this.getNumData.projId = num.row.projId
+      this.getNumData.projName = num.row.projName
+      console.log('this.getNumData>>>', this.getNumData)
+      if (num.row.projType == 1010 || num.row.projType == 1020 || num.row.projType == 1030) {
+        this.getNumType = 1
+      } else {
+        this.getNumType = 2
+      }
+      // this.
+      // getReportNum({ projId: num.row.projId })
+      // .then(res => {
+      //   console.log(res)
+      // })
+      // .catch(err => {
+      //   console.log(res)
+      // })
     },
     formatDate(now) {
       const time = new Date(now.projDate)

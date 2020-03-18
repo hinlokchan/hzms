@@ -4,21 +4,18 @@
       <div class="crumbs">
         <el-breadcrumb separator="/">
           <el-breadcrumb-item>
-            <span>项目管理</span>
+            <span style="vertical-align: middle">项目管理</span>
+            <el-button
+              type="primary"
+              icon="el-icon-plus"
+              style="height:auto;padding: 0px 8px 7px 8px;margin-left:15px"
+              @click="handleAdd"
+            ><span style="font-size:14px;color:#fff;">新增项目计划</span></el-button>
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
       <div class="handle-box">
         <el-row :gutter="20">
-          <el-col :span="3">
-            <el-button
-              type="primary"
-              icon="el-icon-plus"
-              class="handle-add mr10"
-              size="medium"
-              @click="handleAdd"
-            >新增项目计划</el-button>
-          </el-col>
           <!-- <el-col :span="2.5">
             <el-select
               v-model="searchData.searchType"
@@ -241,14 +238,26 @@ export default {
           label: '土地',
           value: '1030'
         }, {
-          label: '咨询',
-          value: '1040'
+          label: '房地产咨询',
+          value: '1041'
         }, {
-          label: 'ppp',
+          label: '资产咨询',
+          value: '1042'
+        }, {
+          label: '土地咨询',
+          value: '1043'
+        }, {
+          label: 'PPP',
           value: '1050'
         }, {
-          label: '会计',
-          value: '1060'
+          label: '房地产复审',
+          value: '1061'
+        }, {
+          label: '资产复审',
+          value: '1062'
+        }, {
+          label: '土地复审',
+          value: '1063'
         }, {
           label: '外协',
           value: '1070'
@@ -263,7 +272,6 @@ export default {
           value: '1100'
         }
       ],
-
       searchData: { reportNum: '', projName: '', projScope: '', clientName: '', projMember: '' },
       tableData: [],
       editVisible: false,
@@ -296,7 +304,13 @@ export default {
       // });
     },
     searchProjInfo() {
-      searchProject(this.searchData).then(res => {
+      let newArr={}
+      for(let j in this.searchData){
+        if(this.searchData[j] !== ''){
+          newArr[j] = this.searchData[j]
+        }
+      }
+      searchProject(newArr).then(res => {
         console.log(res)
         this.tableData = res.data
         this.pageTotal = res.data.length

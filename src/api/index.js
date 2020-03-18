@@ -108,3 +108,12 @@ export function getReportNum(data) {
     data: qs.stringify(data)
   })
 }
+
+export function createReportNum(data) {
+  return request({
+    url: `${ProManageAPIServer}project/createReportNum`,
+    headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
