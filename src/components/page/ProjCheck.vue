@@ -135,7 +135,7 @@
             <el-col :span="4">
               <div class="projContent">
                 <span v-for="item in fengxian" :key="item">
-                  <span v-if="detailData.riskProfile == fengxian.value">{{fengxian.label}}</span>
+                  <span v-if="detailData.riskProfile == item.value">{{item.label}}</span>
                 </span>
               </div>
             </el-col>

@@ -79,7 +79,7 @@
       </div>
       <!-- table -->
       <el-table
-        :data="tableData"
+        :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)"
         stripe
         class="table"
         ref="multipleTable"
@@ -120,10 +120,13 @@
           align="center"
         >
           <template slot-scope="props">
-          <el-tag
-            type="success"
-            effect="dark"
-          >{{props.row.projDegree}}</el-tag>
+            <el-tag
+              type="success"
+              effect="dark"
+            >
+              <span v-if="props.row.projDegree == 1001">正常</span>
+              <span v-else>紧急</span>
+            </el-tag>
           </template>
         </el-table-column>
         <el-table-column
@@ -205,9 +208,9 @@
         ></el-pagination> -->
         <el-pagination
           :total="pageTotal"
-          :page.sync="query.pagenum"
-          :limit.sync="query.pagecount"
-          @pagination="changePage"
+          :current-page="currentPage"
+          :page-size="pageSize"
+          @current-change="changePage"
         />
       </div>
     </div>
@@ -222,9 +225,11 @@ export default {
   data() {
     return {
       query: {
-        pagenum: 1,
+        startFrom: 1,
         pagecount: 10
       },
+      currentPage: 1, // 当前页码
+      pageSize: 10, // 每页的数据条数
       proTypeList: [
         {
           label: '房地产',
@@ -258,6 +263,7 @@ export default {
           value: '1100'
         }
       ],
+
       searchData: { reportNum: '', projName: '', projScope: '', clientName: '', projMember: '' },
       tableData: [],
       editVisible: false,
@@ -298,10 +304,9 @@ export default {
         console.log(err)
       })
     },
-    changePage(data) {
-      this.query.pagenum = data.page
-      this.query.pagecount = data.limit
-      this.getData()
+    changePage(val) {
+      console.log(val)
+      this.currentPage = val;
     },
     searchChange() {
     },

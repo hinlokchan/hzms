@@ -80,9 +80,12 @@
         >
           <template slot-scope="props">
             <el-tag
-              :type="props.row.projDegree === '正常' ? 'success' : 'danger'"
+              :type="props.row.projDegree === '1001' ? 'success' : 'danger'"
               disable-transitions
-            >{{props.row.projDegree}}</el-tag>
+            >
+              <span v-if="props.row.projDegree == 1001">正常</span>
+              <span v-else>紧急</span>
+            </el-tag>
           </template>
         </el-table-column>
         <el-table-column

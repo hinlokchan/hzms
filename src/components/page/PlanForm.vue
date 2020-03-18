@@ -372,6 +372,8 @@ export default {
         projReferer: '',
         supInstruction: '',
         projRefererInfo: '',
+        fldSrvyContact: '',
+        fldSrvyContactInfo: '',
         projScope: '',
         clientContact: '',
         fldSrvySchedule: '',
