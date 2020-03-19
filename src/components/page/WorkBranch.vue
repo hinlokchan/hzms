@@ -168,11 +168,21 @@
         title="取号"
         :visible.sync="getNumVisible"
       >
+        <el-dialog
+          width="30%"
+          title="提示"
+          :visible.sync="innerVisible"
+          append-to-body>
+          <p style="text-align:center">点击确认进行取号</p>
+          <p style="text-align:center">咨询号需先与领导沟通后再取</p>
+          <el-button style="margin: 16px 0 0 40%" type="primary" @click="getNewNum">确认取号</el-button>
+        </el-dialog>
         <div>
           <div>当前项目名：{{getNumData.projName}}</div>
-          <div v-if="getNumType == 1">当前项目初评号： <span v-if="getNumData.cph !== ''">{{getNumData.cph}}</span><span v-else><el-button @click="getNewNum(1)">取号</el-button></span></div>
-          <div>当前项目正评号： <span v-if="getNumData.zph !== ''">{{getNumData.zph}}</span><span v-else><el-button @click="getNewNum(2)">取号</el-button></span></div>
-          <div v-if="getNumType == 1">当前项目咨询号： <span v-if="getNumData.zxh !== ''">{{getNumData.zxh}}</span><span v-else><el-button @click="getNewNum(3)">取号</el-button></span></div>
+          <div v-if="getNumType == 1">当前项目初评号： <span v-if="getNumData.cph !== ''">{{getNumData.cph}}</span><span v-else><el-button type="primary" @click="getNewNummid(1)">取号</el-button></span></div>
+          <div v-if="getNumType !== 3">当前项目正评号： <span v-if="getNumData.zph !== ''">{{getNumData.zph}}</span><span v-else><el-button type="primary" @click="getNewNummid(2)">取号</el-button></span></div>
+          <div v-if="getNumType == 3">当前项目咨询号： <span v-if="getNumData.zxh !== ''">{{getNumData.zxh}}</span><span v-else><el-button type="primary" @click="getNewNummid(3)">取号</el-button></span></div>
+          <div>当前项目回函号： <span v-if="getNumData.hhh !== ''">{{getNumData.hhh}}</span><span v-else><el-button type="primary" @click="getNewNummid(4)">取号</el-button></span></div>
         </div>
       </el-dialog>
       <!-- 更改报告号 -->
@@ -218,7 +228,6 @@
         </div>
       </el-dialog>
       <!-- 分配任务 -->
-
     </div>
   </div>
 </template>
@@ -245,7 +254,9 @@ export default {
       ],
       getNumVisible: false,
       changeNumVisible: false,
+      innerVisible: false,
       arrMemberVisible: false,
+      midNum: 0,
       reportNumType: 'pa',
       date1: '',
       getNumType: 0,
@@ -258,16 +269,40 @@ export default {
   mounted() {
   },
   methods: {
-    getNewNum(type) {
+    getNewNummid(num) {
+      this.midNum = num
+      this.innerVisible = true
+    },
+    getNewNum() {
+      this.innerVisible = false
+      let type = this.midNum
+      console.log('type',type)
       console.log('>>>',this.getNumData.projType)
-      createReportNum({ projId: this.getNumData.projId, reportNumType: this.getNumData.projType + type }).then(res => {
+      let reportNumType = ''
+      if(type == 4){
+        reportNumType = 1100
+      }else{
+        if(this.getNumData.projType == 1041){
+          reportNumType = 1013
+        }else if(this.getNumData.projType == 1042){
+          reportNumType = 1023
+        }else if(this.getNumData.projType == 1043){
+          reportNumType = 1033
+        }else{
+          reportNumType = this.getNumData.projType + type
+        }
+      }
+      console.log('reportNumType>>>', reportNumType)
+      createReportNum({ projId: this.getNumData.projId, reportNumType: reportNumType }).then(res => {
         console.log(res.data.reportNum)
         if(type == 1){
           this.getNumData.cph = res.data.reportNum
         }else if(type == 2){
           this.getNumData.zph = res.data.reportNum
-        }else{
+        }else if(type == 3){
           this.getNumData.zxh = res.data.reportNum
+        }else{
+          this.getNumData.hhh = res.data.reportNum
         }
       }).catch(err => {
         console.log(err)
@@ -300,6 +335,8 @@ export default {
       console.log('this.getNumData>>>', this.getNumData)
       if (num.row.projType == 1010 || num.row.projType == 1020 || num.row.projType == 1030) {
         this.getNumType = 1
+      } else if(num.row.projType == 1041 || num.row.projType == 1042 || num.row.projType == 1043){
+        this.getNumType = 3
       } else {
         this.getNumType = 2
       }
