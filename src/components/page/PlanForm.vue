@@ -282,7 +282,7 @@
                 }"
               >
               <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
-                <div class="flexBox"><el-input style="width:90%" v-model="item.value"></el-input><i class="el-icon-lx-roundclose" style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5" @click.prevent="removeDomain(index)"></i></div>
+                <div class="flexBox"><el-input style="width:90%" v-model="item.value"></el-input><i class="el-icon-lx-roundclose" style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5" @click.prevent="removeDomain(index, 1)"></i></div>
               </el-form-item>
               <el-form-item>
                 <i class="el-icon-lx-roundadd" style="font-size: 26px;color:#b5b5b5" @click="addDomain(1)"></i>
@@ -298,7 +298,7 @@
                 }"
               >
               <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
-                <div class="flexBox"><el-input style="width:90%" v-model="item.value"></el-input><i class="el-icon-lx-roundclose" style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5" @click.prevent="removeDomain(index)"></i></div>
+                <div class="flexBox"><el-input style="width:90%" v-model="item.value"></el-input><i class="el-icon-lx-roundclose" style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5" @click.prevent="removeDomain(index, 2)"></i></div>
               </el-form-item>
               <el-form-item>
                 <i class="el-icon-lx-roundadd" style="font-size: 26px;color:#b5b5b5" @click="addDomain(2)"></i>
@@ -314,7 +314,7 @@
                 }"
               >
               <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
-                <div class="flexBox"><el-input style="width:90%" v-model="item.value"></el-input><i class="el-icon-lx-roundclose" style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5" @click.prevent="removeDomain(index)"></i></div>
+                <div class="flexBox"><el-input style="width:90%" v-model="item.value"></el-input><i class="el-icon-lx-roundclose" style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5" @click.prevent="removeDomain(index, 3)"></i></div>
               </el-form-item>
               <el-form-item>
                 <i class="el-icon-lx-roundadd" style="font-size: 26px;color:#b5b5b5" @click="addDomain(3)"></i>
@@ -330,7 +330,7 @@
                 }"
               >
               <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
-                <div class="flexBox"><el-input style="width:90%" v-model="item.value"></el-input><i class="el-icon-lx-roundclose" style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5" @click.prevent="removeDomain(index)"></i></div>
+                <div class="flexBox"><el-input style="width:90%" v-model="item.value"></el-input><i class="el-icon-lx-roundclose" style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5" @click.prevent="removeDomain(index, 4)"></i></div>
               </el-form-item>
               <el-form-item>
                 <i class="el-icon-lx-roundadd" style="font-size: 26px;color:#b5b5b5" @click="addDomain(4)"></i>
@@ -594,8 +594,16 @@ export default {
         });
       }
     },
-    removeDomain(index) {
-      this.form.projReviewer.splice(index, 1)
+    removeDomain(index, type) {
+      if(type == 1){
+        this.form.projReviewer.splice(index, 1)
+      }else if(type == 2){
+        this.form.projProReviewer.splice(index, 1)
+      }else if(type == 3){
+        this.form.projAsst.splice(index, 1)
+      }else if(type == 4){
+        this.form.fieldSrvy.splice(index, 1)
+      }
     },
     onSubmit() {
       console.log(this.form)
