@@ -46,6 +46,11 @@ export default new Router({
                     meta: { title: '二维码生成' }
                 },
                 {
+                    path: '/usermanage',
+                    component: () => import(/* webpackChunkName: "usermanage" */ '../components/page/UserManage.vue'),
+                    meta: { title: '用户管理' }
+                },
+                {
                     path: '/icon',
                     component: () => import(/* webpackChunkName: "icon" */ '../components/page/Icon.vue'),
                     meta: { title: '自定义图标' }

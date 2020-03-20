@@ -240,24 +240,13 @@ export default {
     return {
       tableData: [],
       typeOptions: [
-        { value: '1010', label: '房地产' },
-        { value: '1020', label: '资产' },
-        { value: '1030', label: '土地' },
-        { value: '1040', label: '房地产咨询' },
-        { value: '1050', label: '资产咨询' },
-        { value: '1060', label: '土地咨询' },
-        { value: '1070', label: 'PPP' },
-        { value: '1080', label: 'f' },
-        { value: '1090', label: '土地' },
-        { value: '1100', label: '土地' },
-
+        
       ],
       getNumVisible: false,
       changeNumVisible: false,
       innerVisible: false,
       arrMemberVisible: false,
       midNum: 0,
-      reportNumType: 'pa',
       date1: '',
       getNumType: 0,
       getNumData: {}

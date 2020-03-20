@@ -117,3 +117,12 @@ export function createReportNum(data) {
     data: qs.stringify(data)
   })
 }
+
+export function getUserList(data) {
+  return request({
+    url: `${ProManageAPIServer}userManager/getUserList`,
+    headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}

@@ -29,6 +29,7 @@
         id="qrcode"
         ref="qrcode"
       ></div>
+			<div @click="downs()">下载图片</div>
     </el-dialog>
   </div>
 </template>
@@ -63,7 +64,10 @@ export default {
     },
     closeQRCode() {
       this.$ref.qrcode.innerHTML = ''
-    }
+		},
+		downs() {
+			
+		}
   }
 }
 </script>

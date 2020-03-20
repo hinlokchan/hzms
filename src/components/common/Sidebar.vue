@@ -93,6 +93,7 @@ export default {
                             title: '工作台'
                         },
                         {
+                            index: 'qrcode',
                             title: '报告二维码生成'
                         },
                         {
@@ -103,6 +104,11 @@ export default {
                 {
                     icon: "el-icon-data-analysis",
                     title: "统计管理"
+                },
+                {
+                    index: "usermanage",
+                    icon: "el-icon-user",
+                    title: "用户管理"
                 },
                 // {
                 //     icon: 'el-icon-lx-copy',

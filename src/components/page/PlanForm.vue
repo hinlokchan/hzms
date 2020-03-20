@@ -19,7 +19,7 @@
           label-width="125px"
           :rules="rules"
         >
-          <el-row :gutter="20">
+          <el-row>
             <el-col :span="6">
               <el-form-item
                 :span="6"
@@ -277,9 +277,6 @@
                 v-for="(item, index) in form.projReviewer"
                 :label="'项目复核人' + (index + 1)"
                 :key="index"
-                :rules="{
-                  required: true, message: '不能为空', trigger: 'blur'
-                }"
               >
               <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
                 <div class="flexBox"><el-input style="width:90%" v-model="item.value"></el-input><i class="el-icon-lx-roundclose" style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5" @click.prevent="removeDomain(index, 1)"></i></div>
@@ -293,9 +290,6 @@
                 v-for="(item, index) in form.projProReviewer"
                 :label="'专业复核人' + (index + 1)"
                 :key="index"
-                :rules="{
-                  required: true, message: '不能为空', trigger: 'blur'
-                }"
               >
               <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
                 <div class="flexBox"><el-input style="width:90%" v-model="item.value"></el-input><i class="el-icon-lx-roundclose" style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5" @click.prevent="removeDomain(index, 2)"></i></div>
@@ -309,9 +303,6 @@
                 v-for="(item, index) in form.projAsst"
                 :label="'项目助理' + (index + 1)"
                 :key="index"
-                :rules="{
-                  required: true, message: '不能为空', trigger: 'blur'
-                }"
               >
               <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
                 <div class="flexBox"><el-input style="width:90%" v-model="item.value"></el-input><i class="el-icon-lx-roundclose" style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5" @click.prevent="removeDomain(index, 3)"></i></div>
@@ -325,9 +316,6 @@
                 v-for="(item, index) in form.fieldSrvy"
                 :label="'现场勘查' + (index + 1)"
                 :key="index"
-                :rules="{
-                  required: true, message: '不能为空', trigger: 'blur'
-                }"
               >
               <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
                 <div class="flexBox"><el-input style="width:90%" v-model="item.value"></el-input><i class="el-icon-lx-roundclose" style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5" @click.prevent="removeDomain(index, 4)"></i></div>
@@ -695,7 +683,7 @@ export default {
 .form-item-title {
     width: 100px;
     text-align: center;
-    margin: 20px 0 20px 0;
+    margin: 10px 0 20px 0;
     border-left: solid 5px #409eff;
 }
 .flexBox{
