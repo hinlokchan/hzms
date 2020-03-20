@@ -1,8 +1,13 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import { isAuthenticated } from '@/api/index';
 
 Vue.use(Router);
-
+let role = localStorage.getItem('role')
+if(!role){
+    let role = localStorage.getItem('role')
+}
+console.log('role>>>>>>>', role)
 export default new Router({
     routes: [
         {

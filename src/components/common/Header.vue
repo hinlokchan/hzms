@@ -76,6 +76,7 @@ export default {
                     Cookies.remove('JSESSIONID')
                     localStorage.removeItem('staffId');
                     localStorage.removeItem('staffName');
+                    localStorage.removeItem('role');
                     this.$router.push('/login');
                 }).catch(err => {
                     this.$message.warning('退出登录失败')

@@ -50,8 +50,10 @@ export default {
                 if (valid) {
                     login({ staffId: parseInt(this.param.username), password: this.param.password }).then(res => {
                       this.$message.success('登录成功');
+                      console.log(res)
                       localStorage.setItem('staffId', res.data.staffId);
                       localStorage.setItem('staffName', res.data.staffName);
+                      localStorage.setItem('role', res.data.role);
                       this.$router.push('/');
                     }).catch(err => {
                       this.$message.warning('账号密码错误')

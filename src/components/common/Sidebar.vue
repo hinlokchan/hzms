@@ -10,7 +10,7 @@
             unique-opened
             router
         >
-            <template v-for="item in items">
+            <template v-for="item in roleItem">
                 <template v-if="item.subs">
                     <el-submenu :index="item.index" :key="item.index">
                         <template slot="title">
@@ -55,17 +55,13 @@ export default {
     data() {
         return {
             collapse: false,
-            items: [
+            roleItem: [],
+            items0: [
                 {
                     icon: 'el-icon-lx-home',
                     index: 'dashboard',
                     title: '系统首页'
                 },
-                // {
-                //     icon: 'el-icon-lx-cascades',
-                //     index: 'table',
-                //     title: '基础表格'
-                // },
                 {
                     icon: 'el-icon-lx-edit',
                     index: 'plan',
@@ -104,11 +100,6 @@ export default {
                     icon: "el-icon-data-analysis",
                     title: "统计管理"
                 },
-                // {
-                //     icon: 'el-icon-lx-copy',
-                //     index: 'tabs',
-                //     title: 'tab选项卡'
-                // },
                 {
                     icon: 'el-icon-lx-calendar',
                     index: '3',
@@ -142,52 +133,52 @@ export default {
                     icon: 'el-icon-lx-emoji',
                     index: 'icon',
                     title: '自定义图标'
-                }//,
-                // {
-                //     icon: 'el-icon-pie-chart',
-                //     index: 'charts',
-                //     title: 'schart图表'
-                // },
-                // {
-                //     icon: 'el-icon-rank',
-                //     index: '6',
-                //     title: '拖拽组件',
-                //     subs: [
-                //         {
-                //             index: 'drag',
-                //             title: '拖拽列表'
-                //         },
-                //         {
-                //             index: 'dialog',
-                //             title: '拖拽弹框'
-                //         }
-                //     ]
-                // },
-                // {
-                //     icon: 'el-icon-lx-global',
-                //     index: 'i18n',
-                //     title: '国际化功能'
-                // },
-                // {
-                //     icon: 'el-icon-lx-warn',
-                //     index: '7',
-                //     title: '错误处理',
-                //     subs: [
-                //         {
-                //             index: 'permission',
-                //             title: '权限测试'
-                //         },
-                //         {
-                //             index: '404',
-                //             title: '404页面'
-                //         }
-                //     ]
-                // },
-                // {
-                //     icon: 'el-icon-lx-redpacket_fill',
-                //     index: '/donate',
-                //     title: '支持作者'
-                // }
+                }
+            ],
+            items1: [
+                {
+                    icon: 'el-icon-lx-home',
+                    index: 'dashboard',
+                    title: '系统首页'
+                },
+                {
+                    icon: 'el-icon-lx-edit',
+                    index: 'plan',
+                    title: '项目管理',
+                    subs: [
+                        {
+                            index: 'plan',
+                            title: '查看项目'
+                        },
+                        {
+                            index: 'planform',
+                            title: '项目计划录入'
+                        }
+                    ]
+                },
+                {
+                    icon: 'el-icon-receiving',
+                    title: '我的项目',
+                    subs: [
+                        {
+                            title: '询价记录查询'
+                        },
+                        {
+                            index: 'workbranch',
+                            title: '工作台'
+                        },
+                        {
+                            title: '报告二维码生成'
+                        },
+                        {
+                            title: '正评登记'
+                        }
+                    ]
+                },
+                {
+                    icon: "el-icon-data-analysis",
+                    title: "统计管理"
+                }
             ]
         };
     },
@@ -197,7 +188,9 @@ export default {
         }
     },
     created() {
-        console.log('权限控制')
+        if(localStorage.getItem('role') == 0){
+            this.roleItem = this.items1
+        }
         // 通过 Event Bus 进行组件间通信，来折叠侧边栏
         bus.$on('collapse', msg => {
             this.collapse = msg;

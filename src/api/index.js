@@ -117,3 +117,12 @@ export function createReportNum(data) {
     data: qs.stringify(data)
   })
 }
+
+export function alterProjType(data) {
+  return request({
+    url: `${ProManageAPIServer}project/editProject/alterProjType`,
+    headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}

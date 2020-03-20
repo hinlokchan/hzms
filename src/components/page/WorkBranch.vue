@@ -56,10 +56,10 @@
       <div class="search">
         <el-row :gutter="20">
           <el-col :span="10">
-            <el-input placeholder="请输入您想搜索的内容"></el-input>
+            <el-input v-model="searchVal" placeholder="请输入您想搜索的内容"></el-input>
           </el-col>
           <el-col :span="3">
-            <el-button type="primary">搜 索</el-button>
+            <el-button @click="getData" type="primary">搜 索</el-button>
           </el-col>
         </el-row>
       </div>
@@ -150,10 +150,10 @@
             <el-button
               type="text"
               icon="el-icon-s-operation"
-              @click="changeNumVisible = true;"
+              @click="changeProjType(scope.row)"
               size="medium"
-              v-if="scope.row.reportNum.zph !== ''"
-            >更改报告号类型</el-button>
+              v-if="scope.row.projType == 1010 || scope.row.projType == 1020 || scope.row.projType == 1030 || scope.row.projType == 1041 || scope.row.projType == 1042 || scope.row.projType == 1043"
+            >更改项目类型</el-button>
             <el-button
               type="text"
               icon="el-icon-s-order"
@@ -187,7 +187,7 @@
       </el-dialog>
       <!-- 更改报告号 -->
       <el-dialog
-        title="更改报告号"
+        title="更改项目类型"
         :visible.sync="changeNumVisible"
       >
         <el-form>
@@ -196,7 +196,7 @@
             label-width="200"
           >
             <el-select
-              v-model="typeOptions.value"
+              v-model="changeType.toType"
               placeholder="请选择"
             >
               <el-option
@@ -224,7 +224,7 @@
           class="dialog-footer"
         >
           <el-button @click="changeNumVisible = false">取 消</el-button>
-          <el-button type="primary">确认更改</el-button>
+          <el-button @click="alterProjType" type="primary">确认更改</el-button>
         </div>
       </el-dialog>
       <!-- 分配任务 -->
@@ -233,7 +233,7 @@
 </template>
 
 <script>
-import { getAllAbstractProject, searchMyProject, getReportNum, createReportNum } from '@/api/index'
+import { getAllAbstractProject, searchMyProject, getReportNum, createReportNum, alterProjType } from '@/api/index'
 export default {
   name: 'workbranch',
   data() {
@@ -243,19 +243,19 @@ export default {
         { value: '1010', label: '房地产' },
         { value: '1020', label: '资产' },
         { value: '1030', label: '土地' },
-        { value: '1040', label: '房地产咨询' },
-        { value: '1050', label: '资产咨询' },
-        { value: '1060', label: '土地咨询' },
-        { value: '1070', label: 'PPP' },
-        { value: '1080', label: 'f' },
-        { value: '1090', label: '土地' },
-        { value: '1100', label: '土地' },
-
+        { value: '1041', label: '房地产咨询' },
+        { value: '1042', label: '资产咨询' },
+        { value: '1043', label: '土地咨询' }
       ],
       getNumVisible: false,
       changeNumVisible: false,
       innerVisible: false,
       arrMemberVisible: false,
+      changeType: {
+        projId: '',
+        toType: ''
+      },
+      searchVal: '',
       midNum: 0,
       reportNumType: 'pa',
       date1: '',
@@ -269,6 +269,32 @@ export default {
   mounted() {
   },
   methods: {
+    alterProjType() {
+      console.log('this.changeType', this.changeType)
+      if(this.changeType.toType == ''){
+        this.$message.info('请选择修改类型');
+      }else{
+        alterProjType(this.changeType).then(res => {
+          this.$message.success('修改成功');
+          this.changeNumVisible = false
+          this.getData();
+        }).catch(err => {
+          this.$message.error('修改失败');
+        })
+      }
+    },
+    changeProjType(data) {
+      console.log('data>>>', data)
+      this.changeType.projId = data.projId
+      this.changeNumVisible = true
+      let selOption = this.typeOptions
+      const index = selOption.findIndex((item, index, arr) => {
+        console.log('value>>>', item)
+        return item.value == data.projType
+      })
+      selOption.splice(index, 1)
+      this.typeOptions = selOption
+    },
     getNewNummid(num) {
       this.midNum = num
       this.innerVisible = true
@@ -309,7 +335,7 @@ export default {
       })
     },
     getData() {
-      searchMyProject()
+      searchMyProject({ projName: this.searchVal })
         .then(res => {
           console.log(res.data)
           this.tableData = res.data
