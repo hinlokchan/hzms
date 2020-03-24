@@ -84,7 +84,7 @@
             <el-select
               v-model="scope.row.role"
               placeholder="请选择"
-              @change="handleChangeRole()"
+              @change="handleChangeRole(scope.row.staffId, scope.row.role)"
             >
               <el-option
                 v-for="item in roleName"
@@ -147,6 +147,15 @@ export default {
 
   },
   methods: {
+    handleChangeRole(staffId, role) {
+      console.log('role>>>', role)
+      console.log('staffId>>>', staffId)
+      alterUserInfo({ staffId: staffId, role: role}).then(res => {
+        this.$message.success('修改成功')
+      }).catch(err => {
+        this.$message.warning ('修改失败')
+      })
+    },
     getData() {
       getUserList()
         .then(res => {
@@ -155,16 +164,19 @@ export default {
         })
         .catch(err => {
           console.log('failed to get user list');
-
         })
     },
     handleAdd() {
       this.showDrawer = true
-
     },
     formSubmit() {
-      console.log(this.form);
-      
+      addUser(this.form).then(res => {
+        this.$message.success('添加成功')
+        this.showDrawer = false
+        this.getData()
+      }).catch(err => {
+        this.$message.success('添加失败')
+      })
     },
     handleDelete(index, row) {
       console.log('res>>>', row);
