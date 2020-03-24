@@ -120,7 +120,34 @@ export function createReportNum(data) {
 
 export function getUserList(data) {
   return request({
-    url: `${ProManageAPIServer}userManager/getUserList`,
+    url: `${ProManageAPIServer}userManage/getUserList`,
+    headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
+
+export function addUser(data) {
+  return request({
+    url: `${ProManageAPIServer}userManage/addUser`,
+    headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
+
+export function deleteUser(data) {
+  return request({
+    url: `${ProManageAPIServer}userManage/deleteUser`,
+    headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
+
+export function alterUserInfo(data) {
+  return request({
+    url: `${ProManageAPIServer}userManage/alterUserInfo`,
     headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},
     method: 'post',
     data: qs.stringify(data)
