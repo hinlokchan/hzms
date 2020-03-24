@@ -6,6 +6,33 @@
             <i v-else class="el-icon-s-unfold"></i>
         </div>
         <div class="logo"></div>
+        <el-dialog
+          title="修改密码"
+          :visible.sync="password"
+          width="20%"
+        >
+          <el-form>
+            <el-form-item
+              label="旧密码"
+              label-width="100"
+            >
+              <el-input v-model="passwordData.origPassword" placeholder="旧密码" size="medium"></el-input>
+            </el-form-item>
+            <el-form-item
+              label="新密码"
+              label-width="100"
+            >
+              <el-input v-model="passwordData.newPassword" placeholder="新密码" size="medium"></el-input>
+            </el-form-item>
+          </el-form>
+          <div
+            slot="footer"
+            class="dialog-footer"
+          >
+            <el-button @click="password = false">取 消</el-button>
+            <el-button @click="change" type="primary">确认更改</el-button>
+          </div>
+        </el-dialog>
         <div class="header-right">
             <div class="header-user-con">
                 <!-- 全屏显示 -->
@@ -38,9 +65,10 @@
                         <i class="el-icon-caret-bottom"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
-                        <a href="https://github.com/lin-xin/vue-manage-system" target="_blank">
+                        <!-- <a href="https://github.com/lin-xin/vue-manage-system" target="_blank">
                             <el-dropdown-item>项目仓库</el-dropdown-item>
-                        </a>
+                        </a> -->
+                        <el-dropdown-item divided command="changePassword">修改密码</el-dropdown-item>
                         <el-dropdown-item divided command="loginout">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
@@ -50,15 +78,20 @@
 </template>
 <script>
 import bus from '../common/bus';
-import { logout } from '@/api/index'
+import { logout, alterPassword } from '@/api/index'
 import Cookies from 'js-cookie'
 export default {
     data() {
         return {
             collapse: false,
             fullscreen: false,
+            password: false,
             name: 'linxin',
-            message: 2
+            message: 2,
+            passwordData: {
+              newPassword: '',
+              origPassword: ''
+            }
         };
     },
     computed: {
@@ -68,6 +101,17 @@ export default {
         }
     },
     methods: {
+      changPassword() {
+        console.log('111')
+      },
+      change() {
+        alterPassword(this.passwordData).then(res => {
+          this.$message.success('密码修改成功')
+          this.password = false
+        }).catch(err => {
+          this.$message.warning('密码修改失败')
+        })
+      },
         // 用户名下拉菜单选择事件
         handleCommand(command) {
             if (command == 'loginout') {
@@ -81,6 +125,8 @@ export default {
                 }).catch(err => {
                     this.$message.warning('退出登录失败')
                 })
+            } else if (command == 'changePassword') {
+              this.password = true
             }
         },
         // 侧边栏折叠

@@ -162,3 +162,12 @@ export function alterUserInfo(data) {
     data: qs.stringify(data)
   })
 }
+
+export function alterPassword(data) {
+  return request({
+    url: `${ProManageAPIServer}user/alterPassword`,
+    headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
