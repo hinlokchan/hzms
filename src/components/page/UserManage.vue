@@ -55,6 +55,7 @@
           prop="staffId"
           label="工号"
           width="100"
+          align="center"
         >
         </el-table-column>
         <el-table-column
@@ -66,6 +67,7 @@
         <el-table-column
           prop="role"
           label="身份"
+          align="center"
         >
           <template slot-scope="scope">
             <span
@@ -84,6 +86,7 @@
             <el-select
               v-model="scope.row.role"
               placeholder="请选择"
+              style="margin-right:20px"
               @change="handleChangeRole(scope.row.staffId, scope.row.role)"
             >
               <el-option
