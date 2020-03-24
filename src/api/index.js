@@ -127,6 +127,15 @@ export function alterProjType(data) {
   })
 }
 
+export function getUserList(data) {
+  return request({
+    url: `${ProManageAPIServer}userManage/getUserList`,
+    headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
+
 export function addUser(data) {
   return request({
     url: `${ProManageAPIServer}userManage/addUser`,

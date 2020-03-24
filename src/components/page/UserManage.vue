@@ -84,6 +84,7 @@
             <el-select
               v-model="scope.row.role"
               placeholder="请选择"
+              @change="handleChangeRole()"
             >
               <el-option
                 v-for="item in roleName"
