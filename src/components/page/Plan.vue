@@ -94,6 +94,7 @@
                   <span v-if="item.value == props.row.projType">{{ item.label }}</span>
                 </div>
               </el-form-item>
+
               <el-form-item label="项目负责人">
                 <span>{{ props.row.projLeader }}</span>
               </el-form-item>
@@ -118,7 +119,7 @@
         >
           <template slot-scope="props">
             <el-tag
-              type="success"
+              :type="props.row.projDegree == 1001 ? 'success' : 'danger'"
               effect="dark"
             >
               <span v-if="props.row.projDegree == 1001">正常</span>
@@ -127,15 +128,17 @@
           </template>
         </el-table-column>
         <el-table-column
-          prop="projStatus"
+          prop="projState"
           label="项目状态"
           width="80"
           align="center"
         >
+          <template slot-scope="props">
           <el-tag
-            type="warning"
+            :type="props.row.projState == '正常' ? 'primary' : 'warning'"
             effect="dark"
-          >滞后</el-tag>
+          >{{ props.row.projState }}</el-tag>
+          </template>
         </el-table-column>
         <el-table-column
           prop="projDate"

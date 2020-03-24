@@ -1,35 +1,66 @@
 <template>
   <div>
-    <div class="qrcode">
-      <div class="qrcode-item">
-        <div>正评号</div>
-        <el-input v-model="faNum" clearable></el-input>
+    <div class="container">
+      <div class="crumbs">
+        <el-breadcrumb separator="/">
+          <el-breadcrumb-item><span style="color:000">生成报告二维码</span></el-breadcrumb-item>
+        </el-breadcrumb>
       </div>
-			<div class="qrcode-item">
-        <div>项目名称</div>
-        <el-input v-model="projName" clearable></el-input>
-      </div>
-			<div class="qrcode-item">
-        <div>评估值</div>
-        <el-input v-model="assemValue" clearable=""></el-input>
-      </div>
-			<div class="qrcode-item">
-        <div>基准日</div>
-        <el-date-picker v-model="baseDate" value-format="yyyy-MM-dd"></el-date-picker>
-      </div>
+        <el-form
+          ref="form"
+          :model="form"
+          label-width="105px"
+          :rules="rules"
+        >
+          <el-row>
+            <el-col :span="5">
+              <el-form-item
+                label="正评号"
+                prop="zph"
+              >
+                <el-input v-model="form.zph"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="5">
+              <el-form-item
+                label="项目名称"
+                prop="xmmc"
+              >
+                <el-input v-model="form.xmmc"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="5">
+              <el-form-item
+                label="评估值"
+                prop="pgz"
+              >
+                <el-input v-model="form.pgz"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="5">
+              <el-form-item
+                label="基准日"
+                prop="jzr"
+              >
+                <el-date-picker v-model="form.jzr" value-format="yyyy-MM-dd"></el-date-picker>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+      <el-button style="margin: 30px 0 0 40%" type="primary" @click="showQRCode">生成报告二维码</el-button>
+      <el-dialog
+        width="30%"
+        @close="closeQRCode"
+        :visible.sync="innerVisible"
+        append-to-body
+      >
+        <div
+          id="qrcode"
+          ref="qrcode"
+          style="margin-left:27%"
+        ></div>
+      </el-dialog>
     </div>
-    <el-button @click="showQRCode">生成报告二维码</el-button>
-    <el-dialog
-      width="30%"
-      @close="closeQRCode"
-      :visible.sync="innerVisible"
-      append-to-body
-    >
-      <div
-        id="qrcode"
-        ref="qrcode"
-      ></div>
-    </el-dialog>
   </div>
 </template>
 
@@ -43,13 +74,19 @@ export default {
 			projName: '',
 			assemValue: '',
 			baseDate: '',
-      innerVisible: false
+      innerVisible: false,
+      form: {
+        zph: '',
+        xmmc: '',
+        pgz: '',
+        jzr: ''
+      }
     }
   },
   methods: {
     showQRCode() {
-      this.innerVisible = true
       // this.qrcode = 'hi'
+      this.innerVisible = true
       this.$nextTick(() => {
         this.creatQRCode()
       })
@@ -58,17 +95,24 @@ export default {
       this.qr = new QRCode('qrcode', {
         width: '150',
         height: '150',
-        text: this.faNum + this.projName + this.assemValue + this.baseDate
+        text: this.form.zph + this.form.xmmc + this.form.pgz + this.form.jzr
       })
     },
     closeQRCode() {
-      this.$ref.qrcode.innerHTML = ''
-    }
+      console.log('close')
+      this.$refs.qrcode.innerHTML = ''
+		},
+		downs() {
+			
+		}
   }
 }
 </script>
 
 <style scoped>
+.container{
+  padding-bottom: 30px;
+}
 .qrcode {
     width: 300px;
     margin: 10px 0 0 10px;

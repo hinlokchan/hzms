@@ -257,7 +257,6 @@ export default {
       },
       searchVal: '',
       midNum: 0,
-      reportNumType: 'pa',
       date1: '',
       getNumType: 0,
       getNumData: {}

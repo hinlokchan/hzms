@@ -89,6 +89,7 @@ export default {
                             title: '工作台'
                         },
                         {
+                            index: 'qrcode',
                             title: '报告二维码生成'
                         },
                         {
@@ -100,6 +101,16 @@ export default {
                     icon: "el-icon-data-analysis",
                     title: "统计管理"
                 },
+                {
+                    index: "usermanage",
+                    icon: "el-icon-user",
+                    title: "用户管理"
+                },
+                // {
+                //     icon: 'el-icon-lx-copy',
+                //     index: 'tabs',
+                //     title: 'tab选项卡'
+                // },
                 {
                     icon: 'el-icon-lx-calendar',
                     index: '3',
@@ -189,7 +200,7 @@ export default {
     },
     created() {
         if(localStorage.getItem('role') == 0){
-            this.roleItem = this.items1
+            this.roleItem = this.items0
         }
         // 通过 Event Bus 进行组件间通信，来折叠侧边栏
         bus.$on('collapse', msg => {
