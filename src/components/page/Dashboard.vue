@@ -7,7 +7,9 @@
                         <img src="../../assets/img/img.jpg" class="user-avator" alt />
                         <div class="user-info-cont">
                             <div class="user-info-name">你好呀，{{name}}</div>
-                            <div>{{role}}</div>
+                            <span v-for="item in sfList" :key="item.value">
+                                <span style="font-size:17px" v-if="item.value == sf">{{item.label}}</span>
+                            </span>
                         </div>
                     </div>
                 </el-card>
@@ -68,6 +70,25 @@ export default {
     name: 'dashboard',
     data() {
         return {
+            sfList: [
+                {
+                    label: '超级管理员',
+                    value: 0
+                },
+                {
+                    label: '管理员',
+                    value: 1
+                },
+                {
+                    label: '计划部门',
+                    value: 2
+                },
+                {
+                    label: '业务部门',
+                    value: 3
+                },
+            ],
+            sf: localStorage.getItem('role'),
             name: localStorage.getItem('staffName'),
             todoList: [
                 {

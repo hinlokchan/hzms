@@ -9,12 +9,20 @@
           <el-breadcrumb-item>新增项目计划</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
+      <el-dialog
+        title="项目计划"
+        :visible.sync="newInfo"
+        width="40%"
+        @close="closeNewInfo"
+      >
+        <el-input :rows="6" type="textarea" v-model="newInfoData" size="medium"></el-input>
+      </el-dialog>
       <div class="form-box">
         <div class="form-item-title">
           <h3>项目信息</h3>
         </div>
         <el-form
-          ref="form"
+          ref="ruleForm"
           :model="form"
           label-width="125px"
           :rules="rules"
@@ -346,6 +354,8 @@ export default {
   data() {
     return {
       isEdit: false,
+      newInfo: false,
+      newInfoData: '',
       form: {
         projType: '',
         projName: '',
@@ -465,6 +475,10 @@ export default {
     }
   },
   methods: {
+    closeNewInfo() {
+      this.newInfo = false
+      this.goBack()
+    },
     formatDate(now) {
       const time = new Date(now)
       var year = time.getFullYear();  //取得4位数的年份
@@ -595,27 +609,44 @@ export default {
     },
     onSubmit() {
       console.log(this.form)
-      this.$refs.form.validate(valid => {
-        this.transformPeop().then(res => {
-          console.log('this.form', this.form)
-          if (this.isEdit) {
-            editProject(this.form).then(res => {
-              console.log('add>>>res', res)
-              this.$message.success('提交成功！');
-              this.goBack()
-            }).catch(err => {
-              console.log('add>>>err', err)
-            })
-          } else {
-            createNewProject(this.form).then(res => {
-              console.log('add>>>res', res)
-              this.$message.success('提交成功！');
-              this.goBack()
-            }).catch(err => {
-              console.log('add>>>err', err)
-            })
-          }
-        })
+      this.$refs.ruleForm.validate((valid) => {
+        if(valid){
+          this.transformPeop().then(res => {
+            console.log('this.form', this.form)
+            if (this.isEdit) {
+              editProject(this.form).then(res => {
+                console.log('add>>>res', res)
+                this.$message.success('提交成功！');
+                this.goBack()
+              }).catch(err => {
+                this.$message.success('提交失败！');
+                console.log('add>>>err', err)
+              })
+            } else {
+              createNewProject(this.form).then(res => {
+                console.log('add>>>res', res)
+                this.$message.success('提交成功！');
+                let riskProfile = ''
+                if(this.form.riskProfile == 1001){
+                  riskProfile == '低'
+                }else if(this.form.riskProfile == 1002){
+                  riskProfile == '中等'
+                }else if(this.form.riskProfile == 1003){
+                  riskProfile == '较高'
+                }else{
+                  riskProfile == '高'
+                }
+                // ZP项目类型：资；委托 人：(其他):惠州市水务投资集团；项目名称：惠州大道大湖溪段667平方米租金；评估对象及其坐落：同上;；评估目的：物业出租价格；引荐人及其电话：惠州市水务投资集团王总135 0229 7502；现联系单位、人及电话：同上；现勘时间：现勘同事约；报告时间要求：5天；项目风险预测：；评估收费报价：待定；是否曾评估的项目：（若是，原项目组成员：）；项目接洽人""[52]-缨(注师：莎缨;助理：健;专业复核人:远。以下由项目负责人安排 现勘：;资料核查验证：;市场询价调查：;技术报告:；报告编制:; 归档：;对外沟通:
+                this.newInfoData = `项目编号:${res.data.projNum},项目名称:${this.form.projName};评估对象及其坐落：同上;评估目的:${this.form.assemGoal};引荐人及其电话:${this.form.projReferer}${this.form.projRefererInfo};现联系单位、人及电话：同上;现勘时间:${this.form.fldSrvySchedule};报告时间要求:${this.form.compSchedule}天;项目风险预测:${riskProfile};评估收费报价:${this.form.assemFeeQuote};项目接洽人:${this.form.projContact},项目助理:${this.form.projAsst},专业复核人:${this.form.projProReviewer}。以下由项目负责人安排,现勘:${this.form.fieldSrvy}`
+                this.newInfo = true
+              }).catch(err => {
+                console.log('add>>>err', err)
+              })
+            }
+          })
+        }else{
+          this.$message('请填写必填信息');
+        }
       })
     },
     transformPeop() {
