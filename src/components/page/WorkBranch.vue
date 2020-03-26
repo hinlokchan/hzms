@@ -54,21 +54,22 @@
         </el-col>
       </el-row>
       <div class="search">
-        <el-row :gutter="20">
+        <el-row :gutter="10">
           <el-col :span="10">
-            <el-input v-model="searchVal" placeholder="请输入您想搜索的内容"></el-input>
+            <el-input v-model="searchVal" placeholder="请输入项目名称搜索"></el-input>
           </el-col>
           <el-col :span="3">
             <el-button @click="getData" type="primary">搜 索</el-button>
+            <el-button @click="reset">重 置</el-button>
           </el-col>
         </el-row>
       </div>
       <!-- table -->
       <el-table
         class="table"
-        :data="tableData"
+        :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)"
         border
-        height="500"
+        ref="multipleTable"
         style="width: 100%"
         :default-sort="{ prop: 'projDate', order: 'descending' }"
       >
@@ -163,6 +164,14 @@
           </template>
         </el-table-column>
       </el-table>
+      <div class="pagination">
+        <el-pagination
+          :total="pageTotal"
+          :current-page="currentPage"
+          :page-size="pageSize"
+          @current-change="changePage"
+        />
+      </div>
       <!-- 取号 -->
       <el-dialog
         title="取号"
@@ -177,12 +186,34 @@
           <p style="text-align:center">咨询号需先与领导沟通后再取</p>
           <el-button style="margin: 16px 0 0 40%" type="primary" @click="getNewNum">确认取号</el-button>
         </el-dialog>
+        <div class="crumbs">
+          <h2>当前项目名：{{getNumData.projName}}</h2>
+        </div>
         <div>
-          <div>当前项目名：{{getNumData.projName}}</div>
-          <div v-if="getNumType == 1">当前项目初评号： <span v-if="getNumData.cph !== ''">{{getNumData.cph}}</span><span v-else><el-button type="primary" @click="getNewNummid(1)">取号</el-button></span></div>
-          <div v-if="getNumType !== 3">当前项目正评号： <span v-if="getNumData.zph !== ''">{{getNumData.zph}}</span><span v-else><el-button type="primary" @click="getNewNummid(2)">取号</el-button></span></div>
-          <div v-if="getNumType == 3">当前项目咨询号： <span v-if="getNumData.zxh !== ''">{{getNumData.zxh}}</span><span v-else><el-button type="primary" @click="getNewNummid(3)">取号</el-button></span></div>
-          <div>当前项目回函号： <span v-if="getNumData.hhh !== ''">{{getNumData.hhh}}</span><span v-else><el-button type="primary" @click="getNewNummid(4)">取号</el-button></span></div>
+          <div class="dialog-item" v-if="getNumType == 1">当前项目初评号： 
+            <span v-if="getNumData.cph !== ''">
+              {{getNumData.cph}}<el-button class="right-button" type="danger">取 消</el-button>
+            </span>
+            <span v-else><el-button class="right-button" type="primary" @click="getNewNummid(1)">取号</el-button></span>
+          </div>
+          <div class="dialog-item" v-if="getNumType !== 3">当前项目正评号： 
+            <span v-if="getNumData.zph !== ''">
+              {{getNumData.zph}}<el-button class="right-button" type="danger">取 消</el-button>
+            </span>
+            <span v-else><el-button class="right-button" type="primary" @click="getNewNummid(2)">取号</el-button></span>
+          </div>
+          <div class="dialog-item" v-if="getNumType == 3">当前项目咨询号： 
+            <span v-if="getNumData.zxh !== ''">
+              {{getNumData.zxh}}<el-button class="right-button" type="danger">取 消</el-button>
+            </span>
+            <span v-else><el-button class="right-button" type="primary" @click="getNewNummid(3)">取号</el-button></span>
+          </div>
+          <div class="dialog-item">当前项目回函号： 
+            <span v-if="getNumData.hhh !== ''">
+              {{getNumData.hhh}}<el-button class="right-button" type="danger">取 消</el-button>
+            </span>
+            <span v-else><el-button class="right-button" type="primary" @click="getNewNummid(4)">取号</el-button></span>
+          </div>
         </div>
       </el-dialog>
       <!-- 更改报告号 -->
@@ -238,6 +269,9 @@ export default {
   name: 'workbranch',
   data() {
     return {
+      currentPage: 1, // 当前页码
+      pageSize: 10, // 每页的数据条数
+      pageTotal: 0, // 数据数
       tableData: [],
       typeOptions: [
         { value: '1010', label: '房地产' },
@@ -338,6 +372,19 @@ export default {
         .then(res => {
           console.log(res.data)
           this.tableData = res.data
+          this.pageTotal = res.data.length
+        })
+        .catch(err => {
+          console.log('field to search');
+        })
+    },
+    reset() {
+      this.searchVal = ''
+      searchMyProject()
+        .then(res => {
+          console.log(res.data)
+          this.tableData = res.data
+          this.pageTotal = res.data.length
         })
         .catch(err => {
           console.log('field to search');
@@ -381,7 +428,11 @@ export default {
       var date = time.getDate();      //返回日期月份中的天数（1到31）
       var hour = time.getHours();     //返回日期中的小时数（0到23）
       return year + "-" + month + "-" + date
-    }
+    },
+    changePage(val) {
+      console.log(val)
+      this.currentPage = val;
+    },
   }
 }
 </script>
@@ -444,5 +495,12 @@ export default {
 }
 .search {
     margin-top: 20px;
+}
+.dialog-item {
+  margin-top: 20px;
+  width: 50%;
+}
+.right-button {
+  float: right;
 }
 </style>

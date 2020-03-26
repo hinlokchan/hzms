@@ -171,3 +171,12 @@ export function alterPassword(data) {
     data: qs.stringify(data)
   })
 }
+
+export function getSubReportNum(data) {
+  return request({
+    url: `${ProManageAPIServer}project/getSubReportNum`,
+    headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}

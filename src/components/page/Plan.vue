@@ -198,14 +198,6 @@
         </el-table-column>
       </el-table>
       <div class="pagination">
-        <!-- <el-pagination
-          background=""
-          layout="total, prev, pager, next"
-          :current-page="query.pageIndex"
-          :page-size="query.pageSize"
-          :total="pageTotal"
-          @current-change="handlePageChange"
-        ></el-pagination> -->
         <el-pagination
           :total="pageTotal"
           :current-page="currentPage"
@@ -224,10 +216,10 @@ export default {
   name: 'plan',
   data() {
     return {
-      query: {
-        startFrom: 1,
-        pagecount: 10
-      },
+      // query: {
+      //   startFrom: 1,
+      //   pagecount: 10
+      // },
       currentPage: 1, // 当前页码
       pageSize: 10, // 每页的数据条数
       proTypeList: [
@@ -371,11 +363,6 @@ export default {
           })
         })
         .catch(() => { });
-    },
-    // 分页导航
-    handlePageChange(val) {
-      this.$set(this.query, 'pageIndex', val);
-      // this.getData();
     }
   }
 };
