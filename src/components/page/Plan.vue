@@ -198,14 +198,6 @@
         </el-table-column>
       </el-table>
       <div class="pagination">
-        <!-- <el-pagination
-          background=""
-          layout="total, prev, pager, next"
-          :current-page="query.pageIndex"
-          :page-size="query.pageSize"
-          :total="pageTotal"
-          @current-change="handlePageChange"
-        ></el-pagination> -->
         <el-pagination
           :total="pageTotal"
           :current-page="currentPage"
@@ -224,10 +216,10 @@ export default {
   name: 'plan',
   data() {
     return {
-      query: {
-        startFrom: 1,
-        pagecount: 10
-      },
+      // query: {
+      //   startFrom: 1,
+      //   pagecount: 10
+      // },
       currentPage: 1, // 当前页码
       pageSize: 10, // 每页的数据条数
       proTypeList: [
@@ -347,17 +339,18 @@ export default {
     },
     //编辑操作
     handleEdit(index) {
-      console.log('编辑项目事件', index);
-      this.$router.push({ path: '/planform', query: { data: this.tableData[index].projId } })
+      const index2 = (this.currentPage - 1)*10 + index
+      this.$router.push({ path: '/planform', query: { data: this.tableData[index2].projId } })
     },
     //查看详情操作
     handleCheck(index) {
-      console.log('查看项目详情事件', this.tableData[index].projId);
-      this.$router.push({ path: '/projcheck', query: { data: this.tableData[index].projId } })
+      const index2 = (this.currentPage - 1)*10 + index
+      console.log('index2', index2)
+      console.log('查看项目详情事件', this.tableData[index2].projId);
+      this.$router.push({ path: '/projcheck', query: { data: this.tableData[index2].projId } })
     },
     // 删除操作
     handleDelete(index, row) {
-      console.log('row>>>', row)
       // 二次确认删除
       this.$confirm('删除后将不可恢复，确定要删除吗？', '提示', {
         type: 'warning'
@@ -371,11 +364,6 @@ export default {
           })
         })
         .catch(() => { });
-    },
-    // 分页导航
-    handlePageChange(val) {
-      this.$set(this.query, 'pageIndex', val);
-      // this.getData();
     }
   }
 };

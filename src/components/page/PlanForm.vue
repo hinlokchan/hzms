@@ -394,6 +394,9 @@ export default {
         ],
         projName: [
           { required: true, message: '请输入项目名称', trigger: 'blur' }
+        ],
+        projScope: [
+          { required: true, message: '请输入项目范围', trigger: 'blur' }
         ]
       },
       proTypeList: [
@@ -600,7 +603,7 @@ export default {
                 this.$message.success('提交成功！');
                 this.goBack()
               }).catch(err => {
-                this.$message.success('提交失败！');
+                this.$message.warning('提交失败！');
                 console.log('add>>>err', err)
               })
             } else {
