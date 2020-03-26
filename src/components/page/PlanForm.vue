@@ -349,6 +349,7 @@
 <script>
 import { createNewProject, editProject } from '@/api/index'
 import { getDetailProjInfo } from '@/api/index'
+import bankOptions from '../../../public/bank.json'
 export default {
   name: 'planform',
   data() {
@@ -387,26 +388,6 @@ export default {
         projReviewer: [{ value: '' }],
         lendingBank: []
       },
-      bankOptions: [{
-        value: 'zhongguoyinhang',
-        label: '中国银行',
-        children: [{
-          value: 'zgyhhz',
-          label: '中国银行惠州支行'
-        },
-        {
-          value: 'zgyhgz',
-          label: '中国银行广州分行'
-        }]
-      },
-      {
-        value: 'jianshenyinhang',
-        label: '建设银行',
-        children: [{
-          value: 'jsyhhz',
-          label: '建设银行惠州分行'
-        }]
-      }],
       rules: {
         projType: [
           { required: true, message: '请选择项目类型', trigger: 'blur' }
@@ -463,7 +444,6 @@ export default {
     };
   },
   created() {
-    console.log('query:', this.$route.query.data)
     if (this.$route.query.data == undefined) {
       this.isEdit = false
       this.form.projDate = this.getToday()
@@ -473,6 +453,7 @@ export default {
       this.isEdit = true
       this.getDetail()
     }
+    this.bankOptions = bankOptions
   },
   methods: {
     closeNewInfo() {
@@ -653,13 +634,13 @@ export default {
       var that = this
       return new Promise(function(resolve, reject) {
         //  银行
-        if(!that.isEdit){
+        // if(!that.isEdit){
           let lendingBankNew = ''
           if(that.form.lendingBank.length){
             lendingBankNew = that.form.lendingBank.pop()
             that.form.lendingBank = lendingBankNew
           }
-        }
+        // }
         //  项目复核人
         let projReviewer = that.form.projReviewer
         let projReviewerNew = ''

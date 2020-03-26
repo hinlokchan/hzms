@@ -167,6 +167,7 @@
       <el-dialog
         title="取号"
         :visible.sync="getNumVisible"
+        width="36%"
       >
         <el-dialog
           width="30%"
@@ -178,11 +179,11 @@
           <el-button style="margin: 16px 0 0 40%" type="primary" @click="getNewNum">确认取号</el-button>
         </el-dialog>
         <div>
-          <div>当前项目名：{{getNumData.projName}}</div>
-          <div v-if="getNumType == 1">当前项目初评号： <span v-if="getNumData.cph !== ''">{{getNumData.cph}}</span><span v-else><el-button type="primary" @click="getNewNummid(1)">取号</el-button></span></div>
-          <div v-if="getNumType !== 3">当前项目正评号： <span v-if="getNumData.zph !== ''">{{getNumData.zph}}</span><span v-else><el-button type="primary" @click="getNewNummid(2)">取号</el-button></span></div>
-          <div v-if="getNumType == 3">当前项目咨询号： <span v-if="getNumData.zxh !== ''">{{getNumData.zxh}}</span><span v-else><el-button type="primary" @click="getNewNummid(3)">取号</el-button></span></div>
-          <div>当前项目回函号： <span v-if="getNumData.hhh !== ''">{{getNumData.hhh}}</span><span v-else><el-button type="primary" @click="getNewNummid(4)">取号</el-button></span></div>
+          <div style="text-align:center;font-size:18px;font-weight:bold;margin-bottom:20px">当前项目名：{{getNumData.projName}}</div>
+          <div class="numStyle" v-if="getNumType == 1">初评号： <span v-if="getNumData.cph !== ''">{{getNumData.cph}}</span><span v-else><el-button type="primary" @click="getNewNummid(1)">取号</el-button></span></div>
+          <div class="numStyle" v-if="getNumType !== 3">正评号： <span v-if="getNumData.zph !== ''">{{getNumData.zph}}</span><span v-else><el-button type="primary" @click="getNewNummid(2)">取号</el-button></span></div>
+          <div class="numStyle" v-if="getNumType == 3">咨询号： <span v-if="getNumData.zxh !== ''">{{getNumData.zxh}}</span><span v-else><el-button type="primary" @click="getNewNummid(3)">取号</el-button></span></div>
+          <div class="numStyle">回函号： <span v-if="getNumData.hhh !== ''">{{getNumData.hhh}}</span><span v-else><el-button type="primary" @click="getNewNummid(4)">取号</el-button></span></div>
         </div>
       </el-dialog>
       <!-- 更改报告号 -->
@@ -444,5 +445,9 @@ export default {
 }
 .search {
     margin-top: 20px;
+}
+.numStyle{
+  font-size: 16px;
+  line-height: 50px
 }
 </style>
