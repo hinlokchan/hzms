@@ -392,6 +392,10 @@ export default {
       })
     },
     getData() {
+      if(sessionStorage.getItem('page')){
+        this.changePage(parseInt(sessionStorage.getItem('page')))
+        sessionStorage.removeItem('page')
+      }
       searchMyProject({ projName: this.searchVal })
         .then(res => {
           console.log(res.data)
@@ -415,7 +419,7 @@ export default {
         })
     },
     handleDetail(index) {
-      console.log(this.tableData[index].projId);
+      sessionStorage.setItem('page', this.currentPage)
       this.$router.push({ path: '/projcheck', query: { data: this.tableData[index].projId } })
     },
     creatReportNum() {
