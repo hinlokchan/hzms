@@ -639,7 +639,7 @@ export default {
         //  银行
         // if(!that.isEdit){
           let lendingBankNew = ''
-          if(that.form.lendingBank.length){
+          if(that.form.lendingBank){
             lendingBankNew = that.form.lendingBank.pop()
             that.form.lendingBank = lendingBankNew
           }

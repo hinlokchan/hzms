@@ -318,23 +318,27 @@ export default {
       }
     },
     changeNum(num,type) {
-      const comp = '惠正'
-      const year = '[' + num.substr(0,4) + ']'
-      const lastNum = '第' + num.substr(4) + '号'
-      let midType = ''
-      let numType = ''
-      if(this.getNumData.projType == 1010 || this.getNumData.projType == 1020 || this.getNumData.projType == 1030){
-        if(this.getNumData.projType == 1010){midType = '房地'}else if(this.getNumData.projType == 1020){midType = '土地'}else{midType = '资产'}
-        if(type == 1){numType = '初评字'}else if(type == 2){numType = '估字'}else if(type == 3){numType = '资字'}
-      }else if(this.getNumData.projType == 1061 || this.getNumData.projType == 1062 || this.getNumData.projType == 1063){
-        midType = '申报字'
-      }else if(this.getNumData.projType == 1090){
-        midType = '绩效评字'
-      }else if(this.getNumData.projType == 1050 || this.getNumData.projType == 1080){
-        midType = '资字'
-      }else if(this.getNumData.projType == 1070){midType = '测绘'}else if(this.getNumData.projType == 1100){midType = '函'}
-      if(type == 4){midType = '函';numType = ''}
-      return comp + midType + numType + year + lastNum
+      if(num){
+        const comp = '惠正'
+        const year = '[' + num.substr(0,4) + ']'
+        const lastNum = '第' + num.substr(4) + '号'
+        let midType = ''
+        let numType = ''
+        if(this.getNumData.projType == 1010 || this.getNumData.projType == 1020 || this.getNumData.projType == 1030){
+          if(this.getNumData.projType == 1010){midType = '房地'}else if(this.getNumData.projType == 1020){midType = '土地'}else{midType = '资产'}
+          if(type == 1){numType = '初评字'}else if(type == 2){numType = '估字'}else if(type == 3){numType = '资字'}
+        }else if(this.getNumData.projType == 1061 || this.getNumData.projType == 1062 || this.getNumData.projType == 1063){
+          midType = '申报字'
+        }else if(this.getNumData.projType == 1090){
+          midType = '绩效评字'
+        }else if(this.getNumData.projType == 1050 || this.getNumData.projType == 1080){
+          midType = '资字'
+        }else if(this.getNumData.projType == 1070){midType = '测绘'}else if(this.getNumData.projType == 1100){midType = '函'}
+        if(type == 4){midType = '函';numType = ''}
+        return comp + midType + numType + year + lastNum
+      }else{
+        return ''
+      }
     },
     changeProjType(data) {
       console.log('data>>>', data)

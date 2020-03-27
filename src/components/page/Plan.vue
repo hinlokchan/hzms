@@ -283,6 +283,10 @@ export default {
   },
   methods: {
     getData() {
+      if(sessionStorage.getItem('page')){
+        this.currentPage = parseInt(sessionStorage.getItem('page'))
+        sessionStorage.removeItem('page')
+      }
       getAllAbstractProject()
         .then(res => {
           console.log(res.data);
@@ -339,11 +343,13 @@ export default {
     },
     //编辑操作
     handleEdit(index) {
+      sessionStorage.setItem('page', this.currentPage)
       const index2 = (this.currentPage - 1)*10 + index
       this.$router.push({ path: '/planform', query: { data: this.tableData[index2].projId } })
     },
     //查看详情操作
     handleCheck(index) {
+      sessionStorage.setItem('page', this.currentPage)
       const index2 = (this.currentPage - 1)*10 + index
       console.log('index2', index2)
       console.log('查看项目详情事件', this.tableData[index2].projId);
