@@ -193,25 +193,25 @@
         <div>
           <div class="dialog-item" v-if="getNumType == 1">当前项目初评号： 
             <span v-if="getNumData.cph !== ''">
-              {{getNumData.cph}}<el-button class="right-button" type="danger">取 消</el-button>
+              {{changeNum(getNumData.cph,1)}}<el-button class="right-button" type="danger">取 消</el-button>
             </span>
             <span v-else><el-button class="right-button" type="primary" @click="getNewNummid(1)">取号</el-button></span>
           </div>
           <div class="dialog-item" v-if="getNumType !== 3">当前项目正评号： 
             <span v-if="getNumData.zph !== ''">
-              {{getNumData.zph}}<el-button class="right-button" type="danger">取 消</el-button>
+              {{changeNum(getNumData.zph,2)}}<el-button class="right-button" type="danger">取 消</el-button>
             </span>
             <span v-else><el-button class="right-button" type="primary" @click="getNewNummid(2)">取号</el-button></span>
           </div>
           <div class="dialog-item" v-if="getNumType == 3">当前项目咨询号： 
             <span v-if="getNumData.zxh !== ''">
-              {{getNumData.zxh}}<el-button class="right-button" type="danger">取 消</el-button>
+              {{changeNum(getNumData.zxh,3)}}<el-button class="right-button" type="danger">取 消</el-button>
             </span>
             <span v-else><el-button class="right-button" type="primary" @click="getNewNummid(3)">取号</el-button></span>
           </div>
           <div class="dialog-item">当前项目回函号： 
             <span v-if="getNumData.hhh !== ''">
-              {{getNumData.hhh}}<el-button class="right-button" type="danger">取 消</el-button>
+              {{changeNum(getNumData.hhh,4)}}<el-button class="right-button" type="danger">取 消</el-button>
             </span>
             <span v-else><el-button class="right-button" type="primary" @click="getNewNummid(4)">取号</el-button></span>
           </div>
@@ -316,6 +316,29 @@ export default {
           this.$message.error('修改失败');
         })
       }
+    },
+    changeNum(num,type) {
+      const comp = '惠正'
+      const year = '[' + num.substr(0,4) + ']'
+      const lastNum = '第' + num.substr(4) + '号'
+      let midType = ''
+      let numType = ''
+      if(this.getNumData.projType == 1010 || this.getNumData.projType == 1020 || this.getNumData.projType == 1030){
+        if(this.getNumData.projType == 1010){midType = '房地'}else if(this.getNumData.projType == 1020){midType = '土地'}else{midType = '资产'}
+        if(type == 1){numType = '初评字'}else if(type == 2){numType = '估字'}else if(type == 3){numType = '资字'}
+      }else if(this.getNumData.projType == 1061 || this.getNumData.projType == 1062 || this.getNumData.projType == 1063){
+        midType = '申报字'
+      }else if(this.getNumData.projType == 1090){
+        midType = '绩效评字'
+      }else if(this.getNumData.projType == 1050 || this.getNumData.projType == 1080){
+        midType = '资字'
+      }else if(this.getNumData.projType == 1070){
+        midType = '测绘'
+      }else if(this.getNumData.projType == 1100){
+        midType = '函'
+      }
+      if(type == 4){midType = '函';numType = ''}
+      return comp + midType + numType + year + lastNum
     },
     changeProjType(data) {
       console.log('data>>>', data)
