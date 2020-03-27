@@ -277,14 +277,14 @@ export default {
     };
   },
   created() {
+    this.getData();
   },
   mounted() {
-    this.getData();
   },
   methods: {
     getData() {
       if(sessionStorage.getItem('page')){
-        this.currentPage = parseInt(sessionStorage.getItem('page'))
+        this.changePage(parseInt(sessionStorage.getItem('page')))
         sessionStorage.removeItem('page')
       }
       getAllAbstractProject()
