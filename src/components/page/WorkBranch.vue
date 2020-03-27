@@ -332,11 +332,7 @@ export default {
         midType = '绩效评字'
       }else if(this.getNumData.projType == 1050 || this.getNumData.projType == 1080){
         midType = '资字'
-      }else if(this.getNumData.projType == 1070){
-        midType = '测绘'
-      }else if(this.getNumData.projType == 1100){
-        midType = '函'
-      }
+      }else if(this.getNumData.projType == 1070){midType = '测绘'}else if(this.getNumData.projType == 1100){midType = '函'}
       if(type == 4){midType = '函';numType = ''}
       return comp + midType + numType + year + lastNum
     },
