@@ -107,29 +107,27 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="项目范围">
+              <el-form-item label="项目范围" prop="projScope">
                 <el-input v-model="form.projScope"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="评估目的">
+              <el-form-item label="评估目的" prop="assemGoal">
                 <el-select
                   v-model="form.assemGoal"
                   placeholder="请选择"
                 >
                   <el-option
-                    label="转让"
-                    value="转让"
-                  ></el-option>
-                  <el-option
-                    label="拆迁"
-                    value="拆迁"
+                    v-for="item in assemGoalList"
+                    :key="item"
+                    :value="item"
+                    :label="item"
                   ></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="编制时间">
+              <el-form-item label="编制时间" prop="projDate">
                 <el-date-picker
                   type="date"
                   placeholder="选择日期"
@@ -140,7 +138,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="基准日">
+              <el-form-item label="基准日" prop="baseDate">
                 <el-date-picker
                   type="date"
                   placeholder="选择日期"
@@ -151,7 +149,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="计划现勘日期">
+              <el-form-item label="计划现勘日期" prop="fldSrvySchedule">
                 <el-date-picker
                   type="date"
                   placeholder="选择日期"
@@ -226,7 +224,7 @@
             <el-col :span="6">
               <el-form-item label="贷款银行">
                 <el-cascader
-                  :show-all-levels="false"
+                  :show-all-levels="true"
                   v-model="form.lendingBank"
                   :options="bankOptions"
                   :props="{ expandTrigger: 'hover' }"
@@ -384,7 +382,7 @@ export default {
         projProReviewer: [{ value: '' }],
         riskProfile: '',
         fieldSrvy: [{ value: '' }],
-        compSchedule: 2,
+        compSchedule: 3,
         projReviewer: [{ value: '' }],
         lendingBank: []
       },
@@ -397,6 +395,18 @@ export default {
         ],
         projScope: [
           { required: true, message: '请输入项目范围', trigger: 'blur' }
+        ],
+        projDate: [
+          { required: true, message: '请选择编制日期', trigger: 'blur' }
+        ],
+        baseDate: [
+          { required: true, message: '请选择基准日', trigger: 'blur' }
+        ],
+        fldSrvySchedule: [
+          { required: true, message: '请选择现勘日期', trigger: 'blur' }
+        ],
+        assemGoal: [
+          { required: true, message: '请选择评估目的', trigger: 'blur' }
         ]
       },
       proTypeList: [
@@ -443,7 +453,8 @@ export default {
           label: '其他',
           value: '1100'
         }
-      ]
+      ],
+      assemGoalList: ['抵押', '交易', '资产处置（司法鉴定）', '出让', '挂牌出让', '补出让', '转让', '盘整收回', '征收补偿', '活立木拍卖', '出租', '置换', '股权转让', '作价入股', '增资扩股', '入账', '征收、完税', '企业改制', '清算', '复审', '评价', '咨询'],
     };
   },
   created() {

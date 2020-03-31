@@ -1,232 +1,240 @@
 <template>
-    <div class="sidebar">
-        <el-menu
-            class="sidebar-el-menu"
-            :default-active="onRoutes"
-            :collapse="collapse"
-            background-color="#324157"
-            text-color="#bfcbd9"
-            active-text-color="#20a0ff"
-            unique-opened
-            router
-        >
-            <template v-for="item in roleItem">
-                <template v-if="item.subs">
-                    <el-submenu :index="item.index" :key="item.index">
-                        <template slot="title">
-                            <i :class="item.icon"></i>
-                            <span slot="title">{{ item.title }}</span>
-                        </template>
-                        <template v-for="subItem in item.subs">
-                            <el-submenu
-                                v-if="subItem.subs"
-                                :index="subItem.index"
-                                :key="subItem.index"
-                            >
-                                <template slot="title">{{ subItem.title }}</template>
-                                <el-menu-item
-                                    v-for="(threeItem,i) in subItem.subs"
-                                    :key="i"
-                                    :index="threeItem.index"
-                                >{{ threeItem.title }}</el-menu-item>
-                            </el-submenu>
-                            <el-menu-item
-                                v-else
-                                :index="subItem.index"
-                                :key="subItem.index"
-                            >{{ subItem.title }}</el-menu-item>
-                        </template>
-                    </el-submenu>
-                </template>
-                <template v-else>
-                    <el-menu-item :index="item.index" :key="item.index">
-                        <i :class="item.icon"></i>
-                        <span slot="title">{{ item.title }}</span>
-                    </el-menu-item>
-                </template>
+  <div class="sidebar">
+    <el-menu
+      class="sidebar-el-menu"
+      :default-active="onRoutes"
+      :collapse="collapse"
+      background-color="#324157"
+      text-color="#bfcbd9"
+      active-text-color="#20a0ff"
+      unique-opened
+      router
+    >
+      <template v-for="item in roleItem">
+        <template v-if="item.subs">
+          <!-- index为字符串格式，加一个''可避免报错type check failed -->
+          <el-submenu
+            :index="item.index + ''"
+            :key="item.index"
+          >
+            <template slot="title">
+              <i :class="item.icon"></i>
+              <span slot="title">{{ item.title }}</span>
             </template>
-        </el-menu>
-    </div>
+            <template v-for="subItem in item.subs">
+              <el-submenu
+                v-if="subItem.subs"
+                :index="subItem.index"
+                :key="subItem.index"
+              >
+                <template slot="title">{{ subItem.title }}</template>
+                <el-menu-item
+                  v-for="(threeItem,i) in subItem.subs"
+                  :key="i"
+                  :index="threeItem.index"
+                >{{ threeItem.title }}</el-menu-item>
+              </el-submenu>
+              <el-menu-item
+                v-else
+                :index="subItem.index"
+                :key="subItem.index"
+              >{{ subItem.title }}</el-menu-item>
+            </template>
+          </el-submenu>
+        </template>
+        <template v-else>
+          <el-menu-item
+            :index="item.index"
+            :key="item.index"
+          >
+            <i :class="item.icon"></i>
+            <span slot="title">{{ item.title }}</span>
+          </el-menu-item>
+        </template>
+      </template>
+    </el-menu>
+  </div>
 </template>
 
 <script>
 import bus from '../common/bus';
 export default {
-    data() {
-        return {
-            collapse: false,
-            roleItem: [],
-            items0: [
+  data() {
+    return {
+      collapse: false,
+      roleItem: [],
+
+      items0: [
+        {
+          icon: 'el-icon-lx-home',
+          index: 'dashboard',
+          title: '系统首页'
+        },
+        {
+          icon: 'el-icon-lx-edit',
+          index: 'plan',
+          title: '项目管理',
+          subs: [
+            {
+              index: 'plan',
+              title: '查看项目'
+            },
+            {
+              index: 'planform',
+              title: '项目计划录入'
+            }
+          ]
+        },
+        {
+          icon: 'el-icon-receiving',
+          title: '我的项目',
+          subs: [
+            {
+              title: '询价记录查询'
+            },
+            {
+              index: 'workbranch',
+              title: '工作台'
+            },
+            {
+              index: 'qrcode',
+              title: '报告二维码生成'
+            },
+            {
+              title: '正评登记'
+            }
+          ]
+        },
+        {
+          icon: "el-icon-data-analysis",
+          title: "统计管理"
+        },
+        {
+          index: "usermanage",
+          icon: "el-icon-user",
+          title: "用户管理"
+        },
+        // {
+        //     icon: 'el-icon-lx-copy',
+        //     index: 'tabs',
+        //     title: 'tab选项卡'
+        // },
+        {
+          icon: 'el-icon-lx-calendar',
+          index: '3',
+          title: '表单相关',
+          subs: [
+            {
+              index: 'form',
+              title: '基本表单'
+            },
+            {
+              index: '3-2',
+              title: '三级菜单',
+              subs: [
                 {
-                    icon: 'el-icon-lx-home',
-                    index: 'dashboard',
-                    title: '系统首页'
+                  index: 'editor',
+                  title: '富文本编辑器'
                 },
                 {
-                    icon: 'el-icon-lx-edit',
-                    index: 'plan',
-                    title: '项目管理',
-                    subs: [
-                        {
-                            index: 'plan',
-                            title: '查看项目'
-                        },
-                        {
-                            index: 'planform',
-                            title: '项目计划录入'
-                        }
-                    ]
-                },
-                {
-                    icon: 'el-icon-receiving',
-                    title: '我的项目',
-                    subs: [
-                        {
-                            title: '询价记录查询'
-                        },
-                        {
-                            index: 'workbranch',
-                            title: '工作台'
-                        },
-                        {
-                            index: 'qrcode',
-                            title: '报告二维码生成'
-                        },
-                        {
-                            title: '正评登记'
-                        }
-                    ]
-                },
-                {
-                    icon: "el-icon-data-analysis",
-                    title: "统计管理"
-                },
-                {
-                    index: "usermanage",
-                    icon: "el-icon-user",
-                    title: "用户管理"
-                },
-                // {
-                //     icon: 'el-icon-lx-copy',
-                //     index: 'tabs',
-                //     title: 'tab选项卡'
-                // },
-                {
-                    icon: 'el-icon-lx-calendar',
-                    index: '3',
-                    title: '表单相关',
-                    subs: [
-                        {
-                            index: 'form',
-                            title: '基本表单'
-                        },
-                        {
-                            index: '3-2',
-                            title: '三级菜单',
-                            subs: [
-                                {
-                                    index: 'editor',
-                                    title: '富文本编辑器'
-                                },
-                                {
-                                    index: 'markdown',
-                                    title: 'markdown编辑器'
-                                }
-                            ]
-                        },
-                        {
-                            index: 'upload',
-                            title: '文件上传'
-                        }
-                    ]
-                },
-                {
-                    icon: 'el-icon-lx-emoji',
-                    index: 'icon',
-                    title: '自定义图标'
+                  index: 'markdown',
+                  title: 'markdown编辑器'
                 }
-            ],
-            items1: [
-                {
-                    icon: 'el-icon-lx-home',
-                    index: 'dashboard',
-                    title: '系统首页'
-                },
-                {
-                    icon: 'el-icon-lx-edit',
-                    index: 'plan',
-                    title: '项目管理',
-                    subs: [
-                        {
-                            index: 'plan',
-                            title: '查看项目'
-                        },
-                        {
-                            index: 'planform',
-                            title: '项目计划录入'
-                        }
-                    ]
-                },
-                {
-                    icon: 'el-icon-receiving',
-                    title: '我的项目',
-                    subs: [
-                        {
-                            title: '询价记录查询'
-                        },
-                        {
-                            index: 'workbranch',
-                            title: '工作台'
-                        },
-                        {
-                            title: '报告二维码生成'
-                        },
-                        {
-                            title: '正评登记'
-                        }
-                    ]
-                },
-                {
-                    icon: "el-icon-data-analysis",
-                    title: "统计管理"
-                }
-            ]
-        };
-    },
-    computed: {
-        onRoutes() {
-            return this.$route.path.replace('/', '');
+              ]
+            },
+            {
+              index: 'upload',
+              title: '文件上传'
+            }
+          ]
+        },
+        {
+          icon: 'el-icon-lx-emoji',
+          index: 'icon',
+          title: '自定义图标'
         }
-    },
-    created() {
-        if(localStorage.getItem('role') == 0){
-            this.roleItem = this.items0
+      ],
+      items1: [
+        {
+          icon: 'el-icon-lx-home',
+          index: 'dashboard',
+          title: '系统首页'
+        },
+        {
+          icon: 'el-icon-lx-edit',
+          index: 'plan',
+          title: '项目管理',
+          subs: [
+            {
+              index: 'plan',
+              title: '查看项目'
+            },
+            {
+              index: 'planform',
+              title: '项目计划录入'
+            }
+          ]
+        },
+        {
+          icon: 'el-icon-receiving',
+          title: '我的项目',
+          subs: [
+            {
+              title: '询价记录查询'
+            },
+            {
+              index: 'workbranch',
+              title: '工作台'
+            },
+            {
+              title: '报告二维码生成'
+            },
+            {
+              title: '正评登记'
+            }
+          ]
+        },
+        {
+          icon: "el-icon-data-analysis",
+          title: "统计管理"
         }
-        // 通过 Event Bus 进行组件间通信，来折叠侧边栏
-        bus.$on('collapse', msg => {
-            this.collapse = msg;
-            bus.$emit('collapse-content', msg);
-        });
+      ]
+    };
+  },
+  computed: {
+    onRoutes() {
+      return this.$route.path.replace('/', '');
     }
+  },
+  created() {
+    if (localStorage.getItem('role') == 0) {
+      this.roleItem = this.items0
+    }
+    // 通过 Event Bus 进行组件间通信，来折叠侧边栏
+    bus.$on('collapse', msg => {
+      this.collapse = msg;
+      bus.$emit('collapse-content', msg);
+    });
+  }
 };
 </script>
 
 <style scoped>
 .sidebar {
-    display: block;
-    position: absolute;
-    left: 0;
-    top: 70px;
-    bottom: 0;
-    overflow-y: scroll;
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 70px;
+  bottom: 0;
+  overflow-y: scroll;
 }
 .sidebar::-webkit-scrollbar {
-    width: 0;
+  width: 0;
 }
 .sidebar-el-menu:not(.el-menu--collapse) {
-    width: 220px;
+  width: 220px;
 }
 .sidebar > ul {
-    height: 100%;
+  height: 100%;
 }
 </style>

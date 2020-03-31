@@ -14,6 +14,9 @@
           <h3>项目信息</h3>
         </div>
         <div class="project">
+          <div style="text-align:right;width:100%;">
+            <el-button type="text" icon="el-icon-printer">打印计划信息表</el-button>
+          </div>
           <el-row>
             <el-col :span="2">
               <div class="projTitle">计划编号</div>
@@ -134,7 +137,7 @@
             </el-col>
             <el-col :span="4">
               <div class="projContent">
-                <span v-for="item in fengxian" :key="item">
+                <span v-for="item in fengxian" :key="item.value">
                   <span v-if="detailData.riskProfile == item.value">{{item.label}}</span>
                 </span>
               </div>
@@ -272,7 +275,7 @@
 </template>
 
 <script>
-import { getDetailProjInfo } from '@/api/index'
+import { getDetailProjInfo, getReportNum } from '@/api/index'
 export default {
   name: 'projcheck',
   data() {
@@ -313,6 +316,10 @@ export default {
         console.log(res.data)
         this.detailData = res.data
       })
+      getReportNum({projId: this.projId})
+        .then(res => {
+          console.log('getReportNum>>>', res)
+        })
     },
     formatDate(now) {
       const time = new Date(now)
@@ -347,7 +354,7 @@ export default {
 .form-item-title {
     width: 100px;
     text-align: center;
-    margin: 20px 0 20px 0;
+    margin: 20px 0 5px 0;
     border-left: solid 5px #409eff;
 }
 </style>

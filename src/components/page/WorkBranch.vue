@@ -148,6 +148,12 @@
               size="medium"
               @click="getNum(scope)"
             >取号</el-button>
+            <!-- <el-button
+              type="text"
+              icon="el-icon-connection"
+              size="meduim"
+            >取分户号
+            </el-button> -->
             <el-button
               type="text"
               icon="el-icon-s-operation"
@@ -176,8 +182,9 @@
       <el-dialog
         title="取号"
         :visible.sync="getNumVisible"
-        width="36%"
+        width="50%"
       >
+        <!-- 取号确认 -->
         <el-dialog
           width="30%"
           title="提示"
@@ -187,33 +194,50 @@
           <p style="text-align:center">咨询号需先与领导沟通后再取</p>
           <el-button style="margin: 16px 0 0 40%" type="primary" @click="getNewNum">确认取号</el-button>
         </el-dialog>
+        <!-- 主体 -->
         <div class="crumbs">
           <h2>当前项目名：{{getNumData.projName}}</h2>
         </div>
         <div>
           <div class="dialog-item" v-if="getNumType == 1">当前项目初评号： 
             <span v-if="getNumData.cph !== ''">
-              {{changeNum(getNumData.cph,1)}}<el-button class="right-button" type="danger">取 消</el-button>
+              {{changeNum(getNumData.cph,1)}}
+              <el-button class="right-button" type="danger">取 消</el-button>
             </span>
             <span v-else><el-button class="right-button" type="primary" @click="getNewNummid(1)">取号</el-button></span>
           </div>
-          <div class="dialog-item" v-if="getNumType !== 3">当前项目正评号： 
+          <div class="dialog-item">当前项目正评号： 
             <span v-if="getNumData.zph !== ''">
-              {{changeNum(getNumData.zph,2)}}<el-button class="right-button" type="danger">取 消</el-button>
+              {{changeNum(getNumData.zph,2)}}
+              <el-button class="right-button" type="danger">取 消</el-button>
             </span>
-            <span v-else><el-button class="right-button" type="primary" @click="getNewNummid(2)">取号</el-button></span>
-          </div>
-          <div class="dialog-item" v-if="getNumType == 3">当前项目咨询号： 
-            <span v-if="getNumData.zxh !== ''">
-              {{changeNum(getNumData.zxh,3)}}<el-button class="right-button" type="danger">取 消</el-button>
+            <span v-else>
+              <el-button class="right-button" type="primary" @click="getNewNummid(2)">取号</el-button>
             </span>
-            <span v-else><el-button class="right-button" type="primary" @click="getNewNummid(3)">取号</el-button></span>
           </div>
           <div class="dialog-item">当前项目回函号： 
             <span v-if="getNumData.hhh !== ''">
               {{changeNum(getNumData.hhh,4)}}<el-button class="right-button" type="danger">取 消</el-button>
             </span>
             <span v-else><el-button class="right-button" type="primary" @click="getNewNummid(4)">取号</el-button></span>
+          </div>
+          <el-divider></el-divider>
+          <div class="dialog-item">
+            <span v-if="getNumData.cph !== '' || getNumData.zph !== '' || getNumData.hhh !== ''">
+              <h3>子报告号</h3>
+            </span>
+          </div>
+          <div class="dialog-item">
+            <el-row>
+              <el-col :span="6">
+                <span v-if="getNumData.cph !== ''">{{getNumData.cph}} -</span>
+              </el-col>
+              <el-col :span="3">
+                <el-button
+                  @click="getSubNum">取子报告号
+                </el-button>
+              </el-col>
+            </el-row>
           </div>
         </div>
       </el-dialog>
@@ -239,7 +263,7 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item
+          <!-- <el-form-item
             label="请选择更改的原因"
             label-width="200"
           >
@@ -248,7 +272,7 @@
               <el-option label="个人误操作"></el-option>
               <el-option></el-option>
             </el-select>
-          </el-form-item>
+          </el-form-item> -->
         </el-form>
         <div style="color: red">Tips:更改后原报告号及计划编号将改变</div>
         <div
@@ -265,7 +289,7 @@
 </template>
 
 <script>
-import { getAllAbstractProject, searchMyProject, getReportNum, createReportNum, alterProjType } from '@/api/index'
+import { getAllAbstractProject, searchMyProject, getReportNum, createReportNum, alterProjType, getSubReportNum, addSubReportNum } from '@/api/index'
 export default {
   name: 'workbranch',
   data() {
@@ -294,7 +318,9 @@ export default {
       midNum: 0,
       date1: '',
       getNumType: 0,
-      getNumData: {}
+      getNumData: {},
+      getSubNum: '',
+      subNum: []
     }
   },
   created() {
@@ -317,6 +343,7 @@ export default {
         })
       }
     },
+    //完整号显示
     changeNum(num,type) {
       if(num){
         const comp = '惠正'
@@ -352,45 +379,6 @@ export default {
       selOption.splice(index, 1)
       this.typeOptions = selOption
     },
-    getNewNummid(num) {
-      this.midNum = num
-      this.innerVisible = true
-    },
-    getNewNum() {
-      this.innerVisible = false
-      let type = this.midNum
-      console.log('type',type)
-      console.log('>>>',this.getNumData.projType)
-      let reportNumType = ''
-      if(type == 4){
-        reportNumType = 1100
-      }else{
-        if(this.getNumData.projType == 1041){
-          reportNumType = 1013
-        }else if(this.getNumData.projType == 1042){
-          reportNumType = 1023
-        }else if(this.getNumData.projType == 1043){
-          reportNumType = 1033
-        }else{
-          reportNumType = this.getNumData.projType + type
-        }
-      }
-      console.log('reportNumType>>>', reportNumType)
-      createReportNum({ projId: this.getNumData.projId, reportNumType: reportNumType }).then(res => {
-        console.log(res.data.reportNum)
-        if(type == 1){
-          this.getNumData.cph = res.data.reportNum
-        }else if(type == 2){
-          this.getNumData.zph = res.data.reportNum
-        }else if(type == 3){
-          this.getNumData.zxh = res.data.reportNum
-        }else{
-          this.getNumData.hhh = res.data.reportNum
-        }
-      }).catch(err => {
-        console.log(err)
-      })
-    },
     getData() {
       if(sessionStorage.getItem('page')){
         this.changePage(parseInt(sessionStorage.getItem('page')))
@@ -422,9 +410,7 @@ export default {
       sessionStorage.setItem('page', this.currentPage)
       this.$router.push({ path: '/projcheck', query: { data: this.tableData[index].projId } })
     },
-    creatReportNum() {
-
-    },
+    //取号流程 getNum -> getNewNumId -> getNewNum
     getNum(num) {
       console.log(num.row)
       this.getNumVisible = true
@@ -432,23 +418,73 @@ export default {
       this.getNumData.projType = num.row.projType
       this.getNumData.projId = num.row.projId
       this.getNumData.projName = num.row.projName
-      console.log('this.getNumData>>>', this.getNumData)
+      this.getSubNum = num.row.reportNum.cph+','+num.row.reportNum.zph+','+num.row.reportNum.hhh
+      console.log('getSubNum >>>', this.getSubNum)
+      getSubReportNum({reportNumList: this.getSubNum})
+        .then(res => {
+          console.log('xxx', res.data);
+          this.subNum.push(res.data)
+        })
+      console.log('getNum -> getNumData>>>', this.getNumData)
       if (num.row.projType == 1010 || num.row.projType == 1020 || num.row.projType == 1030) {
-        this.getNumType = 1
-      } else if(num.row.projType == 1041 || num.row.projType == 1042 || num.row.projType == 1043){
-        this.getNumType = 3
+        this.getNumType = 1 //房地资项目类型才有初评正评
+      // } else if(num.row.projType == 1041 || num.row.projType == 1042 || num.row.projType == 1043){
+      //   this.getNumType = 3
       } else {
-        this.getNumType = 2
+        this.getNumType = 2 //其他仅有正评
       }
-      // this.
-      // getReportNum({ projId: num.row.projId })
-      // .then(res => {
-      //   console.log(res)
-      // })
-      // .catch(err => {
-      //   console.log(res)
-      // })
     },
+    getNewNummid(num) {
+      //传入 1, 2, 4代表初评、正评、回函
+      this.midNum = num
+      //显示取号确认dialog
+      this.innerVisible = true
+    },
+    getNewNum() {
+      this.innerVisible = false
+      let type = this.midNum
+      console.log('type',type)
+      console.log('>>>',this.getNumData.projType)
+      let reportNumType = ''
+      if(type == 4){
+        reportNumType = 1100
+      }else{
+        if(this.getNumData.projType == 1041){
+          reportNumType = 1013
+        }else if(this.getNumData.projType == 1042){
+          reportNumType = 1023
+        }else if(this.getNumData.projType == 1043){
+          reportNumType = 1033
+        }else if(this.getNumData.projType == 1010 || this.getNumData.projType == 1020 || this.getNumData.projType == 1030){
+          reportNumType = this.getNumData.projType + type
+        }else{
+          reportNumType = this.getNumData.projType
+        }
+      }
+      console.log('reportNumType>>>', reportNumType)
+      createReportNum({ projId: this.getNumData.projId, reportNumType: reportNumType }).then(res => {
+        console.log(res.data.reportNum)
+        if(type == 1){
+          this.getNumData.cph = res.data.reportNum
+        }else if(type == 2){
+          this.getNumData.zph = res.data.reportNum
+        }else if(type == 3){
+          this.getNumData.zxh = res.data.reportNum
+        }else{
+          this.getNumData.hhh = res.data.reportNum
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    //取号end
+    getSubNum() {
+      addSubReportNum({reportNum: '2020FG03002', subReportNum: '102'})
+        .then(res => {
+          console.log(res)
+        })
+    },
+    //
     formatDate(now) {
       const time = new Date(now.projDate)
       var year = time.getFullYear();  //取得4位数的年份
@@ -526,7 +562,7 @@ export default {
 }
 .dialog-item {
   margin-top: 20px;
-  width: 50%;
+  width: 90%;
 }
 .right-button {
   float: right;

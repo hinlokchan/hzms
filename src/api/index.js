@@ -180,3 +180,12 @@ export function getSubReportNum(data) {
     data: qs.stringify(data)
   })
 }
+
+export function addSubReportNum(data) {
+  return request({
+    url: `${ProManageAPIServer}project/addSubReportNum`,
+    headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
