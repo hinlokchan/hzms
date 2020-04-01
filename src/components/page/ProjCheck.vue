@@ -15,50 +15,60 @@
         </div>
         <div class="project">
           <div style="text-align:right;width:100%;">
-            <el-button type="text" icon="el-icon-printer" @click="dealDetailData()">打印计划信息表</el-button>
+            <el-button type="text" icon="el-icon-printer">打印计划信息表</el-button>
+            <div style="font-size:13px;">计划录入：{{detailData.operator}}</div>
           </div>
           <el-row>
             <el-col :span="2">
               <div class="projTitle">计划编号</div>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="4">
               <div class="projContent">{{detailData.projNum}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">初评号</div>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="4">
               <div class="projContent">{{detailData.reportNumList.cph}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">正评号</div>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="4">
               <div class="projContent">{{detailData.reportNumList.zph}}</div>
+            </el-col>
+            <el-col :span="2">
+              <div class="projTitle">回函号</div>
+            </el-col>
+            <el-col :span="4">
+              <div class="projContent">{{detailData.reportNumList.hhh}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">项目类型</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent"></div>
+              <div class="projContent">{{transedData.projType}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">安排/轮序</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent">{{detailData.arrgType}}</div>
+              <div class="projContent" v-if="detailData.arrgType == 1001">轮序</div>
+              <div class="projContent" v-else>安排</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">新/重评项目</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent">{{detailData.newOldType}}</div>
+              <div class="projContent" v-if="detailData.newOldType == 1001">新项目</div>
+              <div class="projContent" v-else>轮序项目</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">紧急程度</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent">{{detailData.projDegree}}</div>
+              <div class="projContent" v-if="detailData.projDegree == 1001">正常</div>
+              <div class="projContent" v-else>紧急</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">项目名称</div>
@@ -156,17 +166,14 @@
             </el-col>
           </el-row>
           <el-row>
+            <el-col :span="4">
             <div class="form-item-title">
               <h3>项目进度</h3>
             </div>
-            <el-col :span="12">
-              <span>当前状态</span>
-              <el-tag
-                type="warning"
-                size="medium"
-              >滞后</el-tag>
             </el-col>
-            <el-col :span="18">
+          </el-row>
+          <el-row>
+            <el-col :span="20">
               <el-steps
                 :active="1"
                 simple
@@ -285,6 +292,8 @@ export default {
       detailData: [],
       reportNum: [],
       projTypeOption:[],
+      projTypeZH: '',
+      transedData: {},
       fengxian: [
         {
           value: '1001',
@@ -311,6 +320,7 @@ export default {
     this.getDetail()
     this.projTypeOption = projTypeOption
     console.log('projTypeOption', this.projTypeOption);
+    
   },
   mounted() {
 
@@ -320,20 +330,13 @@ export default {
       getDetailProjInfo({ projId: this.projId }).then(res => {
         console.log('res.data', res.data)
         this.detailData = res.data
-      })
-      // getReportNum({projId: this.projId})
-      //   .then(res => {
-      //     console.log('getReportNum>>>', res)
-      //     this.reportNum = res.data
-      //   })
-    },
-    dealDetailData() {
-      console.log(this.projTypeOption.length);
-      for(i=0;i<this.projTypeOption.length;i++) {
-        return console.log('1');
-        
+        //处理value转为label展示
+        for(var i=0;i<this.projTypeOption.length;i++) {
+        if(this.detailData.projType == this.projTypeOption[i].value) {
+          this.transedData.projType = this.projTypeOption[i].label
+        }
       }
-      
+      })
     },
     formatDate(now) {
       const time = new Date(now)
@@ -366,8 +369,9 @@ export default {
     border: 1px solid #d3d3d3;
 }
 .form-item-title {
-    width: 100px;
-    text-align: center;
+    width: 100%;
+    text-align: left;
+    padding-left: 10px;
     margin: 20px 0 5px 0;
     border-left: solid 5px #409eff;
 }

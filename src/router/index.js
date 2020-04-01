@@ -51,6 +51,11 @@ export default new Router({
                     meta: { title: '二维码生成' }
                 },
                 {
+                    path: '/workarrange',
+                    component: () => import(/* webpackChunkName: "qrcode" */ '../components/page/WorkArrange.vue'),
+                    meta: { title: '工作安排' }
+                },
+                {
                     path: '/usermanage',
                     component: () => import(/* webpackChunkName: "usermanage" */ '../components/page/UserManage.vue'),
                     meta: { title: '用户管理' }
