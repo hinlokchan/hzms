@@ -38,7 +38,7 @@
                   v-model="form.projType"
                 >
                   <el-option
-                    v-for="item in proTypeList"
+                    v-for="item in projTypeOption"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value"
@@ -348,6 +348,7 @@
 import { createNewProject, editProject } from '@/api/index'
 import { getDetailProjInfo } from '@/api/index'
 import bankOptions from '../../../public/bank.json'
+import projTypeOption from '../../../public/projTypeOption.json'
 export default {
   name: 'planform',
   data() {
@@ -384,7 +385,8 @@ export default {
         fieldSrvy: [{ value: '' }],
         compSchedule: 3,
         projReviewer: [{ value: '' }],
-        lendingBank: []
+        lendingBank: [],
+        projTypeOption: []
       },
       rules: {
         projType: [
@@ -409,51 +411,6 @@ export default {
           { required: true, message: '请选择评估目的', trigger: 'blur' }
         ]
       },
-      proTypeList: [
-        {
-          label: '房地产',
-          value: '1010'
-        }, {
-          label: '资产',
-          value: '1020'
-        }, {
-          label: '土地',
-          value: '1030'
-        }, {
-          label: '房地产咨询',
-          value: '1041'
-        }, {
-          label: '资产咨询',
-          value: '1042'
-        }, {
-          label: '土地咨询',
-          value: '1043'
-        }, {
-          label: 'PPP',
-          value: '1050'
-        }, {
-          label: '房地产复审',
-          value: '1061'
-        }, {
-          label: '资产复审',
-          value: '1062'
-        }, {
-          label: '土地复审',
-          value: '1063'
-        }, {
-          label: '外协',
-          value: '1070'
-        }, {
-          label: '政策修订',
-          value: '1080'
-        }, {
-          label: '绩效',
-          value: '1090'
-        }, {
-          label: '其他',
-          value: '1100'
-        }
-      ],
       assemGoalList: ['抵押', '交易', '资产处置（司法鉴定）', '出让', '挂牌出让', '补出让', '转让', '盘整收回', '征收补偿', '活立木拍卖', '出租', '置换', '股权转让', '作价入股', '增资扩股', '入账', '征收、完税', '企业改制', '清算', '复审', '评价', '咨询'],
     };
   },
@@ -468,6 +425,7 @@ export default {
       this.getDetail()
     }
     this.bankOptions = bankOptions
+    this.projTypeOption = projTypeOption
   },
   methods: {
     closeNewInfo() {

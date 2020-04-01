@@ -223,21 +223,9 @@
           </div>
           <el-divider></el-divider>
           <div class="dialog-item">
-            <span v-if="getNumData.cph !== '' || getNumData.zph !== '' || getNumData.hhh !== ''">
+            <span>
               <h3>子报告号</h3>
             </span>
-          </div>
-          <div class="dialog-item">
-            <el-row>
-              <el-col :span="6">
-                <span v-if="getNumData.cph !== ''">{{getNumData.cph}} -</span>
-              </el-col>
-              <el-col :span="3">
-                <el-button
-                  @click="getSubNum">取子报告号
-                </el-button>
-              </el-col>
-            </el-row>
           </div>
         </div>
       </el-dialog>
@@ -319,8 +307,7 @@ export default {
       date1: '',
       getNumType: 0,
       getNumData: {},
-      getSubNum: '',
-      subNum: []
+      getSubNum: ''
     }
   },
   created() {
@@ -418,13 +405,6 @@ export default {
       this.getNumData.projType = num.row.projType
       this.getNumData.projId = num.row.projId
       this.getNumData.projName = num.row.projName
-      this.getSubNum = num.row.reportNum.cph+','+num.row.reportNum.zph+','+num.row.reportNum.hhh
-      console.log('getSubNum >>>', this.getSubNum)
-      getSubReportNum({reportNumList: this.getSubNum})
-        .then(res => {
-          console.log('xxx', res.data);
-          this.subNum.push(res.data)
-        })
       console.log('getNum -> getNumData>>>', this.getNumData)
       if (num.row.projType == 1010 || num.row.projType == 1020 || num.row.projType == 1030) {
         this.getNumType = 1 //房地资项目类型才有初评正评

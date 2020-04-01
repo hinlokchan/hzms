@@ -15,7 +15,7 @@
         </div>
         <div class="project">
           <div style="text-align:right;width:100%;">
-            <el-button type="text" icon="el-icon-printer">打印计划信息表</el-button>
+            <el-button type="text" icon="el-icon-printer" @click="dealDetailData()">打印计划信息表</el-button>
           </div>
           <el-row>
             <el-col :span="2">
@@ -28,19 +28,19 @@
               <div class="projTitle">初评号</div>
             </el-col>
             <el-col :span="6">
-              <div class="projContent">{{detailData.paNum}}</div>
+              <div class="projContent">{{detailData.reportNumList.cph}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">正评号</div>
             </el-col>
             <el-col :span="6">
-              <div class="projContent">{{detailData.faNUm}}</div>
+              <div class="projContent">{{detailData.reportNumList.zph}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">项目类型</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent">{{detailData.projType}}</div>
+              <div class="projContent"></div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">安排/轮序</div>
@@ -276,12 +276,15 @@
 
 <script>
 import { getDetailProjInfo, getReportNum } from '@/api/index'
+import projTypeOption from '../../../public/projTypeOption.json'
 export default {
   name: 'projcheck',
   data() {
     return {
       projId: '',
       detailData: [],
+      reportNum: [],
+      projTypeOption:[],
       fengxian: [
         {
           value: '1001',
@@ -306,6 +309,8 @@ export default {
     console.log('11', this.$route.query.data)
     this.projId = this.$route.query.data
     this.getDetail()
+    this.projTypeOption = projTypeOption
+    console.log('projTypeOption', this.projTypeOption);
   },
   mounted() {
 
@@ -313,13 +318,22 @@ export default {
   methods: {
     getDetail() {
       getDetailProjInfo({ projId: this.projId }).then(res => {
-        console.log(res.data)
+        console.log('res.data', res.data)
         this.detailData = res.data
       })
-      getReportNum({projId: this.projId})
-        .then(res => {
-          console.log('getReportNum>>>', res)
-        })
+      // getReportNum({projId: this.projId})
+      //   .then(res => {
+      //     console.log('getReportNum>>>', res)
+      //     this.reportNum = res.data
+      //   })
+    },
+    dealDetailData() {
+      console.log(this.projTypeOption.length);
+      for(i=0;i<this.projTypeOption.length;i++) {
+        return console.log('1');
+        
+      }
+      
     },
     formatDate(now) {
       const time = new Date(now)
