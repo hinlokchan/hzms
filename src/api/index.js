@@ -189,3 +189,23 @@ export function addSubReportNum(data) {
     data: qs.stringify(data)
   })
 }
+
+export function setWorkAssignment(data) {
+  return request({
+    url: `${ProManageAPIServer}project/workAssignment`,
+    headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
+
+export function getWorkAssignment(data) {
+  return request({
+    url: `${ProManageAPIServer}project/getWorkAssignment`,
+    headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
+
+

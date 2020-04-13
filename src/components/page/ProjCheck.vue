@@ -15,7 +15,11 @@
         </div>
         <div class="project">
           <div style="text-align:right;width:100%;">
-            <el-button type="text" icon="el-icon-printer">打印计划信息表</el-button>
+            <el-button
+              type="text"
+              icon="el-icon-printer"
+              @click="printProj(projId)"
+            >打印计划信息表</el-button>
             <div style="font-size:13px;">计划录入：{{detailData.operator}}</div>
           </div>
           <el-row>
@@ -53,22 +57,40 @@
               <div class="projTitle">安排/轮序</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent" v-if="detailData.arrgType == 1001">轮序</div>
-              <div class="projContent" v-else>安排</div>
+              <div
+                class="projContent"
+                v-if="detailData.arrgType == 1001"
+              >轮序</div>
+              <div
+                class="projContent"
+                v-else
+              >安排</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">新/重评项目</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent" v-if="detailData.newOldType == 1001">新项目</div>
-              <div class="projContent" v-else>轮序项目</div>
+              <div
+                class="projContent"
+                v-if="detailData.newOldType == 1001"
+              >新项目</div>
+              <div
+                class="projContent"
+                v-else
+              >轮序项目</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">紧急程度</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent" v-if="detailData.projDegree == 1001">正常</div>
-              <div class="projContent" v-else>紧急</div>
+              <div
+                class="projContent"
+                v-if="detailData.projDegree == 1001"
+              >正常</div>
+              <div
+                class="projContent"
+                v-else
+              >紧急</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">项目名称</div>
@@ -107,7 +129,7 @@
               <div class="projContent">{{formatDate(detailData.fldSrvySchedule)}}</div>
             </el-col>
             <el-col :span="2">
-              <div class="projTitle">委托方</div>
+              <div class="projTitle">委托人</div>
             </el-col>
             <el-col :span="4">
               <div class="projContent">{{detailData.clientName}}</div>
@@ -119,7 +141,7 @@
               <div class="projContent">{{detailData.lendingBank}}</div>
             </el-col>
             <el-col :span="4">
-              <div class="projTitle">委托方联系人及联系方式</div>
+              <div class="projTitle">委托人联系人及联系方式</div>
             </el-col>
             <el-col :span="8">
               <div class="projContent">{{detailData.clientContact}}{{detailData.clientContactInfo}}</div>
@@ -147,7 +169,10 @@
             </el-col>
             <el-col :span="4">
               <div class="projContent">
-                <span v-for="item in fengxian" :key="item.value">
+                <span
+                  v-for="item in fengxian"
+                  :key="item.value"
+                >
                   <span v-if="detailData.riskProfile == item.value">{{item.label}}</span>
                 </span>
               </div>
@@ -167,9 +192,9 @@
           </el-row>
           <el-row>
             <el-col :span="4">
-            <div class="form-item-title">
-              <h3>项目进度</h3>
-            </div>
+              <div class="form-item-title">
+                <h3>项目进度</h3>
+              </div>
             </el-col>
           </el-row>
           <el-row>
@@ -282,7 +307,7 @@
 </template>
 
 <script>
-import { getDetailProjInfo, getReportNum } from '@/api/index'
+import { getDetailProjInfo, getReportNum, getProjInfoTable } from '@/api/index'
 import projTypeOption from '../../../public/projTypeOption.json'
 export default {
   name: 'projcheck',
@@ -291,7 +316,7 @@ export default {
       projId: '',
       detailData: [],
       reportNum: [],
-      projTypeOption:[],
+      projTypeOption: [],
       projTypeZH: '',
       transedData: {},
       fengxian: [
@@ -320,7 +345,7 @@ export default {
     this.getDetail()
     this.projTypeOption = projTypeOption
     console.log('projTypeOption', this.projTypeOption);
-    
+
   },
   mounted() {
 
@@ -331,12 +356,22 @@ export default {
         console.log('res.data', res.data)
         this.detailData = res.data
         //处理value转为label展示
-        for(var i=0;i<this.projTypeOption.length;i++) {
-        if(this.detailData.projType == this.projTypeOption[i].value) {
-          this.transedData.projType = this.projTypeOption[i].label
+        for (var i = 0; i < this.projTypeOption.length; i++) {
+          if (this.detailData.projType == this.projTypeOption[i].value) {
+            this.transedData.projType = this.projTypeOption[i].label
+          }
         }
-      }
       })
+    },
+    printProj(val) {
+      console.log('val', val)
+      getProjInfoTable({projId: val})
+        .then(res => {
+          console.log(res)
+        })
+        .catch(err => {
+          console.log(err, 'failed to ger ProjInfoTable')
+        })
     },
     formatDate(now) {
       const time = new Date(now)
@@ -352,27 +387,27 @@ export default {
 
 <style scoped>
 .project {
-    width: 100%;
-    height: inherit;
+  width: 100%;
+  height: inherit;
 }
 .projTitle {
-    background-color: #cbe5ff;
-    text-align: center;
-    height: 50px;
-    line-height: 50px;
-    border: 1px solid #d3d3d3;
+  background-color: #cbe5ff;
+  text-align: center;
+  height: 50px;
+  line-height: 50px;
+  border: 1px solid #d3d3d3;
 }
 .projContent {
-    text-align: center;
-    height: 50px;
-    line-height: 50px;
-    border: 1px solid #d3d3d3;
+  text-align: center;
+  height: 50px;
+  line-height: 50px;
+  border: 1px solid #d3d3d3;
 }
 .form-item-title {
-    width: 100%;
-    text-align: left;
-    padding-left: 10px;
-    margin: 20px 0 5px 0;
-    border-left: solid 5px #409eff;
+  width: 100%;
+  text-align: left;
+  padding-left: 10px;
+  margin: 20px 0 5px 0;
+  border-left: solid 5px #409eff;
 }
 </style>

@@ -36,6 +36,7 @@
               >
                 <el-select
                   v-model="form.projType"
+                  @change="arrgTypeToEnable"
                 >
                   <el-option
                     v-for="item in projTypeOption"
@@ -52,6 +53,7 @@
                 <el-select
                   v-model="form.arrgType"
                   placeholder="请选择"
+                  :disabled="arrgTypeEnable"
                 >
                   <el-option
                     label="轮序"
@@ -107,7 +109,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="项目范围" prop="projScope">
+              <el-form-item label="评估范围" prop="projScope">
                 <el-input v-model="form.projScope"></el-input>
               </el-form-item>
             </el-col>
@@ -182,22 +184,42 @@
           <el-row :gutter="20">
             <el-divider></el-divider>
             <el-col :span="6">
-              <el-form-item label="接洽人">
+              <el-form-item label="接洽类型">
+                <el-cascader
+                  
+                >
+                </el-cascader>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="接洽人" prop="projContact">
                 <el-input v-model="form.projContact"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="委托方">
+              <el-form-item label="贷款银行" prop="lendingBank">
+                <el-cascader
+                  :show-all-levels="true"
+                  v-model="form.lendingBank"
+                  :options="bankOptions"
+                  :props="{ expandTrigger: 'hover' }"
+                >
+                </el-cascader>
+              </el-form-item>
+            </el-col>
+            
+            <el-col :span="6">
+              <el-form-item label="委托人" prop="clientName">
                 <el-input v-model="form.clientName"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="委托方联系人">
+              <el-form-item label="委托人联系人">
                 <el-input v-model="form.clientContact"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="委托方联系人电话">
+              <el-form-item label="委托人联系人电话">
                 <el-input v-model="form.clientContactInfo"></el-input>
               </el-form-item>
             </el-col>
@@ -219,17 +241,6 @@
             <el-col :span="6">
               <el-form-item label="引荐人电话">
                 <el-input v-model="form.projRefererInfo"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="贷款银行">
-                <el-cascader
-                  :show-all-levels="true"
-                  v-model="form.lendingBank"
-                  :options="bankOptions"
-                  :props="{ expandTrigger: 'hover' }"
-                >
-                </el-cascader>
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -356,6 +367,7 @@ export default {
       isEdit: false,
       newInfo: false,
       newInfoData: '',
+      arrgTypeEnable: true,
       form: {
         projType: '',
         projName: '',
@@ -396,7 +408,10 @@ export default {
           { required: true, message: '请输入项目名称', trigger: 'blur' }
         ],
         projScope: [
-          { required: true, message: '请输入项目范围', trigger: 'blur' }
+          { required: true, message: '请输入评估范围', trigger: 'blur' }
+        ],
+        assemGoal: [
+          { required: true, message: '请选择评估目的', trigger: 'blur' }
         ],
         projDate: [
           { required: true, message: '请选择编制日期', trigger: 'blur' }
@@ -407,8 +422,14 @@ export default {
         fldSrvySchedule: [
           { required: true, message: '请选择现勘日期', trigger: 'blur' }
         ],
-        assemGoal: [
-          { required: true, message: '请选择评估目的', trigger: 'blur' }
+        projContact: [
+          { required: true, message: '请填写接洽人', trigge: 'blur' }
+        ],
+        clientName: [
+          { required: true, message: '请填写委托人', trigge: 'blur' }
+        ],
+        lendingBank: [
+          { required: true, message: '请选择贷款银行', trigger: 'blur' }
         ]
       },
       assemGoalList: ['抵押', '交易', '资产处置（司法鉴定）', '出让', '挂牌出让', '补出让', '转让', '盘整收回', '征收补偿', '活立木拍卖', '出租', '置换', '股权转让', '作价入股', '增资扩股', '入账', '征收、完税', '企业改制', '清算', '复审', '评价', '咨询'],
@@ -419,6 +440,7 @@ export default {
       this.isEdit = false
       this.form.projDate = this.getToday()
       this.form.baseDate = this.getToday()
+      this.form.fldSrvySchedule = this.getToday()
     } else {
       this.projId = this.$route.query.data
       this.isEdit = true
@@ -428,6 +450,13 @@ export default {
     this.projTypeOption = projTypeOption
   },
   methods: {
+    arrgTypeToEnable(val) {
+      if(val == 1010 || val == 1030) {
+        this.arrgTypeEnable = false
+      } else {
+        this.arrgTypeEnable = true
+      }
+    },
     closeNewInfo() {
       this.newInfo = false
       this.goBack()

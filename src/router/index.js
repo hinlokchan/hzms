@@ -56,6 +56,11 @@ export default new Router({
                     meta: { title: '工作安排' }
                 },
                 {
+                    path: '/stat',
+                    component: () => import(/* webpackChunkName: "qrcode" */ '../components/page/Stat.vue'),
+                    meta: { title: '工作安排' }
+                },
+                {
                     path: '/usermanage',
                     component: () => import(/* webpackChunkName: "usermanage" */ '../components/page/UserManage.vue'),
                     meta: { title: '用户管理' }

@@ -93,8 +93,8 @@
           prop="projDate"
           label="编制日期"
           width="120"
-          sortable
           :formatter="formatDate"
+          sortable
         >
         </el-table-column>
         <el-table-column
@@ -139,7 +139,7 @@
             <el-button
               type="text"
               icon="el-icon-info"
-              @click="handleDetail(scope.$index)"
+              @click="handleDetail(scope.row)"
               size="medium"
             >项目详情</el-button>
             <el-button
@@ -148,12 +148,6 @@
               size="medium"
               @click="getNum(scope)"
             >取号</el-button>
-            <!-- <el-button
-              type="text"
-              icon="el-icon-connection"
-              size="meduim"
-            >取分户号
-            </el-button> -->
             <el-button
               type="text"
               icon="el-icon-s-operation"
@@ -164,9 +158,9 @@
             <el-button
               type="text"
               icon="el-icon-s-order"
-              @click="arrMemberVisible = true"
+              @click="handleWorkArrange(scope.row)"
               size="medium"
-            >分配任务</el-button>
+            >工作安排</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -323,7 +317,7 @@ export default {
     }
   },
   created() {
-    this.getData();
+    this.getData()
   },
   mounted() {
   },
@@ -375,7 +369,7 @@ export default {
         console.log('value>>>', item)
         return item.value == data.projType
       })
-      selOption.splice(index, 1)
+      //selOption.splice(index, 1)
       this.typeOptions = selOption
     },
     getData() {
@@ -390,7 +384,7 @@ export default {
           this.pageTotal = res.data.length
         })
         .catch(err => {
-          console.log('field to search');
+          console.log('field to search myproject');
         })
     },
     reset() {
@@ -405,9 +399,14 @@ export default {
           console.log('field to search');
         })
     },
-    handleDetail(index) {
+    handleDetail(val) {
       sessionStorage.setItem('page', this.currentPage)
-      this.$router.push({ path: '/projcheck', query: { data: this.tableData[index].projId } })
+      // const index2 = (this.currentPage - 1)*10 + index
+      console.log('当前行信息 >>>', val)
+      this.$router.push({ path: '/projcheck', query: { data: val.projId } })
+    },
+    handleWorkArrange(val) {
+      this.$router.push({ path: '/workarrange', query: { data: val } })
     },
     //取号流程 getNum -> getNewNumId -> getNewNum
     getNum(num) {

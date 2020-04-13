@@ -94,7 +94,6 @@
                   <span v-if="item.value == props.row.projType">{{ item.label }}</span>
                 </div>
               </el-form-item>
-
               <el-form-item label="项目负责人">
                 <span>{{ props.row.projLeader }}</span>
               </el-form-item>
@@ -212,6 +211,7 @@
 <script>
 // import { fetchData } from '../../api/index';
 import { getAllAbstractProject, searchProject, delProject } from '@/api/index';
+import projTypeOption from '../../../public/projTypeOption.json'
 export default {
   name: 'plan',
   data() {
@@ -222,6 +222,7 @@ export default {
       // },
       currentPage: 1, // 当前页码
       pageSize: 10, // 每页的数据条数
+      pageTotal: 0,
       proTypeList: [
         {
           label: '房地产',
@@ -270,10 +271,7 @@ export default {
       searchData: { reportNum: '', projName: '', projScope: '', clientName: '', projMember: '' },
       tableData: [],
       editVisible: false,
-      pageTotal: 0,
-      form: {},
-      idx: -1,
-      id: -1
+      form: {}
     };
   },
   created() {
