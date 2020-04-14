@@ -81,6 +81,7 @@
         class="table"
         ref="multipleTable"
         header-cell-class-name="table-header"
+        :default-sort="{ prop:'projDate', order: 'descending' }"
       >
         <el-table-column type="expand">
           <template slot-scope="props">
@@ -90,7 +91,7 @@
               class="demo-table-expand"
             >
               <el-form-item label="项目类型">
-                <div v-for="item in proTypeList" :key="item.value">
+                <div v-for="item in projTypeList" :key="item.value">
                   <span v-if="item.value == props.row.projType">{{ item.label }}</span>
                 </div>
               </el-form-item>
@@ -143,6 +144,7 @@
           prop="projDate"
           :formatter="formatDate"
           label="编制日期"
+          sortable
         ></el-table-column>
         <el-table-column
           prop="projNum"
@@ -178,20 +180,20 @@
               type="text"
               icon="el-icon-info"
               size="meduim"
-              @click="handleCheck(scope.$index)"
+              @click="handleCheck(scope.row)"
             >详情</el-button>
             <el-button
               type="text"
               icon="el-icon-edit"
               size="medium"
-              @click="handleEdit(scope.$index)"
+              @click="handleEdit(scope.row)"
             >编辑</el-button>
             <el-button
               type="text"
               icon="el-icon-delete"
               class="red"
               size="medium"
-              @click="handleDelete(scope.$index, scope.row)"
+              @click="handleDelete(scope.row)"
             >删除</el-button>
           </template>
         </el-table-column>
@@ -223,7 +225,7 @@ export default {
       currentPage: 1, // 当前页码
       pageSize: 10, // 每页的数据条数
       pageTotal: 0,
-      proTypeList: [
+      projTypeList: [
         {
           label: '房地产',
           value: '1010'
@@ -340,23 +342,21 @@ export default {
       this.$router.push('/planform')
     },
     //编辑操作
-    handleEdit(index) {
+    handleEdit(val) {
       sessionStorage.setItem('page', this.currentPage)
-      const index2 = (this.currentPage - 1)*10 + index
-      this.$router.push({ path: '/planform', query: { data: this.tableData[index2].projId } })
+      this.$router.push({ path: '/planform', query: { data: val.projId } })
     },
     //查看详情操作
-    handleCheck(index) {
+    handleCheck(val) {
       sessionStorage.setItem('page', this.currentPage)
-      const index2 = (this.currentPage - 1)*10 + index
-      console.log('index2', index2)
-      console.log('查看项目详情事件', this.tableData[index2].projId);
-      this.$router.push({ path: '/projcheck', query: { data: this.tableData[index2].projId } })
+      // const index2 = (this.currentPage - 1)*10 + index
+      console.log('查看项目详情事件', val.projId);
+      this.$router.push({ path: '/projcheck', query: { data: val.projId } })
     },
     // 删除操作
-    handleDelete(index, row) {
+    handleDelete(row) {
       // 二次确认删除
-      this.$confirm('删除后将不可恢复，确定要删除吗？', '提示', {
+      this.$confirm('删除后将不可恢复，确定要删除吗？', '提示: 即将删除['+row.projNum+']', {
         type: 'warning'
       })
         .then(() => {
@@ -364,7 +364,7 @@ export default {
             this.$message.success('删除成功');
             this.getData()
           }).catch(err => {
-            this.$message.warning('删除失败');
+            this.$message.warning('删除失败,请稍后重试');
           })
         })
         .catch(() => { });

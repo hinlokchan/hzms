@@ -62,13 +62,14 @@ export default {
   },
   methods: {
     printDayReport(val) {
+      console.log('val>>>', val)
       getDayReport({ dateStr: val })
         .then(res => {
-          
+          console.log('res>>>', res)
           
         })
         .catch(err => {
-          console.log(err)
+          console.log('err>>>', err)
           this.$message({
             message: '下载失败',
             type: 'error',

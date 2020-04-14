@@ -18,6 +18,7 @@ export function getDayReport(data) {
     url: `${ProManageAPIServer}statistics/dayReport`,
     headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},
     method: 'post',
-    data: qs.stringify(data)
+    data: qs.stringify(data),
+    responseType: 'blob'
   })
 }
