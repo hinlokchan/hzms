@@ -29,6 +29,9 @@
 
 <script>
 import { getDayReport } from '@/api/statistics'
+import { Base64 } from 'js-base64'
+import { host } from '@/config'
+var ProManageAPIServer = `${host.baseUrl}/${host.pathUrl}`
 export default {
   name: 'stat',
   data() {
@@ -62,20 +65,32 @@ export default {
   },
   methods: {
     printDayReport(val) {
-      console.log('val>>>', val)
-      getDayReport({ dateStr: val })
-        .then(res => {
-          console.log('res>>>', res)
-          
-        })
-        .catch(err => {
-          console.log('err>>>', err)
-          this.$message({
-            message: '下载失败',
-            type: 'error',
-            
-          })
-        })
+      if(val == ''){ 
+        this.$message.warning ('请选择时间')
+        return 0
+      }
+      var oReq = new XMLHttpRequest()
+      // url参数为拿后台数据的接口
+      let pathUrl = ProManageAPIServer + 'statistics/dayReport'
+      oReq.open('POST', pathUrl, true)
+      oReq.responseType = 'blob'
+      oReq.onload = function(oEvent) {
+        var content = oReq.response
+        var elink = document.createElement('a')
+        // name为后台返给前端的文件名，根据下载文件格式加后缀名，后缀名必须加，不然下载在本地不方便打开。
+        var headers = oReq.getResponseHeader('content-disposition')
+        const headers2 = headers.split(';')[1].split('=')[1].substr(10)
+        elink.download = headers2
+        elink.style.display = 'none'
+        var blob = new Blob([content])
+        elink.href = URL.createObjectURL(blob)
+        document.body.appendChild(elink)
+        elink.click()
+        document.body.removeChild(elink)
+      }
+      const fdata = new FormData()
+      fdata.append('dateStr', val)
+      oReq.send(fdata)
     },
     formatDate(now) {
       const time = new Date(now)
