@@ -24,10 +24,10 @@
                 </el-card>
                 <el-card shadow="hover" :body-style="{padding: '0px'}" style="margin-top: 10px;">
                     <div class="grid-content grid-con-2">
-                        <i class="el-icon-lx-notice grid-con-icon"></i>
+                        <i class="el-icon-lx-punch grid-con-icon"></i>
                         <div class="grid-cont-right">
                             <div class="grid-num">321</div>
-                            <div>系统消息</div>
+                            <div>待归档项目数</div>
                         </div>
                     </div>
                 </el-card>
