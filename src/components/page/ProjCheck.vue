@@ -309,6 +309,8 @@
 <script>
 import { getDetailProjInfo, getReportNum, getProjInfoTable } from '@/api/index'
 import projTypeOption from '../../../public/projTypeOption.json'
+import { host } from '@/config'
+var ProManageAPIServer = `${host.baseUrl}/${host.pathUrl}`
 export default {
   name: 'projcheck',
   data() {
@@ -351,6 +353,26 @@ export default {
 
   },
   methods: {
+    // 将返回的流数据转换为url
+    getObjectURL(file) {
+      let url = null;
+      if (window.createObjectURL != undefined) { // basic
+          url = window.createObjectURL(file);
+      } else if (window.webkitURL != undefined) { // webkit or chrome
+          try {
+            url = window.webkitURL.createObjectURL(file);            
+          } catch (error) {
+            
+          }
+      } else if (window.URL != undefined) { // mozilla(firefox)
+        try {
+          url = window.URL.createObjectURL(file);
+        } catch (error) {
+          
+        }
+      }
+      return url;
+    },
     getDetail() {
       getDetailProjInfo({ projId: this.projId }).then(res => {
         console.log('res.data', res.data)
@@ -364,14 +386,18 @@ export default {
       })
     },
     printProj(val) {
-      console.log('val', val)
-      getProjInfoTable({projId: val})
-        .then(res => {
-          console.log(res)
-        })
-        .catch(err => {
-          console.log(err, 'failed to ger ProjInfoTable')
-        })
+      var that = this
+      var oReq = new XMLHttpRequest()
+      // url参数为拿后台数据的接口
+      let pathUrl = ProManageAPIServer + getProjInfoTable
+      oReq.open('POST', pathUrl, true)
+      oReq.responseType = 'blob'
+      oReq.onload = function(oEvent) {
+        window.open('/static/pdf/web/viewer.html?file=' + encodeURIComponent(URL.createObjectURL(new Blob([oReq.response]))))
+      }
+      const fdata = new FormData()
+      fdata.append('projId', parseInt(that.projId))
+      oReq.send(fdata)
     },
     formatDate(now) {
       const time = new Date(now)

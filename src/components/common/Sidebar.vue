@@ -63,7 +63,6 @@ export default {
     return {
       collapse: false,
       roleItem: [],
-
       items0: [
         {
           icon: 'el-icon-lx-home',
@@ -114,48 +113,9 @@ export default {
           index: "usermanage",
           icon: "el-icon-user",
           title: "用户管理"
-        },
-        // {
-        //     icon: 'el-icon-lx-copy',
-        //     index: 'tabs',
-        //     title: 'tab选项卡'
-        // },
-        {
-          icon: 'el-icon-lx-calendar',
-          index: '3',
-          title: '表单相关',
-          subs: [
-            {
-              index: 'form',
-              title: '基本表单'
-            },
-            {
-              index: '3-2',
-              title: '三级菜单',
-              subs: [
-                {
-                  index: 'editor',
-                  title: '富文本编辑器'
-                },
-                {
-                  index: 'markdown',
-                  title: 'markdown编辑器'
-                }
-              ]
-            },
-            {
-              index: 'upload',
-              title: '文件上传'
-            }
-          ]
-        },
-        {
-          icon: 'el-icon-lx-emoji',
-          index: 'icon',
-          title: '自定义图标'
         }
       ],
-      items1: [
+      items2: [
         {
           icon: 'el-icon-lx-home',
           index: 'dashboard',
@@ -184,10 +144,7 @@ export default {
               title: '询价记录查询'
             },
             {
-              index: 'workbranch',
-              title: '工作台'
-            },
-            {
+              index: 'qrcode',
               title: '报告二维码生成'
             },
             {
@@ -196,8 +153,36 @@ export default {
           ]
         },
         {
+          index: 'stat',
           icon: "el-icon-data-analysis",
           title: "统计管理"
+        }
+      ],
+      items3: [
+        {
+          icon: 'el-icon-lx-home',
+          index: 'dashboard',
+          title: '系统首页'
+        },
+        {
+          icon: 'el-icon-receiving',
+          title: '我的项目',
+          subs: [
+            {
+              title: '询价记录查询'
+            },
+            {
+              index: 'workbranch',
+              title: '工作台'
+            },
+            {
+              index: 'qrcode',
+              title: '报告二维码生成'
+            },
+            {
+              title: '正评登记'
+            }
+          ]
         }
       ]
     };
@@ -208,8 +193,13 @@ export default {
     }
   },
   created() {
-    if (localStorage.getItem('role') == 0) {
+    let sf = localStorage.getItem('role')
+    if (sf == 0 || sf == 1) {
       this.roleItem = this.items0
+    } else if (sf == 2) {
+      this.roleItem = this.items2
+    } else if (sf == 3) {
+      this.roleItem = this.items3
     }
     // 通过 Event Bus 进行组件间通信，来折叠侧边栏
     bus.$on('collapse', msg => {
