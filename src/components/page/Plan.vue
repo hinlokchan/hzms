@@ -36,6 +36,7 @@
               v-model="searchData.reportNum"
               placeholder="初、正评号"
               size="medium"
+              @keyup.enter.native="handleSearch"
             ></el-input>
           </el-col>
           <el-col :span="2.5">
@@ -43,6 +44,7 @@
               v-model="searchData.projName"
               placeholder="项目名称"
               size="medium"
+              @keyup.enter.native="handleSearch"
             ></el-input>
           </el-col>
           <el-col :span="2.5">
@@ -50,6 +52,7 @@
               v-model="searchData.projScope"
               placeholder="项目范围"
               size="medium"
+              @keyup.enter.native="handleSearch"
             ></el-input>
           </el-col>
           <el-col :span="2.5">
@@ -57,6 +60,7 @@
               v-model="searchData.clientName"
               placeholder="委托方"
               size="medium"
+              @keyup.enter.native="handleSearch"
             ></el-input>
           </el-col>
           <el-col :span="2.5">
@@ -64,6 +68,7 @@
               v-model="searchData.projMember"
               placeholder="项目成员"
               size="medium"
+              @keyup.enter.native="handleSearch"
             ></el-input>
           </el-col>
           <el-button
@@ -360,6 +365,7 @@ export default {
         type: 'warning'
       })
         .then(() => {
+          //接口会判断是否有报告号并对应删除
           delProject({ projId: row.projId }).then(res => {
             this.$message.success('删除成功');
             this.getData()

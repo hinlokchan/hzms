@@ -90,18 +90,12 @@ export default {
           title: '我的项目',
           subs: [
             {
-              title: '询价记录查询'
-            },
-            {
               index: 'workbranch',
               title: '工作台'
             },
             {
               index: 'qrcode',
               title: '报告二维码生成'
-            },
-            {
-              title: '正评登记'
             }
           ]
         },

@@ -141,7 +141,7 @@
               icon="el-icon-info"
               @click="handleDetail(scope.row)"
               size="medium"
-            >项目详情</el-button>
+            >详情</el-button>
             <el-button
               type="text"
               icon="el-icon-star-on"

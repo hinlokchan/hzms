@@ -1,10 +1,10 @@
 <template>
     <div class="login-wrap">
         <div class="login-title">
-            <h1>欢迎使用惠正评估管理系统</h1>
+            <h1>欢迎使用惠正评估管理系统<br/>(内测版本)</h1>
         </div>
         <div class="ms-login">
-            <el-form :model="param" :rules="rules" ref="login" label-width="0px" class="ms-content">
+            <el-form :model="param" :rules="rules" ref="login" label-width="0px" class="ms-content" v-enterToNext="true">
                 <el-form-item prop="username">
                     <el-input v-model="param.username" placeholder="username" size="medium">
                         <el-button slot="prepend" icon="el-icon-lx-people"></el-button>

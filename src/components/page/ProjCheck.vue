@@ -8,6 +8,9 @@
           </el-breadcrumb-item>
           <el-breadcrumb-item>查看项目详情</el-breadcrumb-item>
         </el-breadcrumb>
+        <div>
+          <span><i class="el-icon-back"></i></span>
+        </div>
       </div>
       <div class="form-box">
         <div class="form-item-title">
@@ -33,19 +36,19 @@
               <div class="projTitle">初评号</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent">{{detailData.reportNumList.cph}}</div>
+              <div class="projContent"></div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">正评号</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent">{{detailData.reportNumList.zph}}</div>
+              <div class="projContent"></div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">回函号</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent">{{detailData.reportNumList.hhh}}</div>
+              <div class="projContent"></div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">项目类型</div>
@@ -193,7 +196,7 @@
           <el-row>
             <el-col :span="4">
               <div class="form-item-title">
-                <h3>项目进度</h3>
+                <h3>项目进度 - (跟进功能开发中...)</h3>
               </div>
             </el-col>
           </el-row>
@@ -307,13 +310,16 @@
 </template>
 
 <script>
-import { getDetailProjInfo, getReportNum, getProjInfoTable } from '@/api/index'
+import { getDetailProjInfo, getReportNum } from '@/api/index'
 import projTypeOption from '../../../public/projTypeOption.json'
 export default {
   name: 'projcheck',
   data() {
     return {
       projId: '',
+      cph: '',
+      zph: '',
+      hhh: '',
       detailData: [],
       reportNum: [],
       projTypeOption: [],
@@ -365,7 +371,7 @@ export default {
     },
     printProj(val) {
       console.log('val', val)
-      getProjInfoTable({projId: val})
+      getProjInfoTable({ projId: val })
         .then(res => {
           console.log(res)
         })

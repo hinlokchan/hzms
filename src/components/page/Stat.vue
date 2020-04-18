@@ -21,7 +21,7 @@
           value-format="yyyy-MM-dd"
         >
         </el-date-picker>
-        {{dateStr}}
+        <el-autocomplete></el-autocomplete>
       </div>
     </el-card>
   </div>
