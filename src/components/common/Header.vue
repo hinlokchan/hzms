@@ -5,7 +5,10 @@
             <i v-if="!collapse" class="el-icon-s-fold"></i>
             <i v-else class="el-icon-s-unfold"></i>
         </div>
-        <div class="logo"></div>
+        <div class="logo">
+            <img class="logoImg" src="../../assets/img/logo.png">
+            <span class="logoTitle">惠正评估管理系统</span>
+        </div>
         <el-dialog
           title="修改密码"
           :visible.sync="password"
@@ -186,8 +189,17 @@ export default {
 }
 .header .logo {
     float: left;
-    width: 250px;
+    width: 350px;
     line-height: 70px;
+}
+.logoImg{
+   width:50px;
+   height:50px;
+   vertical-align: middle;
+   margin: 0 20px;
+}
+.logoTitle{
+   vertical-align: middle;
 }
 .header-right {
     float: right;

@@ -210,27 +210,13 @@
           >当前项目初评号：
             <span v-if="getNumData.cph !== ''">
               {{changeNum(getNumData.cph,1)}}
-              <el-button
-                class="right-button"
-                type="danger"
-              >取 消</el-button>
-            </span>
-            <span v-else>
-              <el-button
-                class="right-button"
-                type="primary"
-                @click="getNewNummid(1)"
-              >取号</el-button>
+              <el-button class="right-button" @click="deleteReportNum(getNumData.cph)" type="danger">取 消</el-button>
             </span>
           </div>
           <div class="dialog-item">当前项目正评号：
             <span v-if="getNumData.zph !== ''">
               {{changeNum(getNumData.zph,2)}}
-              <el-button
-                class="right-button"
-                type="danger"
-                @click="deleteReportNum(scope)"
-              >取 消</el-button>
+              <el-button class="right-button" @click="deleteReportNum(getNumData.zph)" type="danger">取 消</el-button>
             </span>
             <span v-else>
               <el-button
@@ -242,17 +228,7 @@
           </div>
           <div class="dialog-item">当前项目回函号：
             <span v-if="getNumData.hhh !== ''">
-              {{changeNum(getNumData.hhh,4)}}<el-button
-                class="right-button"
-                type="danger"
-              >取 消</el-button>
-            </span>
-            <span v-else>
-              <el-button
-                class="right-button"
-                type="primary"
-                @click="getNewNummid(4)"
-              >取号</el-button>
+              {{changeNum(getNumData.hhh,4)}}<el-button @click="deleteReportNum(getNumData.hhh)" class="right-button" type="danger">取 消</el-button>
             </span>
           </div>
           <el-divider></el-divider>
@@ -267,7 +243,8 @@
                 <span v-if="getNumData.cph !== ''">{{getNumData.cph}} -</span>
               </el-col>
               <el-col :span="3">
-                <el-button @click="getSubNum">取子报告号
+                <el-button
+                  @click="getSubNumMethod">取子报告号
                 </el-button>
               </el-col>
             </el-row>
@@ -317,8 +294,7 @@
 </template>
 
 <script>
-import { getAllAbstractProject, searchMyProject, getReportNum, createReportNum, deleteReportNum, alterProjType, getSubReportNum, addSubReportNum } from '@/api/index'
-import projTypeOption from '../../../public/projTypeOption.json'
+import { getAllAbstractProject, searchMyProject, getReportNum, createReportNum, alterProjType, getSubReportNum, addSubReportNum, deleteReportNum } from '@/api/index'
 export default {
   name: 'workbranch',
   data() {
@@ -357,6 +333,15 @@ export default {
   mounted() {
   },
   methods: {
+    deleteReportNum(reportNum) {
+      deleteReportNum({ reportNum: reportNum }).then(res => {
+        this.$message.success('删除成功');
+        this.getNumVisible = false
+        this.getData();
+      }).catch(err => {
+        this.$message.error('删除失败');
+      })
+    },
     alterProjType() {
       console.log('this.changeType', this.changeType)
       if (this.changeType.toType == '') {
@@ -512,15 +497,8 @@ export default {
       })
     },
     //取号end
-    //取消报告号
-    deleteReportNum(scope) {
-      console.log('val', scope)
-      this.$confirm('取消后不可恢复，确定要取消报告号吗？', '提示: 即将取消', {
-        type: 'warning'
-      })
-    },
-    getSubNum() {
-      addSubReportNum({ reportNum: '2020FG03002', subReportNum: '102' })
+    getSubNumMethod() {
+      addSubReportNum({reportNum: '2020FG03002', subReportNum: '102'})
         .then(res => {
           console.log(res)
         })

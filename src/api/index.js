@@ -217,4 +217,13 @@ export function getWorkAssignment(data) {
   })
 }
 
+export function deleteReportNum(data) {
+  return request({
+    url: `${ProManageAPIServer}project/deleteReportNum`,
+    headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
 
+export var getProjInfoTable = 'statistics/getProjInfoTable'
