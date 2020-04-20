@@ -310,7 +310,7 @@
 </template>
 
 <script>
-import { getDetailProjInfo, getReportNum } from '@/api/index'
+import { getDetailProjInfo, getReportNum, getProjInfoTable } from '@/api/index'
 import projTypeOption from '../../../public/projTypeOption.json'
 import { host } from '@/config'
 var ProManageAPIServer = `${host.baseUrl}/${host.pathUrl}`
@@ -392,16 +392,6 @@ export default {
       })
     },
     printProj(val) {
-<<<<<<< HEAD
-      console.log('val', val)
-      getProjInfoTable({ projId: val })
-        .then(res => {
-          console.log(res)
-        })
-        .catch(err => {
-          console.log(err, 'failed to ger ProjInfoTable')
-        })
-=======
       var that = this
       var oReq = new XMLHttpRequest()
       // url参数为拿后台数据的接口
@@ -414,7 +404,6 @@ export default {
       const fdata = new FormData()
       fdata.append('projId', parseInt(that.projId))
       oReq.send(fdata)
->>>>>>> 6412ac89ae9529049db154e57f8d57f3eb5ccf45
     },
     formatDate(now) {
       const time = new Date(now)

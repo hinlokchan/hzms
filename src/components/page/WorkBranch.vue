@@ -147,7 +147,7 @@
               icon="el-icon-info"
               @click="handleDetail(scope.row)"
               size="medium"
-            >详情</el-button>
+            >项目详情</el-button>
             <el-button
               type="text"
               icon="el-icon-star-on"
@@ -210,13 +210,28 @@
           >当前项目初评号：
             <span v-if="getNumData.cph !== ''">
               {{changeNum(getNumData.cph,1)}}
-              <el-button class="right-button" @click="deleteReportNum(getNumData.cph)" type="danger">取 消</el-button>
+              <el-button
+                class="right-button"
+                @click="deleteReportNum(getNumData.cph)"
+                type="danger"
+              >取 消</el-button>
+            </span>
+            <span v-else>
+              <el-button
+                class="right-button"
+                type="primary"
+                @click="getNewNummid(1)"
+              >取号</el-button>
             </span>
           </div>
           <div class="dialog-item">当前项目正评号：
             <span v-if="getNumData.zph !== ''">
               {{changeNum(getNumData.zph,2)}}
-              <el-button class="right-button" @click="deleteReportNum(getNumData.zph)" type="danger">取 消</el-button>
+              <el-button
+                class="right-button"
+                @click="deleteReportNum(getNumData.zph)"
+                type="danger"
+              >取 消</el-button>
             </span>
             <span v-else>
               <el-button
@@ -228,26 +243,19 @@
           </div>
           <div class="dialog-item">当前项目回函号：
             <span v-if="getNumData.hhh !== ''">
-              {{changeNum(getNumData.hhh,4)}}<el-button @click="deleteReportNum(getNumData.hhh)" class="right-button" type="danger">取 消</el-button>
+              {{changeNum(getNumData.hhh,4)}}<el-button
+                @click="deleteReportNum(getNumData.hhh)"
+                class="right-button"
+                type="danger"
+              >取 消</el-button>
             </span>
-          </div>
-          <el-divider></el-divider>
-          <div class="dialog-item">
-            <span v-if="getNumData.cph !== '' || getNumData.zph !== '' || getNumData.hhh !== ''">
-              <h3>子报告号</h3>
+            <span v-else>
+              <el-button
+                class="right-button"
+                type="primary"
+                @click="getNewNummid(4)"
+              >取号</el-button>
             </span>
-          </div>
-          <div class="dialog-item">
-            <el-row>
-              <el-col :span="6">
-                <span v-if="getNumData.cph !== ''">{{getNumData.cph}} -</span>
-              </el-col>
-              <el-col :span="3">
-                <el-button
-                  @click="getSubNumMethod">取子报告号
-                </el-button>
-              </el-col>
-            </el-row>
           </div>
         </div>
       </el-dialog>
@@ -256,7 +264,6 @@
         title="更改项目类型"
         :visible.sync="changeNumVisible"
       >
-        <h3>当前项目类型：</h3>
         <el-form>
           <el-form-item
             label="选择需要更改的类型"
@@ -271,12 +278,21 @@
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
-                :disabled="item.disabled"
               ></el-option>
             </el-select>
           </el-form-item>
+          <!-- <el-form-item
+            label="请选择更改的原因"
+            label-width="200"
+          >
+            <el-select>
+              <el-option label="项目工作需要"></el-option>
+              <el-option label="个人误操作"></el-option>
+              <el-option></el-option>
+            </el-select>
+          </el-form-item> -->
         </el-form>
-        <div style="color: red">Tips:更改后计划编号将改变、已取号项目需重新取号</div>
+        <div style="color: red">Tips:更改后原报告号及计划编号将改变</div>
         <div
           slot="footer"
           class="dialog-footer"
@@ -389,8 +405,8 @@ export default {
         console.log('value>>>', item)
         return item.value == data.projType
       })
+      //selOption.splice(index, 1)
       this.typeOptions = selOption
-
     },
     getData() {
       if (sessionStorage.getItem('page')) {
@@ -498,7 +514,7 @@ export default {
     },
     //取号end
     getSubNumMethod() {
-      addSubReportNum({reportNum: '2020FG03002', subReportNum: '102'})
+      addSubReportNum({ reportNum: '2020FG03002', subReportNum: '102' })
         .then(res => {
           console.log(res)
         })

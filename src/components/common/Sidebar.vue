@@ -107,7 +107,6 @@ export default {
           index: "usermanage",
           icon: "el-icon-user",
           title: "用户管理"
-<<<<<<< HEAD
         },
         // {
         //     icon: 'el-icon-lx-copy',
@@ -147,8 +146,6 @@ export default {
           icon: 'el-icon-lx-emoji',
           index: 'icon',
           title: '自定义图标'
-=======
->>>>>>> 6412ac89ae9529049db154e57f8d57f3eb5ccf45
         }
       ],
       items2: [
