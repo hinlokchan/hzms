@@ -4,9 +4,9 @@
       class="sidebar-el-menu"
       :default-active="onRoutes"
       :collapse="collapse"
-      background-color="#324157"
-      text-color="#bfcbd9"
-      active-text-color="#20a0ff"
+      background-color="#fff"
+      text-color="#000"
+      active-text-color="#009ad6"
       unique-opened
       router
     >
@@ -18,7 +18,7 @@
             :key="item.index"
           >
             <template slot="title">
-              <i :class="item.icon"></i>
+              <i :class="item.icon" style="color: #000"></i>
               <span slot="title">{{ item.title }}</span>
             </template>
             <template v-for="subItem in item.subs">
@@ -47,7 +47,7 @@
             :index="item.index"
             :key="item.index"
           >
-            <i :class="item.icon"></i>
+            <i :class="item.icon" style="color: #000"></i>
             <span slot="title">{{ item.title }}</span>
           </el-menu-item>
         </template>
@@ -85,6 +85,7 @@ export default {
           ]
         },
         {
+          index: 'workbranch',
           icon: 'el-icon-receiving',
           title: '我的项目',
           subs: [
@@ -99,14 +100,29 @@ export default {
           ]
         },
         {
+          icon: 'el-icon-search',
+          title: '历史项目信息查询',
+          subs: [
+            {
+              title: '房地产项目'
+            },
+            {
+              title: '土地项目'
+            },
+            {
+              title: '资产项目'
+            }
+          ]
+        },
+        {
           index: 'stat',
-          icon: "el-icon-data-analysis",
+          icon: 'el-icon-data-analysis',
           title: "统计管理"
         },
         {
-          index: "usermanage",
-          icon: "el-icon-user",
-          title: "用户管理"
+          index: 'usermanage',
+          icon: 'el-icon-user',
+          title: '用户管理'
         },
         // {
         //     icon: 'el-icon-lx-copy',
@@ -142,11 +158,11 @@ export default {
         //     }
         //   ]
         // },
-        {
-          icon: 'el-icon-lx-emoji',
-          index: 'icon',
-          title: '自定义图标'
-        }
+        // {
+        //   icon: 'el-icon-lx-emoji',
+        //   index: 'icon',
+        //   title: '自定义图标'
+        // }
       ],
       items2: [
         {
@@ -256,7 +272,7 @@ export default {
   width: 0;
 }
 .sidebar-el-menu:not(.el-menu--collapse) {
-  width: 220px;
+  width: 250px;
 }
 .sidebar > ul {
   height: 100%;

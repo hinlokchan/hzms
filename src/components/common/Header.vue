@@ -6,9 +6,10 @@
             <i v-else class="el-icon-s-unfold"></i>
         </div>
         <div class="logo">
-            <img class="logoImg" src="../../assets/img/logo.png">
-            <span class="logoTitle">惠正评估管理系统</span>
+            <!-- <img class="logoImg" src="../../assets/img/logo.png"> -->
+            <span class="logoTitle">广东惠正评估管理系统</span>
         </div>
+        <!-- 更改密码 -->
         <el-dialog
           title="修改密码"
           :visible.sync="password"
@@ -180,12 +181,21 @@ export default {
     height: 70px;
     font-size: 22px;
     color: #fff;
+    background-color: #009ad6;
 }
 .collapse-btn {
     float: left;
     padding: 0 21px;
     cursor: pointer;
     line-height: 70px;
+    background: #009ad6;
+}
+.collapse-btn i {
+    transition: 0.5s;
+}
+.collapse-btn i:hover {
+    transform: rotate(180deg);
+    transition: 0.5s;
 }
 .header .logo {
     float: left;

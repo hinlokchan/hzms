@@ -30,7 +30,7 @@ a {
     padding-bottom: 30px;
     -webkit-transition: left .3s ease-in-out;
     transition: left .3s ease-in-out;
-    background: #f0f0f0;
+    background: #F7F8FD;
 }
 
 .content {
@@ -48,7 +48,8 @@ a {
 .container {
     padding: 30px;
     background: #fff;
-    border: 1px solid #ddd;
+    /* border: 1px solid #ddd; */
+    box-shadow: 1px 1px 5px #cacaca;
     border-radius: 5px;
 }
 
