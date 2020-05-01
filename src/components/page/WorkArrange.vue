@@ -160,150 +160,9 @@
                         :label="item"
                       ></el-checkbox-button>
                     </el-checkbox-group>
+                    <h1>{{form.prePreparationPic}}</h1>
                   </el-form-item>
                 </el-col>
-                <!-- <el-col :span="8">
-                  <el-form-item class="workname-right-form">
-                    <el-select
-                      v-model="form.prePreparationPic"
-                      multiple
-                      placeholder="请选择人员"
-                    >
-                      <el-option
-                        v-for="item in projMember"
-                        :key="item"
-                        :label="item"
-                        :value="item"
-                      ></el-option>
-                    </el-select>
-                  </el-form-item>
-                  <el-form-item class="workname-right-form">
-                    <el-select
-                      v-model="form.fldSrvyPic"
-                      multiple
-                      placeholder="请选择人员"
-                    >
-                      <el-option
-                        v-for="item in projMember"
-                        :key="item"
-                        :label="item"
-                        :value="item"
-                      ></el-option>
-                    </el-select>
-                  </el-form-item>
-                  <el-form-item class="workname-right-form">
-                    <el-select
-                      v-model="form.mktSrvyPic"
-                      multiple
-                      placeholder="请选择人员"
-                    >
-                      <el-option
-                        v-for="item in projMember"
-                        :key="item"
-                        :label="item"
-                        :value="item"
-                      ></el-option>
-                    </el-select>
-                  </el-form-item>
-                  <el-form-item class="workname-right-form">
-                    <el-select
-                      v-model="form.assemEstPic"
-                      multiple
-                      placeholder="请选择人员"
-                    >
-                      <el-option
-                        v-for="item in projMember"
-                        :key="item"
-                        :label="item"
-                        :value="item"
-                      ></el-option>
-                    </el-select>
-                  </el-form-item>
-                  <el-form-item class="workname-right-form">
-                    <el-select
-                      v-model="form.issueValPic"
-                      multiple
-                      placeholder="请选择人员"
-                    >
-                      <el-option
-                        v-for="item in projMember"
-                        :key="item"
-                        :label="item"
-                        :value="item"
-                      ></el-option>
-                    </el-select>
-                  </el-form-item>
-                  <el-form-item class="workname-right-form">
-                    <el-select
-                      v-model="form.internalAuditPic"
-                      multiple
-                      placeholder="请选择人员"
-                    >
-                      <el-option
-                        v-for="item in projMember"
-                        :key="item"
-                        :label="item"
-                        :value="item"
-                      ></el-option>
-                    </el-select>
-                  </el-form-item>
-                  <el-form-item class="workname-right-form">
-                    <el-select
-                      v-model="form.commuClientPic"
-                      multiple
-                      placeholder="请选择人员"
-                    >
-                      <el-option
-                        v-for="item in projMember"
-                        :key="item"
-                        :label="item"
-                        :value="item"
-                      ></el-option>
-                    </el-select>
-                  </el-form-item>
-                  <el-form-item class="workname-right-form">
-                    <el-select
-                      v-model="form.assemChargePic"
-                      multiple
-                      placeholder="请选择人员"
-                    >
-                      <el-option
-                        v-for="item in projMember"
-                        :key="item"
-                        :label="item"
-                        :value="item"
-                      ></el-option>
-                    </el-select>
-                  </el-form-item>
-                  <el-form-item class="workname-right-form">
-                    <el-select
-                      v-model="form.amendFinalPic"
-                      multiple
-                      placeholder="请选择人员"
-                    >
-                      <el-option
-                        v-for="item in projMember"
-                        :key="item"
-                        :label="item"
-                        :value="item"
-                      ></el-option>
-                    </el-select>
-                  </el-form-item>
-                  <el-form-item class="workname-right-form">
-                    <el-select
-                      v-model="form.manuArchivePic"
-                      multiple
-                      placeholder="请选择人员"
-                    >
-                      <el-option
-                        v-for="item in projMember"
-                        :key="item"
-                        :label="item"
-                        :value="item"
-                      ></el-option>
-                    </el-select>
-                  </el-form-item>
-                </el-col> -->
               </el-row>
             </el-card>
             <el-form-item>
@@ -322,6 +181,7 @@
 
 <script>
 import { setWorkAssignment, getWorkAssignment } from '@/api/index'
+const axa = ['1', '2', '3']
 export default {
   name: 'workarrange',
   data() {
@@ -329,7 +189,7 @@ export default {
       queryData: {},
       tableData: [],
       midMember: [],
-      projMember: [],
+      projMember: axa,
       projContact: [],
       projLeader: [],
       projReviewer: [],
@@ -340,7 +200,7 @@ export default {
         assemMethod: [],
         fldSrvyContent: '',
         prePreparationSche: '',
-        prePreparationPic: '',
+        prePreparationPic: [],
         fldSrvySche: '',
         fldSrvyPic: '',
         mktSrvySche: '',
@@ -375,7 +235,7 @@ export default {
   },
   mounted() {
     var a = Array.from(new Set(this.midMember))//数组内去重
-    this.projMember = a.filter(item => item)
+    //this.projMember = a.filter(item => item)
     console.log('去重，去空串后projMember', this.projMember)
 
   },

@@ -106,6 +106,7 @@ export default {
   letter-spacing: 4px;
 }
 .ms-title {
+  top: 25%;
   width: 100%;
   line-height: 50px;
   text-align: center;
@@ -114,11 +115,10 @@ export default {
   border-bottom: 1px solid #ddd;
 }
 .ms-login {
-  position: absolute;
-  left: 45%;
-  top: 50%;
+  
+  top: 500px;
   width: 550px;
-  margin: -190px 0 0 -175px;
+  margin: 0 auto;
   border-radius: 5px;
   background: rgba(255, 255, 255, 0);
   overflow: hidden;

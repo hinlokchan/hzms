@@ -12,7 +12,6 @@
       <el-row :gutter="20">
         <el-col :span="8">
           <el-card
-            shadow="hover"
             :body-style="{ padding: '0px' }"
           >
             <div class="grid-content grid-con-1">
@@ -26,7 +25,6 @@
         </el-col>
         <el-col :span="8">
           <el-card
-            shadow="hover"
             :body-style="{ padding: '0px' }"
           >
             <div class="grid-content grid-con-3">
@@ -40,7 +38,6 @@
         </el-col>
         <el-col :span="8">
           <el-card
-            shadow="hover"
             :body-style="{ padding: '0px' }"
           >
             <div class="grid-content grid-con-2">
@@ -79,6 +76,29 @@
         style="width: 100%"
         :default-sort="{ prop: 'projDate', order: 'descending' }"
       >
+        <!-- <el-table-column
+          type="expand"
+        >
+          <template>
+            <el-table style="width: calc(100% - 47px)">
+              <el-table-column align="center" label="子报告号" width="120">
+                
+              </el-table-column>
+              <el-table-column align="center" label="子项目名称" width="400">
+                
+              </el-table-column>
+              <el-table-column align="center" label="项目负责人" width="120">
+                
+              </el-table-column>
+              <el-table-column align="center" label="项目助理" width="180">
+                
+              </el-table-column>
+              <el-table-column align="center" label="操作">
+                
+              </el-table-column>
+            </el-table>
+          </template>
+        </el-table-column> -->
         <el-table-column
           prop="projDegree"
           label="紧急程度"
@@ -304,7 +324,7 @@
           >确认更改</el-button>
         </div>
       </el-dialog>
-      <!-- 分配任务 -->
+      <!-- 分配任务end -->
     </div>
   </div>
 </template>

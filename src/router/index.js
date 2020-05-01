@@ -16,53 +16,63 @@ export default new Router({
         },
         {
             path: '/',
-            component: () => import(/* webpackChunkName: "home" */ '../components/common/Home.vue'),
+            component: () => import('../components/common/Home.vue'),
             meta: { title: '自述文件' },
             children: [
                 {
                     path: '/dashboard',
                     name: 'dashboard',
-                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/Dashboard.vue'),
+                    component: () => import('../components/page/Dashboard.vue'),
                     meta: { title: '系统首页' }
                 },
                 {
                     path: '/plan',
-                    component: () => import(/* webpackChunkName: "plan" */ '../components/page/Plan.vue'),
+                    component: () => import('../components/page/Plan.vue'),
                     meta: { title: '项目管理' }
                 },
                 {
                     path: '/planform',
-                    component: () => import(/* webpackChunkName: "planform" */ '../components/page/PlanForm.vue'),
+                    component: () => import('../components/page/PlanForm.vue'),
                     meta: { title: '表单' }
                 },
                 {
                     path: '/projcheck',
-                    component: () => import(/* webpackChunkName: "projcheck" */ '../components/page/ProjCheck.vue'),
+                    component: () => import('../components/page/ProjCheck.vue'),
                     meta: { title: '项目详情' }
                 },
                 {
                     path: '/workbranch',
-                    component: () => import(/* webpackChunkName: "plancheck" */ '../components/page/WorkBranch.vue'),
+                    component: () => import('../components/page/WorkBranch.vue'),
+                    meta: { title: '工作台' }
+                },
+                {
+                    path: '/workbranch',
+                    component: () => import('../components/page/WorkBranch.vue'),
                     meta: { title: '工作台' }
                 },
                 {
                     path: '/qrcode',
-                    component: () => import(/* webpackChunkName: "qrcode" */ '../components/page/QRCode.vue'),
+                    component: () => import('../components/page/QRCode.vue'),
                     meta: { title: '二维码生成' }
                 },
                 {
+                    path: '/workhandle',
+                    component: () => import('../components/page/WorkHandle.vue'),
+                    meta: { title: '项目工作管理' }
+                },
+                {
                     path: '/workarrange',
-                    component: () => import(/* webpackChunkName: "qrcode" */ '../components/page/WorkArrange.vue'),
+                    component: () => import('../components/page/WorkArrange.vue'),
                     meta: { title: '工作安排' }
                 },
                 {
                     path: '/stat',
-                    component: () => import(/* webpackChunkName: "qrcode" */ '../components/page/Stat.vue'),
-                    meta: { title: '工作安排' }
+                    component: () => import('../components/page/Stat.vue'),
+                    meta: { title: '统计管理' }
                 },
                 {
                     path: '/usermanage',
-                    component: () => import(/* webpackChunkName: "usermanage" */ '../components/page/UserManage.vue'),
+                    component: () => import('../components/page/UserManage.vue'),
                     meta: { title: '用户管理' }
                 },
                 // {

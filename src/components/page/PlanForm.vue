@@ -26,7 +26,6 @@
           :model="form"
           label-width="125px"
           :rules="rules"
-          v-enterToNext="true"
         >
           <el-row>
             <el-col :span="6">
@@ -184,50 +183,34 @@
           </el-row>
           <el-row :gutter="20">
             <el-divider></el-divider>
-            <el-col :span="5">
+            <el-col :span="6">
+              <el-form-item label="接洽类型">
+                <el-cascader
+                  
+                >
+                </el-cascader>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="接洽人" prop="projContact">
+                <el-input v-model="form.projContact"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
               <el-form-item label="贷款银行" prop="lendingBank">
                 <el-cascader
                   :show-all-levels="true"
                   v-model="form.lendingBank"
                   :options="bankOptions"
                   :props="{ expandTrigger: 'hover' }"
-                  clearable
                 >
                 </el-cascader>
               </el-form-item>
             </el-col>
-            <el-col :span="7">
+            
+            <el-col :span="6">
               <el-form-item label="委托人" prop="clientName">
-                <el-input v-model="form.clientName" style="width:70%"></el-input>
-                <el-popover
-                  placement="top"
-                  width="400"
-                  trigger="click"
-                  v-model="clientVisiable"
-                >
-                  <el-cascader
-                    v-model="clientNameMid"
-                    ref="myCascader"
-                    :options="clientOptions"
-                    @change="giveClientName"
-                  >
-                  </el-cascader>
-                  <el-button slot="reference">常用选项</el-button>
-                </el-popover>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="接洽类型">
-                <el-select
-                  v-model="form.projContactType"
-                >
-                  
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="接洽人" prop="projContact">
-                <el-input v-model="form.projContact"></el-input>
+                <el-input v-model="form.clientName"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -325,6 +308,7 @@
                 :label="'专业复核人' + (index + 1)"
                 :key="index"
               >
+              <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
                 <div class="flexBox"><el-input style="width:90%" v-model="item.value"></el-input><i class="el-icon-lx-roundclose" style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5" @click.prevent="removeDomain(index, 2)"></i></div>
               </el-form-item>
               <el-form-item>
@@ -337,6 +321,7 @@
                 :label="'项目助理' + (index + 1)"
                 :key="index"
               >
+              <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
                 <div class="flexBox"><el-input style="width:90%" v-model="item.value"></el-input><i class="el-icon-lx-roundclose" style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5" @click.prevent="removeDomain(index, 3)"></i></div>
               </el-form-item>
               <el-form-item>
@@ -349,6 +334,7 @@
                 :label="'现场勘查' + (index + 1)"
                 :key="index"
               >
+              <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
                 <div class="flexBox"><el-input style="width:90%" v-model="item.value"></el-input><i class="el-icon-lx-roundclose" style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5" @click.prevent="removeDomain(index, 4)"></i></div>
               </el-form-item>
               <el-form-item>
@@ -374,7 +360,6 @@ import { createNewProject, editProject } from '@/api/index'
 import { getDetailProjInfo } from '@/api/index'
 import bankOptions from '../../../public/bank.json'
 import projTypeOption from '../../../public/projTypeOption.json'
-import clientOptions from '../../../public/client.json'
 export default {
   name: 'planform',
   data() {
@@ -383,8 +368,6 @@ export default {
       newInfo: false,
       newInfoData: '',
       arrgTypeEnable: true,
-      clientNameMid: '',
-      clientVisiable: false,
       form: {
         projType: '',
         projName: '',
@@ -395,7 +378,6 @@ export default {
         projDegree: '',
         baseDate: '',
         assemGoal: '',
-        projContactType: '',
         clientName: '',
         projReferer: '',
         supInstruction: '',
@@ -445,6 +427,9 @@ export default {
         ],
         clientName: [
           { required: true, message: '请填写委托人', trigge: 'blur' }
+        ],
+        lendingBank: [
+          { required: true, message: '请选择贷款银行', trigger: 'blur' }
         ]
       },
       assemGoalList: ['抵押', '交易', '资产处置（司法鉴定）', '出让', '挂牌出让', '补出让', '转让', '盘整收回', '征收补偿', '活立木拍卖', '出租', '置换', '股权转让', '作价入股', '增资扩股', '入账', '征收、完税', '企业改制', '清算', '复审', '评价', '咨询'],
@@ -463,16 +448,8 @@ export default {
     }
     this.bankOptions = bankOptions
     this.projTypeOption = projTypeOption
-    this.clientOptions = clientOptions
   },
   methods: {
-    //委托人选择器赋予form.clientName
-    giveClientName(val) {
-      this.clientNameMid = this.$refs.myCascader.getCheckedNodes()[0].pathLabels
-      console.log(this.clientNameMid)
-      this.form.clientName = this.clientNameMid[1]
-      this.clientVisiable = !this.clientVisiable
-    },
     arrgTypeToEnable(val) {
       if(val == 1010 || val == 1030) {
         this.arrgTypeEnable = false
