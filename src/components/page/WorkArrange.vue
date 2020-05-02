@@ -50,17 +50,24 @@
         <div class="form-item-title">
           <h3>现场调查内容</h3>
         </div>
+        <el-date-picker
+          type="daterange"
+          v-model="aa"
+          value-format="yyyy-MM-dd"
+          @change="dateChange"
+        ></el-date-picker>
+        <h2>aa{{aa}}</h2>
         <el-row>
           <el-col :span="12">
-        <el-form-item class="el-form-item">
-          <el-input
-            type="textarea"
-            :rows="2"
-            placeholder="请输入内容"
-            v-model="form.fldSrvyContent"
-          ></el-input>
-        </el-form-item>
-        </el-col>
+            <el-form-item class="el-form-item">
+              <el-input
+                type="textarea"
+                :rows="2"
+                placeholder="请输入内容"
+                v-model="form.fldSrvyContent"
+              ></el-input>
+            </el-form-item>
+          </el-col>
         </el-row>
         <div class="form-item-title">
           <h3>综合进度安排</h3>
@@ -186,6 +193,7 @@ export default {
   name: 'workarrange',
   data() {
     return {
+      aa: [],
       queryData: {},
       tableData: [],
       midMember: [],
@@ -223,23 +231,26 @@ export default {
     }
   },
   created() {
-    this.queryData = this.$route.query.data
-    console.log('queryData >>> ', this.queryData)
-    this.projContact = (this.queryData.projContact || '').split(',')
-    this.projLeader = (this.queryData.projLeader || '').split(',')
-    this.projReviewer = (this.queryData.projReviewer || '').split(',')
-    this.projProReviewer = (this.queryData.projProReviewer || '').split(',')
-    this.projAsst = (this.queryData.projAsst || '').split(',')
-    this.midMember.push(...this.projContact, ...this.projLeader, ...this.projReviewer, ...this.projProReviewver, ...this.projAsst)//暂存后续去重
-    this.getData()
+    // this.queryData = this.$route.query.data
+    // console.log('queryData >>> ', this.queryData)
+    // this.projContact = (this.queryData.projContact || '').split(',')
+    // this.projLeader = (this.queryData.projLeader || '').split(',')
+    // this.projReviewer = (this.queryData.projReviewer || '').split(',')
+    // this.projProReviewer = (this.queryData.projProReviewer || '').split(',')
+    // this.projAsst = (this.queryData.projAsst || '').split(',')
+    // this.midMember.push(...this.projContact, ...this.projLeader, ...this.projReviewer, ...this.projProReviewver, ...this.projAsst)//暂存后续去重
+    // this.getData()
   },
   mounted() {
     var a = Array.from(new Set(this.midMember))//数组内去重
     //this.projMember = a.filter(item => item)
     console.log('去重，去空串后projMember', this.projMember)
-
   },
   methods: {
+    dateChange() {
+      let uuu = this.aa.join(',')
+      console.log('a', uuu)
+    },
     onSubmit() {
       console.log('onsubmit')
 
