@@ -10,7 +10,8 @@ import './assets/css/icon.css';
 import './components/common/directives';
 import 'babel-polyfill';
 import { isAuthenticated } from '@/api/index';
-
+import { formatDate } from './utils/comment'
+Vue.prototype.$formatDate = formatDate
 Vue.config.productionTip = false;
 window.router=router
 Vue.use(VueI18n);

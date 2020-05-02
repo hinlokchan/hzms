@@ -117,19 +117,19 @@
               <div class="projTitle">编制时间</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent">{{formatDate(detailData.projDate)}}</div>
+              <div class="projContent">{{this.$formatDate(detailData.projDate)}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">基准日</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent">{{formatDate(detailData.baseDate)}}</div>
+              <div class="projContent">{{this.$formatDate(detailData.baseDate)}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">计划现勘日</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent">{{formatDate(detailData.fldSrvySchedule)}}</div>
+              <div class="projContent">{{this.$formatDate(detailData.fldSrvySchedule)}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">委托人</div>
@@ -404,15 +404,7 @@ export default {
       const fdata = new FormData()
       fdata.append('projId', parseInt(that.projId))
       oReq.send(fdata)
-    },
-    formatDate(now) {
-      const time = new Date(now)
-      var year = time.getFullYear();  //取得4位数的年份
-      var month = time.getMonth() + 1;  //取得日期中的月份，其中0表示1月，11表示12月
-      var date = time.getDate();      //返回日期月份中的天数（1到31）
-      var hour = time.getHours();     //返回日期中的小时数（0到23）
-      return year + "-" + month + "-" + date
-    },
+    }
   }
 }
 </script>
