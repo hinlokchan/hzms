@@ -11,9 +11,7 @@
       </div>
       <el-row :gutter="20">
         <el-col :span="8">
-          <el-card
-            :body-style="{ padding: '0px' }"
-          >
+          <el-card :body-style="{ padding: '0px' }">
             <div class="grid-content grid-con-1">
               <i class="el-icon-lx-edit grid-con-icon"></i>
               <div class="grid-cont-right">
@@ -24,9 +22,7 @@
           </el-card>
         </el-col>
         <el-col :span="8">
-          <el-card
-            :body-style="{ padding: '0px' }"
-          >
+          <el-card :body-style="{ padding: '0px' }">
             <div class="grid-content grid-con-3">
               <i class="el-icon-lx-warn grid-con-icon"></i>
               <div class="grid-cont-right">
@@ -37,9 +33,7 @@
           </el-card>
         </el-col>
         <el-col :span="8">
-          <el-card
-            :body-style="{ padding: '0px' }"
-          >
+          <el-card :body-style="{ padding: '0px' }">
             <div class="grid-content grid-con-2">
               <i class="el-icon-lx-punch grid-con-icon"></i>
               <div class="grid-cont-right">
@@ -168,6 +162,12 @@
               @click="handleDetail(scope.row)"
               size="medium"
             >项目详情</el-button>
+            <el-button
+              type="text"
+              icon="el-icon-info"
+              @click="handleHandle(scope.row)"
+              size="medium"
+            >处理项目</el-button>
             <el-button
               type="text"
               icon="el-icon-star-on"
@@ -460,6 +460,10 @@ export default {
       // const index2 = (this.currentPage - 1)*10 + index
       console.log('当前行信息 >>>', val)
       this.$router.push({ path: '/projcheck', query: { data: val.projId } })
+    },
+    handleHandle(val) {
+      sessionStorage.setItem('page', this.currentPage)
+      this.$router.push({ path: '/workhandle', query: { data: JSON.stringify(val) } })
     },
     handleWorkArrange(val) {
       this.$router.push({ path: '/workarrange', query: { data: val } })

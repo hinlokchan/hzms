@@ -8,9 +8,6 @@
           </el-breadcrumb-item>
           <el-breadcrumb-item>查看项目详情</el-breadcrumb-item>
         </el-breadcrumb>
-        <div>
-          <span><i class="el-icon-back"></i></span>
-        </div>
       </div>
       <div class="form-box">
         <div class="form-item-title">

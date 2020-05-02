@@ -159,6 +159,7 @@
                   value-format="yyyy-MM-dd"
                   style="width: 100%;"
                 ></el-date-picker>
+                <h2>{{form.fldSrvySchedule}}</h2>
               </el-form-item>
             </el-col>
             <el-col :span="6">
