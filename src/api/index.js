@@ -118,6 +118,15 @@ export function createReportNum(data) {
   });
 }
 
+export function deleteReportNum(data) {
+  return request({
+    url: `${ProManageAPIServer}project/deleteReportNum`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
 export function alterProjType(data) {
   return request({
     url: `${ProManageAPIServer}project/editProject/alterProjType`,
@@ -202,15 +211,6 @@ export function setWorkAssignment(data) {
 export function getWorkAssignment(data) {
   return request({
     url: `${ProManageAPIServer}project/getWorkAssignment`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
-    method: 'post',
-    data: qs.stringify(data)
-  });
-}
-
-export function deleteReportNum(data) {
-  return request({
-    url: `${ProManageAPIServer}project/deleteReportNum`,
     headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
     method: 'post',
     data: qs.stringify(data)
