@@ -118,6 +118,7 @@
         >确认提交</el-button>
       </div>
     </el-dialog>
+
     <el-tag>项目状态：已安排人员，已取号，无子项目信息</el-tag>
     <div class="work">
       <div class="work-title">
@@ -189,14 +190,12 @@
               <span style="float: right">
                 <el-button
                   slot="reference"
-                  size="medium"
                   type="primary"
                   icon="el-icon-circle-plus-outline"
                   @click="handleGetNum"
                 >取号</el-button>
                 <el-button
                   type="danger"
-                  size="medium"
                   icon="el-icon-circle-close"
                   @click="handleDelNum"
                 >取消报告号</el-button>
@@ -293,23 +292,30 @@
       >
         <template slot-scope="scope">
           <!-- <el-button type="text">查看</el-button> -->
-          <el-button type="text" @click="delSubProj(scope.row)">删除</el-button>
+          <el-button
+            type="text"
+            @click="delSubProj(scope.row)"
+          >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
     <div class="work-title">
       <span class="work-title-name">项目工作信息</span>
+      <span class="work-title-button">
+        <el-button
+          icon="el-icon-s-order"
+          size="medium"
+          type="primary"
+          @click="handleWorkArrg"
+        >安排</el-button>
+      </span>
     </div>
     <el-divider></el-divider>
     <el-row :gutter="20">
       <el-col :span="8">
         <el-card>
           <div v-if="workArrgEdit == false">
-            尚未安排工作详情，请先
-            <el-button
-              type="primary"
-              icon="el-icon-notebook-1"
-            >安排</el-button>
+            <h3>未安排工作信息，请先安排</h3>
           </div>
           <div v-else>
             <div class="text">
@@ -322,7 +328,7 @@
       <el-col :span="16">
         <el-card>
           <div slot="header">综合进度安排</div>
-          <div>
+          <div v-if="this.workArrgEdit == true">
             <el-row :gutter="20">
               <el-col :span="6">
                 <h4>综合进度</h4>
@@ -360,6 +366,9 @@
               </el-col>
             </el-row>
           </div>
+          <div v-else>
+            <h3>未安排工作信息，请先安排</h3>
+          </div>
         </el-card>
       </el-col>
     </el-row>
@@ -367,7 +376,7 @@
 </template>
 
 <script>
-import { getDetailProjInfo, getWorkAssignment, createReportNum, deleteReportNum } from '@/api/index'
+import { getDetailProjInfo, getWorkAssignment, setWorkAssignment, createReportNum, deleteReportNum } from '@/api/index'
 import { addSubProject, getSubProjectInfoList, delSubProject } from '@/api/subReport'
 import projTypeOption from '../../../public/projTypeOption.json'
 export default {
@@ -377,12 +386,14 @@ export default {
       queryData: '',
       arrgData: {},
       projDetail: '',
+      projMember: [],
       reportNum: {},
       projTypeOption: [],
       transedProjType: {},
       tableData: [],
       activeTab: 'reportNum',
-      workArrgEdit: true,
+      addAssemCheck: false,
+      workArrgEdit: false,
       workName: ['前期准备', '现场勘查及收集资料', '市场调查询价记录', '评定估算', '编制出具评估（估价）报告', '内部三级审核', '与委托人沟通', '评估收费', '修正定稿及提交报告', '工作底稿归档'],
       workDate: [],
       workPeople: [],
@@ -412,12 +423,46 @@ export default {
         subProjScope: [
           { required: true, message: '请输入子项目范围', trigger: 'blur' }
         ]
+      },
+      midMember: [],
+      workArrgForm: {
+        projId: '',
+        assemMethod: '成本法',
+         fldSrvyContent: '',
+        //人员
+        prePreparationPic: [],
+        fldSrvyPic: [],
+        mktSrvyPic: [],
+        assemEstPic: [],
+        issueValPic: [],
+        internalAuditPic: [],
+        commuClientPic: [],
+        assemChargePic: [],
+        amendFinalPic: [],
+        manuArchivePic: [],
+        // //日期
+        prePreparationSche: '',
+        fldSrvySche: '',
+        mktSrvySche: '',
+        assemEstcSche: '',
+        issueValSche: '',
+        internalAuditSche: '',
+        commuClientSche: '',
+        assemChargeSche: '',
+        amendFinalSche: '',
+        manuArchiveSche: ''
+      },
+      arrgFormRules: {
+        assemMethod: [
+          { required: true, message: '请选择评估方法', trigger: 'blur' }
+        ]
       }
     }
   },
   created() {
     //处理从工作台获取的val -> queryData
     this.queryData = JSON.parse(this.$route.query.data)
+    this.workArrgForm.projId = this.queryData.projId
     console.log('queryData', this.queryData)
     this.projTypeOption = projTypeOption
     //处理项目类型value转为label展示
@@ -445,19 +490,33 @@ export default {
             console.log('detail200', res.data)
             this.reportNum = res.data.reportNumList
             console.log('reportNum', this.reportNum)
+            const leader = this.projDetail.projLeader.split(',')
+            const reviewer = this.projDetail.projReviewer.split(',')
+            const projReviewer = this.projDetail.projProReviewer.split(',')
+            const asst = this.projDetail.projAsst.split(',')
+            const srvy = this.projDetail.fieldSrvy.split(',')
+            this.midMember.push(...leader, ...reviewer, ...projReviewer, ...asst, ...srvy)
+            const mid2 = Array.from(new Set(this.midMember))
+            this.projMember = mid2.filter(item => item)
+            // this.projMember.forEach(item => {
+            //   let key = item
+            //   this.$set(this.workArrgForm, key, [])
+            // })
+            console.log('midMember', this.midMember)
+            console.log('mid2', mid2)
+            console.log('projMember', this.projMember)
           }
           this.$nextTick(() => {
             // let numVal = JSON.stringify(this.reportNum)
             // console.log('numval', numVal)
             getSubProjectInfoList({ reportNumList: this.reportNum.cph + ',' + this.reportNum.zph + ',' + this.reportNum.hhh })
               .then(res => {
-                console.log('goooooood', res)
                 this.subTableData = res.data.cph
                 this.subTableData = this.subTableData.concat(res.data.zph)
                 console.log('subTableData', this.subTableData)
               })
               .catch(err => {
-                console.log('baaaaaaaaad', err)
+                console.log('failed to getSubProjectInfoList', err)
               })
           })
         })
@@ -471,11 +530,42 @@ export default {
         .then(res => {
           if (res.statusCode == 200) {
             this.arrgData = res.data
-            console.log('arrgData', this.arrgData)
+            //后期看看让后端分割出date和people
+            this.workPeople.push(res.data.prePreparationPic, res.data.fldSrvyPic, res.data.mktSrvyPic, res.data.assemEstPic, res.data.issueValPic, res.data.internalAuditPic, res.data.commuClientPic, res.data.assemChargePic, res.data.amendFinalPic, res.data.manuArchivePic)
+            this.workDate.push(res.data.prePreparationSche, res.data.fldSrvySche, res.data.mktSrvySche, res.data.assemEstSche, res.data.issueValSche, res.data.internalAuditSche, res.data.commuClientSche, res.data.assemChargeSche, res.data.amendFinalSche, res.data.manuArchiveSche)
+            for (var i = 0; i < this.workPeople.length; i++) {
+              if (this.workPeople[i] !== '') {
+                this.workArrgEdit = true
+                break
+              } else {
+                this.workArrgEdit = false
+              }
+            }
           }
         })
         .catch(err => {
           this.$message.error('获取安排信息失败，请重试')
+        })
+    },
+    handleWorkArrg() {
+      this.$router.push({ path: '/workarrange', query: { projId: this.queryData.projId, projDate: this.queryData.projDate,  projMember:this.projMember} })
+    },
+    submitWorkArrg() {
+      console.log(this.workArrgForm)
+      //将人员的数组转为字符串
+      this.workArrgForm.prePreparationPic = this.workArrgForm.prePreparationPic.join(',')
+      this.workArrgForm.fldSrvyPic = this.fldSrvyPic.join(',')
+      this.workArrgForm.mktSrvyPic = this.workArrgForm.mktSrvyPic.join(',')
+      this.workArrgForm.assemChargePic = this.workArrgForm.assemChargePic.join(',')
+      this.workArrgForm.issueValSche = this.workArrgForm.pissueValSche.join(',')
+      this.workArrgForm.internalAuditPic = this.workArrgForm.internalAuditPic.join(',')
+      this.workArrgForm.commuClientPic = this.workArrgForm.commuClientPic.join(',')
+      this.workArrgForm.assemChargePic = this.workArrgForm.assemChargePic.join(',')
+      this.workArrgForm.amendFinalPic = this.workArrgForm.amendFinalPic.join(',')
+      this.workArrgForm.manuArchivePic = this.workArrgForm.manuArchivePic.join(',')
+      setWorkAssignment(this.workArrgForm)
+        .then(res => {
+          console.log('success')
         })
     },
     handleDetail() {
@@ -587,7 +677,7 @@ export default {
       })
     },
     delSubProj(row) {
-      delSubProject({reportNum: row.reportNum, subReportNum: row.subReportNum})
+      delSubProject({ reportNum: row.reportNum, subReportNum: row.subReportNum })
         .then(res => {
           this.$message.success('删除子项目成功')
           setTimeout("location.reload()", "400")
