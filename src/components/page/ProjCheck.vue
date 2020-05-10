@@ -114,19 +114,19 @@
               <div class="projTitle">编制时间</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent">{{this.$formatDate(detailData.projDate)}}</div>
+              <div class="projContent">{{this.formatDate(detailData.projDate)}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">基准日</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent">{{this.$formatDate(detailData.baseDate)}}</div>
+              <div class="projContent">{{this.formatDate(detailData.baseDate)}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">计划现勘日</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent">{{this.$formatDate(detailData.fldSrvySchedule)}}</div>
+              <div class="projContent">{{this.formatDate(detailData.fldSrvySchedule)}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">委托人</div>
@@ -355,26 +355,14 @@ export default {
   mounted() {
 
   },
-  methods: {
-    // 将返回的流数据转换为url
-    getObjectURL(file) {
-      let url = null;
-      if (window.createObjectURL != undefined) { // basic
-          url = window.createObjectURL(file);
-      } else if (window.webkitURL != undefined) { // webkit or chrome
-          try {
-            url = window.webkitURL.createObjectURL(file);            
-          } catch (error) {
-            
-          }
-      } else if (window.URL != undefined) { // mozilla(firefox)
-        try {
-          url = window.URL.createObjectURL(file);
-        } catch (error) {
-          
-        }
-      }
-      return url;
+methods: {
+    formatDate(now) {
+      const time = new Date(now)
+      var year = time.getFullYear();  //取得4位数的年份
+      var month = time.getMonth() + 1;  //取得日期中的月份，其中0表示1月，11表示12月
+      var date = time.getDate();      //返回日期月份中的天数（1到31）
+      var hour = time.getHours();     //返回日期中的小时数（0到23）
+      return year + "-" + month + "-" + date
     },
     getDetail() {
       getDetailProjInfo({ projId: this.projId }).then(res => {
