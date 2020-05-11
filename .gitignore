@@ -2,7 +2,7 @@
 node_modules
 /dist
 /hzht
-/hzht.zip
+*.zip
 example.html
 favicon.ico
 # local env files
