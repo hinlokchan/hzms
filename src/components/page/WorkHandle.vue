@@ -118,8 +118,41 @@
         >确认提交</el-button>
       </div>
     </el-dialog>
-
-    <el-tag>项目状态：已安排人员，已取号，无子项目信息</el-tag>
+    <el-dialog
+      title="更改项目类型"
+      :visible.sync="changeTypeVisible"
+    >
+      <el-form>
+        <el-form-item
+          label="选择需要更改的类型"
+          label-width="200"
+        >
+          <el-select
+            v-model="changeType.toType"
+            placeholder="请选择"
+          >
+            <el-option
+              v-for="item in typeOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div style="color: red">Tips:更改后原报告号及计划编号将改变</div>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="changeTypeVisible = false">取 消</el-button>
+        <el-button
+          @click="changeProjType()"
+          type="primary"
+        >确认更改</el-button>
+      </div>
+    </el-dialog>
+    <!-- <el-tag>项目状态：已安排人员，已取号，无子项目信息</el-tag> -->
     <div class="work">
       <div class="work-title">
         <span class="work-title-name">项目信息</span>
@@ -132,10 +165,13 @@
           <el-button
             icon="el-icon-edit"
             size="medium"
+            @click="handleEdit()"
           >编辑</el-button>
           <el-button
             icon="el-icon-set-up"
             size="medium"
+            v-if="this.queryData.projType == 1010 || this.queryData.projType == 1020 || this.queryData.projType == 1030 || this.queryData.projType == 1041 || this.queryData.projType == 1042 || this.queryData.projType == 1043"
+            @click="handleChangeType()"
           >更改项目类型</el-button>
           <el-button
             icon="el-icon-printer"
@@ -376,7 +412,7 @@
 </template>
 
 <script>
-import { getDetailProjInfo, getWorkAssignment, setWorkAssignment, createReportNum, deleteReportNum } from '@/api/index'
+import { getDetailProjInfo, getWorkAssignment, setWorkAssignment, createReportNum, deleteReportNum, alterProjType } from '@/api/index'
 import { addSubProject, getSubProjectInfoList, delSubProject } from '@/api/subReport'
 import projTypeOption from '../../../public/projTypeOption.json'
 export default {
@@ -399,6 +435,7 @@ export default {
       workPeople: [],
       getNumVisible: false,
       delNumVisible: false,
+      changeTypeVisible: false,
       reportNumSelectVal: 2,
       deleteNumSelectVal: 2,
       getNumType: '',
@@ -406,6 +443,19 @@ export default {
       subProjVisible: false,
       subFatherReport: '',
       subTableData: [],
+      changeType: {
+        projId: '',
+        toType: ''
+      },
+      typeOptions: [
+        { value: '1010', label: '房地产' },
+        { value: '1020', label: '资产' },
+        { value: '1030', label: '土地' },
+        { value: '1041', label: '房地产咨询' },
+        { value: '1042', label: '资产咨询' },
+        { value: '1043', label: '土地咨询' }
+      ],
+      //
       subProjForm: {
         reportNum: '',
         subReportNum: '',
@@ -428,7 +478,7 @@ export default {
       workArrgForm: {
         projId: '',
         assemMethod: '成本法',
-         fldSrvyContent: '',
+        fldSrvyContent: '',
         //人员
         prePreparationPic: [],
         fldSrvyPic: [],
@@ -509,11 +559,11 @@ export default {
           this.$nextTick(() => {
             // let numVal = JSON.stringify(this.reportNum)
             // console.log('numval', numVal)
-            getSubProjectInfoList({ reportNumList: this.reportNum.cph + ',' + this.reportNum.zph + ',' + this.reportNum.hhh })
+            getSubProjectInfoList({ reportNumList: this.reportNum.cph + ',' + this.reportNum.zph })
               .then(res => {
                 this.subTableData = res.data.cph
                 this.subTableData = this.subTableData.concat(res.data.zph)
-                console.log('subTableData', this.subTableData)
+                console.log('subTableData', res)
               })
               .catch(err => {
                 console.log('failed to getSubProjectInfoList', err)
@@ -548,7 +598,8 @@ export default {
         })
     },
     handleWorkArrg() {
-      this.$router.push({ path: '/workarrange', query: { projId: this.queryData.projId, projDate: this.queryData.projDate,  projMember:this.projMember} })
+      //this.$router.push({ path: '/workarrange', query: { projId: this.queryData.projId, projDate: this.queryData.projDate,  projMember:this.projMember, projNum: this.queryData.projNum} })
+      this.$router.push({ path: '/workarrange', query: { data: this.queryData, projMember: this.projMember } })
     },
     submitWorkArrg() {
       console.log(this.workArrgForm)
@@ -570,6 +621,36 @@ export default {
     },
     handleDetail() {
       this.$router.push({ path: '/projcheck', query: { data: this.queryData.projId } })
+    },
+    handleEdit() {
+      this.$router.push({ path: '/planform', query: { data: this.queryData.projId } })
+    },
+    handleChangeType() {
+      this.changeTypeVisible = true
+      this.changeType.projId = this.queryData.projId
+      let selOption = this.typeOptions
+      const index = selOption.findIndex((item, index, arr) => {
+        console.log('value>>>', item)
+        return item.value == data.projType
+      })
+      //selOption.splice(index, 1)
+      this.typeOptions = selOption
+    },
+    changeProjType() {
+      if (this.changeType.toType == '') {
+        this.$message.info('请选择修改类型');
+      } else {
+        alterProjType(this.changeType).then(res => {
+          this.$message.success('修改成功');
+          this.changeNumVisible = false
+          this.getData();
+        }).catch(err => {
+          this.$message.error('修改失败');
+        })
+      }
+    },
+    handlePrintPlan() {
+
     },
     //取号流程
     handleGetNum() {

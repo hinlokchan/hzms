@@ -687,7 +687,7 @@ export default {
       })
     },
     goBack() {
-      this.$router.push('/plan')
+      this.$router.go(-1)
     }
   }
 };
