@@ -1,27 +1,45 @@
+'use strict'
+const modeEnv = process.env.VUE_APP_MODE_ENV
+const port = 8081
+let publicPath = '/'
+switch (modeEnv) {
+  case 'production':
+    publicPath = '/hzms/hzht'
+    break
+  case 'test':
+    publicPath = '/hzmsBeta/hzht'
+    break
+  default:
+    break
+}
 module.exports = {
-    baseUrl: './',
     assetsDir: 'static',
     productionSourceMap: false,
+    publicPath: publicPath,
+    outputDir: 'hzht',
+    lintOnSave: true,
     devServer: {
-        // proxy: {
-        //     '/api':{
-        //         target:'http://demo.hinlok.com',
-        //         changeOrigin:true,
-        //         pathRewrite:{
-        //             '/api':''
-        //         }
-        //     }
-        // }
+      open: true,
+      port: port,
+      overlay: {
+        warnings: false,
+        errors: true
+      },
         proxy: {
-            // change xxx-api/login => mock/login
-            // detail: https://cli.vuejs.org/config/#devserver-proxy
-            '/api': {
-              target: 'http://demo.hinlok.com',
-              changeOrigin: true,
-              pathRewrite: {
-                '^/api': ''
-              }
+          '/api': {
+            target: process.env.VUE_APP_PROXY_URL,
+            changeOrigin: true,
+            pathRewrite: {
+              '^/api': ''
+            }
+          },
+          [process.env.VUE_APP_PROXY_API]: {
+            target: `http://127.0.0.1:${port}/mock`,
+            changeOrigin: true,
+            pathRewrite: {
+              ['^' + process.env.VUE_APP_PROXY_API]: ''
             }
           }
+        }
     }
 }

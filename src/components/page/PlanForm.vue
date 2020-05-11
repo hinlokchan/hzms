@@ -159,7 +159,6 @@
                   value-format="yyyy-MM-dd"
                   style="width: 100%;"
                 ></el-date-picker>
-                <h2>{{form.fldSrvySchedule}}</h2>
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -638,8 +637,9 @@ export default {
         //  银行
         // if(!that.isEdit){
           let lendingBankNew = ''
+          console.log('that.form.lendingBank', that.form.lendingBank[1])
           if(that.form.lendingBank){
-            lendingBankNew = that.form.lendingBank.pop()
+            lendingBankNew = that.form.lendingBank[1]
             that.form.lendingBank = lendingBankNew
           }
         // }

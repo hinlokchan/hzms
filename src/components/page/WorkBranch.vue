@@ -479,11 +479,6 @@ export default {
       //////
       this.getSubNum = num.row.reportNum.cph
       console.log('getSubNum >>>', this.getSubNum)
-      getSubReportNum({ reportNumList: this.getSubNum })
-        .then(res => {
-          console.log('xxx', res.data);
-
-        })
       console.log('getNum -> getNumData>>>', this.getNumData)
       if (num.row.projType == 1010 || num.row.projType == 1020 || num.row.projType == 1030) {
         this.getNumType = 1 //房地资项目类型才有初评正评
