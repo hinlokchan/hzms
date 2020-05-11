@@ -1,13 +1,13 @@
 'use strict'
 const modeEnv = process.env.VUE_APP_MODE_ENV
-const port = 8081
+const port = 8080
 let publicPath = '/'
 switch (modeEnv) {
   case 'production':
     publicPath = '/hzms/hzht'
     break
   case 'test':
-    publicPath = '/hzmsBeta/hzht'
+    publicPath = '/hzms/hzht'
     break
   default:
     break
