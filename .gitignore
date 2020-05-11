@@ -1,6 +1,8 @@
 .DS_Store
 node_modules
 /dist
+/hzht
+/hzht.zip
 example.html
 favicon.ico
 # local env files

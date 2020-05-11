@@ -138,7 +138,7 @@
               <div class="projTitle">权属银行</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent">{{detailData.lendingBank}}</div>
+              <div class="projContent">{{detailData.lendingBankLable}}</div>
             </el-col>
             <el-col :span="4">
               <div class="projTitle">委托人联系人及联系方式</div>
@@ -309,6 +309,7 @@
 <script>
 import { getDetailProjInfo, getReportNum, getProjInfoTable } from '@/api/index'
 import projTypeOption from '../../../public/projTypeOption.json'
+import bankOptions from '../../../public/bank.json'
 import { host } from '@/config'
 var ProManageAPIServer = `${host.baseUrl}/${host.pathUrl}`
 export default {
@@ -321,6 +322,7 @@ export default {
       hhh: '',
       detailData: [],
       reportNum: [],
+      bankOptions: [],
       projTypeOption: [],
       projTypeZH: '',
       transedData: {},
@@ -350,7 +352,7 @@ export default {
     this.getDetail()
     this.projTypeOption = projTypeOption
     console.log('projTypeOption', this.projTypeOption);
-
+    this.bankOptions = bankOptions
   },
   mounted() {
 
@@ -374,6 +376,21 @@ methods: {
             this.transedData.projType = this.projTypeOption[i].label
           }
         }
+        //银行转译
+        let bankOptions = this.bankOptions
+        let bankAfter = []
+        for(let i = 0;i<bankOptions.length;i++){
+          if(bankOptions[i].children){
+            bankAfter = bankAfter.concat(bankOptions[i].children)
+          }
+        }
+        let index = bankAfter.findIndex((val) => {
+          return val.value == this.detailData.lendingBank
+        })
+        let indexBefore = bankOptions.findIndex((val) => {
+          return val.value == this.detailData.lendingBank.substring(0,3)
+        })
+        this.detailData.lendingBankLable = bankOptions[indexBefore].label + ' - ' + bankAfter[index].label
       })
     },
     printProj(val) {
