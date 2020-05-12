@@ -580,13 +580,21 @@ export default {
     },
     removeDomain(index, type) {
       if(type == 1){
-        this.form.projReviewer.splice(index, 1)
+        if(this.form.projReviewer.length !== 1 && this.form.projReviewer.length !== 0){
+          this.form.projReviewer.splice(index, 1)
+        }
       }else if(type == 2){
-        this.form.projProReviewer.splice(index, 1)
+        if(this.form.projProReviewer.length !== 1 && this.form.projProReviewer.length !== 0){
+          this.form.projProReviewer.splice(index, 1)
+        }
       }else if(type == 3){
-        this.form.projAsst.splice(index, 1)
+        if(this.form.projAsst.length !== 1 && this.form.projAsst.length !== 0){
+          this.form.projAsst.splice(index, 1)
+        }
       }else if(type == 4){
-        this.form.fieldSrvy.splice(index, 1)
+        if(this.form.fieldSrvy.length !== 1 && this.form.fieldSrvy.length !== 0){
+          this.form.fieldSrvy.splice(index, 1)
+        }
       }
     },
     onSubmit() {
