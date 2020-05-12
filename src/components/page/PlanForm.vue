@@ -166,7 +166,6 @@
                 <el-input-number
                   v-model="form.compSchedule"
                   :min="1"
-                  :max="10    "
                   label="完成天数"
                 ></el-input-number>
               </el-form-item>

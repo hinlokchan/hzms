@@ -190,7 +190,7 @@
               <div class="projContent">{{detailData.assemFeeQuote}}</div>
             </el-col>
           </el-row>
-          <el-row>
+          <!-- <el-row>
             <el-col :span="4">
               <div class="form-item-title">
                 <h3>项目进度 - (跟进功能开发中...)</h3>
@@ -225,7 +225,7 @@
                 ></el-step>
               </el-steps>
             </el-col>
-          </el-row>
+          </el-row> -->
           <el-row>
             <div class="form-item-title">
               <h3>项目组成员</h3>

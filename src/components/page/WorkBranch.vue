@@ -126,13 +126,11 @@
         <el-table-column
           prop="projName"
           label="项目名称"
-          width="200"
         >
         </el-table-column>
         <el-table-column
           prop="projScope"
           label="项目范围"
-          width="160"
         >
         </el-table-column>
         <el-table-column
@@ -154,6 +152,7 @@
         <el-table-column
           label="操作"
           align="center"
+          width="200"
         >
           <template slot-scope="scope">
             <el-button
@@ -164,11 +163,11 @@
             >项目详情</el-button>
             <el-button
               type="text"
-              icon="el-icon-info"
+              icon="el-icon-s-order"
               @click="handleHandle(scope.row)"
               size="medium"
             >处理项目</el-button>
-            <el-button
+            <!-- <el-button
               type="text"
               icon="el-icon-star-on"
               size="medium"
@@ -186,7 +185,7 @@
               icon="el-icon-s-order"
               @click="handleWorkArrange(scope.row)"
               size="medium"
-            >工作安排</el-button>
+            >工作安排</el-button> -->
           </template>
         </el-table-column>
       </el-table>

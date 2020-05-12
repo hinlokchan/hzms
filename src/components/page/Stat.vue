@@ -21,7 +21,6 @@
           value-format="yyyy-MM-dd"
         >
         </el-date-picker>
-        <el-autocomplete></el-autocomplete>
       </div>
     </el-card>
   </div>

@@ -99,21 +99,21 @@ export default {
             }
           ]
         },
-        {
-          icon: 'el-icon-search',
-          title: '历史项目信息查询',
-          subs: [
-            {
-              title: '房地产项目'
-            },
-            {
-              title: '土地项目'
-            },
-            {
-              title: '资产项目'
-            }
-          ]
-        },
+        // {
+        //   icon: 'el-icon-search',
+        //   title: '历史项目信息查询',
+        //   subs: [
+        //     {
+        //       title: '房地产项目'
+        //     },
+        //     {
+        //       title: '土地项目'
+        //     },
+        //     {
+        //       title: '资产项目'
+        //     }
+        //   ]
+        // },
         {
           index: 'stat',
           icon: 'el-icon-data-analysis',
