@@ -311,7 +311,7 @@ import { getDetailProjInfo, getReportNum, getProjInfoTable } from '@/api/index'
 import projTypeOption from '../../../public/projTypeOption.json'
 import bankOptions from '../../../public/bank.json'
 import { host } from '@/config'
-var ProManageAPIServer = `${host.baseUrl}/${host.pathUrl}`
+var ProManageAPIServer = `${host.baseUrl}/`
 export default {
   name: 'projcheck',
   data() {
