@@ -23,11 +23,16 @@
           label="评估方法"
           prop="assemMethod"
         >
-          <el-radio-group v-model="workArrgForm.assemMethod">
+          <!-- <el-radio-group v-model="workArrgForm.assemMethod">
             <el-radio label="成本法">成本法</el-radio>
             <el-radio label="收益法">收益法</el-radio>
             <el-radio label="市场法">市场法</el-radio>
-          </el-radio-group>
+          </el-radio-group> -->
+          <el-checkbox-group v-model="workArrgForm.assemMethod">
+            <el-checkbox label="成本法"></el-checkbox>
+            <el-checkbox label="收益法"></el-checkbox>
+            <el-checkbox label="市场法"></el-checkbox>
+          </el-checkbox-group>
         </el-form-item>
         <el-form-item
           label="现场勘查内容"
@@ -243,7 +248,7 @@ export default {
       workname: ['前期准备', '现场勘查及收集资料', '市场调查询价记录', '评定估算', '编制出具估价（估价）报告', '内部三级审核', '与委托人沟通', '评估收费', '修正定稿及提交报告', '工作底稿归档'],
       workArrgForm: {
         projId: '',
-        assemMethod: '成本法',
+        assemMethod: [],
         fldSrvyContent: '',
         //人员
         prePreparationPic: [],

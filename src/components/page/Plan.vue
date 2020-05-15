@@ -167,14 +167,14 @@
           prop="clientName"
           label="委托方名称"
         ></el-table-column>
-        <el-table-column
+        <!-- <el-table-column
           prop="projRate"
           label="项目进度"
           width="90"
           align="center"
         >
           <el-tag effect="dark">编写报告</el-tag>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column
           label="操作"
           width="190"

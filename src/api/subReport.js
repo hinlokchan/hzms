@@ -2,7 +2,7 @@ import request from '../utils/request';
 import qs from 'qs';
 import Cookies from 'js-cookie';
 import { host } from '@/config';
-const ProManageAPIServer = `${host.baseUrl}/${host.pathUrl}`;
+const ProManageAPIServer = `${host.baseUrl}/${host.ProManageAPIServer}`;
 
 export function addSubProject(data) {
   return request({

@@ -15,7 +15,12 @@
         width="40%"
         @close="closeNewInfo"
       >
-        <el-input :rows="6" type="textarea" v-model="newInfoData" size="medium"></el-input>
+        <el-input
+          :rows="6"
+          type="textarea"
+          v-model="newInfoData"
+          size="medium"
+        ></el-input>
       </el-dialog>
       <div class="form-box">
         <div class="form-item-title">
@@ -109,12 +114,18 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="评估范围" prop="projScope">
+              <el-form-item
+                label="评估范围"
+                prop="projScope"
+              >
                 <el-input v-model="form.projScope"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="评估目的" prop="assemGoal">
+              <el-form-item
+                label="评估目的"
+                prop="assemGoal"
+              >
                 <el-select
                   v-model="form.assemGoal"
                   placeholder="请选择"
@@ -129,7 +140,10 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="编制时间" prop="projDate">
+              <el-form-item
+                label="编制时间"
+                prop="projDate"
+              >
                 <el-date-picker
                   type="date"
                   placeholder="选择日期"
@@ -140,7 +154,10 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="基准日" prop="baseDate">
+              <el-form-item
+                label="基准日"
+                prop="baseDate"
+              >
                 <el-date-picker
                   type="date"
                   placeholder="选择日期"
@@ -151,7 +168,10 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="计划现勘日期" prop="fldSrvySchedule">
+              <el-form-item
+                label="计划现勘日期"
+                prop="fldSrvySchedule"
+              >
                 <el-date-picker
                   type="date"
                   placeholder="选择日期"
@@ -184,31 +204,39 @@
             <el-divider></el-divider>
             <el-col :span="6">
               <el-form-item label="接洽类型">
-                <el-cascader
-                  
-                >
+                <el-cascader>
                 </el-cascader>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="接洽人" prop="projContact">
+              <el-form-item
+                label="接洽人"
+                prop="projContact"
+              >
                 <el-input v-model="form.projContact"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="贷款银行" prop="lendingBank">
+              <el-form-item
+                label="贷款银行"
+                prop="lendingBank"
+              >
                 <el-cascader
                   :show-all-levels="true"
                   v-model="form.lendingBank"
                   :options="bankOptions"
                   :props="{ expandTrigger: 'hover' }"
+                  @change="bankLabel()"
                 >
                 </el-cascader>
               </el-form-item>
             </el-col>
-            
+
             <el-col :span="6">
-              <el-form-item label="委托人" prop="clientName">
+              <el-form-item
+                label="委托人"
+                prop="clientName"
+              >
                 <el-input v-model="form.clientName"></el-input>
               </el-form-item>
             </el-col>
@@ -294,11 +322,24 @@
                 :label="'项目复核人' + (index + 1)"
                 :key="index"
               >
-              <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
-                <div class="flexBox"><el-input style="width:90%" v-model="item.value"></el-input><i class="el-icon-lx-roundclose" style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5" @click.prevent="removeDomain(index, 1)"></i></div>
+                <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
+                <div class="flexBox">
+                  <el-input
+                    style="width:90%"
+                    v-model="item.value"
+                  ></el-input><i
+                    class="el-icon-lx-roundclose"
+                    style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5"
+                    @click.prevent="removeDomain(index, 1)"
+                  ></i>
+                </div>
               </el-form-item>
               <el-form-item>
-                <i class="el-icon-lx-roundadd" style="font-size: 26px;color:#b5b5b5" @click="addDomain(1)"></i>
+                <i
+                  class="el-icon-lx-roundadd"
+                  style="font-size: 26px;color:#b5b5b5"
+                  @click="addDomain(1)"
+                ></i>
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -307,11 +348,24 @@
                 :label="'专业复核人' + (index + 1)"
                 :key="index"
               >
-              <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
-                <div class="flexBox"><el-input style="width:90%" v-model="item.value"></el-input><i class="el-icon-lx-roundclose" style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5" @click.prevent="removeDomain(index, 2)"></i></div>
+                <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
+                <div class="flexBox">
+                  <el-input
+                    style="width:90%"
+                    v-model="item.value"
+                  ></el-input><i
+                    class="el-icon-lx-roundclose"
+                    style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5"
+                    @click.prevent="removeDomain(index, 2)"
+                  ></i>
+                </div>
               </el-form-item>
               <el-form-item>
-                <i class="el-icon-lx-roundadd" style="font-size: 26px;color:#b5b5b5" @click="addDomain(2)"></i>
+                <i
+                  class="el-icon-lx-roundadd"
+                  style="font-size: 26px;color:#b5b5b5"
+                  @click="addDomain(2)"
+                ></i>
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -320,11 +374,24 @@
                 :label="'项目助理' + (index + 1)"
                 :key="index"
               >
-              <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
-                <div class="flexBox"><el-input style="width:90%" v-model="item.value"></el-input><i class="el-icon-lx-roundclose" style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5" @click.prevent="removeDomain(index, 3)"></i></div>
+                <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
+                <div class="flexBox">
+                  <el-input
+                    style="width:90%"
+                    v-model="item.value"
+                  ></el-input><i
+                    class="el-icon-lx-roundclose"
+                    style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5"
+                    @click.prevent="removeDomain(index, 3)"
+                  ></i>
+                </div>
               </el-form-item>
               <el-form-item>
-                <i class="el-icon-lx-roundadd" style="font-size: 26px;color:#b5b5b5" @click="addDomain(3)"></i>
+                <i
+                  class="el-icon-lx-roundadd"
+                  style="font-size: 26px;color:#b5b5b5"
+                  @click="addDomain(3)"
+                ></i>
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -333,11 +400,24 @@
                 :label="'现场勘查' + (index + 1)"
                 :key="index"
               >
-              <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
-                <div class="flexBox"><el-input style="width:90%" v-model="item.value"></el-input><i class="el-icon-lx-roundclose" style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5" @click.prevent="removeDomain(index, 4)"></i></div>
+                <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
+                <div class="flexBox">
+                  <el-input
+                    style="width:90%"
+                    v-model="item.value"
+                  ></el-input><i
+                    class="el-icon-lx-roundclose"
+                    style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5"
+                    @click.prevent="removeDomain(index, 4)"
+                  ></i>
+                </div>
               </el-form-item>
               <el-form-item>
-                <i class="el-icon-lx-roundadd" style="font-size: 26px;color:#b5b5b5" @click="addDomain(4)"></i>
+                <i
+                  class="el-icon-lx-roundadd"
+                  style="font-size: 26px;color:#b5b5b5"
+                  @click="addDomain(4)"
+                ></i>
               </el-form-item>
             </el-col>
           </el-row>
@@ -388,7 +468,7 @@ export default {
         fldSrvySchedule: '',
         clientContactInfo: '',
         assemFeeQuote: '',
-        assemValueQuote:'',
+        assemValueQuote: '',
         projLeader: '',
         projAsst: [{ value: '' }],
         projProReviewer: [{ value: '' }],
@@ -450,7 +530,7 @@ export default {
   },
   methods: {
     arrgTypeToEnable(val) {
-      if(val == 1010 || val == 1030) {
+      if (val == 1010 || val == 1030) {
         this.arrgTypeEnable = false
       } else {
         this.arrgTypeEnable = true
@@ -475,10 +555,10 @@ export default {
       var month = date.getMonth() + 1;
       var strDate = date.getDate();
       if (month >= 1 && month <= 9) {
-          month = "0" + month;
+        month = "0" + month;
       }
       if (strDate >= 0 && strDate <= 9) {
-          strDate = "0" + strDate;
+        strDate = "0" + strDate;
       }
       var currentdate = year + seperator1 + month + seperator1 + strDate;
       return currentdate;
@@ -492,63 +572,63 @@ export default {
     },
     dealEditData(data) {
       // 项目复核人
-      if(data.projReviewer !== ''){
-        if(data.projReviewer.indexOf(',') !== -1){
+      if (data.projReviewer !== '') {
+        if (data.projReviewer.indexOf(',') !== -1) {
           let midData = data.projReviewer.split(',')
           let endData = []
-          for(let i=0;i<midData.length;i++){
-            endData.push({value: midData[i]})
+          for (let i = 0; i < midData.length; i++) {
+            endData.push({ value: midData[i] })
           }
           data.projReviewer = endData
-        }else{
+        } else {
           data.projReviewer = [{ value: data.projReviewer }]
         }
-      }else{
+      } else {
         data.projReviewer = [{ value: '' }]
       }
       //  专业复核人
-      if(data.projProReviewer !== ''){
-        if(data.projProReviewer.indexOf(',') !== -1){
+      if (data.projProReviewer !== '') {
+        if (data.projProReviewer.indexOf(',') !== -1) {
           let midData = data.projProReviewer.split(',')
           let endData = []
-          for(let i=0;i<midData.length;i++){
-            endData.push({value: midData[i]})
+          for (let i = 0; i < midData.length; i++) {
+            endData.push({ value: midData[i] })
           }
           data.projProReviewer = endData
-        }else{
+        } else {
           data.projProReviewer = [{ value: data.projProReviewer }]
         }
-      }else{
+      } else {
         data.projProReviewer = [{ value: '' }]
       }
       // 项目助理
-      if(data.projAsst !== ''){
-        if(data.projAsst.indexOf(',') !== -1){
+      if (data.projAsst !== '') {
+        if (data.projAsst.indexOf(',') !== -1) {
           let midData = data.projAsst.split(',')
           let endData = []
-          for(let i=0;i<midData.length;i++){
-            endData.push({value: midData[i]})
+          for (let i = 0; i < midData.length; i++) {
+            endData.push({ value: midData[i] })
           }
           data.projAsst = endData
-        }else{
+        } else {
           data.projAsst = [{ value: data.projAsst }]
         }
-      }else{
+      } else {
         data.projAsst = [{ value: '' }]
       }
       // 现场勘察
-      if(data.fieldSrvy !== ''){
-        if(data.fieldSrvy.indexOf(',') !== -1){
+      if (data.fieldSrvy !== '') {
+        if (data.fieldSrvy.indexOf(',') !== -1) {
           let midData = data.fieldSrvy.split(',')
           let endData = []
-          for(let i=0;i<midData.length;i++){
-            endData.push({value: midData[i]})
+          for (let i = 0; i < midData.length; i++) {
+            endData.push({ value: midData[i] })
           }
           data.fieldSrvy = endData
-        }else{
+        } else {
           data.fieldSrvy = [{ value: data.fieldSrvy }]
         }
-      }else{
+      } else {
         data.fieldSrvy = [{ value: '' }]
       }
       // this.form.projDate = this.formatDate(this.form.projDate)
@@ -559,39 +639,39 @@ export default {
       this.form = data
     },
     addDomain(type) {
-      if(type == 1){
+      if (type == 1) {
         this.form.projReviewer.push({
           value: ''
         });
-      }else if(type == 2){
+      } else if (type == 2) {
         this.form.projProReviewer.push({
           value: ''
         });
-      }else if(type == 3){
+      } else if (type == 3) {
         this.form.projAsst.push({
           value: ''
         });
-      }else if(type == 4){
+      } else if (type == 4) {
         this.form.fieldSrvy.push({
           value: ''
         });
       }
     },
     removeDomain(index, type) {
-      if(type == 1){
-        if(this.form.projReviewer.length !== 1 && this.form.projReviewer.length !== 0){
+      if (type == 1) {
+        if (this.form.projReviewer.length !== 1 && this.form.projReviewer.length !== 0) {
           this.form.projReviewer.splice(index, 1)
         }
-      }else if(type == 2){
-        if(this.form.projProReviewer.length !== 1 && this.form.projProReviewer.length !== 0){
+      } else if (type == 2) {
+        if (this.form.projProReviewer.length !== 1 && this.form.projProReviewer.length !== 0) {
           this.form.projProReviewer.splice(index, 1)
         }
-      }else if(type == 3){
-        if(this.form.projAsst.length !== 1 && this.form.projAsst.length !== 0){
+      } else if (type == 3) {
+        if (this.form.projAsst.length !== 1 && this.form.projAsst.length !== 0) {
           this.form.projAsst.splice(index, 1)
         }
-      }else if(type == 4){
-        if(this.form.fieldSrvy.length !== 1 && this.form.fieldSrvy.length !== 0){
+      } else if (type == 4) {
+        if (this.form.fieldSrvy.length !== 1 && this.form.fieldSrvy.length !== 0) {
           this.form.fieldSrvy.splice(index, 1)
         }
       }
@@ -599,7 +679,7 @@ export default {
     onSubmit() {
       console.log(this.form)
       this.$refs.ruleForm.validate((valid) => {
-        if(valid){
+        if (valid) {
           this.transformPeop().then(res => {
             console.log('this.form', this.form)
             if (this.isEdit) {
@@ -616,13 +696,13 @@ export default {
                 console.log('add>>>res', res)
                 this.$message.success('提交成功！');
                 let riskProfile = ''
-                if(this.form.riskProfile == 1001){
+                if (this.form.riskProfile == 1001) {
                   riskProfile == '低'
-                }else if(this.form.riskProfile == 1002){
+                } else if (this.form.riskProfile == 1002) {
                   riskProfile == '中等'
-                }else if(this.form.riskProfile == 1003){
+                } else if (this.form.riskProfile == 1003) {
                   riskProfile == '较高'
-                }else{
+                } else {
                   riskProfile == '高'
                 }
                 // ZP项目类型：资；委托 人：(其他):惠州市水务投资集团；项目名称：惠州大道大湖溪段667平方米租金；评估对象及其坐落：同上;；评估目的：物业出租价格；引荐人及其电话：惠州市水务投资集团王总135 0229 7502；现联系单位、人及电话：同上；现勘时间：现勘同事约；报告时间要求：5天；项目风险预测：；评估收费报价：待定；是否曾评估的项目：（若是，原项目组成员：）；项目接洽人""[52]-缨(注师：莎缨;助理：健;专业复核人:远。以下由项目负责人安排 现勘：;资料核查验证：;市场询价调查：;技术报告:；报告编制:; 归档：;对外沟通:
@@ -633,28 +713,29 @@ export default {
               })
             }
           })
-        }else{
+        } else {
           this.$message('请填写必填信息');
         }
       })
     },
     transformPeop() {
       var that = this
-      return new Promise(function(resolve, reject) {
+      return new Promise(function (resolve, reject) {
         //  银行
         // if(!that.isEdit){
-          let lendingBankNew = ''
-          console.log('that.form.lendingBank', that.form.lendingBank[1])
-          if(that.form.lendingBank){
-            lendingBankNew = that.form.lendingBank[1]
-            that.form.lendingBank = lendingBankNew
-          }
-        // }
+        //后端处理好号把这段加回去
+        let lendingBankNew = ''
+        console.log('that.form.lendingBank', that.form.lendingBank[1])
+        if(that.form.lendingBank){
+          lendingBankNew = that.form.lendingBank[1]
+          that.form.lendingBank = lendingBankNew
+        }
+        //}
         //  项目复核人
         let projReviewer = that.form.projReviewer
         let projReviewerNew = ''
-        for(let i = 0;i<projReviewer.length;i++){
-          if(projReviewer[i].value){
+        for (let i = 0; i < projReviewer.length; i++) {
+          if (projReviewer[i].value) {
             projReviewerNew = projReviewerNew + projReviewer[i].value + ','
           }
         }
@@ -663,8 +744,8 @@ export default {
         //  专业复核人
         let projProReviewer = that.form.projProReviewer
         let projProReviewerNew = ''
-        for(let i = 0;i<projProReviewer.length;i++){
-          if(projProReviewer[i].value){
+        for (let i = 0; i < projProReviewer.length; i++) {
+          if (projProReviewer[i].value) {
             projProReviewerNew = projProReviewerNew + projProReviewer[i].value + ','
           }
         }
@@ -673,8 +754,8 @@ export default {
         // 项目助理
         let projAsst = that.form.projAsst
         let projAsstNew = ''
-        for(let i = 0;i<projAsst.length;i++){
-          if(projAsst[i].value){
+        for (let i = 0; i < projAsst.length; i++) {
+          if (projAsst[i].value) {
             projAsstNew = projAsstNew + projAsst[i].value + ','
           }
         }
@@ -683,8 +764,8 @@ export default {
         // 现场勘察
         let fieldSrvy = that.form.fieldSrvy
         let fieldSrvyNew = ''
-        for(let i = 0;i<fieldSrvy.length;i++){
-          if(fieldSrvy[i].value){
+        for (let i = 0; i < fieldSrvy.length; i++) {
+          if (fieldSrvy[i].value) {
             fieldSrvyNew = fieldSrvyNew + fieldSrvy[i].value + ','
           }
         }
@@ -702,16 +783,16 @@ export default {
 
 <style scoped>
 .form-item-title {
-    width: 100px;
-    text-align: center;
-    margin: 10px 0 20px 0;
-    border-left: solid 5px #409eff;
+  width: 100px;
+  text-align: center;
+  margin: 10px 0 20px 0;
+  border-left: solid 5px #409eff;
 }
-.flexBox{
+.flexBox {
   display: flex;
-  justify-content:space-between
+  justify-content: space-between;
 }
 .flexBox el-input {
-  margin-right: 5px
+  margin-right: 5px;
 }
 </style>

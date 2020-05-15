@@ -173,10 +173,11 @@
             v-if="this.queryData.projType == 1010 || this.queryData.projType == 1020 || this.queryData.projType == 1030 || this.queryData.projType == 1041 || this.queryData.projType == 1042 || this.queryData.projType == 1043"
             @click="handleChangeType()"
           >更改项目类型</el-button>
-          <el-button
+          <!-- <el-button
             icon="el-icon-printer"
             size="medium"
-          >打印计划信息表</el-button>
+            @click="handlePrintProj(queryData.projId)"
+          >打印计划信息表</el-button> -->
         </span>
       </div>
       <el-divider></el-divider>
@@ -412,7 +413,7 @@
 </template>
 
 <script>
-import { getDetailProjInfo, getWorkAssignment, setWorkAssignment, createReportNum, deleteReportNum, alterProjType } from '@/api/index'
+import { getDetailProjInfo, getWorkAssignment, setWorkAssignment, createReportNum, deleteReportNum, alterProjType, getProjInfoTable } from '@/api/index'
 import { addSubProject, getSubProjectInfoList, delSubProject } from '@/api/subReport'
 import projTypeOption from '../../../public/projTypeOption.json'
 export default {
@@ -594,31 +595,31 @@ export default {
           }
         })
         .catch(err => {
-          this.$message.error('获取安排信息失败，请重试')
+
         })
     },
     handleWorkArrg() {
       //this.$router.push({ path: '/workarrange', query: { projId: this.queryData.projId, projDate: this.queryData.projDate,  projMember:this.projMember, projNum: this.queryData.projNum} })
       this.$router.push({ path: '/workarrange', query: { data: this.queryData, projMember: this.projMember } })
     },
-    submitWorkArrg() {
-      console.log(this.workArrgForm)
-      //将人员的数组转为字符串
-      this.workArrgForm.prePreparationPic = this.workArrgForm.prePreparationPic.join(',')
-      this.workArrgForm.fldSrvyPic = this.fldSrvyPic.join(',')
-      this.workArrgForm.mktSrvyPic = this.workArrgForm.mktSrvyPic.join(',')
-      this.workArrgForm.assemChargePic = this.workArrgForm.assemChargePic.join(',')
-      this.workArrgForm.issueValSche = this.workArrgForm.pissueValSche.join(',')
-      this.workArrgForm.internalAuditPic = this.workArrgForm.internalAuditPic.join(',')
-      this.workArrgForm.commuClientPic = this.workArrgForm.commuClientPic.join(',')
-      this.workArrgForm.assemChargePic = this.workArrgForm.assemChargePic.join(',')
-      this.workArrgForm.amendFinalPic = this.workArrgForm.amendFinalPic.join(',')
-      this.workArrgForm.manuArchivePic = this.workArrgForm.manuArchivePic.join(',')
-      setWorkAssignment(this.workArrgForm)
-        .then(res => {
-          console.log('success')
-        })
-    },
+    // submitWorkArrg() {
+    //   console.log(this.workArrgForm)
+    //   //将人员的数组转为字符串
+    //   this.workArrgForm.prePreparationPic = this.workArrgForm.prePreparationPic.join(',')
+    //   this.workArrgForm.fldSrvyPic = this.fldSrvyPic.join(',')
+    //   this.workArrgForm.mktSrvyPic = this.workArrgForm.mktSrvyPic.join(',')
+    //   this.workArrgForm.assemChargePic = this.workArrgForm.assemChargePic.join(',')
+    //   this.workArrgForm.issueValSche = this.workArrgForm.pissueValSche.join(',')
+    //   this.workArrgForm.internalAuditPic = this.workArrgForm.internalAuditPic.join(',')
+    //   this.workArrgForm.commuClientPic = this.workArrgForm.commuClientPic.join(',')
+    //   this.workArrgForm.assemChargePic = this.workArrgForm.assemChargePic.join(',')
+    //   this.workArrgForm.amendFinalPic = this.workArrgForm.amendFinalPic.join(',')
+    //   this.workArrgForm.manuArchivePic = this.workArrgForm.manuArchivePic.join(',')
+    //   setWorkAssignment(this.workArrgForm)
+    //     .then(res => {
+    //       console.log('success')
+    //     })
+    // },
     handleDetail() {
       this.$router.push({ path: '/projcheck', query: { data: this.queryData.projId } })
     },
@@ -631,7 +632,7 @@ export default {
       let selOption = this.typeOptions
       const index = selOption.findIndex((item, index, arr) => {
         console.log('value>>>', item)
-        return item.value == data.projType
+        return item.value == this.queryData.projType
       })
       //selOption.splice(index, 1)
       this.typeOptions = selOption
@@ -640,17 +641,33 @@ export default {
       if (this.changeType.toType == '') {
         this.$message.info('请选择修改类型');
       } else {
-        alterProjType(this.changeType).then(res => {
-          this.$message.success('修改成功');
-          this.changeNumVisible = false
-          this.getData();
-        }).catch(err => {
-          this.$message.error('修改失败');
-        })
+        alterProjType(this.changeType)
+          .then(res => {
+            console.log(res)
+            this.$message.success('修改成功');
+            this.changeTypeVisible = false
+            this.$router.go(-1)
+          })
+          .catch(err => {
+            console.log(err)
+            this.$message.error('修改失败');
+          })
       }
     },
-    handlePrintPlan() {
-
+    handlePrintProj(val) {
+      console.log(val)
+      // var that = this
+      // var oReq = new XMLHttpRequest()
+      // // url参数为拿后台数据的接口
+      // let pathUrl = ProManageAPIServer + getProjInfoTable
+      // oReq.open('POST', pathUrl, true)
+      // oReq.responseType = 'blob'
+      // oReq.onload = function (oEvent) {
+      //   window.open('/static/pdf/web/viewer.html?file=' + encodeURIComponent(URL.createObjectURL(new Blob([oReq.response]))))
+      // }
+      // const fdata = new FormData()
+      // fdata.append('projId', parseInt(that.projId))
+      // oReq.send(fdata)
     },
     //取号流程
     handleGetNum() {
