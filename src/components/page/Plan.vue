@@ -83,6 +83,7 @@
       <el-table
         :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)"
         stripe
+        border
         class="table"
         ref="multipleTable"
         header-cell-class-name="table-header"
@@ -150,22 +151,42 @@
           :formatter="this.$formatDate"
           label="编制日期"
           sortable
+          width="105"
         ></el-table-column>
         <el-table-column
           prop="projNum"
           label="计划编号"
+          width="110"
         ></el-table-column>
         <el-table-column
           prop="projName"
           label="评估项目名称"
+          width="300"
         ></el-table-column>
         <el-table-column
           prop="projScope"
           label="评估项目范围"
+          width="300"
         ></el-table-column>
         <el-table-column
           prop="clientName"
-          label="委托方名称"
+          label="委托人名称"
+          width="180"
+        ></el-table-column>
+        <el-table-column
+          prop="projLeader"
+          label="项目负责人"
+          width="95"
+        ></el-table-column>
+        <el-table-column
+          prop="projReviewer"
+          label="项目复核人"
+          width="95"
+        ></el-table-column>
+        <el-table-column
+          prop="projAsst"
+          label="项目助理"
+          width="80"
         ></el-table-column>
         <!-- <el-table-column
           prop="projRate"

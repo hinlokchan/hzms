@@ -23,6 +23,30 @@
         </el-date-picker>
       </div>
     </el-card>
+    <el-card style="width:50%">
+      <div
+        slot="header"
+        class="clearfix"
+      >
+        <span>周报表</span>
+        <el-button
+          style="float:right"
+          type="text"
+          @click="printWeekReport(week)"
+        >导出</el-button>
+      </div>
+      <div>
+        <el-date-picker
+          v-model="week"
+          type="week"
+          placeholder="请选择日期"
+          format="W"
+          value-format="W"
+        >
+        </el-date-picker>
+        <h2>{{this.week}}</h2>
+      </div>
+    </el-card>
   </div>
 </template>
 
@@ -36,6 +60,7 @@ export default {
   data() {
     return {
       dateStr: '',
+      week: '',
       pickerOptions: {
         disabledDate(time) {
           return time.getTime() > Date.now()

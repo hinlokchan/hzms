@@ -152,7 +152,21 @@
         >确认更改</el-button>
       </div>
     </el-dialog>
-    <!-- <el-tag>项目状态：已安排人员，已取号，无子项目信息</el-tag> -->
+    <el-dialog
+      width="30%"
+      @close="closeQRCode"
+      :visible.sync="qrcodeVisible"
+      append-to-body
+    >
+      <div
+        id="qrcode"
+        ref="qrcode"
+        style="margin-left:27%"
+      ></div>
+    </el-dialog>
+    <!--////////////////////////////////-->
+    <!--            主体                 -->
+    <!--////////////////////////////////-->
     <div class="work">
       <div class="work-title">
         <span class="work-title-name">项目信息</span>
@@ -173,11 +187,16 @@
             v-if="this.queryData.projType == 1010 || this.queryData.projType == 1020 || this.queryData.projType == 1030 || this.queryData.projType == 1041 || this.queryData.projType == 1042 || this.queryData.projType == 1043"
             @click="handleChangeType()"
           >更改项目类型</el-button>
-          <!-- <el-button
+          <el-button
+            icon="el-icon-lx-qrcode"
+            size="medium"
+            @click="handleQRCode()"
+          >生成二维码</el-button>
+          <el-button
             icon="el-icon-printer"
             size="medium"
             @click="handlePrintProj(queryData.projId)"
-          >打印计划信息表</el-button> -->
+          >打印计划信息表</el-button>
         </span>
       </div>
       <el-divider></el-divider>
@@ -413,9 +432,13 @@
 </template>
 
 <script>
-import { getDetailProjInfo, getWorkAssignment, setWorkAssignment, createReportNum, deleteReportNum, alterProjType, getProjInfoTable } from '@/api/index'
+import QRCode from 'qrcodejs2'
+import { editProject, getDetailProjInfo, getWorkAssignment, setWorkAssignment, createReportNum, deleteReportNum, alterProjType, getProjInfoTable } from '@/api/index'
 import { addSubProject, getSubProjectInfoList, delSubProject } from '@/api/subReport'
 import projTypeOption from '../../../public/projTypeOption.json'
+import { host } from '@/config'
+var ProManageAPIServer = `${host.baseUrl}/`
+
 export default {
   name: 'workhandle',
   data() {
@@ -431,12 +454,14 @@ export default {
       activeTab: 'reportNum',
       addAssemCheck: false,
       workArrgEdit: false,
+      assemValueEdit: false,
       workName: ['前期准备', '现场勘查及收集资料', '市场调查询价记录', '评定估算', '编制出具评估（估价）报告', '内部三级审核', '与委托人沟通', '评估收费', '修正定稿及提交报告', '工作底稿归档'],
       workDate: [],
       workPeople: [],
       getNumVisible: false,
       delNumVisible: false,
       changeTypeVisible: false,
+      qrcodeVisible: false,
       reportNumSelectVal: 2,
       deleteNumSelectVal: 2,
       getNumType: '',
@@ -507,7 +532,8 @@ export default {
         assemMethod: [
           { required: true, message: '请选择评估方法', trigger: 'blur' }
         ]
-      }
+      },
+      reportNumList: ''
     }
   },
   created() {
@@ -538,7 +564,7 @@ export default {
         .then(res => {
           if (res.statusCode == 200) {
             this.projDetail = res.data
-            console.log('detail200', res.data)
+            console.log('projDetail', this.projDetail)
             this.reportNum = res.data.reportNumList
             console.log('reportNum', this.reportNum)
             const leader = this.projDetail.projLeader.split(',')
@@ -553,14 +579,21 @@ export default {
             //   let key = item
             //   this.$set(this.workArrgForm, key, [])
             // })
-            console.log('midMember', this.midMember)
-            console.log('mid2', mid2)
             console.log('projMember', this.projMember)
           }
           this.$nextTick(() => {
             // let numVal = JSON.stringify(this.reportNum)
             // console.log('numval', numVal)
-            getSubProjectInfoList({ reportNumList: this.reportNum.cph + ',' + this.reportNum.zph })
+            if (this.reportNum.cph != '' && this.reportNum.zph != '') {
+              this.reportNumList = this.reportNum.cph + ',' + this.reportNum.zph
+            } else if (this.reportNum.cph == '' && this.reportNum.zph == '') {
+              this.reportNumList = ''
+            } else if (this.reportNum.cph == '' && this.reportNum.zph != '') {
+              this.reportNumList = this.reportNum.zph
+            } else if (this.reportNum.zph == '' && this.reportNum.cph != '') {
+              this.reportNumList = this.reportNum.cph
+            }
+            getSubProjectInfoList({ reportNumList: this.reportNumList })
               .then(res => {
                 this.subTableData = res.data.cph
                 this.subTableData = this.subTableData.concat(res.data.zph)
@@ -580,17 +613,25 @@ export default {
       getWorkAssignment({ projId: this.queryData.projId })
         .then(res => {
           if (res.statusCode == 200) {
-            this.arrgData = res.data
-            //后期看看让后端分割出date和people
-            this.workPeople.push(res.data.prePreparationPic, res.data.fldSrvyPic, res.data.mktSrvyPic, res.data.assemEstPic, res.data.issueValPic, res.data.internalAuditPic, res.data.commuClientPic, res.data.assemChargePic, res.data.amendFinalPic, res.data.manuArchivePic)
-            this.workDate.push(res.data.prePreparationSche, res.data.fldSrvySche, res.data.mktSrvySche, res.data.assemEstSche, res.data.issueValSche, res.data.internalAuditSche, res.data.commuClientSche, res.data.assemChargeSche, res.data.amendFinalSche, res.data.manuArchiveSche)
-            for (var i = 0; i < this.workPeople.length; i++) {
-              if (this.workPeople[i] !== '') {
-                this.workArrgEdit = true
-                break
-              } else {
-                this.workArrgEdit = false
-              }
+            if (res.data == null) {
+              this.workArrgEdit = false
+              console.log('workArrgEdit', this.workArrgEdit)
+            } else {
+              this.workArrgEdit = true
+              this.arrgData = res.data
+              //后期看看让后端分割出date和people
+              this.workPeople.push(res.data.prePreparationPic, res.data.fldSrvyPic, res.data.mktSrvyPic, res.data.assemEstPic, res.data.issueValPic, res.data.internalAuditPic, res.data.commuClientPic, res.data.assemChargePic, res.data.amendFinalPic, res.data.manuArchivePic)
+              this.workDate.push(res.data.prePreparationSche, res.data.fldSrvySche, res.data.mktSrvySche, res.data.assemEstSche, res.data.issueValSche, res.data.internalAuditSche, res.data.commuClientSche, res.data.assemChargeSche, res.data.amendFinalSche, res.data.manuArchiveSche)
+              // for (var i = 0; i < this.workPeople.length; i++) {
+              //   if (this.workPeople[i] !== '') {
+              //     this.workArrgEdit = true
+              //     break
+              //   } else {
+              //     this.workArrgEdit = false
+              //   }
+              // }
+              console.log('arrgData', this.arrgData)
+              console.log('workArrgEdit', this.workArrgEdit)
             }
           }
         })
@@ -599,8 +640,7 @@ export default {
         })
     },
     handleWorkArrg() {
-      //this.$router.push({ path: '/workarrange', query: { projId: this.queryData.projId, projDate: this.queryData.projDate,  projMember:this.projMember, projNum: this.queryData.projNum} })
-      this.$router.push({ path: '/workarrange', query: { data: this.queryData, projMember: this.projMember } })
+      this.$router.push({ path: '/workarrange', query: { data: this.queryData, projMember: this.projMember, isEdit: this.workArrgEdit } })
     },
     // submitWorkArrg() {
     //   console.log(this.workArrgForm)
@@ -654,20 +694,48 @@ export default {
           })
       }
     },
+    handleQRCode() {
+
+
+      this.qrcodeVisible = true
+      this.$nextTick(() => {
+        this.creatQRCode()
+      })
+    },
+    creatQRCode() {
+      this.qr = new QRCode('qrcode', {
+        width: '150',
+        height: '150',
+        //text: this.form.zph + this.form.xmmc + this.form.pgz + this.form.jzr,
+        text: '项目报告号：' + this.reportNum.zph + ' ' + '项目名称：' + this.projDetail.projName + ' ' + '项目评估值：' + this.projDetail.assemValue + ' ' + '基准日：' + this.formatDate(this.projDetail.projDate)
+      })
+    },
+    closeQRCode() {
+      this.$refs.qrcode.innerHTML = ''
+    },
     handlePrintProj(val) {
-      console.log(val)
-      // var that = this
-      // var oReq = new XMLHttpRequest()
-      // // url参数为拿后台数据的接口
-      // let pathUrl = ProManageAPIServer + getProjInfoTable
-      // oReq.open('POST', pathUrl, true)
-      // oReq.responseType = 'blob'
-      // oReq.onload = function (oEvent) {
-      //   window.open('/static/pdf/web/viewer.html?file=' + encodeURIComponent(URL.createObjectURL(new Blob([oReq.response]))))
-      // }
-      // const fdata = new FormData()
-      // fdata.append('projId', parseInt(that.projId))
-      // oReq.send(fdata)
+      //伪加载中，防止重复提交请求
+      const loading = this.$loading({
+        lock: true,
+        text: '加载中',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+      setTimeout(() => {
+        loading.close()
+      }, 5000)
+      var that = this
+      var oReq = new XMLHttpRequest()
+      // url参数为拿后台数据的接口
+      let pathUrl = ProManageAPIServer + getProjInfoTable
+      oReq.open('POST', pathUrl, true)
+      oReq.responseType = 'blob'
+      oReq.onload = function (oEvent) {
+        window.open('/static/pdf/web/viewer.html?file=' + encodeURIComponent(URL.createObjectURL(new Blob([oReq.response]))))
+      }
+      const fdata = new FormData()
+      fdata.append('projId', parseInt(that.queryData.projId))
+      oReq.send(fdata)
     },
     //取号流程
     handleGetNum() {
@@ -742,6 +810,7 @@ export default {
         })
         .catch(() => { })
     },//end of delNum
+
     //子项目
     handleAddSubProj(val) {
       if (val !== '') {

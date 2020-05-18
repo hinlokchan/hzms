@@ -75,6 +75,11 @@ export default new Router({
                     component: () => import('../components/page/UserManage.vue'),
                     meta: { title: '用户管理' }
                 },
+                {
+                    path: '/icon',
+                    component: () => import('../components/page/Icon.vue'),
+                    meta: { title: '图标' }
+                },
                 // {
                 //     // 富文本编辑器组件
                 //     path: '/editor',

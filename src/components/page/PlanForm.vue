@@ -72,6 +72,153 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
+              <el-form-item label="接洽类型">
+                <el-select v-model="form.projContactType">
+                  <el-option
+                    v-for="item in contactTypeOption"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                  >
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item
+                label="接洽人"
+                prop="projContact"
+              >
+                <el-input v-model="form.projContact"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item
+                label="委托人"
+                prop="clientName"
+              >
+                <el-input v-model="form.clientName"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item
+                label="贷款银行"
+                prop="lendingBank"
+              >
+                <el-cascader
+                  :show-all-levels="true"
+                  v-model="form.lendingBank"
+                  :options="bankOptions"
+                  :props="{ expandTrigger: 'hover' }"
+                >
+                </el-cascader>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="委托人联系人">
+                <el-input v-model="form.clientContact"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="委托人联系人电话">
+                <el-input v-model="form.clientContactInfo"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item
+                label="项目名称"
+                prop="projName"
+              >
+                <el-input v-model="form.projName"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="引荐人">
+                <el-input v-model="form.projReferer"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="引荐人电话">
+                <el-input v-model="form.projRefererInfo"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item
+                label="评估范围"
+                prop="projScope"
+              >
+                <el-input v-model="form.projScope"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="现勘联系人">
+                <el-input v-model="form.fldSrvyContact"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="现勘联系人电话">
+                <el-input v-model="form.fldSrvyContactInfo"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item
+                label="评估目的"
+                prop="assemGoal"
+              >
+                <el-select
+                  v-model="form.assemGoal"
+                  placeholder="请选择"
+                >
+                  <el-option
+                    v-for="item in assemGoalList"
+                    :key="item"
+                    :value="item"
+                    :label="item"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="计划完成天数">
+                <el-input-number
+                  v-model="form.compSchedule"
+                  :min="1"
+                  label="完成天数"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item
+                label="基准日"
+                prop="baseDate"
+              >
+                <el-date-picker
+                  type="date"
+                  placeholder="选择日期"
+                  v-model="form.baseDate"
+                  value-format="yyyy-MM-dd"
+                  style="width: 100%;"
+                ></el-date-picker>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item
+                label="计划现勘日期"
+                prop="fldSrvySchedule"
+              >
+                <el-date-picker
+                  type="date"
+                  placeholder="选择日期"
+                  v-model="form.fldSrvySchedule"
+                  value-format="yyyy-MM-dd"
+                  style="width: 100%;"
+                ></el-date-picker>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-divider></el-divider>
+            <el-col :span="6">
               <el-form-item label="新/重评">
                 <el-select
                   v-model="form.newOldType"
@@ -105,171 +252,6 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="12">
-              <el-form-item
-                label="项目名称"
-                prop="projName"
-              >
-                <el-input v-model="form.projName"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item
-                label="评估范围"
-                prop="projScope"
-              >
-                <el-input v-model="form.projScope"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item
-                label="评估目的"
-                prop="assemGoal"
-              >
-                <el-select
-                  v-model="form.assemGoal"
-                  placeholder="请选择"
-                >
-                  <el-option
-                    v-for="item in assemGoalList"
-                    :key="item"
-                    :value="item"
-                    :label="item"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item
-                label="编制时间"
-                prop="projDate"
-              >
-                <el-date-picker
-                  type="date"
-                  placeholder="选择日期"
-                  v-model="form.projDate"
-                  value-format="yyyy-MM-dd"
-                  style="width: 100%;"
-                ></el-date-picker>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item
-                label="基准日"
-                prop="baseDate"
-              >
-                <el-date-picker
-                  type="date"
-                  placeholder="选择日期"
-                  v-model="form.baseDate"
-                  value-format="yyyy-MM-dd"
-                  style="width: 100%;"
-                ></el-date-picker>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item
-                label="计划现勘日期"
-                prop="fldSrvySchedule"
-              >
-                <el-date-picker
-                  type="date"
-                  placeholder="选择日期"
-                  v-model="form.fldSrvySchedule"
-                  value-format="yyyy-MM-dd"
-                  style="width: 100%;"
-                ></el-date-picker>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="计划完成天数">
-                <el-input-number
-                  v-model="form.compSchedule"
-                  :min="1"
-                  label="完成天数"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="其他补充说明">
-                <el-input
-                  type="textarea"
-                  autosize
-                  v-model="form.supInstruction"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20">
-            <el-divider></el-divider>
-            <el-col :span="6">
-              <el-form-item label="接洽类型">
-                <el-cascader>
-                </el-cascader>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item
-                label="接洽人"
-                prop="projContact"
-              >
-                <el-input v-model="form.projContact"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item
-                label="贷款银行"
-                prop="lendingBank"
-              >
-                <el-cascader
-                  :show-all-levels="true"
-                  v-model="form.lendingBank"
-                  :options="bankOptions"
-                  :props="{ expandTrigger: 'hover' }"
-                  @change="bankLabel()"
-                >
-                </el-cascader>
-              </el-form-item>
-            </el-col>
-
-            <el-col :span="6">
-              <el-form-item
-                label="委托人"
-                prop="clientName"
-              >
-                <el-input v-model="form.clientName"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="委托人联系人">
-                <el-input v-model="form.clientContact"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="委托人联系人电话">
-                <el-input v-model="form.clientContactInfo"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="现勘联系人">
-                <el-input v-model="form.fldSrvyContact"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="现勘联系人电话">
-                <el-input v-model="form.fldSrvyContactInfo"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="引荐人">
-                <el-input v-model="form.projReferer"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="引荐人电话">
-                <el-input v-model="form.projRefererInfo"></el-input>
-              </el-form-item>
-            </el-col>
             <el-col :span="6">
               <el-form-item label="风险预测">
                 <el-select v-model="form.riskProfile">
@@ -297,9 +279,27 @@
                 <el-input v-model="form.assemFeeQuote"></el-input>
               </el-form-item>
             </el-col>
+            <el-col :span="12">
+              <el-form-item label="其他补充说明">
+                <el-input
+                  type="textarea"
+                  autosize
+                  v-model="form.supInstruction"
+                ></el-input>
+              </el-form-item>
+            </el-col>
             <el-col :span="6">
-              <el-form-item label="评估值报价">
-                <el-input v-model="form.assemValueQuote"></el-input>
+              <el-form-item
+                label="编制时间"
+                prop="projDate"
+              >
+                <el-date-picker
+                  type="date"
+                  placeholder="选择日期"
+                  v-model="form.projDate"
+                  value-format="yyyy-MM-dd"
+                  style="width: 100%;"
+                ></el-date-picker>
               </el-form-item>
             </el-col>
           </el-row>
@@ -451,10 +451,11 @@ export default {
         projType: '',
         projName: '',
         projContact: '',
+        projContactType: '正常接洽',
         projDate: '',
-        newOldType: '',
+        newOldType: '新项目',
         arrgType: '',
-        projDegree: '',
+        projDegree: '1001',
         baseDate: '',
         assemGoal: '',
         clientName: '',
@@ -472,7 +473,7 @@ export default {
         projLeader: '',
         projAsst: [{ value: '' }],
         projProReviewer: [{ value: '' }],
-        riskProfile: '',
+        riskProfile: '1002',
         fieldSrvy: [{ value: '' }],
         compSchedule: 3,
         projReviewer: [{ value: '' }],
@@ -507,11 +508,9 @@ export default {
         clientName: [
           { required: true, message: '请填写委托人', trigge: 'blur' }
         ],
-        lendingBank: [
-          { required: true, message: '请选择贷款银行', trigger: 'blur' }
-        ]
       },
       assemGoalList: ['抵押', '交易', '资产处置（司法鉴定）', '出让', '挂牌出让', '补出让', '转让', '盘整收回', '征收补偿', '活立木拍卖', '出租', '置换', '股权转让', '作价入股', '增资扩股', '入账', '征收、完税', '企业改制', '清算', '复审', '评价', '咨询'],
+      contactTypeOption: ['正常接洽', '摇珠', '中行通知书']
     };
   },
   created() {
@@ -706,7 +705,7 @@ export default {
                   riskProfile == '高'
                 }
                 // ZP项目类型：资；委托 人：(其他):惠州市水务投资集团；项目名称：惠州大道大湖溪段667平方米租金；评估对象及其坐落：同上;；评估目的：物业出租价格；引荐人及其电话：惠州市水务投资集团王总135 0229 7502；现联系单位、人及电话：同上；现勘时间：现勘同事约；报告时间要求：5天；项目风险预测：；评估收费报价：待定；是否曾评估的项目：（若是，原项目组成员：）；项目接洽人""[52]-缨(注师：莎缨;助理：健;专业复核人:远。以下由项目负责人安排 现勘：;资料核查验证：;市场询价调查：;技术报告:；报告编制:; 归档：;对外沟通:
-                this.newInfoData = `项目编号:${res.data.projNum},项目名称:${this.form.projName};评估对象及其坐落：同上;评估目的:${this.form.assemGoal};引荐人及其电话:${this.form.projReferer}${this.form.projRefererInfo};现联系单位、人及电话：同上;现勘时间:${this.form.fldSrvySchedule};报告时间要求:${this.form.compSchedule}天;项目风险预测:${riskProfile};评估收费报价:${this.form.assemFeeQuote};项目接洽人:${this.form.projContact},项目助理:${this.form.projAsst},专业复核人:${this.form.projProReviewer}。以下由项目负责人安排,现勘:${this.form.fieldSrvy}`
+                this.newInfoData = `项目编号:${res.data.projNum},项目名称:${this.form.projName};评估对象及其坐落：同上;评估目的:${this.form.assemGoal};引荐人及其电话:${this.form.projReferer}${this.form.projRefererInfo};现联系单位人及电话：同上;现勘时间:${this.form.fldSrvySchedule};报告时间要求:${this.form.compSchedule}天;项目风险预测:${riskProfile};评估收费报价:${this.form.assemFeeQuote};项目接洽人:${this.form.projContact},项目助理:${this.form.projAsst},专业复核人:${this.form.projProReviewer}。以下由项目负责人安排,现勘:${this.form.fieldSrvy}`
                 this.newInfo = true
               }).catch(err => {
                 console.log('add>>>err', err)
@@ -726,7 +725,7 @@ export default {
         //后端处理好号把这段加回去
         let lendingBankNew = ''
         console.log('that.form.lendingBank', that.form.lendingBank[1])
-        if(that.form.lendingBank){
+        if (that.form.lendingBank) {
           lendingBankNew = that.form.lendingBank[1]
           that.form.lendingBank = lendingBankNew
         }

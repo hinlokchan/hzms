@@ -119,6 +119,7 @@ export default {
           icon: 'el-icon-data-analysis',
           title: "统计管理"
         },
+
         // {
         //   index: 'usermanage',
         //   icon: 'el-icon-user',

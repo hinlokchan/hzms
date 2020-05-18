@@ -15,11 +15,11 @@
         </div>
         <div class="project">
           <div style="text-align:right;width:100%;">
-            <!-- <el-button
+            <el-button
               type="text"
               icon="el-icon-printer"
               @click="printProj(projId)"
-            >打印计划信息表</el-button> -->
+            >打印计划信息表</el-button>
             <div style="font-size:13px;">计划录入：{{detailData.operator}}</div>
           </div>
           <el-row>
@@ -394,6 +394,7 @@ methods: {
       })
     },
     printProj(val) {
+      console.log(val)
       var that = this
       var oReq = new XMLHttpRequest()
       // url参数为拿后台数据的接口
