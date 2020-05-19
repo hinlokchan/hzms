@@ -164,6 +164,28 @@
         style="margin-left:27%"
       ></div>
     </el-dialog>
+    <el-dialog
+      title="取往月报告号"
+      :visible.sync="getOldNumVisible"
+      prop="takenDate"
+      width="30%"
+    >
+      <el-date-picker
+        v-model="takenDate"
+        type="month"
+        placeholder="选择月份"
+      ></el-date-picker>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="getOldNumVisible = false">取 消</el-button>
+        <el-button
+          @click="getOldNum(takenDate)"
+          type="primary"
+        >确认更改</el-button>
+      </div>
+    </el-dialog>
     <!--////////////////////////////////-->
     <!--            主体                 -->
     <!--////////////////////////////////-->
@@ -250,6 +272,11 @@
                   icon="el-icon-circle-plus-outline"
                   @click="handleGetNum"
                 >取号</el-button>
+                <el-button
+                  type="primary"
+                  icon="el-icon-circle-close"
+                  @click="handleGetOldNum"
+                >取往月报告号</el-button>
                 <el-button
                   type="danger"
                   icon="el-icon-circle-close"
@@ -433,7 +460,7 @@
 
 <script>
 import QRCode from 'qrcodejs2'
-import { editProject, getDetailProjInfo, getWorkAssignment, setWorkAssignment, createReportNum, deleteReportNum, alterProjType, getProjInfoTable } from '@/api/index'
+import { editProject, getDetailProjInfo, getWorkAssignment, setWorkAssignment, createReportNum, deleteReportNum, alterProjType, getProjInfoTable, getOldReportNum } from '@/api/index'
 import { addSubProject, getSubProjectInfoList, delSubProject } from '@/api/subReport'
 import projTypeOption from '../../../public/projTypeOption.json'
 import { host } from '@/config'
@@ -451,6 +478,7 @@ export default {
       projTypeOption: [],
       transedProjType: {},
       tableData: [],
+      takenDate: '',
       activeTab: 'reportNum',
       addAssemCheck: false,
       workArrgEdit: false,
@@ -462,6 +490,7 @@ export default {
       delNumVisible: false,
       changeTypeVisible: false,
       qrcodeVisible: false,
+      getOldNumVisible: false,
       reportNumSelectVal: 2,
       deleteNumSelectVal: 2,
       getNumType: '',
@@ -761,7 +790,7 @@ export default {
           } else if (this.queryData.projType == 1042) {
             this.getNumType = 1023 //资咨询正评
           } else if (this.queryData.projType == 1043) {
-            this, getNumType = 1033 //土咨询正评
+            this.getNumType = 1033 //土咨询正评
           }
         } else {
           this.getNumType = this.queryData.projType
@@ -783,6 +812,49 @@ export default {
           }
         })
       //end of getNewNum()
+    },
+    handleGetOldNum() {
+      this.getOldNumVisible = true
+    },
+    getOldNum(val) {
+      if (val == '') {
+        this.$message.warning('请选择时间')
+        return 0
+      } else if (this.reportNum.zph !== '') {
+        this.$message.warning('已存在正评号')
+        return 0
+      } else {
+        //takenData格式化
+        this.takenDate = this.$moment(val).format('YYYY-MM-DD')
+        //reportNumType
+        if (this.queryData.projType == 1010 || this.queryData.projType == 1020 || this.queryData.projType == 1030) {
+          this.getNumType = this.queryData.projType + 2 //房地资正评
+        } else if (this.queryData.projType == 1041 || this.queryData.projType == 1042 || this.queryData.projType == 1043) {
+          //*********
+          //请不要怀疑这一段代码为什么这么绕口令，因为初期提需求的时候（也就是写下这段代码的本人）没有考虑好projType和ReportNumType的关系，详情参考接口文档
+          //*********
+          if (this.queryData.projType == 1041) {
+            this.getNumType = 1013 //房咨询正评
+          } else if (this.queryData.projType == 1042) {
+            this.getNumType = 1023 //资咨询正评
+          } else if (this.queryData.projType == 1043) {
+            this.getNumType = 1033 //土咨询正评
+          }
+        } else {
+          this.getNumType = this.queryData.projType
+        }
+        getOldReportNum({ projId: this.queryData.projId, reportNumType: this.getNumType, takenDate: this.takenDate })
+          .then(res => {
+            console.log('oldReportNum', res.data)
+            this.$message.success('获取成功')
+            setTimeout("location.reload()", "400")
+          })
+          .catch(err => {
+            console.log('oldReportNum.err', err)
+            this.$message.warning('获取失败，请稍后再试')
+          })
+      }
+
     },
     handleDelNum() {
       this.delNumVisible = true

@@ -199,6 +199,15 @@ export function addSubReportNum(data) {
   });
 }
 
+export function getOldReportNum(data) {
+  return request({
+    url: `${ProManageAPIServer}project/createPostMonthReportNum`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
 export function setWorkAssignment(data) {
   return request({
     url: `${ProManageAPIServer}project/workAssignment`,
