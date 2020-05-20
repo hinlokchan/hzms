@@ -33,10 +33,23 @@
                 label="正评号"
                 prop="reportNum"
               >
-                <el-input
-                  v-model="form.reportNums.reportNum"
-                  placeholder="例:2020FG01001"
-                ></el-input>
+                <el-input v-model="reportNum"></el-input>
+                <!-- <el-select style="width: 90px">
+                  <el-option></el-option>
+                  <el-option></el-option>
+                  <el-option></el-option>
+                </el-select>
+                <el-input style="width: 120px"></el-input> -->
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="报告号日期">
+                <el-date-picker
+                  v-model="takenDate"
+                  type="month"
+                  placeholder="选择月份"
+                  style="width: 100%;"
+                ></el-date-picker>
               </el-form-item>
             </el-col>
             <el-col
@@ -453,6 +466,7 @@
 </template>
 
 <script>
+import { setOldProject } from '@/api/index'
 import bankOptions from '../../../public/bank.json'
 import projTypeOption from '../../../public/projTypeOption.json'
 export default {
@@ -460,6 +474,8 @@ export default {
   data() {
     return {
       arrgTypeEnable: true,
+      reportNum: '',
+      takenDate: '',
       form: {
         projNum: '',
         projDate: '',
@@ -512,33 +528,36 @@ export default {
         projTypeOption: []
       },
       rules: {
-        projType: [
-          { required: true, message: '请选择项目类型', trigger: 'blur' }
-        ],
-        projName: [
-          { required: true, message: '请输入项目名称', trigger: 'blur' }
-        ],
-        projScope: [
-          { required: true, message: '请输入评估范围', trigger: 'blur' }
-        ],
-        assemGoal: [
-          { required: true, message: '请选择评估目的', trigger: 'blur' }
-        ],
-        projDate: [
-          { required: true, message: '请选择编制日期', trigger: 'blur' }
-        ],
-        baseDate: [
-          { required: true, message: '请选择基准日', trigger: 'blur' }
-        ],
-        fldSrvySchedule: [
-          { required: true, message: '请选择现勘日期', trigger: 'blur' }
-        ],
-        projContact: [
-          { required: true, message: '请填写接洽人', trigge: 'blur' }
-        ],
-        clientName: [
-          { required: true, message: '请填写委托人', trigge: 'blur' }
-        ],
+        // projNum: [
+        //   { required: true, message: '请选择项目类型', trigger: 'blur' }
+        // ],
+        // projType: [
+        //   { required: true, message: '请选择项目类型', trigger: 'change' }
+        // ],
+        // projName: [
+        //   { required: true, message: '请输入项目名称', trigger: 'blur' }
+        // ],
+        // projScope: [
+        //   { required: true, message: '请输入评估范围', trigger: 'blur' }
+        // ],
+        // assemGoal: [
+        //   { required: true, message: '请选择评估目的', trigger: 'change' }
+        // ],
+        // projDate: [
+        //   { required: true, message: '请选择编制日期', trigger: 'blur' }
+        // ],
+        // baseDate: [
+        //   { required: true, message: '请选择基准日', trigger: 'blur' }
+        // ],
+        // fldSrvySchedule: [
+        //   { required: true, message: '请选择现勘日期', trigger: 'blur' }
+        // ],
+        // projContact: [
+        //   { required: true, message: '请填写接洽人', trigge: 'blur' }
+        // ],
+        // clientName: [
+        //   { required: true, message: '请填写委托人', trigge: 'blur' }
+        // ],
       },
       assemGoalList: ['抵押', '交易', '资产处置（司法鉴定）', '出让', '挂牌出让', '补出让', '转让', '盘整收回', '征收补偿', '活立木拍卖', '出租', '置换', '股权转让', '作价入股', '增资扩股', '入账', '征收、完税', '企业改制', '清算', '复审', '评价', '咨询'],
       contactTypeOption: ['正常接洽', '摇珠', '中行通知书']
@@ -600,7 +619,106 @@ export default {
       }
     },
     onSubmit() {
+      //判断是否填写了正评号,赋值reportNumType
+      if (this.reportNum) {
+        if (this.form.projType == 1010 || this.form.projType == 1020 || this.form.projType == 1030) {
+          this.form.reportNums[0].reportNumType = parseInt(this.form.projType) + 2//房地资正评
+        } else if (this.form.projType == 1041 || this.form.projType == 1042 || this.form.projType == 1043) {
+          //*********
+          //请不要怀疑这一段代码为什么这么绕口令，因为初期提需求的时候（也就是写下这段代码的本人）没有考虑好projType和ReportNumType的关系，详情参考接口文档
+          //*********
+          if (this.form.projType == 1041) {
+            this.form.reportNums[0].reportNumType = 1013 //房咨询正评
+          } else if (this.form.projType == 1042) {
+            this.form.reportNums[0].reportNumType = 1023 //资咨询正评
+          } else if (this.form.projType == 1043) {
+            this.form.reportNums[0].reportNumType = 1033 //土咨询正评
+          }
+        } else {
+          this.form.reportNums[0].reportNumType = this.form.projType
+        }
+        //
+        this.form.reportNums[0].reportNum = this.reportNum
+        this.form.reportNums[0].takenDate = this.$moment(this.takenDate).format('YYYY-MM-DD')
+      } else {
+        console.log('没有填写正评号')
+      }
 
+      this.$refs.ruleForm.validate((valid) => {
+        if (valid) {
+          this.transformPeop()
+            .then(res => {
+              console.log('form', this.form)
+              // setOldProject(this.form)
+              //   .then(res => {
+              //     this.$message.success('录入成功')
+              //     console.log('res', res)
+              //   })
+              //   .catch(err => {
+              //     console.log('err', err)
+              //   })
+            })
+        } else {
+          this.$message.warning('请填写必填信息')
+        }
+      })
+    },
+    //转化项目组成员
+    transformPeop() {
+      var that = this
+      return new Promise(function (resolve, reject) {
+        //  银行
+        // if(!that.isEdit){
+        //后端处理好号把这段加回去
+        let lendingBankNew = ''
+        console.log('that.form.lendingBank', that.form.lendingBank[1])
+        if (that.form.lendingBank) {
+          lendingBankNew = that.form.lendingBank[1]
+          that.form.lendingBank = lendingBankNew
+        }
+        //}
+        //  项目复核人
+        let projReviewer = that.form.projReviewer
+        let projReviewerNew = ''
+        for (let i = 0; i < projReviewer.length; i++) {
+          if (projReviewer[i].value) {
+            projReviewerNew = projReviewerNew + projReviewer[i].value + ','
+          }
+        }
+        console.log('projReviewerNew', projReviewerNew.substr(0, projReviewerNew.length - 1))
+        that.form.projReviewer = projReviewerNew.substr(0, projReviewerNew.length - 1)
+        //  专业复核人
+        let projProReviewer = that.form.projProReviewer
+        let projProReviewerNew = ''
+        for (let i = 0; i < projProReviewer.length; i++) {
+          if (projProReviewer[i].value) {
+            projProReviewerNew = projProReviewerNew + projProReviewer[i].value + ','
+          }
+        }
+        console.log('projProReviewerNew', projProReviewerNew.substr(0, projProReviewerNew.length - 1))
+        that.form.projProReviewer = projProReviewerNew.substr(0, projProReviewerNew.length - 1)
+        // 项目助理
+        let projAsst = that.form.projAsst
+        let projAsstNew = ''
+        for (let i = 0; i < projAsst.length; i++) {
+          if (projAsst[i].value) {
+            projAsstNew = projAsstNew + projAsst[i].value + ','
+          }
+        }
+        console.log('projAsstNew', projAsstNew.substr(0, projAsstNew.length - 1))
+        that.form.projAsst = projAsstNew.substr(0, projAsstNew.length - 1)
+        // 现场勘察
+        let fieldSrvy = that.form.fieldSrvy
+        let fieldSrvyNew = ''
+        for (let i = 0; i < fieldSrvy.length; i++) {
+          if (fieldSrvy[i].value) {
+            fieldSrvyNew = fieldSrvyNew + fieldSrvy[i].value + ','
+          }
+        }
+        console.log('fieldSrvyNew', fieldSrvyNew.substr(0, fieldSrvyNew.length - 1))
+        that.form.fieldSrvy = fieldSrvyNew.substr(0, fieldSrvyNew.length - 1)
+        resolve(1)
+      })
     },
     goBack() {
       this.$router.go(-1)

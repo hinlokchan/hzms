@@ -119,8 +119,9 @@ export default {
         this.$message.warning('请选择时间')
         return 0
       }
-      val = this.$moment(val).format('W')
-      console.log(val)
+      const week = this.$moment(val).format('WW')
+      const year = this.$moment(val).format('YYYY')
+      //console.log(val, week, year)
       var oReq = new XMLHttpRequest()
       // url参数为拿后台数据的接口
       let pathUrl = ProManageAPIServer + 'statistics/getWeekReport'
@@ -142,7 +143,8 @@ export default {
         document.body.removeChild(elink)
       }
       const fdata = new FormData()
-      fdata.append('week', val)
+      fdata.append('week', week)
+      fdata.append('year', year)
       oReq.send(fdata)
     },
     formatDate(now) {

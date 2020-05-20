@@ -99,6 +99,11 @@ export default {
             // }
           ]
         },
+        {
+          index: 'oldplanform',
+          icon: 'el-icon-document-add',
+          title: '旧项目录入'
+        },
         // {
         //   icon: 'el-icon-search',
         //   title: '历史项目信息查询',

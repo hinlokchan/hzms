@@ -520,7 +520,7 @@ export default {
       subFormRules: {
         subReportNum: [
           { required: true, message: '请输入子项目报告号', trigger: 'blur' },
-          { min: 3, max: 3, message: '请输入长度为3位数字', trigger: 'blur' }
+          { min: 3, max: 3, message: '请输入长度为3位数字', trigger: 'blur' },
         ],
         subProjName: [
           { required: true, message: '请输入子项目名称', trigger: 'blur' }

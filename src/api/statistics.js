@@ -26,8 +26,7 @@ export function getDayReport(data) {
 export function getWeekReport(data) {
   return request({
     url: `${ProManageAPIServer}statistics/getWeekReport`,
-    headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},
-    method: 'post',
+    headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},    method: 'post',
     data: qs.stringify(data),
     responseType: 'blob'
   })
