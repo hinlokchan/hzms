@@ -46,9 +46,9 @@ export default new Router({
                     meta: { title: '工作台' }
                 },
                 {
-                    path: '/workbranch',
-                    component: () => import('../components/page/WorkBranch.vue'),
-                    meta: { title: '工作台' }
+                    path: '/oldplanform',
+                    component: () => import('../components/page/OldPlanForm.vue'),
+                    meta: { title: '旧项目录入' }
                 },
                 {
                     path: '/qrcode',

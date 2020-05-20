@@ -3,35 +3,53 @@
     <div class="container">
       <div class="crumbs">
         <el-breadcrumb separator="/">
-          <el-breadcrumb-item>
-            <i class="el-icon-lx-calendar"></i> 项目管理
-          </el-breadcrumb-item>
-          <el-breadcrumb-item>新增项目计划</el-breadcrumb-item>
+          <el-breadcrumb-item>录入旧项目计划</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
-      <el-dialog
-        title="项目计划"
-        :visible.sync="newInfo"
-        width="40%"
-        @close="closeNewInfo"
-      >
-        <el-input
-          :rows="6"
-          type="textarea"
-          v-model="newInfoData"
-          size="medium"
-        ></el-input>
-      </el-dialog>
       <div class="form-box">
-        <div class="form-item-title">
-          <h3>项目信息</h3>
-        </div>
         <el-form
           ref="ruleForm"
           :model="form"
           label-width="125px"
           :rules="rules"
         >
+          <div class="form-item-title">
+            <h3>编号信息</h3>
+          </div>
+          <el-row>
+            <el-col :span="6">
+              <el-form-item
+                label="计划编号"
+                prop="projNum"
+              >
+                <el-input
+                  v-model="form.projNum"
+                  placeholder="例:房202001001"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item
+                label="正评号"
+                prop="reportNum"
+              >
+                <el-input
+                  v-model="form.reportNums.reportNum"
+                  placeholder="例:2020FG01001"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col
+              :span="6"
+              :offset="1"
+            >
+              <span style="color: red">Tips: 没有取过号的项目请勿填写报告号</span>
+            </el-col>
+          </el-row>
+          <div class="form-item-title">
+            <h3>项目信息</h3>
+          </div>
+
           <el-row>
             <el-col :span="6">
               <el-form-item
@@ -441,7 +459,7 @@ export default {
   name: 'oldplanform',
   data() {
     return {
-
+      arrgTypeEnable: true,
       form: {
         projNum: '',
         projDate: '',
@@ -472,8 +490,8 @@ export default {
         projReviewer: [{ value: '' }],
         projProReviewer: [{ value: '' }],
         projAsst: [{ value: '' }],
+        fieldSrvy: [{ value: '' }],
         //
-        fieldSrvy: '',
         infoVerification: '',
         marketEnquiry: '',
         techExpDrafter: '',
@@ -524,6 +542,68 @@ export default {
       },
       assemGoalList: ['抵押', '交易', '资产处置（司法鉴定）', '出让', '挂牌出让', '补出让', '转让', '盘整收回', '征收补偿', '活立木拍卖', '出租', '置换', '股权转让', '作价入股', '增资扩股', '入账', '征收、完税', '企业改制', '清算', '复审', '评价', '咨询'],
       contactTypeOption: ['正常接洽', '摇珠', '中行通知书']
+    }
+  },
+  created() {
+    this.bankOptions = bankOptions
+    this.projTypeOption = projTypeOption
+  },
+  mounted() {
+
+  },
+  methods: {
+    //当项目类型为1010、1030时才可选择安排类型
+    arrgTypeToEnable(val) {
+      if (val == 1010 || val == 1030) {
+        this.arrgTypeEnable = false
+      } else {
+        this.arrgTypeEnable = true
+      }
+    },
+    //项目组成员添加、删除组件
+    addDomain(type) {
+      if (type == 1) {
+        this.form.projReviewer.push({
+          value: ''
+        });
+      } else if (type == 2) {
+        this.form.projProReviewer.push({
+          value: ''
+        });
+      } else if (type == 3) {
+        this.form.projAsst.push({
+          value: ''
+        });
+      } else if (type == 4) {
+        this.form.fieldSrvy.push({
+          value: ''
+        });
+      }
+    },
+    removeDomain(index, type) {
+      if (type == 1) {
+        if (this.form.projReviewer.length !== 1 && this.form.projReviewer.length !== 0) {
+          this.form.projReviewer.splice(index, 1)
+        }
+      } else if (type == 2) {
+        if (this.form.projProReviewer.length !== 1 && this.form.projProReviewer.length !== 0) {
+          this.form.projProReviewer.splice(index, 1)
+        }
+      } else if (type == 3) {
+        if (this.form.projAsst.length !== 1 && this.form.projAsst.length !== 0) {
+          this.form.projAsst.splice(index, 1)
+        }
+      } else if (type == 4) {
+        if (this.form.fieldSrvy.length !== 1 && this.form.fieldSrvy.length !== 0) {
+          this.form.fieldSrvy.splice(index, 1)
+        }
+      }
+    },
+    onSubmit() {
+
+    },
+    goBack() {
+      this.$router.go(-1)
     }
   }
 }
