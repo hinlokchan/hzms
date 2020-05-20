@@ -52,7 +52,7 @@
 import { getDayReport } from '@/api/statistics'
 import { Base64 } from 'js-base64'
 import { host } from '@/config'
-var ProManageAPIServer = `${host.baseUrl}/${host.pathUrl}`
+var ProManageAPIServer = `${host.baseUrl}/`
 export default {
   name: 'stat',
   data() {
