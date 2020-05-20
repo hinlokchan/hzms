@@ -226,4 +226,13 @@ export function getWorkAssignment(data) {
   });
 }
 
+export function setOldProject(data) {
+  return request({
+    url: `${ProManageAPIServer}project/oldProjectInput`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
 export var getProjInfoTable = 'statistics/getProjInfoTable';
