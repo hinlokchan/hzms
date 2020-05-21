@@ -531,39 +531,39 @@ export default {
         projTypeOption: []
       },
       rules: {
-        // projNum: [
-        //   { required: true, message: '请选择项目类型', trigger: 'blur' },
-        // ],
-        // zph: [
-        //   { min: 11, max: 12, message: '请输入11-12位报告号', trigger: 'blur' }
-        // ],
-        // projType: [
-        //   { required: true, message: '请选择项目类型', trigger: 'change' }
-        // ],
-        // projName: [
-        //   { required: true, message: '请输入项目名称', trigger: 'blur' }
-        // ],
-        // projScope: [
-        //   { required: true, message: '请输入评估范围', trigger: 'blur' }
-        // ],
-        // assemGoal: [
-        //   { required: true, message: '请选择评估目的', trigger: 'change' }
-        // ],
-        // projDate: [
-        //   { required: true, message: '请选择编制日期', trigger: 'blur' }
-        // ],
-        // baseDate: [
-        //   { required: true, message: '请选择基准日', trigger: 'blur' }
-        // ],
-        // fldSrvySchedule: [
-        //   { required: true, message: '请选择现勘日期', trigger: 'blur' }
-        // ],
-        // projContact: [
-        //   { required: true, message: '请填写接洽人', trigge: 'blur' }
-        // ],
-        // clientName: [
-        //   { required: true, message: '请填写委托人', trigge: 'blur' }
-        // ],
+        projNum: [
+          { required: true, message: '请选择项目类型', trigger: 'blur' },
+        ],
+        zph: [
+          { min: 11, max: 12, message: '请输入11-12位报告号', trigger: 'blur' }
+        ],
+        projType: [
+          { required: true, message: '请选择项目类型', trigger: 'change' }
+        ],
+        projName: [
+          { required: true, message: '请输入项目名称', trigger: 'blur' }
+        ],
+        projScope: [
+          { required: true, message: '请输入评估范围', trigger: 'blur' }
+        ],
+        assemGoal: [
+          { required: true, message: '请选择评估目的', trigger: 'change' }
+        ],
+        projDate: [
+          { required: true, message: '请选择编制日期', trigger: 'blur' }
+        ],
+        baseDate: [
+          { required: true, message: '请选择基准日', trigger: 'blur' }
+        ],
+        fldSrvySchedule: [
+          { required: true, message: '请选择现勘日期', trigger: 'blur' }
+        ],
+        projContact: [
+          { required: true, message: '请填写接洽人', trigge: 'blur' }
+        ],
+        clientName: [
+          { required: true, message: '请填写委托人', trigge: 'blur' }
+        ],
       },
       assemGoalList: ['抵押', '交易', '资产处置（司法鉴定）', '出让', '挂牌出让', '补出让', '转让', '盘整收回', '征收补偿', '活立木拍卖', '出租', '置换', '股权转让', '作价入股', '增资扩股', '入账', '征收、完税', '企业改制', '清算', '复审', '评价', '咨询'],
       contactTypeOption: ['正常接洽', '摇珠', '中行通知书'],
@@ -654,6 +654,7 @@ export default {
         this.form.reportNums[0].reportNum = this.form.zph
         this.form.reportNums[0].takenDate = this.$moment(this.takenDate).format('YYYY-MM-DD')
       } else {
+        //没输入正评号的时候传空数组
         this.form.reportNums = null
         console.log('没有填写正评号')
 
@@ -664,15 +665,14 @@ export default {
           this.transformPeop()
             .then(res => {
               console.log('form', this.form)
-              console.log('type', typeof (this.form.projNum))
-              // setOldProject(this.form)
-              //   .then(res => {
-              //     this.$message.success('录入成功')
-              //     console.log('res', res)
-              //   })
-              //   .catch(err => {
-              //     console.log('err', err)
-              //   })
+              setOldProject(this.form)
+                .then(res => {
+                  this.$message.success('录入成功')
+                  console.log('res', res)
+                })
+                .catch(err => {
+                  console.log('err', err)
+                })
             })
         } else {
           this.$message.warning('请填写必填信息')
