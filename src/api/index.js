@@ -238,4 +238,4 @@ export function setOldProject(data) {
   });
 }
 
-export var getProjInfoTable = 'statistics/getProjInfoTable';
+export var getProjInfoTable = 'hzhtServer/statistics/getProjInfoTable';
