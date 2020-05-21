@@ -229,7 +229,10 @@ export function getWorkAssignment(data) {
 export function setOldProject(data) {
   return request({
     url: `${ProManageAPIServer}project/oldProjectInput`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: {
+      cookie: 'JSESSIONID' + Cookies.get('JSESSIONID'),
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
     method: 'post',
     data: qs.stringify(data)
   });
