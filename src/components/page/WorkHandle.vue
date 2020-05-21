@@ -214,11 +214,11 @@
             size="medium"
             @click="handleQRCode()"
           >生成二维码</el-button>
-          <el-button
+          <!-- <el-button
             icon="el-icon-printer"
             size="medium"
             @click="handlePrintProj(queryData.projId)"
-          >打印计划信息表</el-button>
+          >打印计划信息表</el-button> -->
         </span>
       </div>
       <el-divider></el-divider>
