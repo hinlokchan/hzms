@@ -1,8 +1,16 @@
+/*
+ * @Author: your name
+ * @Date: 2020-05-21 10:59:55
+ * @LastEditTime: 2020-05-21 18:07:36
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: /hz-manage-system/src/api/statistics.js
+ */ 
 import request from '../utils/request';
 import qs from 'qs'
 import Cookies from 'js-cookie'
 import { host } from '@/config'
-const ProManageAPIServer = `${host.baseUrl}/${host.pathUrl}`
+const ProManageAPIServer = `${host.baseUrl}/${host.ProManageAPIServer}`
 
 // export function getProjInfoTable(data) {
 //   return request({
