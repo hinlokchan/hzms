@@ -5,12 +5,13 @@
  * @LastEditors: your name
  * @Description: In User Settings Edit
  * @FilePath: /hz-manage-system/src/api/statistics.js
- */ 
+ */
+
 import request from '../utils/request';
-import qs from 'qs'
-import Cookies from 'js-cookie'
-import { host } from '@/config'
-const ProManageAPIServer = `${host.baseUrl}/${host.ProManageAPIServer}`
+import qs from 'qs';
+import Cookies from 'js-cookie';
+import { host } from '@/config';
+const ProManageAPIServer = `${host.baseUrl}/${host.ProManageAPIServer}`;
 
 // export function getProjInfoTable(data) {
 //   return request({
@@ -24,18 +25,19 @@ const ProManageAPIServer = `${host.baseUrl}/${host.ProManageAPIServer}`
 export function getDayReport(data) {
   return request({
     url: `${ProManageAPIServer}statistics/dayReport`,
-    headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
     method: 'post',
     data: qs.stringify(data),
     responseType: 'blob'
-  })
+  });
 }
 
 export function getWeekReport(data) {
   return request({
     url: `${ProManageAPIServer}statistics/getWeekReport`,
-    headers: {'cookie': 'JSESSIONID' + Cookies.get('JSESSIONID')},    method: 'post',
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    method: 'post',
     data: qs.stringify(data),
     responseType: 'blob'
-  })
+  });
 }

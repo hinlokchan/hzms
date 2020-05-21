@@ -214,11 +214,11 @@
             size="medium"
             @click="handleQRCode()"
           >生成二维码</el-button>
-          <!-- <el-button
+          <el-button
             icon="el-icon-printer"
             size="medium"
             @click="handlePrintProj(queryData.projId)"
-          >打印计划信息表</el-button> -->
+          >打印计划信息表</el-button>
         </span>
       </div>
       <el-divider></el-divider>
@@ -464,7 +464,7 @@ import { editProject, getDetailProjInfo, getWorkAssignment, setWorkAssignment, c
 import { addSubProject, getSubProjectInfoList, delSubProject } from '@/api/subReport'
 import projTypeOption from '../../../public/projTypeOption.json'
 import { host } from '@/config'
-var ProManageAPIServer = `${host.baseUrl}/`
+var ProManageAPIServer = `${host.baseUrl}/${host.ProManageAPIServer}`
 
 export default {
   name: 'workhandle',
