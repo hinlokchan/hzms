@@ -654,6 +654,11 @@ export default {
 
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
+          const ps = this.projTypeOption.filter((n) => n.value == this.form.projType)[0].ps
+          if(this.form.zph.indexOf(ps) == -1){
+            this.$message.warning('正评号与项目类型不符')
+            return 0
+          }
           this.transformPeop()
             .then(res => {
               console.log('form', this.form)
