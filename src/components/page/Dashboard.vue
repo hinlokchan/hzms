@@ -43,7 +43,7 @@
             </el-col>
             <el-col :span="15">
                 <el-card shadow="hover" style="height:100%;">
-                    <el-calendar v-model="value" id="calendar">
+                    <el-calendar id="calendar">
                     </el-calendar>
                 </el-card>
             </el-col>

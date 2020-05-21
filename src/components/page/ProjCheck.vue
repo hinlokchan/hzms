@@ -15,13 +15,17 @@
         </div>
         <div class="project">
           <div style="text-align:right;width:100%;">
-            <el-button
+            <!-- <el-button
               type="text"
               icon="el-icon-printer"
               @click="printProj(projId)"
-            >打印计划信息表</el-button>
+            >打印计划信息表</el-button> -->
             <div style="font-size:13px;">计划录入：{{detailData.operator}}</div>
           </div>
+          <el-card>
+            <div class="text"><h4 style="color: #009ad6">项目名称：</h4>{{detailData.projName}}</div>
+            <div class="text"><h4 style="color: #009ad6">项目范围：</h4>{{detailData.projScope}}</div>
+          </el-card>
           <el-row>
             <el-col :span="2">
               <div class="projTitle">计划编号</div>
@@ -92,18 +96,19 @@
                 v-else
               >紧急</div>
             </el-col>
-            <el-col :span="2">
+            <!-- <el-col :span="2">
               <div class="projTitle">项目名称</div>
             </el-col>
-            <el-col :span="10">
+            <el-col :span="22">
               <div class="projContent">{{detailData.projName}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">项目范围</div>
             </el-col>
-            <el-col :span="10">
+            <el-col :span="22">
               <div class="projContent">{{detailData.projScope}}</div>
-            </el-col>
+            </el-col> -->
+
             <el-col :span="2">
               <div class="projTitle">评估目的</div>
             </el-col>
@@ -436,5 +441,8 @@ methods: {
   padding-left: 10px;
   margin: 20px 0 5px 0;
   border-left: solid 5px #409eff;
+}
+.text {
+  margin-top: 15px;
 }
 </style>

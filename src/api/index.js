@@ -231,10 +231,10 @@ export function setOldProject(data) {
     url: `${ProManageAPIServer}project/oldProjectInput`,
     headers: {
       cookie: 'JSESSIONID' + Cookies.get('JSESSIONID'),
-      'Content-Type': 'application/x-www-form-urlencoded'
+      'Content-Type': 'application/json'
     },
     method: 'post',
-    data: qs.stringify(data)
+    data: JSON.stringify(data)
   });
 }
 

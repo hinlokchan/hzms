@@ -625,6 +625,7 @@ export default {
       }
     },
     onSubmit() {
+      this.form.projNum = JSON.stringify(this.form.projNum)
       //判断是否填写了正评号,赋值reportNumType
       if (this.form.zph) {
         //if (this.form.zph.indexOf(''))
@@ -656,6 +657,7 @@ export default {
           this.transformPeop()
             .then(res => {
               console.log('form', this.form)
+              console.log('type', typeof(this.form.projNum))
               setOldProject(this.form)
                 .then(res => {
                   this.$message.success('录入成功')
