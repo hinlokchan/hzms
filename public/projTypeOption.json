@@ -1,58 +1,73 @@
 [
   {
     "label": "房地产",
-    "value": "1010"
+    "value": "1010",
+    "ps": "FG"
   },
   {
     "label": "资产",
-    "value": "1020"
+    "value": "1020",
+    "ps": "ZP"
   },
   {
     "label": "土地",
-    "value": "1030"
+    "value": "1030",
+    "ps": "TG"
   },
   {
     "label": "房地产咨询",
-    "value": "1041"
+    "value": "1041",
+    "ps": "FZ"
   },
   {
     "label": "资产咨询",
-    "value": "1042"
+    "value": "1042",
+    "ps": "ZZ"
   },
   {
     "label": "土地咨询",
-    "value": "1043"
+    "value": "1043",
+    "ps": "TZ"
+
   },
   {
     "label": "PPP",
-    "value": "1050"
+    "value": "1050",
+    "ps": "PPP"
   },
   {
     "label": "房地产复审",
-    "value": "1061"
+    "value": "1061",
+    "ps": "FSF"
   },
   {
     "label": "资产复审",
-    "value": "1062"
+    "value": "1062",
+    "ps": "FSZ"
   },
   {
     "label": "土地复审",
-    "value": "1063"
+    "value": "1063",
+    "ps": "FST"
   },
   {
     "label": "外协",
-    "value": "1070"
+    "value": "1070",
+    "ps": "WX"
   },
   {
     "label": "政策修订",
-    "value": "1080"
+    "value": "1080",
+    "ps": "ZC"
   },
   {
     "label": "绩效",
-    "value": "1090"
+    "value": "1090",
+    "ps": "JX"
   },
   {
     "label": "其他",
-    "value": "1100"
+    "value": "1100",
+    "ps": "QT"
   }
 ]
