@@ -158,6 +158,9 @@
       :visible.sync="qrcodeVisible"
       append-to-body
     >
+      <div>
+        <span style="color: red">Tips: 右键二维码-图片另存为即可保存</span>
+      </div>
       <div
         id="qrcode"
         ref="qrcode"
@@ -761,7 +764,7 @@ export default {
       oReq.responseType = 'blob'
       oReq.onload = function (oEvent) {
         //生产环境需要加上前缀/hzms/hzht
-        window.open('/hzms/hzht/static/pdf/web/viewer.html?file=' + encodeURIComponent(URL.createObjectURL(new Blob([oReq.response]))))
+        window.open('/static/pdf/web/viewer.html?file=' + encodeURIComponent(URL.createObjectURL(new Blob([oReq.response]))))
       }
       const fdata = new FormData()
       fdata.append('projId', parseInt(that.queryData.projId))

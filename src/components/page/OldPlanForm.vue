@@ -668,6 +668,7 @@ export default {
               setOldProject(this.form)
                 .then(res => {
                   this.$message.success('录入成功')
+                  location.reload()
                   console.log('res', res)
                 })
                 .catch(err => {

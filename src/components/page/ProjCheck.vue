@@ -14,18 +14,17 @@
           <h3>项目信息</h3>
         </div>
         <div class="project">
+          <el-card style="margin-bottom: 20px">
+            <div class="text">
+              <h4 style="color: #009ad6">项目名称：</h4>{{detailData.projName}}
+            </div>
+            <div class="text">
+              <h4 style="color: #009ad6">项目范围：</h4>{{detailData.projScope}}
+            </div>
+          </el-card>
           <div style="text-align:right;width:100%;">
-            <!-- <el-button
-              type="text"
-              icon="el-icon-printer"
-              @click="printProj(projId)"
-            >打印计划信息表</el-button> -->
             <div style="font-size:13px;">计划录入：{{detailData.operator}}</div>
           </div>
-          <el-card>
-            <div class="text"><h4 style="color: #009ad6">项目名称：</h4>{{detailData.projName}}</div>
-            <div class="text"><h4 style="color: #009ad6">项目范围：</h4>{{detailData.projScope}}</div>
-          </el-card>
           <el-row>
             <el-col :span="2">
               <div class="projTitle">计划编号</div>
@@ -235,7 +234,19 @@
             <div class="form-item-title">
               <h3>项目组成员</h3>
             </div>
-            <el-row>
+            <el-col :span="12">
+              <el-card>
+                <div class="text">
+                  <div class="item"><span>项目负责人：</span>{{this.detailData.projLeader}}</div>
+                  <div class="item"><span>项目复核人：</span>{{this.detailData.projReviewer}}</div>
+                  <div class="item"><span>专业复核人：</span>{{this.detailData.projProReviewer}}</div>
+                  <div class="item"><span>项目助理：</span>{{this.detailData.projAsst}}</div>
+                  <div class="item"><span>现场勘查：</span>{{this.detailData.fieldSrvy}}</div>
+                </div>
+              </el-card>
+            </el-col>
+
+            <!-- <el-row>
               <el-col :span="3">
                 <div class="projTitle">项目负责人</div>
               </el-col>
@@ -254,8 +265,8 @@
             </el-col>
             <el-col :span="9">
               <div class="projContent">{{detailData.projProReviewer}}</div>
-            </el-col>
-            <el-col :span="3">
+            </el-col> -->
+            <!-- <el-col :span="3">
               <div class="projTitle">现勘调查人员</div>
             </el-col>
             <el-col :span="9">
@@ -272,14 +283,14 @@
             </el-col>
             <el-col :span="9">
               <div class="projContent">{{detailData.marketEnquiry}}</div>
-            </el-col>
-            <el-col :span="3">
-              <div class="projTitle">助理</div>
+            </el-col> -->
+            <!-- <el-col :span="3">
+              <div class="projTitle">项目助理</div>
             </el-col>
             <el-col :span="9">
               <div class="projContent">{{detailData.projAsst}}</div>
-            </el-col>
-            <el-col :span="3">
+            </el-col> -->
+            <!-- <el-col :span="3">
               <div class="projTitle">技术说明拟稿人</div>
             </el-col>
             <el-col :span="9">
@@ -302,7 +313,7 @@
             </el-col>
             <el-col :span="9">
               <div class="projContent">{{detailData.instructor}}</div>
-            </el-col>
+            </el-col> -->
           </el-row>
         </div>
 
@@ -362,7 +373,7 @@ export default {
   mounted() {
 
   },
-methods: {
+  methods: {
     formatDate(now) {
       const time = new Date(now)
       var year = time.getFullYear();  //取得4位数的年份
@@ -384,8 +395,8 @@ methods: {
         //银行转译
         let bankOptions = this.bankOptions
         let bankAfter = []
-        for(let i = 0;i<bankOptions.length;i++){
-          if(bankOptions[i].children){
+        for (let i = 0; i < bankOptions.length; i++) {
+          if (bankOptions[i].children) {
             bankAfter = bankAfter.concat(bankOptions[i].children)
           }
         }
@@ -393,7 +404,7 @@ methods: {
           return val.value == this.detailData.lendingBank
         })
         let indexBefore = bankOptions.findIndex((val) => {
-          return val.value == this.detailData.lendingBank.substring(0,3)
+          return val.value == this.detailData.lendingBank.substring(0, 3)
         })
         this.detailData.lendingBankLable = bankOptions[indexBefore].label + ' - ' + bankAfter[index].label
       })
@@ -406,7 +417,7 @@ methods: {
       let pathUrl = ProManageAPIServer + getProjInfoTable
       oReq.open('POST', pathUrl, true)
       oReq.responseType = 'blob'
-      oReq.onload = function(oEvent) {
+      oReq.onload = function (oEvent) {
         window.open('/static/pdf/web/viewer.html?file=' + encodeURIComponent(URL.createObjectURL(new Blob([oReq.response]))))
       }
       const fdata = new FormData()
@@ -444,5 +455,14 @@ methods: {
 }
 .text {
   margin-top: 15px;
+}
+.text {
+  line-height: 30px;
+}
+.text span {
+  color: #707781;
+}
+.item {
+  border-bottom: solid 1px #ebe8e8;
 }
 </style>
