@@ -764,7 +764,7 @@ export default {
       oReq.responseType = 'blob'
       oReq.onload = function (oEvent) {
         //生产环境需要加上前缀/hzms/hzht
-        window.open('/static/pdf/web/viewer.html?file=' + encodeURIComponent(URL.createObjectURL(new Blob([oReq.response]))))
+        window.open('/hzms/hzht/static/pdf/web/viewer.html?file=' + encodeURIComponent(URL.createObjectURL(new Blob([oReq.response]))))
       }
       const fdata = new FormData()
       fdata.append('projId', parseInt(that.queryData.projId))
