@@ -51,6 +51,11 @@ export default new Router({
                     meta: { title: '旧项目录入' }
                 },
                 {
+                    path: '/formalreg',
+                    component: () => import('../components/page/FormalReg.vue'),
+                    meta: { title: '正评登记' }
+                },
+                {
                     path: '/qrcode',
                     component: () => import('../components/page/QRCode.vue'),
                     meta: { title: '二维码生成' }

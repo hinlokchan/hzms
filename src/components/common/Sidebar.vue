@@ -18,7 +18,10 @@
             :key="item.index"
           >
             <template slot="title">
-              <i :class="item.icon" style="color: #000"></i>
+              <i
+                :class="item.icon"
+                style="color: #000"
+              ></i>
               <span slot="title">{{ item.title }}</span>
             </template>
             <template v-for="subItem in item.subs">
@@ -47,7 +50,10 @@
             :index="item.index"
             :key="item.index"
           >
-            <i :class="item.icon" style="color: #000"></i>
+            <i
+              :class="item.icon"
+              style="color: #000"
+            ></i>
             <span slot="title">{{ item.title }}</span>
           </el-menu-item>
         </template>
@@ -87,11 +93,15 @@ export default {
         {
           index: 'workbranch',
           icon: 'el-icon-receiving',
-          title: '我的项目',
+          title: '工作台',
           subs: [
             {
               index: 'workbranch',
-              title: '工作台'
+              title: '我的项目'
+            },
+            {
+              index: 'formalreg',
+              title: "正评登记"
             },
             // {
             //   index: 'qrcode',
