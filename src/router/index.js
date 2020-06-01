@@ -56,6 +56,11 @@ export default new Router({
                     meta: { title: '正评登记' }
                 },
                 {
+                    path: '/fcformalreg',
+                    component: () => import('../components/page/projreg/FcFormalReg.vue'),
+                    meta: { title: '房地产正评登记' }
+                },
+                {
                     path: '/qrcode',
                     component: () => import('../components/page/QRCode.vue'),
                     meta: { title: '二维码生成' }
