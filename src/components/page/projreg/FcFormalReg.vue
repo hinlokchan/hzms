@@ -179,32 +179,68 @@
             <el-row :gutter="20">
               <el-col :span="6">
                 <el-form-item label="房屋用途">
-                  <el-input></el-input>
+                  <el-select style="width: 100%">
+                    <el-option
+                      v-for="item in housePurposeOption"
+                      :key="item"
+                      :value="item"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="房屋类型">
-                  <el-input></el-input>
+                  <el-select style="width: 100%">
+                    <el-option
+                      v-for="item in houseTypeOption"
+                      :key="item"
+                      :value="item"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="房屋性质">
-                  <el-input></el-input>
+                  <el-select style="width: 100%">
+                    <el-option
+                      v-for="item in houseAttributeOption"
+                      :key="item"
+                      :value="item"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="户型结构">
-                  <el-input></el-input>
+                  <el-select style="width: 100%">
+                    <el-option
+                      v-for="item in houstStructureOption"
+                      :key="item"
+                      :value="item"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="户型">
-                  <el-input></el-input>
+                  <el-select style="width: 100%">
+                    <el-option
+                      v-for="item in houseModelOption"
+                      :key="item"
+                      :value="item"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="向">
-                  <el-input></el-input>
+                  <el-select style="width: 100%">
+                    <el-option
+                      v-for="item in houseDecorationOption"
+                      :key="item"
+                      :value="item"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -307,7 +343,13 @@ export default {
       //select option
       assemGoalOption: ['房地产转让价格评估', '房地产分割、合并评估', '房地产纠纷估价', '房地产保险估价', '土地使用权出让价格评估', '房地产拍卖底价评估', '房地产抵押价值评估', '房地产课税估价', '房地产租赁价格评估', '企业各种经济活动中涉及的房地产估价', '其他目的的房地产估价'],
       priceTypeOption: ['成交价格', '正常价格', '市场价格', '评估价值', '市场价值', '投资价值', '现状价值', '快速变现价值', '残余价值', '抵押价值', '抵押净值', '法定优先受偿款', '计税价值', '保险价值', '完全产权价值', '无租约限制价值', '出租人权益价值', '承租人权益价值', '建筑物价值', '土地价值', '楼面地价'],
-      housePurposeOption: ['住宅', '宗教', '园林绿化', '工业、交通、仓储', '别墅', '涉外', '医疗卫生', '文化、娱乐、体育', '公共运输', '新闻', '娱乐', '监狱', '集体宿舍', '成套住宅', '商业服务', '旅游', '军事', '体育', '物管用房', '铁路', '非成套住宅', '工业', '文化', '仓储', '电讯信息', '教育', '教育、医疗、卫生、可研', '民航', '高档公寓', '科研', '公共设施', '商业、金融、信息', '航运', '金融保险', '其他', '办公', '经营']
+      housePurposeOption: ['住宅', '宗教', '园林绿化', '工业、交通、仓储', '别墅', '涉外', '医疗卫生', '文化、娱乐、体育', '公共运输', '新闻', '娱乐', '监狱', '集体宿舍', '成套住宅', '商业服务', '旅游', '军事', '体育', '物管用房', '铁路', '非成套住宅', '工业', '文化', '仓储', '电讯信息', '教育', '教育、医疗、卫生、可研', '民航', '高档公寓', '科研', '公共设施', '商业、金融、信息', '航运', '金融保险', '其他', '办公', '经营'],
+      houseTypeOption: ['车库', '别墅、高档公寓', '仓储用房', '住宅', '其他', '办公用房', '商业用房', '工业用房', '房地价值'],
+      houseAttributeOption: ['其他', '经济适用房', '配套商品房', '建筑物价值', '市场化商品房', '动迁房', '公共租赁住房', '廉租住房', '限价普通商品住房', '集资建房', '定销商品房', '福利房'],
+      houstStructureOption: ['错层', '复式楼', '土地价值', '跃层', '平层', '其他'],
+      houseModelOption: ['一居室', '二居室', '三居室', '四居室', '五居室', '其他'],
+      houseDirectionOption: ['东北', '东南', '西北', '西南', '东', '南', '西', '北', '西南双面', '东南双面', '南北通透双面', '其他通透双面', '其他非通透双面', '其他'],
+      houseDecorationOption: ['粗装修', '毛坯', '精装修']
     }
   },
   methods: {

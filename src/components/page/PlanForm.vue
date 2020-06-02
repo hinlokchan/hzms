@@ -58,7 +58,6 @@
                 <el-select
                   v-model="form.arrgType"
                   placeholder="请选择"
-                  :disabled="arrgTypeEnable"
                 >
                   <el-option
                     label="轮序"
@@ -102,16 +101,16 @@
             </el-col>
             <el-col :span="6">
               <el-form-item
-                label="贷款银行"
+                label="产权持有人"
                 prop="lendingBank"
               >
-                <el-cascader
+                <!-- <el-cascader
                   :show-all-levels="true"
                   v-model="form.lendingBank"
                   :options="bankOptions"
                   :props="{ expandTrigger: 'hover' }"
                 >
-                </el-cascader>
+                </el-cascader> -->
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -446,7 +445,6 @@ export default {
       isEdit: false,
       newInfo: false,
       newInfoData: '',
-      arrgTypeEnable: true,
       transedData: {},
       form: {
         projType: '',
@@ -531,9 +529,9 @@ export default {
   methods: {
     arrgTypeToEnable(val) {
       if (val == 1010 || val == 1030) {
-        this.arrgTypeEnable = false
+        this.form.arrgType = '1001'
       } else {
-        this.arrgTypeEnable = true
+        this.form.arrgType = '1002'
       }
     },
     closeNewInfo() {
