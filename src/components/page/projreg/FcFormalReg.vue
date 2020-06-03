@@ -328,9 +328,20 @@ export default {
   name: 'fcformalreg',
   data() {
     return {
+      projId: '',
+      projDetail: '',
       activeTab: 'projInfo',
       //计划信息
-      form1: {},
+      form1: {
+        projId: '',
+        projType: '',
+        baseData: '',
+        projName: '',
+        projScope: '',
+        clientName: '',
+        clientContact: '',
+        clientContactInfo: ''
+      },
       //项目信息
       form2: {
         assemGoal: '',
@@ -352,8 +363,20 @@ export default {
       houseDecorationOption: ['粗装修', '毛坯', '精装修']
     }
   },
-  methods: {
+  created() {
+    this.getDetail()
 
+  },
+  methods: {
+    getDetail() {
+      getDetailProjInfo({projId: 1020202005001})
+        .then(res => {
+          this.projDetail = res.data
+        })
+        .catch(err => {
+          this.$message.warning('读取项目信息失败，请重试')
+        })
+    }
   }
 }
 </script>

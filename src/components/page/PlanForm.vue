@@ -101,7 +101,7 @@
             </el-col>
             <el-col :span="6">
               <el-form-item
-                label="产权持有人"
+                label="产权持有人  "
                 prop="lendingBank"
               >
                 <!-- <el-cascader
