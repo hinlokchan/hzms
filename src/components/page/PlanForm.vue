@@ -71,6 +71,18 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
+              <el-form-item label="测试" v-if="test1 == true">
+                <el-cascader
+                  v-model="form.test"
+                  :options="bankOptions"
+                  filterable
+                  :show-all-levels="false"
+                  @change="selectToInput()"
+                ></el-cascader>
+                <h2>{{form.test}}</h2>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
               <el-form-item label="接洽类型">
                 <el-select v-model="form.projContactType">
                   <el-option
@@ -111,6 +123,7 @@
                   :props="{ expandTrigger: 'hover' }"
                 >
                 </el-cascader> -->
+                <el-input v-model="form.incumbrancer"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -446,7 +459,9 @@ export default {
       newInfo: false,
       newInfoData: '',
       transedData: {},
+      test1: false,
       form: {
+        test: '',
         projType: '',
         projName: '',
         projContact: '',
@@ -476,7 +491,8 @@ export default {
         fieldSrvy: [{ value: '' }],
         compSchedule: 3,
         projReviewer: [{ value: '' }],
-        lendingBank: [],
+        //lendingBank: [],
+        incumbrancer: '',
         projTypeOption: []
       },
       rules: {
@@ -674,6 +690,9 @@ export default {
           this.form.fieldSrvy.splice(index, 1)
         }
       }
+    },
+    selectToInput() {
+      console.log('1')
     },
     onSubmit() {
       console.log(this.form)

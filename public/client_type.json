@@ -1,0 +1,120 @@
+{
+  "RECORDS": [
+    {
+      "client_type": "101",
+      "client_type_name": "中国银行"
+    },
+    {
+      "client_type": "102",
+      "client_type_name": "建设银行"
+    },
+    {
+      "client_type": "103",
+      "client_type_name": "农业银行"
+    },
+    {
+      "client_type": "104",
+      "client_type_name": "工商银行"
+    },
+    {
+      "client_type": "105",
+      "client_type_name": "交通银行"
+    },
+    {
+      "client_type": "106",
+      "client_type_name": "广发银行"
+    },
+    {
+      "client_type": "107",
+      "client_type_name": "浦发银行"
+    },
+    {
+      "client_type": "108",
+      "client_type_name": "民生银行"
+    },
+    {
+      "client_type": "109",
+      "client_type_name": "兴业银行"
+    },
+    {
+      "client_type": "110",
+      "client_type_name": "中信银行"
+    },
+    {
+      "client_type": "111",
+      "client_type_name": "平安银行"
+    },
+    {
+      "client_type": "112",
+      "client_type_name": "南粤银行"
+    },
+    {
+      "client_type": "113",
+      "client_type_name": "邮政储蓄银行"
+    },
+    {
+      "client_type": "114",
+      "client_type_name": "光大银行"
+    },
+    {
+      "client_type": "115",
+      "client_type_name": "广州银行"
+    },
+    {
+      "client_type": "116",
+      "client_type_name": "华润银行"
+    },
+    {
+      "client_type": "117",
+      "client_type_name": "东莞农商银行"
+    },
+    {
+      "client_type": "118",
+      "client_type_name": "惠州东盈村镇银行"
+    },
+    {
+      "client_type": "119",
+      "client_type_name": "惠民村镇银行"
+    },
+    {
+      "client_type": "120",
+      "client_type_name": "广东华兴银行"
+    },
+    {
+      "client_type": "121",
+      "client_type_name": "农商银行"
+    },
+    {
+      "client_type": "1000",
+      "client_type_name": "个人"
+    },
+    {
+      "client_type": "1001",
+      "client_type_name": "自然资源局"
+    },
+    {
+      "client_type": "1002",
+      "client_type_name": "法院"
+    },
+    {
+      "client_type": "1003",
+      "client_type_name": "国资委"
+    },
+    {
+      "client_type": "1004",
+      "client_type_name": "财政局"
+    },
+    {
+      "client_type": "1005",
+      "client_type_name": "政府部门"
+    },
+    {
+      "client_type": "1006",
+      "client_type_name": "担保公司"
+    },
+    {
+      "client_type": "1100",
+      "client_type_name": "其他"
+    }
+  ]
+}
