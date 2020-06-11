@@ -81,6 +81,17 @@
                 ></el-cascader>
                 <h2>{{form.test}}</h2>
               </el-form-item>
+              <el-form-item label="false" v-if="test1 == false">
+                <el-cascader
+                  v-model="form.test"
+                  :options="bankOptions"
+                  filterable
+                  clearable
+                  :show-all-levels="false"
+                  @change="selectToInput()"
+                ></el-cascader>
+                <h2>{{form.test}}</h2>
+              </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="接洽类型">
