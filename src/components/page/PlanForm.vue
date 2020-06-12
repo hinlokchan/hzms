@@ -71,29 +71,6 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="测试" v-if="test1 == true">
-                <el-cascader
-                  v-model="form.test"
-                  :options="bankOptions"
-                  filterable
-                  :show-all-levels="false"
-                  @change="selectToInput()"
-                ></el-cascader>
-                <h2>{{form.test}}</h2>
-              </el-form-item>
-              <el-form-item label="false" v-if="test1 == false">
-                <el-cascader
-                  v-model="form.test"
-                  :options="bankOptions"
-                  filterable
-                  clearable
-                  :show-all-levels="false"
-                  @change="selectToInput()"
-                ></el-cascader>
-                <h2>{{form.test}}</h2>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
               <el-form-item label="接洽类型">
                 <el-select v-model="form.projContactType">
                   <el-option
@@ -118,22 +95,48 @@
               <el-form-item
                 label="委托人"
                 prop="clientName"
+                v-if="clientInputTypeChange == false"
               >
-                <el-input v-model="form.clientName"></el-input>
+                <el-cascader
+                  :show-all-levels="false"
+                  v-model="form.clientId"
+                  :options="clientOptions"
+                  :props="{ expandTrigger: 'hover' }"
+                  style="width: 90%"
+                  @change="selectToInput()"
+                >
+                </el-cascader>
+                <el-button
+                  type="text"
+                  icon="el-icon-refresh-right"
+                  style="width: 10%"
+                  @click="resetClientName()"
+                ></el-button>
               </el-form-item>
+              <el-form-item
+                label="委托人"
+                prop="clientName"
+                v-if="clientInputTypeChange == true"
+              >
+                <el-input
+                  v-model="form.clientName"
+                  style="width: 90%"
+                ></el-input>
+                <el-button
+                  type="text"
+                  icon="el-icon-refresh-right"
+                  style="width: 10%"
+                  @click="resetClientName()"
+                ></el-button>
+              </el-form-item>
+              <h2>{{form.clientName}}</h2>
+              <h2>{{form.clientNameMid}}</h2>
             </el-col>
             <el-col :span="6">
               <el-form-item
                 label="产权持有人  "
-                prop="lendingBank"
+                prop="incumbrancer"
               >
-                <!-- <el-cascader
-                  :show-all-levels="true"
-                  v-model="form.lendingBank"
-                  :options="bankOptions"
-                  :props="{ expandTrigger: 'hover' }"
-                >
-                </el-cascader> -->
                 <el-input v-model="form.incumbrancer"></el-input>
               </el-form-item>
             </el-col>
@@ -460,7 +463,7 @@
 <script>
 import { createNewProject, editProject } from '@/api/index'
 import { getDetailProjInfo } from '@/api/index'
-import bankOptions from '../../../public/bank.json'
+import clientOptions from '../../../public/clientName.json'
 import projTypeOption from '../../../public/projTypeOption.json'
 export default {
   name: 'planform',
@@ -470,7 +473,7 @@ export default {
       newInfo: false,
       newInfoData: '',
       transedData: {},
-      test1: false,
+      clientInputTypeChange: false,
       form: {
         test: '',
         projType: '',
@@ -483,7 +486,9 @@ export default {
         projDegree: '1001',
         baseDate: '',
         assemGoal: '',
+        clientId: '',
         clientName: '',
+        incumbrancer: '',
         projReferer: '',
         supInstruction: '',
         projRefererInfo: '',
@@ -529,10 +534,10 @@ export default {
           { required: true, message: '请选择现勘日期', trigger: 'blur' }
         ],
         projContact: [
-          { required: true, message: '请填写接洽人', trigge: 'blur' }
+          { required: true, message: '请填写接洽人', trigger: 'blur' }
         ],
         clientName: [
-          { required: true, message: '请填写委托人', trigge: 'blur' }
+          { required: true, message: '请填写委托人', trigger: 'blur' }
         ],
       },
       assemGoalList: ['抵押', '交易', '资产处置（司法鉴定）', '出让', '挂牌出让', '补出让', '转让', '盘整收回', '征收补偿', '活立木拍卖', '出租', '置换', '股权转让', '作价入股', '增资扩股', '入账', '征收、完税', '企业改制', '清算', '复审', '评价', '咨询'],
@@ -550,7 +555,7 @@ export default {
       this.isEdit = true
       this.getDetail()
     }
-    this.bankOptions = bankOptions
+    this.clientOptions = clientOptions
     this.projTypeOption = projTypeOption
   },
   methods: {
@@ -702,11 +707,26 @@ export default {
         }
       }
     },
+    //
     selectToInput() {
-      console.log('1')
+      if (this.form.clientId == '141') {
+        this.clientInputTypeChange = true
+      } else {
+        this.clientInputTypeChange = false
+      }
+    },
+    resetClientName() {
+      this.clientInputTypeChange = false
+      this.form.clientId = ''
+      this.form.clientName = ''
     },
     onSubmit() {
-      console.log(this.form)
+      if (this.form.clientId == 141) {
+        this.form.clientId = ''
+      } else {
+        this.form.clientId = this.form.clientId[this.form.clientId.length - 1]
+      }
+      console.log('form', this.form)
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           this.transformPeop().then(res => {
@@ -759,12 +779,12 @@ export default {
         //  银行
         // if(!that.isEdit){
         //后端处理好号把这段加回去
-        let lendingBankNew = ''
-        console.log('that.form.lendingBank', that.form.lendingBank[1])
-        if (that.form.lendingBank) {
-          lendingBankNew = that.form.lendingBank[1]
-          that.form.lendingBank = lendingBankNew
-        }
+        // let lendingBankNew = ''
+        // console.log('that.form.lendingBank', that.form.lendingBank[1])
+        // if (that.form.lendingBank) {
+        //   lendingBankNew = that.form.lendingBank[1]
+        //   that.form.lendingBank = lendingBankNew
+        // }
         //}
         //  项目复核人
         let projReviewer = that.form.projReviewer

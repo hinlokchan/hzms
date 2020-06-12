@@ -134,7 +134,7 @@
                 <el-input v-model="form.clientName"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="6">
+            <!-- <el-col :span="6">
               <el-form-item
                 label="贷款银行"
                 prop="lendingBank"
@@ -142,12 +142,11 @@
                 <el-cascader
                   :show-all-levels="true"
                   v-model="form.lendingBank"
-                  :options="bankOptions"
                   :props="{ expandTrigger: 'hover' }"
                 >
                 </el-cascader>
               </el-form-item>
-            </el-col>
+            </el-col> -->
             <el-col :span="6">
               <el-form-item label="委托人联系人">
                 <el-input v-model="form.clientContact"></el-input>
@@ -470,7 +469,7 @@
 
 <script>
 import { setOldProject } from '@/api/index'
-import bankOptions from '../../../public/bank.json'
+import clientOptions from '../../../public/clientName.json'
 import projTypeOption from '../../../public/projTypeOption.json'
 export default {
   name: 'oldplanform',
@@ -570,7 +569,7 @@ export default {
     }
   },
   created() {
-    this.bankOptions = bankOptions
+    this.clientOptions = clientOptions
     this.projTypeOption = projTypeOption
   },
   mounted() {

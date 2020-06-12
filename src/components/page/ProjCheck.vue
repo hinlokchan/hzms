@@ -139,10 +139,10 @@
               <div class="projContent">{{detailData.clientName}}</div>
             </el-col>
             <el-col :span="2">
-              <div class="projTitle">权属银行</div>
+              <div class="projTitle">产权持有人</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent">{{detailData.lendingBankLable}}</div>
+              <div class="projContent">{{detailData.incumbrancer}}</div>
             </el-col>
             <el-col :span="4">
               <div class="projTitle">委托人联系人及联系方式</div>
@@ -325,7 +325,7 @@
 <script>
 import { getDetailProjInfo, getReportNum, getProjInfoTable } from '@/api/index'
 import projTypeOption from '../../../public/projTypeOption.json'
-import bankOptions from '../../../public/bank.json'
+import clientOptions from '../../../public/clientName.json'
 import { host } from '@/config'
 var ProManageAPIServer = `${host.baseUrl}/`
 export default {
@@ -338,7 +338,7 @@ export default {
       hhh: '',
       detailData: [],
       reportNum: [],
-      bankOptions: [],
+      clientOptions: [],
       projTypeOption: [],
       projTypeZH: '',
       transedData: {},
@@ -368,7 +368,7 @@ export default {
     this.getDetail()
     this.projTypeOption = projTypeOption
     console.log('projTypeOption', this.projTypeOption);
-    this.bankOptions = bankOptions
+    this.clientOptions = clientOptions
   },
   mounted() {
 
@@ -392,21 +392,21 @@ export default {
             this.transedData.projType = this.projTypeOption[i].label
           }
         }
-        //银行转译
-        let bankOptions = this.bankOptions
+        //委托人（原银行）转译
+        let clientOptions = this.clientOptions
         let bankAfter = []
-        for (let i = 0; i < bankOptions.length; i++) {
-          if (bankOptions[i].children) {
-            bankAfter = bankAfter.concat(bankOptions[i].children)
+        for (let i = 0; i < clientOptions.length; i++) {
+          if (clientOptions[i].children) {
+            bankAfter = bankAfter.concat(clientOptions[i].children)
           }
         }
         let index = bankAfter.findIndex((val) => {
           return val.value == this.detailData.lendingBank
         })
-        let indexBefore = bankOptions.findIndex((val) => {
+        let indexBefore = clientOptions.findIndex((val) => {
           return val.value == this.detailData.lendingBank.substring(0, 3)
         })
-        this.detailData.lendingBankLable = bankOptions[indexBefore].label + ' - ' + bankAfter[index].label
+        this.detailData.lendingBankLable = clientOptions[indexBefore].label + ' - ' + bankAfter[index].label
       })
     },
     printProj(val) {
