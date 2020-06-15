@@ -69,6 +69,7 @@ export default {
     return {
       collapse: false,
       roleItem: [],
+      //管理员
       items0: [
         {
           icon: 'el-icon-lx-home',
@@ -99,14 +100,10 @@ export default {
               index: 'workbranch',
               title: '我的项目'
             },
-            {
-              index: 'formalreg',
-              title: "正评登记"
-            },
             // {
-            //   index: 'qrcode',
-            //   title: '报告二维码生成'
-            // }
+            //   index: 'formalreg',
+            //   title: "正评登记"
+            // },
           ]
         },
         {
@@ -180,6 +177,7 @@ export default {
         //   title: '自定义图标'
         // }
       ],
+      //计划部门
       items2: [
         {
           icon: 'el-icon-lx-home',
@@ -202,27 +200,33 @@ export default {
           ]
         },
         {
-          icon: 'el-icon-receiving',
-          title: '我的项目',
-          subs: [
-            {
-              title: '询价记录查询'
-            },
-            {
-              index: 'qrcode',
-              title: '报告二维码生成'
-            },
-            {
-              title: '正评登记'
-            }
-          ]
+          index: 'oldplanform',
+          icon: 'el-icon-document-add',
+          title: '旧项目录入'
         },
+        // {
+        //   icon: 'el-icon-receiving',
+        //   title: '我的项目',
+        //   subs: [
+        //     {
+        //       title: '询价记录查询'
+        //     },
+        //     {
+        //       index: 'qrcode',
+        //       title: '报告二维码生成'
+        //     },
+        //     {
+        //       title: '正评登记'
+        //     }
+        //   ]
+        // },
         {
           index: 'stat',
           icon: "el-icon-data-analysis",
           title: "统计管理"
         }
       ],
+      //业务部门
       items3: [
         {
           icon: 'el-icon-lx-home',
@@ -234,20 +238,15 @@ export default {
           title: '我的项目',
           subs: [
             {
-              title: '询价记录查询'
-            },
-            {
               index: 'workbranch',
               title: '工作台'
-            },
-            {
-              index: 'qrcode',
-              title: '报告二维码生成'
-            },
-            {
-              title: '正评登记'
             }
           ]
+        },
+        {
+          index: 'oldplanform',
+          icon: 'el-icon-document-add',
+          title: '旧项目录入'
         }
       ]
     };
@@ -259,6 +258,7 @@ export default {
   },
   created() {
     let sf = localStorage.getItem('role')
+    //0: 超级管理员 1:管理员 2:计划部门 3: 业务部门
     if (sf == 0 || sf == 1) {
       this.roleItem = this.items0
     } else if (sf == 2) {

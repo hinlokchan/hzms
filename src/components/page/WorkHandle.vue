@@ -218,6 +218,11 @@
             @click="handleQRCode()"
           >生成二维码</el-button>
           <el-button
+            icon="el-icon-suitcase"
+            size="medium"
+            @click="handleCreateContractNum()"
+          >生成合同号</el-button>
+          <el-button
             icon="el-icon-printer"
             size="medium"
             @click="handlePrintProj(queryData.projId)"
@@ -277,7 +282,7 @@
                 >取号</el-button>
                 <el-button
                   type="primary"
-                  icon="el-icon-circle-close"
+                  icon="el-icon-circle-plus-outline"
                   @click="handleGetOldNum"
                 >取往月报告号</el-button>
                 <el-button
@@ -325,6 +330,35 @@
                   </el-col>
                 </el-row>
               </div>
+            </div>
+          </el-card>
+        </el-col>
+        <el-col
+          :span="24"
+          style="margin-top: 10px"
+        >
+          <el-card>
+            <div
+              slot="header"
+              class="card=header"
+            >
+              <span>合同号信息</span>
+
+            </div>
+            <div class="report-num">
+              <el-row>
+                <el-col
+                  :span="2"
+                  class="report-title"
+                >合同号</el-col>
+                <el-col
+                  :span="6"
+                  class="report-content"
+                >
+                  <span v-if="this.contractNum == ''">未取号</span>
+                  <span v-else>{{this.contractNum}}</span>
+                </el-col>
+              </el-row>
             </div>
           </el-card>
         </el-col>
@@ -463,7 +497,7 @@
 
 <script>
 import QRCode from 'qrcodejs2'
-import { editProject, getDetailProjInfo, getWorkAssignment, setWorkAssignment, createReportNum, deleteReportNum, alterProjType, getProjInfoTable, getOldReportNum } from '@/api/index'
+import { editProject, getDetailProjInfo, getWorkAssignment, setWorkAssignment, createReportNum, deleteReportNum, alterProjType, getProjInfoTable, getOldReportNum, createContractNum, deleteContractNum } from '@/api/index'
 import { addSubProject, getSubProjectInfoList, delSubProject } from '@/api/subReport'
 import projTypeOption from '../../../public/projTypeOption.json'
 import { host } from '@/config'
@@ -501,6 +535,8 @@ export default {
       subProjVisible: false,
       subFatherReport: '',
       subTableData: [],
+      contractNum: '',
+      contractNumType: '',
       changeType: {
         projId: '',
         toType: ''
@@ -599,6 +635,8 @@ export default {
             console.log('projDetail', this.projDetail)
             this.reportNum = res.data.reportNumList
             console.log('reportNum', this.reportNum)
+            this.contractNum = res.data.contractNum.contractNum
+            console.log('contractNum', this.contractNum)
             const leader = this.projDetail.projLeader.split(',')
             const reviewer = this.projDetail.projReviewer.split(',')
             const projReviewer = this.projDetail.projProReviewer.split(',')
@@ -727,8 +765,6 @@ export default {
       }
     },
     handleQRCode() {
-
-
       this.qrcodeVisible = true
       this.$nextTick(() => {
         this.creatQRCode()
@@ -744,6 +780,49 @@ export default {
     },
     closeQRCode() {
       this.$refs.qrcode.innerHTML = ''
+    },
+    handleCreateContractNum() {
+      // if (queryData.projType == 1010)let const
+      switch (this.queryData.projType) {
+        case 1010:
+          this.contractNumType = '101'
+          break
+        case 1020:
+          this.contractNumType = '201'
+          break
+        case 1030:
+          this.contractNumType = '301'
+          break
+        case 1041:
+          this.contractNumType = '102'
+          break
+        case 1042:
+          this.contractNumType = '202'
+          break
+        case 1043:
+          this.contractNumType = '302'
+          break
+        case 1050:
+          this.contractNumType = '202'
+          break
+        case 1070:
+          this.contractNumType = '101'
+          break
+        case 1090:
+          this.contractNumType = '202'
+          break
+        case 1100:
+          this.contractNumType = '401'
+          break
+      }
+      console.log(this.contractNumType)
+      createContractNum({ projId: this.queryData.projId, contractNumType: this.contractNumType })
+        .then(res => {
+          console.log('createContractNum.res', res)
+        })
+        .catch(err => {
+          this.$message.error('服务器忙，获取合同号失败！')
+        })
     },
     handlePrintProj(val) {
       //伪加载中，防止重复提交请求

@@ -58,7 +58,7 @@
           <el-col :span="2.5">
             <el-input
               v-model="searchData.clientName"
-              placeholder="委托方"
+              placeholder="委托人"
               size="medium"
               @keyup.enter.native="handleSearch"
             ></el-input>

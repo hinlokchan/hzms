@@ -104,6 +104,7 @@
                   :props="{ expandTrigger: 'hover' }"
                   style="width: 90%"
                   @change="selectToInput()"
+                  filterableƒ
                 >
                 </el-cascader>
                 <el-button
@@ -129,8 +130,6 @@
                   @click="resetClientName()"
                 ></el-button>
               </el-form-item>
-              <h2>{{form.clientName}}</h2>
-              <h2>{{form.clientNameMid}}</h2>
             </el-col>
             <el-col :span="6">
               <el-form-item
@@ -535,10 +534,7 @@ export default {
         ],
         projContact: [
           { required: true, message: '请填写接洽人', trigger: 'blur' }
-        ],
-        clientName: [
-          { required: true, message: '请填写委托人', trigger: 'blur' }
-        ],
+        ]
       },
       assemGoalList: ['抵押', '交易', '资产处置（司法鉴定）', '出让', '挂牌出让', '补出让', '转让', '盘整收回', '征收补偿', '活立木拍卖', '出租', '置换', '股权转让', '作价入股', '增资扩股', '入账', '征收、完税', '企业改制', '清算', '复审', '评价', '咨询'],
       contactTypeOption: ['正常接洽', '摇珠', '中行通知书', '定点采购', '中介超市摇珠']
@@ -721,57 +717,64 @@ export default {
       this.form.clientName = ''
     },
     onSubmit() {
-      if (this.form.clientId == 141) {
-        this.form.clientId = ''
+      if (this.form.clientName == '' && this.form.clientId == '') {
+        this.$message.warning('请填写委托人！')
       } else {
-        this.form.clientId = this.form.clientId[this.form.clientId.length - 1]
-      }
-      console.log('form', this.form)
-      this.$refs.ruleForm.validate((valid) => {
-        if (valid) {
-          this.transformPeop().then(res => {
-            console.log('this.form', this.form)
-            if (this.isEdit) {
-              editProject(this.form).then(res => {
-                console.log('add>>>res', res)
-                this.$message.success('提交成功！');
-                this.goBack()
-              }).catch(err => {
-                this.$message.warning('提交失败！');
-                console.log('add>>>err', err)
-              })
-            } else {
-              createNewProject(this.form).then(res => {
-                console.log('add>>>res', res)
-                this.$message.success('提交成功！');
-                let riskProfile = ''
-                if (this.form.riskProfile == 1001) {
-                  riskProfile == '低'
-                } else if (this.form.riskProfile == 1002) {
-                  riskProfile == '中等'
-                } else if (this.form.riskProfile == 1003) {
-                  riskProfile == '较高'
-                } else {
-                  riskProfile == '高'
-                }
-                //处理value转为label展示
-                for (var i = 0; i < this.projTypeOption.length; i++) {
-                  if (this.form.projType == this.projTypeOption[i].value) {
-                    this.transedData.projType = this.projTypeOption[i].label
-                  }
-                }
-                // ZP项目类型：资；委托 人：(其他):惠州市水务投资集团；项目名称：惠州大道大湖溪段667平方米租金；评估对象及其坐落：同上;；评估目的：物业出租价格；引荐人及其电话：惠州市水务投资集团王总135 0229 7502；现联系单位、人及电话：同上；现勘时间：现勘同事约；报告时间要求：5天；项目风险预测：；评估收费报价：待定；是否曾评估的项目：（若是，原项目组成员：）；项目接洽人""[52]-缨(注师：莎缨;助理：健;专业复核人:远。以下由项目负责人安排 现勘：;资料核查验证：;市场询价调查：;技术报告:；报告编制:; 归档：;对外沟通:
-                this.newInfoData = `项目编号:${res.data.projNum};项目类型:${this.transedData.projType};委托人:${this.form.clientName};项目名称:${this.form.projName};评估对象及其坐落:同上;评估目的:${this.form.assemGoal};引荐人及其电话:${this.form.projReferer}${this.form.projRefererInfo};现勘联系单位人及电话：同上;现勘时间:${this.form.fldSrvySchedule};报告时间要求:${this.form.compSchedule}天;项目风险预测:${riskProfile};评估收费报价:${this.form.assemFeeQuote};是否曾评估项目:${this.form.newOldType};项目接洽人:${this.form.projContact},项目助理:${this.form.projAsst},专业复核人:${this.form.projProReviewer}。以下由项目负责人安排,现勘:${this.form.fieldSrvy};资料核查验证: ;市场询价调查: ;技术报告: ;报告编制: ;归档: ;对外沟通: 。`
-                this.newInfo = true
-              }).catch(err => {
-                console.log('add>>>err', err)
-              })
-            }
-          })
+        if (this.form.clientId == 141) {
+          this.form.clientId = ''
         } else {
-          this.$message('请填写必填信息');
+          //this.form.clientId = this.form.clientId[this.form.clientId.length - 1]
+          let clientIdMid = this.form.clientId[this.form.clientId.length - 1]
+          this.form.clientId = ''
+          this.form.clientId = clientIdMid
         }
-      })
+        console.log('form', this.form)
+        this.$refs.ruleForm.validate((valid) => {
+          if (valid) {
+            this.transformPeop().then(res => {
+              console.log('this.form', this.form)
+              if (this.isEdit) {
+                editProject(this.form).then(res => {
+                  console.log('add>>>res', res)
+                  this.$message.success('提交成功！');
+                  this.goBack()
+                }).catch(err => {
+                  this.$message.warning('提交失败！');
+                  console.log('add>>>err', err)
+                })
+              } else {
+                createNewProject(this.form).then(res => {
+                  console.log('add>>>res', res)
+                  this.$message.success('提交成功！');
+                  let riskProfile = ''
+                  if (this.form.riskProfile == 1001) {
+                    riskProfile == '低'
+                  } else if (this.form.riskProfile == 1002) {
+                    riskProfile == '中等'
+                  } else if (this.form.riskProfile == 1003) {
+                    riskProfile == '较高'
+                  } else {
+                    riskProfile == '高'
+                  }
+                  //处理value转为label展示
+                  for (var i = 0; i < this.projTypeOption.length; i++) {
+                    if (this.form.projType == this.projTypeOption[i].value) {
+                      this.transedData.projType = this.projTypeOption[i].label
+                    }
+                  }
+                  // ZP项目类型：资；委托 人：(其他):惠州市水务投资集团；项目名称：惠州大道大湖溪段667平方米租金；评估对象及其坐落：同上;；评估目的：物业出租价格；引荐人及其电话：惠州市水务投资集团王总135 0229 7502；现联系单位、人及电话：同上；现勘时间：现勘同事约；报告时间要求：5天；项目风险预测：；评估收费报价：待定；是否曾评估的项目：（若是，原项目组成员：）；项目接洽人""[52]-缨(注师：莎缨;助理：健;专业复核人:远。以下由项目负责人安排 现勘：;资料核查验证：;市场询价调查：;技术报告:；报告编制:; 归档：;对外沟通:
+                  this.newInfoData = `项目编号:${res.data.projNum};项目类型:${this.transedData.projType};委托人:${this.form.clientName};项目名称:${this.form.projName};评估对象及其坐落:同上;评估目的:${this.form.assemGoal};引荐人及其电话:${this.form.projReferer}${this.form.projRefererInfo};现勘联系单位人及电话：同上;现勘时间:${this.form.fldSrvySchedule};报告时间要求:${this.form.compSchedule}天;项目风险预测:${riskProfile};评估收费报价:${this.form.assemFeeQuote};是否曾评估项目:${this.form.newOldType};项目接洽人:${this.form.projContact},项目助理:${this.form.projAsst},专业复核人:${this.form.projProReviewer}。以下由项目负责人安排,现勘:${this.form.fieldSrvy};资料核查验证: ;市场询价调查: ;技术报告: ;报告编制: ;归档: ;对外沟通: 。`
+                  this.newInfo = true
+                }).catch(err => {
+                  console.log('add>>>err', err)
+                })
+              }
+            })
+          } else {
+            this.$message('请填写必填信息');
+          }
+        })
+      }
     },
     transformPeop() {
       var that = this

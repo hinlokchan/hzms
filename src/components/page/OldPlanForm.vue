@@ -129,9 +129,39 @@
             <el-col :span="6">
               <el-form-item
                 label="委托人"
-                prop="clientName"
+                v-if="this.clientInputTypeChange == false"
               >
-                <el-input v-model="form.clientName"></el-input>
+                <el-cascader
+                  :show-all-levels="false"
+                  v-model="form.clientId"
+                  :options="clientOptions"
+                  :props="{ expandTrigger: 'hover' }"
+                  style="width: 90%"
+                  @change="selectToInput()"
+                  filterable
+                >
+                </el-cascader>
+                <el-button
+                  type="text"
+                  icon="el-icon-refresh-right"
+                  style="width: 10%"
+                  @click="resetClientName()"
+                ></el-button>
+              </el-form-item>
+              <el-form-item
+                label="委托人"
+                v-if="this.clientInputTypeChange == true"
+              >
+                <el-input
+                  v-model="form.clientName"
+                  style="width: 90%"
+                ></el-input>
+                <el-button
+                  type="text"
+                  icon="el-icon-refresh-right"
+                  style="width: 10%"
+                  @click="resetClientName()"
+                ></el-button>
               </el-form-item>
             </el-col>
             <!-- <el-col :span="6">
@@ -476,6 +506,7 @@ export default {
   data() {
     return {
       arrgTypeEnable: true,
+      clientInputTypeChange: false,
       takenDate: '',
       form: {
         projNum: '',
@@ -497,6 +528,7 @@ export default {
         fldSrvyContact: '',
         fldSrvyContactInfo: '',
         lendingBank: [],
+        clientId: '',
         clientName: '',
         clientContact: '',
         clientContactInfo: '',
@@ -622,6 +654,18 @@ export default {
           this.form.fieldSrvy.splice(index, 1)
         }
       }
+    },
+    selectToInput() {
+      if (this.form.clientId == '141') {
+        this.clientInputTypeChange = true
+      } else {
+        this.clientInputTypeChange = false
+      }
+    },
+    resetClientName() {
+      this.clientInputTypeChange = false
+      this.form.clientId = ''
+      this.form.clientName = ''
     },
     onSubmit() {
       //this.form.projNum = JSON.stringify(this.form.projNum)

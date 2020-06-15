@@ -393,20 +393,20 @@ export default {
           }
         }
         //委托人（原银行）转译
-        let clientOptions = this.clientOptions
-        let bankAfter = []
-        for (let i = 0; i < clientOptions.length; i++) {
-          if (clientOptions[i].children) {
-            bankAfter = bankAfter.concat(clientOptions[i].children)
-          }
-        }
-        let index = bankAfter.findIndex((val) => {
-          return val.value == this.detailData.lendingBank
-        })
-        let indexBefore = clientOptions.findIndex((val) => {
-          return val.value == this.detailData.lendingBank.substring(0, 3)
-        })
-        this.detailData.lendingBankLable = clientOptions[indexBefore].label + ' - ' + bankAfter[index].label
+        // let clientOptions = this.clientOptions
+        // let bankAfter = []
+        // for (let i = 0; i < clientOptions.length; i++) {
+        //   if (clientOptions[i].children) {
+        //     bankAfter = bankAfter.concat(clientOptions[i].children)
+        //   }
+        // }
+        // let index = bankAfter.findIndex((val) => {
+        //   return val.value == this.detailData.lendingBank
+        // })
+        // let indexBefore = clientOptions.findIndex((val) => {
+        //   return val.value == this.detailData.lendingBank.substring(0, 3)
+        // })
+        // this.detailData.lendingBankLable = clientOptions[indexBefore].label + ' - ' + bankAfter[index].label
       })
     },
     printProj(val) {

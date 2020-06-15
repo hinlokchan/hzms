@@ -238,4 +238,22 @@ export function setOldProject(data) {
   });
 }
 
+export function createContractNum(data) {
+  return request({
+    url: `${ProManageAPIServer}project/createContractNum`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
+export function deleteContractNum(data) {
+  return request({
+    url: `${ProManageAPIServer}project/deleteContractNum`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
 export var getProjInfoTable = 'statistics/getProjInfoTable';
