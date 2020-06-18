@@ -367,6 +367,7 @@
 <script>
 import { getDetailProjInfo, getWorkAssignment, } from '@/api/index'
 import projTypeOption from '../../../../public/projTypeOption.json'
+import citys from '../../../../public/citys.json'
 export default {
   name: 'fcformalreg',
   data() {

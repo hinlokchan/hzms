@@ -51,6 +51,7 @@ router.beforeEach((to, from, next) => {
   }
 });
 
+//格式化日期方法，通过 this.$moment('date').format('YYYY-MM-DD') 调用
 Vue.filter('weekformat', function(dataStr, pattern = 'W') {
   return moment(dataStr).format(pattern);
 });

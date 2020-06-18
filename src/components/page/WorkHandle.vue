@@ -218,11 +218,6 @@
             @click="handleQRCode()"
           >生成二维码</el-button>
           <el-button
-            icon="el-icon-suitcase"
-            size="medium"
-            @click="handleCreateContractNum()"
-          >生成合同号</el-button>
-          <el-button
             icon="el-icon-printer"
             size="medium"
             @click="handlePrintProj(queryData.projId)"
@@ -343,7 +338,18 @@
               class="card=header"
             >
               <span>合同号信息</span>
-
+              <span style="float: right">
+                <el-button
+                  icon="el-icon-suitcase"
+                  size="medium"
+                  @click="handleCreateContractNum()"
+                >生成合同号</el-button>
+                <el-button
+                  icon="el-icon-suitcase"
+                  size="medium"
+                  @click="handleDeleteContractNum()"
+                >删除合同号</el-button>
+              </span>
             </div>
             <div class="report-num">
               <el-row>
@@ -806,7 +812,7 @@ export default {
           this.contractNumType = '202'
           break
         case 1070:
-          this.contractNumType = '101'
+          this.contractNumType = '202'
           break
         case 1090:
           this.contractNumType = '202'
@@ -822,6 +828,21 @@ export default {
         })
         .catch(err => {
           this.$message.error('服务器忙，获取合同号失败！')
+        })
+    },
+    handleDeleteContractNum() {
+      this.$confirm('即将删除合同号，确定吗？', '提示：即将删除[' + this.contractNum + ']')
+        .then(() => {
+          deleteContractNum({ contractNum: this.contractNum })
+            .then(res => {
+              this.$message.success('合同号已删除！')
+            })
+            .catch(err => {
+              this.$message.warning('服务器忙，请稍后重试！')
+            })
+        })
+        .catch(() => {
+          { }
         })
     },
     handlePrintProj(val) {

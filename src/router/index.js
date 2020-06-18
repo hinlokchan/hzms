@@ -61,6 +61,11 @@ export default new Router({
                     meta: { title: '房地产正评登记' }
                 },
                 {
+                    path: '/zcformalreg',
+                    component: () => import('../components/page/projreg/ZcFormalReg.vue'),
+                    meta: { title: '资产正评登记' }
+                },
+                {
                     path: '/qrcode',
                     component: () => import('../components/page/QRCode.vue'),
                     meta: { title: '二维码生成' }
@@ -96,12 +101,12 @@ export default new Router({
                 //     component: () => import(/* webpackChunkName: "editor" */ '../components/page/VueEditor.vue'),
                 //     meta: { title: '富文本编辑器' }
                 // },
-                // {
-                //     // vue-schart组件
-                //     path: '/charts',
-                //     component: () => import(/* webpackChunkName: "chart" */ '../components/page/BaseCharts.vue'),
-                //     meta: { title: 'schart图表' }
-                // },
+                {
+                    // vue-schart组件
+                    path: '/charts',
+                    component: () => import(/* webpackChunkName: "chart" */ '../components/page/BaseCharts.vue'),
+                    meta: { title: 'schart图表' }
+                },
                 {
                     // 权限页面
                     path: '/permission',
