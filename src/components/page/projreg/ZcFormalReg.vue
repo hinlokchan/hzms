@@ -2,7 +2,7 @@
   <div class="container">
     <div class="crumbs">
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item>资产正评登记</el-breadcrumb-item>
+        <el-breadcrumb-item>资产项目正评登记</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="form-header">
@@ -92,7 +92,10 @@
           label="项目信息"
           name="projInfo"
         >
-          <el-form :model="form2">
+          <el-form
+            :model="form2"
+            :rules="formRule"
+          >
             <el-row :gutter="20">
               <el-col :span="6">
                 <el-form-item label="初评号">
@@ -107,6 +110,14 @@
                   <el-input
                     :disabled="true"
                     v-model="form2.faReportNum"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="分户号（子报告号）">
+                  <el-input
+                    :disabled="true"
+                    v-model="form2.subReportNum"
                   ></el-input>
                 </el-form-item>
               </el-col>
@@ -132,8 +143,30 @@
                     v-model="form2.adminRegion"
                     :options="cityOptions"
                     style="width: 100%"
+                    clearable
                   >
                   </el-cascader>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="出报告日期">
+                  <el-date-picker
+                    v-model="form2.projCompTime"
+                    type="date"
+                    placeholder="请选择日期"
+                    style="width: 100%"
+                  ></el-date-picker>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item
+                  label="评估对象数量"
+                  prop="count"
+                >
+                  <el-input
+                    v-model="form2.count"
+                    oninput="value=value.replace(/[^\d.]/g,'')"
+                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -151,22 +184,8 @@
                   <el-date-picker
                     v-model="form2.entrustTime"
                     type="date"
-                  ></el-date-picker>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="出报告日期">
-                  <el-date-picker
-                    v-model="form2.projCompTime"
-                    type="date"
-                    placeholder="请选择日期"
                     style="width: 100%"
                   ></el-date-picker>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="评估对象数量">
-                  <el-input v-model="form2.count"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -174,17 +193,26 @@
             <el-row :gutter="20">
               <el-col :span="6">
                 <el-form-item label="资产总值">
-                  <el-input v-model="form2.formerTotalAssets"></el-input>
+                  <el-input
+                    v-model="form2.formerTotalAssets"
+                    oninput="value=value.replace(/[^\d.]/g,'')"
+                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="负债总值">
-                  <el-input v-model="form2.formerTotalDebet"></el-input>
+                  <el-input
+                    v-model="form2.formerTotalDebet"
+                    oninput="value=value.replace(/[^\d.]/g,'')"
+                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="所有值权益">
-                  <el-input v-model="form2.formerOwnersEquity"></el-input>
+                  <el-input
+                    v-model="form2.formerOwnersEquity"
+                    oninput="value=value.replace(/[^\d.]/g,'')"
+                  ></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -192,17 +220,26 @@
             <el-row :gutter="20">
               <el-col :span="6">
                 <el-form-item label="资产总值">
-                  <el-input v-model="form2.latterTotalAssets"></el-input>
+                  <el-input
+                    v-model="form2.latterTotalAssets"
+                    oninput="value=value.replace(/[^\d.]/g,'')"
+                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="负债总值">
-                  <el-input v-model="form2.latterTotalDebet"></el-input>
+                  <el-input
+                    v-model="form2.latterTotalDebet"
+                    oninput="value=value.replace(/[^\d.]/g,'')"
+                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="所有值权益">
-                  <el-input v-model="form2.latterOwnersEquity"></el-input>
+                  <el-input
+                    v-model="form2.latterOwnersEquity"
+                    oninput="value=value.replace(/[^\d.]/g,'')"
+                  ></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -305,8 +342,16 @@ export default {
       form2: {
         paReportNum: '',
         faReportNum: '',
+        subReportNum: '',
+        assemGoal: '',
+        assemMethod: '',
+        adminRegion: '',
         projCompTime: '',
-        formerTotalAssetsL: '',
+        count: '',
+        recordNum: '',
+        entrustNum: '',
+        entrustTime: '',
+        formerTotalAssets: '',
         formerTotalDebet: '',
         formerOwnersEquity: '',
         latterTotalAssets: '',
@@ -326,15 +371,18 @@ export default {
         reportDrafter: '',
       },
       mainForm: {},
+      formRule: {
+
+      }
     }
   },
   created() {
     this.projTypeOption = projTypeOption
     this.cityOptions = cityOptions
   },
-  methods: [
+  methods: {
 
-  ]
+  }
 }
 </script>
 

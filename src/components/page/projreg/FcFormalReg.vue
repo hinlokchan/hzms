@@ -2,7 +2,7 @@
   <div class="container">
     <div class="crumbs">
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item>房地产正评登记</el-breadcrumb-item>
+        <el-breadcrumb-item>房地产项目正评登记</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="form-header">
@@ -55,7 +55,10 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="合同号">
-                  <el-input :disabled="true" v-model="form1.contractNum"></el-input>
+                  <el-input
+                    :disabled="true"
+                    v-model="form1.contractNum"
+                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
@@ -76,7 +79,10 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="估价委托人（产权持有人）">
-                  <!-- <el-input :disabled="true" v-model=""></el-input> -->
+                  <el-input
+                    :disabled="true"
+                    v-model="form1.incumbrancer"
+                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -114,12 +120,26 @@
             <el-row :gutter="20">
               <el-col :span="6">
                 <el-form-item label="初评号">
-                  <el-input :disabled="true" v-model="form2.paReportNum"></el-input>
+                  <el-input
+                    :disabled="true"
+                    v-model="form2.paReportNum"
+                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="正评号">
-                  <el-input :disabled="true" v-model="form2.faReportNum"></el-input>
+                  <el-input
+                    :disabled="true"
+                    v-model="form2.faReportNum"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="分户号（子报告号）">
+                  <el-input
+                    :disabled="true"
+                    v-model="form2.subReportNum"
+                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -127,6 +147,7 @@
                   <el-select
                     v-model="form2.evalGoal"
                     style="width: 100%"
+                    filterable
                   >
                     <el-option
                       v-for="item in assemGoalOption"
@@ -141,6 +162,7 @@
                   <el-select
                     v-model="form2.valueType"
                     style="width: 100%"
+                    filterable
                   >
                     <el-option
                       v-for="item in priceTypeOption"
@@ -152,7 +174,10 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="本报告的估价对象个数">
-                  <el-input v-model="form2.evalObjCount"></el-input>
+                  <el-input
+                    v-model="form2.evalObjCount"
+                    oninput="value=value.replace(/[^\d.]/g,'')"
+                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -172,42 +197,55 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="项目完成时间">
-                  <el-date-picker style="width: 100%" v-model="form2.projCompTime"></el-date-picker>
+                  <el-date-picker
+                    style="width: 100%"
+                    v-model="form2.projCompTime"
+                  ></el-date-picker>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="估价方法">
-                  <el-input :disabled="true" v-model="form2.assemMethod"></el-input>
+                  <el-input
+                    :disabled="true"
+                    v-model="form2.assemMethod"
+                  ></el-input>
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :span="6">
                 <el-form-item label="估价方法说明">
                   <el-input v-model="form2.assemMethodExp"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="估价对象土地面积（平方米）">
-                  <el-input v-model="form2.evalObjAcreage"></el-input>
+                  <el-input
+                    v-model="form2.evalObjAcreage"
+                    oninput="value=value.replace(/[^\d.]/g,'')"
+                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="土地评估单价（元/平方米）">
-                  <el-input v-model="form2.landAssemUnitPrice"></el-input>
+                  <el-input
+                    v-model="form2.landAssemUnitPrice"
+                    oninput="value=value.replace(/[^\d.]/g,'')"
+                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="估价对象建筑面积（平方米）">
-                  <el-input v-model="form2.evalObjArea"></el-input>
+                  <el-input
+                    v-model="form2.evalObjArea"
+                    oninput="value=value.replace(/[^\d.]/g,'')"
+                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="建筑评估单价（元/平方米）">
-                  <el-input v-model="form2.buildingAssemUnitPrice"></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="房地产估价机构">
-                  <el-input :disabled="true" v-model="form2.assemAgency"></el-input>
+                  <el-input
+                    v-model="form2.buildingAssemUnitPrice"
+                    oninput="value=value.replace(/[^\d.]/g,'')"
+                  ></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -221,7 +259,10 @@
             <el-row :gutter="20">
               <el-col :span="6">
                 <el-form-item label="房屋用途">
-                  <el-select style="width: 100%" v-model="form3.unitUsage">
+                  <el-select
+                    style="width: 100%"
+                    v-model="form3.unitUsage"
+                  >
                     <el-option
                       v-for="item in housePurposeOption"
                       :key="item"
@@ -232,7 +273,10 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="房屋类型">
-                  <el-select style="width: 100%" v-model="form3.unitType">
+                  <el-select
+                    style="width: 100%"
+                    v-model="form3.unitType"
+                  >
                     <el-option
                       v-for="item in houseTypeOption"
                       :key="item"
@@ -243,7 +287,10 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="房屋性质">
-                  <el-select style="width: 100%" v-model="form3.unitProperty">
+                  <el-select
+                    style="width: 100%"
+                    v-model="form3.unitProperty"
+                  >
                     <el-option
                       v-for="item in houseAttributeOption"
                       :key="item"
@@ -254,7 +301,10 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="户型结构">
-                  <el-select style="width: 100%" v-model="form3.houseTypeStructure">
+                  <el-select
+                    style="width: 100%"
+                    v-model="form3.houseTypeStructure"
+                  >
                     <el-option
                       v-for="item in houstStructureOption"
                       :key="item"
@@ -265,7 +315,10 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="户型">
-                  <el-select style="width: 100%" v-model="form3.houseType">
+                  <el-select
+                    style="width: 100%"
+                    v-model="form3.houseType"
+                  >
                     <el-option
                       v-for="item in houseModelOption"
                       :key="item"
@@ -276,9 +329,12 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="向">
-                  <el-select style="width: 100%" v-model="form3.towards">
+                  <el-select
+                    style="width: 100%"
+                    v-model="form3.towards"
+                  >
                     <el-option
-                      v-for="item in houseDecorationOption"
+                      v-for="item in houseDirectionOption"
                       :key="item"
                       :value="item"
                     ></el-option>
@@ -292,12 +348,24 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="装修程度">
-                  <el-input v-model="form3.decoDegree"></el-input>
+                  <el-select
+                    style="width: 100%"
+                    v-model="form3.decoDegree"
+                  >
+                    <el-option
+                      v-for="item in houseDecorationOption"
+                      :key="item"
+                      :value="item"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="剩余年限">
-                  <el-input v-model="form3.remainTerm"></el-input>
+                  <el-input
+                    v-model="form3.remainTerm"
+                    oninput="value=value.replace(/[^\d.]/g,'')"
+                  ></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -311,53 +379,106 @@
             <el-row :gutter="20">
               <el-col :span="6">
                 <el-form-item label="接洽人">
-                  <el-input v-model="form4.projContact" :disabled="true"></el-input>
+                  <el-input
+                    v-model="form4.projContact"
+                    :disabled="true"
+                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="项目负责人">
-                  <el-input v-model="form4.projLeader" :disabled="true"></el-input>
+                  <el-input
+                    v-model="form4.projLeader"
+                    :disabled="true"
+                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="专业复核人">
-                  <el-input v-model="form4.projProReviewer" :disabled="true"></el-input>
+                  <el-input
+                    v-model="form4.projProReviewer"
+                    :disabled="true"
+                  ></el-input>
                 </el-form-item>
               </el-col>
+
               <el-col :span="6">
                 <el-form-item label="现勘">
-                  <el-input></el-input>
+                  <el-input
+                    v-model="form4.fieldSrvy"
+                    :disabled="true"
+                  ></el-input>
                 </el-form-item>
               </el-col>
+            </el-row>
+            <el-row :gutter="20">
               <el-col :span="6">
                 <el-form-item label="资料收集及验证">
-                  <el-input></el-input>
+                  <el-checkbox-group v-model="form4.infoVerification">
+                    <el-checkbox
+                      v-for="item in projMember"
+                      :key="item"
+                      :label="item"
+                      style="width: 100%"
+                    ></el-checkbox>
+                  </el-checkbox-group>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="市场询价调查">
-                  <el-input></el-input>
+                  <el-checkbox-group v-model="form4.marketEnquiry">
+                    <el-checkbox
+                      v-for="item in projMember"
+                      :key="item"
+                      :label="item"
+                      style="width: 100%"
+                    ></el-checkbox>
+                  </el-checkbox-group>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="技术说明">
-                  <el-input></el-input>
+                  <el-checkbox-group v-model="form4.techExpDrafter">
+                    <el-checkbox
+                      v-for="item in projMember"
+                      :key="item"
+                      :label="item"
+                      style="width: 100%"
+                    ></el-checkbox>
+                  </el-checkbox-group>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="报告拟稿">
-                  <el-input></el-input>
+                  <el-checkbox-group v-model="form4.reportDrafter">
+                    <el-checkbox
+                      v-for="item in projMember"
+                      :key="item"
+                      :label="item"
+                      style="width: 100%"
+                    ></el-checkbox>
+                  </el-checkbox-group>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="收费跟进">
-                  <el-input></el-input>
+                  <el-checkbox-group v-model="form4.feeFollowUp">
+                    <el-checkbox
+                      v-for="item in projMember"
+                      :key="item"
+                      :label="item"
+                      style="width: 100%"
+                    ></el-checkbox>
+                  </el-checkbox-group>
                 </el-form-item>
               </el-col>
             </el-row>
           </el-form>
         </el-tab-pane>
-        <el-button type="primary" @click="onSubmit()">提交</el-button>
+        <el-button
+          type="primary"
+          @click="onSubmit()"
+        >提交</el-button>
         <el-button>取消</el-button>
       </el-tabs>
     </div>
@@ -366,6 +487,7 @@
 
 <script>
 import { getDetailProjInfo, getWorkAssignment, } from '@/api/index'
+import { submitFaRegister } from '@/api/formalReg'
 import projTypeOption from '../../../../public/projTypeOption.json'
 import citys from '../../../../public/citys.json'
 export default {
@@ -373,9 +495,12 @@ export default {
   data() {
     return {
       projId: '',
+      registerType: '',
       projDetail: '',
       activeTab: 'projInfo',
       projTypeOption: [],
+      projMember: [],
+      midMember: [],
       //计划信息
       form1: {
         projNum: '',
@@ -384,6 +509,7 @@ export default {
         contractNum: '',
         projName: '',
         projScope: '',
+        incumbrancer: '',
         clientName: '',
         clientContact: '',
         clientContactInfo: ''
@@ -392,6 +518,7 @@ export default {
       form2: {
         paReportNum: '',
         faReportNum: '',
+        subReportNum: '',
         evalGoal: '',
         valueType: '',
         evalObjCount: '',
@@ -405,7 +532,6 @@ export default {
         landAssemUnitPrice: '',
         evalObjArea: '',
         buildingAssemUnitPrice: '',
-        assemAgency: ''
       },
       //房屋信息
       form3: {
@@ -425,10 +551,11 @@ export default {
         projLeader: '',
         projProReviewer: '',
         fieldSrvy: '',
-        infoVerification: '',
-        marketEnquiry: '',
-        techExpDrafter: '',
-        reportDrafter: '',
+        infoVerification: [],
+        marketEnquiry: [],
+        techExpDrafter: [],
+        reportDrafter: [],
+        feeFollowUp: []
       },
       mainForm: {},
       //select option
@@ -447,10 +574,11 @@ export default {
     this.getDetail()
     //this.splitDetailData()
     this.projTypeOption = projTypeOption
+
   },
   methods: {
     getDetail() {
-      getDetailProjInfo({ projId: 1020202005001 })
+      getDetailProjInfo({ projId: 1010202005001 })
         .then(res => {
           this.projDetail = res.data
 
@@ -462,21 +590,50 @@ export default {
           this.form1.clientName = res.data.clientName
           this.form1.clientContact = res.data.clientContact
           this.form1.clientContactInfo = res.data.clientContactInfo
-          
-          this.form4.clientName = res.data.clientName
+
+          this.form4.projContact = res.data.projContact
           this.form4.projLeader = res.data.projLeader
           this.form4.projProReviewer = res.data.projProReviewer
+
+          //提取项目组成员
+          const leader = this.projDetail.projLeader.split(',')
+          const reviewer = this.projDetail.projReviewer.split(',')
+          const projReviewer = this.projDetail.projProReviewer.split(',')
+          const asst = this.projDetail.projAsst.split(',')
+          const srvy = this.projDetail.fieldSrvy.split(',')
+          this.midMember.push(...leader, ...reviewer, ...projReviewer, ...asst, ...srvy)
+          const mid2 = Array.from(new Set(this.midMember))
+          this.projMember = mid2.filter(item => item)
+          console.log('projMember', this.projMember)
         })
         .catch(err => {
           this.$message.warning('读取项目信息失败，请重试')
         })
     },
     onSubmit() {
+      this.dealPeopleData()
       this.mergeForm()
-      console.log(this.mainForm)
+
+      console.log('marinform', this.mainForm)
+      submitFaRegister(this.mainForm)
+        .then(res => {
+          console.log('res', res)
+        })
+        .catch(err => {
+          console.log('err', err)
+        })
+
     },
     mergeForm() {
-      this.mainForm = Object.assign(this.form1, this.form2, this.form3, this.form4)
+      this.mainForm = Object.assign(this.projId, this.registerType, this.form1, this.form2, this.form3, this.form4)
+    },
+    dealPeopleData() {
+      this.form4.infoVerification = this.form4.infoVerification.join(',')
+      this.form4.marketEnquiry = this.form4.marketEnquiry.join(',')
+      this.form4.techExpDrafter = this.form4.techExpDrafter.join(',')
+      this.form4.reportDrafter = this.form4.reportDrafter.join(',')
+      this.form4.feeFollowUp = this.form4.feeFollowUp.join(',')
+
     }
   }
 }

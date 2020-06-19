@@ -643,6 +643,7 @@ export default {
             console.log('reportNum', this.reportNum)
             this.contractNum = res.data.contractNum.contractNum
             console.log('contractNum', this.contractNum)
+            //提取项目组成员
             const leader = this.projDetail.projLeader.split(',')
             const reviewer = this.projDetail.projReviewer.split(',')
             const projReviewer = this.projDetail.projProReviewer.split(',')
@@ -651,10 +652,6 @@ export default {
             this.midMember.push(...leader, ...reviewer, ...projReviewer, ...asst, ...srvy)
             const mid2 = Array.from(new Set(this.midMember))
             this.projMember = mid2.filter(item => item)
-            // this.projMember.forEach(item => {
-            //   let key = item
-            //   this.$set(this.workArrgForm, key, [])
-            // })
             console.log('projMember', this.projMember)
           }
           this.$nextTick(() => {
