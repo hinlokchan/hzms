@@ -93,7 +93,7 @@
           name="projInfo"
         >
           <el-form
-            :model="form2"
+            :model="form1"
             :rules="formRule"
           >
             <el-row :gutter="20">
@@ -337,6 +337,23 @@ export default {
         projName: '',
         projScope: '',
         clientName: '',
+        paReportNum: '',
+        faReportNum: '',
+        subReportNum: '',
+        assemGoal: '',
+        assemMethod: '',
+        adminRegion: '',
+        projCompTime: '',
+        count: '',
+        recordNum: '',
+        entrustNum: '',
+        entrustTime: '',
+        formerTotalAssets: '',
+        formerTotalDebet: '',
+        formerOwnersEquity: '',
+        latterTotalAssets: '',
+        latterTotalDebet: '',
+        latterOwnersEquity: ''
       },
       //项目信息
       form2: {

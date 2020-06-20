@@ -12,3 +12,21 @@ export function submitFaRegister(data) {
     data: qs.stringify(data)
   });
 }
+
+export function getFaRegister(data) {
+  return request({
+    url: `${ProManageAPIServer}faRegister/getProjInfo`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
+export function editFaRegister(data) {
+  return request({
+    url: `${ProManageAPIServer}faRegister/edit`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
