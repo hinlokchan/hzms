@@ -189,9 +189,34 @@
         >确认更改</el-button>
       </div>
     </el-dialog>
-    <!--////////////////////////////////-->
-    <!--            主体                 -->
-    <!--////////////////////////////////-->
+    <el-dialog
+      title="评估（估价）对象详情"
+      :visible.sync="assemObjDetailVisible"
+    ></el-dialog>
+    <!--
+                          _____                    _____                    _____                    _____          
+                  /\    \                  /\    \                  /\    \                  /\    \         
+                  /::\____\                /::\    \                /::\    \                /::\____\        
+                /::::|   |               /::::\    \               \:::\    \              /::::|   |        
+                /:::::|   |              /::::::\    \               \:::\    \            /:::::|   |        
+              /::::::|   |             /:::/\:::\    \               \:::\    \          /::::::|   |        
+              /:::/|::|   |            /:::/__\:::\    \               \:::\    \        /:::/|::|   |        
+            /:::/ |::|   |           /::::\   \:::\    \              /::::\    \      /:::/ |::|   |        
+            /:::/  |::|___|______    /::::::\   \:::\    \    ____    /::::::\    \    /:::/  |::|   | _____  
+          /:::/   |::::::::\    \  /:::/\:::\   \:::\    \  /\   \  /:::/\:::\    \  /:::/   |::|   |/\    \ 
+          /:::/    |:::::::::\____\/:::/  \:::\   \:::\____\/::\   \/:::/  \:::\____\/:: /    |::|   /::\____\
+          \::/    / ~~~~~/:::/    /\::/    \:::\  /:::/    /\:::\  /:::/    \::/    /\::/    /|::|  /:::/    /
+          \/____/      /:::/    /  \/____/ \:::\/:::/    /  \:::\/:::/    / \/____/  \/____/ |::| /:::/    / 
+                      /:::/    /            \::::::/    /    \::::::/    /                   |::|/:::/    /  
+                      /:::/    /              \::::/    /      \::::/____/                    |::::::/    /   
+                    /:::/    /               /:::/    /        \:::\    \                    |:::::/    /    
+                    /:::/    /               /:::/    /          \:::\    \                   |::::/    /     
+                  /:::/    /               /:::/    /            \:::\    \                  /:::/    /      
+                  /:::/    /               /:::/    /              \:::\____\                /:::/    /       
+                  \::/    /                \::/    /                \::/    /                \::/    /        
+                  \/____/                  \/____/                  \/____/                  \/____/         
+                                                                                                              
+    -->
     <div class="work">
       <div class="work-title">
         <span class="work-title-name">项目信息</span>
@@ -217,6 +242,11 @@
             size="medium"
             @click="handleQRCode()"
           >生成二维码</el-button>
+          <el-button
+            icon="el-icon-document"
+            size="medium"
+            @click="handleReg(projDetail.projId)"
+          >正评登记</el-button>
           <el-button
             icon="el-icon-printer"
             size="medium"
@@ -283,7 +313,7 @@
                 <el-button
                   type="danger"
                   icon="el-icon-circle-close"
-                  @click="handleDelNum"
+                  @click="handleDelNum()"
                 >取消报告号</el-button>
               </span>
             </div>
@@ -371,60 +401,16 @@
       </el-row>
     </div>
     <div class="work-title">
-      <span class="work-title-name">子项目信息</span>
+      <span class="work-title-name">评估（估价）对象详情</span>
       <span class="work-title-button">
         <el-button
-          icon="el-icon-circle-plus-outline"
+          icon="el-icon-info"
           size="medium"
-          @click="handleAddSubProj(reportNum.cph)"
-        >新增子项目(初评)</el-button>
-        <el-button
-          icon="el-icon-circle-plus-outline"
-          size="medium"
-          @click="handleAddSubProj(reportNum.zph)"
-        >新增子项目(正评)</el-button>
+          @click="handleAssemObjDetail()"
+        >生成合同号</el-button>
       </span>
     </div>
     <el-divider></el-divider>
-    <el-table
-      :data="subTableData"
-      border
-    >
-      <el-table-column
-        label="父报告号"
-        width="120"
-        prop="reportNum"
-      ></el-table-column>
-      <el-table-column
-        label="子项目报告号"
-        width="120"
-        prop="subReportNum"
-      ></el-table-column>
-      <el-table-column
-        label="子项目名称"
-        prop="subProjName"
-      ></el-table-column>
-      <el-table-column
-        label="子项目范围"
-        prop="subProjScope"
-      ></el-table-column>
-      <!-- <el-table-column
-        label="基准日"
-        width="120"
-      ></el-table-column> -->
-      <el-table-column
-        label="操作"
-        width="200"
-      >
-        <template slot-scope="scope">
-          <!-- <el-button type="text">查看</el-button> -->
-          <el-button
-            type="text"
-            @click="delSubProj(scope.row)"
-          >删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
     <div class="work-title">
       <span class="work-title-name">项目工作信息</span>
       <span class="work-title-button">
@@ -498,6 +484,61 @@
         </el-card>
       </el-col>
     </el-row>
+    <div class="work-title">
+      <span class="work-title-name">子项目信息</span>
+      <span class="work-title-button">
+        <el-button
+          icon="el-icon-circle-plus-outline"
+          size="medium"
+          @click="handleAddSubProj(reportNum.cph)"
+        >新增子项目(初评)</el-button>
+        <el-button
+          icon="el-icon-circle-plus-outline"
+          size="medium"
+          @click="handleAddSubProj(reportNum.zph)"
+        >新增子项目(正评)</el-button>
+      </span>
+    </div>
+    <el-divider></el-divider>
+    <el-table
+      :data="subTableData"
+      border
+    >
+      <el-table-column
+        label="父报告号"
+        width="120"
+        prop="reportNum"
+      ></el-table-column>
+      <el-table-column
+        label="子项目报告号"
+        width="120"
+        prop="subReportNum"
+      ></el-table-column>
+      <el-table-column
+        label="子项目名称"
+        prop="subProjName"
+      ></el-table-column>
+      <el-table-column
+        label="子项目范围"
+        prop="subProjScope"
+      ></el-table-column>
+      <!-- <el-table-column
+        label="基准日"
+        width="120"
+      ></el-table-column> -->
+      <el-table-column
+        label="操作"
+        width="200"
+      >
+        <template slot-scope="scope">
+          <!-- <el-button type="text">查看</el-button> -->
+          <el-button
+            type="text"
+            @click="delSubProj(scope.row)"
+          >删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
   </div>
 </template>
 
@@ -511,6 +552,7 @@ var ProManageAPIServer = `${host.baseUrl}/${host.ProManageAPIServer}`
 
 export default {
   name: 'workhandle',
+  inject: ['reload'],            //注入App里的reload方法
   data() {
     return {
       queryData: '',
@@ -534,6 +576,7 @@ export default {
       changeTypeVisible: false,
       qrcodeVisible: false,
       getOldNumVisible: false,
+      assemObjDetailVisible: false,
       reportNumSelectVal: 2,
       deleteNumSelectVal: 2,
       getNumType: '',
@@ -639,10 +682,14 @@ export default {
           if (res.statusCode == 200) {
             this.projDetail = res.data
             console.log('projDetail', this.projDetail)
-            this.reportNum = res.data.reportNumList
-            console.log('reportNum', this.reportNum)
-            this.contractNum = res.data.contractNum.contractNum
-            console.log('contractNum', this.contractNum)
+            if (res.data.reportNumList != '') {
+              this.reportNum = res.data.reportNumList
+              console.log('reportNum', this.reportNum)
+            }
+            if (res.data.contractNum != null) {
+              this.contractNum = res.data.contractNum.contractNum
+              console.log('contractNum', this.contractNum)
+            }
             //提取项目组成员
             const leader = this.projDetail.projLeader.split(',')
             const reviewer = this.projDetail.projReviewer.split(',')
@@ -655,8 +702,6 @@ export default {
             console.log('projMember', this.projMember)
           }
           this.$nextTick(() => {
-            // let numVal = JSON.stringify(this.reportNum)
-            // console.log('numval', numVal)
             if (this.reportNum.cph != '' && this.reportNum.zph != '') {
               this.reportNumList = this.reportNum.cph + ',' + this.reportNum.zph
             } else if (this.reportNum.cph == '' && this.reportNum.zph == '') {
@@ -679,6 +724,7 @@ export default {
         })
         .catch(err => {
           this.$message.error('获取项目详细信息失败')
+          console.log('获取项目详情信息失败', err)
         })
 
     },
@@ -715,24 +761,6 @@ export default {
     handleWorkArrg() {
       this.$router.push({ path: '/workarrange', query: { data: this.queryData, projMember: this.projMember, isEdit: this.workArrgEdit } })
     },
-    // submitWorkArrg() {
-    //   console.log(this.workArrgForm)
-    //   //将人员的数组转为字符串
-    //   this.workArrgForm.prePreparationPic = this.workArrgForm.prePreparationPic.join(',')
-    //   this.workArrgForm.fldSrvyPic = this.fldSrvyPic.join(',')
-    //   this.workArrgForm.mktSrvyPic = this.workArrgForm.mktSrvyPic.join(',')
-    //   this.workArrgForm.assemChargePic = this.workArrgForm.assemChargePic.join(',')
-    //   this.workArrgForm.issueValSche = this.workArrgForm.pissueValSche.join(',')
-    //   this.workArrgForm.internalAuditPic = this.workArrgForm.internalAuditPic.join(',')
-    //   this.workArrgForm.commuClientPic = this.workArrgForm.commuClientPic.join(',')
-    //   this.workArrgForm.assemChargePic = this.workArrgForm.assemChargePic.join(',')
-    //   this.workArrgForm.amendFinalPic = this.workArrgForm.amendFinalPic.join(',')
-    //   this.workArrgForm.manuArchivePic = this.workArrgForm.manuArchivePic.join(',')
-    //   setWorkAssignment(this.workArrgForm)
-    //     .then(res => {
-    //       console.log('success')
-    //     })
-    // },
     handleDetail() {
       this.$router.push({ path: '/projcheck', query: { data: this.queryData.projId } })
     },
@@ -767,6 +795,19 @@ export default {
           })
       }
     },
+    handleReg(val) {
+      if (this.projDetail.projType == 1010) {
+        this.$router.push({ path: '/fcformalreg', query: { data: val } })
+      } else if (this.projDetail.projType == 1020) {
+        this.$router.push({ path: '/zcformalreg', query: { data: val } })
+      } else if (this.projDetail.projType == 1030) {
+        this.$router.push({ path: '/tdformalreg', query: { data: val } })
+
+      }
+    },
+    handleAssemObjDetail() {
+      this.assemObjDetailVisible = true
+    },
     handleQRCode() {
       this.qrcodeVisible = true
       this.$nextTick(() => {
@@ -786,46 +827,51 @@ export default {
     },
     handleCreateContractNum() {
       // if (queryData.projType == 1010)let const
-      switch (this.queryData.projType) {
-        case 1010:
-          this.contractNumType = '101'
-          break
-        case 1020:
-          this.contractNumType = '201'
-          break
-        case 1030:
-          this.contractNumType = '301'
-          break
-        case 1041:
-          this.contractNumType = '102'
-          break
-        case 1042:
-          this.contractNumType = '202'
-          break
-        case 1043:
-          this.contractNumType = '302'
-          break
-        case 1050:
-          this.contractNumType = '202'
-          break
-        case 1070:
-          this.contractNumType = '202'
-          break
-        case 1090:
-          this.contractNumType = '202'
-          break
-        case 1100:
-          this.contractNumType = '401'
-          break
+      if (this.contractNum) {
+        this.$message.warning('已存在合同号！')
+      } else {
+        switch (this.queryData.projType) {
+          case 1010:
+            this.contractNumType = '101'
+            break
+          case 1020:
+            this.contractNumType = '201'
+            break
+          case 1030:
+            this.contractNumType = '301'
+            break
+          case 1041:
+            this.contractNumType = '102'
+            break
+          case 1042:
+            this.contractNumType = '202'
+            break
+          case 1043:
+            this.contractNumType = '302'
+            break
+          case 1050:
+            this.contractNumType = '202'
+            break
+          case 1070:
+            this.contractNumType = '202'
+            break
+          case 1090:
+            this.contractNumType = '202'
+            break
+          case 1100:
+            this.contractNumType = '401'
+            break
+        }
+        console.log(this.contractNumType)
+        createContractNum({ projId: this.queryData.projId, contractNumType: this.contractNumType })
+          .then(res => {
+            console.log('createContractNum.res', res)
+            this.reload()
+          })
+          .catch(err => {
+            this.$message.warning('服务器忙，请稍后重试！')
+          })
       }
-      console.log(this.contractNumType)
-      createContractNum({ projId: this.queryData.projId, contractNumType: this.contractNumType })
-        .then(res => {
-          console.log('createContractNum.res', res)
-        })
-        .catch(err => {
-          this.$message.error('服务器忙，获取合同号失败！')
-        })
     },
     handleDeleteContractNum() {
       this.$confirm('即将删除合同号，确定吗？', '提示：即将删除[' + this.contractNum + ']')
@@ -833,6 +879,7 @@ export default {
           deleteContractNum({ contractNum: this.contractNum })
             .then(res => {
               this.$message.success('合同号已删除！')
+              this.reload()
             })
             .catch(err => {
               this.$message.warning('服务器忙，请稍后重试！')
@@ -903,7 +950,7 @@ export default {
       createReportNum({ projId: this.queryData.projId, reportNumType: this.getNumType })
         .then(res => {
           this.$message.success('取号成功')
-          setTimeout("location.reload()", "1000")
+          this.reload()
         })
         .catch(err => {
           if (err.statusCode == 5001) {
@@ -948,7 +995,7 @@ export default {
           .then(res => {
             console.log('oldReportNum', res.data)
             this.$message.success('获取成功')
-            setTimeout("location.reload()", "400")
+            this.reload()
           })
           .catch(err => {
             console.log('oldReportNum.err', err)
@@ -957,7 +1004,7 @@ export default {
       }
 
     },
-    handleDelNum() {
+    handleDelNum(obj) {
       this.delNumVisible = true
     },
     delNum(val) {
@@ -975,7 +1022,7 @@ export default {
           deleteReportNum({ reportNum: this.needDelNum })
             .then(res => {
               this.$message.success('删除成功')
-              setTimeout("location.reload()", "1200")
+              this.reload()
             })
             .catch(err => {
               this.$message.warning('删除失败，请稍后再试')
@@ -1002,7 +1049,7 @@ export default {
           addSubProject(this.subProjForm)
             .then(res => {
               this.$message.success('创建子项目成功')
-              setTimeout("location.reload()", "500")
+              this.reload()
             })
             .catch(err => {
               if (statusCode == 5002) {
@@ -1020,7 +1067,7 @@ export default {
       delSubProject({ reportNum: row.reportNum, subReportNum: row.subReportNum })
         .then(res => {
           this.$message.success('删除子项目成功')
-          setTimeout("location.reload()", "400")
+          this.reload()
         })
         .catch(err => {
           this.$message.warning('删除失败，请稍后重试')

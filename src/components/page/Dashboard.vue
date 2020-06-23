@@ -34,7 +34,7 @@
           <div class="grid-content grid-con-1">
             <i class="el-icon-lx-remind grid-con-icon"></i>
             <div class="grid-cont-right">
-              <div class="grid-num">1234</div>
+              <div class="grid-num">null</div>
               <div>待完成项目数</div>
             </div>
           </div>
@@ -47,7 +47,7 @@
           <div class="grid-content grid-con-2">
             <i class="el-icon-lx-punch grid-con-icon"></i>
             <div class="grid-cont-right">
-              <div class="grid-num">321</div>
+              <div class="grid-num">null</div>
               <div>待归档项目数</div>
             </div>
           </div>
@@ -60,7 +60,7 @@
           <div class="grid-content grid-con-3">
             <i class="el-icon-lx-warn grid-con-icon"></i>
             <div class="grid-cont-right">
-              <div class="grid-num">50</div>
+              <div class="grid-num">null</div>
               <div>紧急项目数</div>
             </div>
           </div>
@@ -76,7 +76,7 @@
         </el-card>
       </el-col>
     </el-row>
-    <el-row :gutter="20">
+    <!-- <el-row :gutter="20">
       <el-col :span="12">
         <el-card shadow="hover">
           <schart
@@ -97,7 +97,7 @@
           ></schart>
         </el-card>
       </el-col>
-    </el-row>
+    </el-row> -->
   </div>
 </template>
 

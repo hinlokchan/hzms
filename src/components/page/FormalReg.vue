@@ -2,7 +2,7 @@
   <div class="container">
     <div class="crumbs">
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item>正评登记</el-breadcrumb-item>
+        <el-breadcrumb-item>估价对象详情</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <!-- <el-card style="width: 50%">

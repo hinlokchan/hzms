@@ -11,137 +11,13 @@
     </div>
     <div class="form-body">
       <el-tabs v-model="activeTab">
-        <el-tab-pane
-          label="计划信息"
-          name="planInfo"
-        >
-          <el-form :model="form">
-            <el-row :gutter="20">
-              <el-col :span="6">
-                <el-form-item label="计划编号">
-                  <el-input
-                    :disabled="true"
-                    v-model="form.projNum"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="项目类型">
-                  <!-- <el-input
-                    :disabled="true"
-                    v-model="form.projType"
-                  ></el-input> -->
-                  <el-select
-                    v-model="form.projType"
-                    :disabled="true"
-                    style="width: 100%"
-                  >
-                    <el-option
-                      v-for="item in projTypeOption"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value"
-                    ></el-option>
-                  </el-select>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="价值时点">
-                  <el-input
-                    :disabled="true"
-                    v-model="form.baseDate"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="合同号">
-                  <el-input
-                    :disabled="true"
-                    v-model="form.contractNum"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="估价项目">
-                  <el-input
-                    :disabled="true"
-                    v-model="form.projName"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="估价对象详细地址">
-                  <el-input
-                    :disabled="true"
-                    v-model="form.projScope"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="估价委托人（产权持有人）">
-                  <el-input
-                    :disabled="true"
-                    v-model="form.incumbrancer"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="委托人">
-                  <el-input
-                    :disabled="true"
-                    v-model="form.clientName"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="委托人联系人">
-                  <el-input
-                    :disabled="true"
-                    v-model="form.clientContact"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="委托人联系人电话">
-                  <el-input
-                    :disabled="true"
-                    v-model="form.clientContactInfo"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-            </el-row>
-          </el-form>
-        </el-tab-pane>
+
         <el-tab-pane
           label="项目信息"
           name="projInfo"
         >
           <el-form :model="form">
             <el-row :gutter="20">
-              <el-col :span="6">
-                <el-form-item label="初评号">
-                  <el-input
-                    :disabled="true"
-                    v-model="form.paReportNum"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="正评号">
-                  <el-input
-                    :disabled="true"
-                    v-model="form.faReportNum"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="分户号（子报告号）">
-                  <el-input
-                    :disabled="true"
-                    v-model="form.subReportNum"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
               <el-col :span="6">
                 <el-form-item label="估价目的">
                   <el-select
@@ -201,14 +77,6 @@
                     style="width: 100%"
                     v-model="form.projCompTime"
                   ></el-date-picker>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="估价方法">
-                  <el-input
-                    :disabled="true"
-                    v-model="form.assemMethod"
-                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -479,7 +347,7 @@
           type="primary"
           @click="onSubmit()"
         >提交</el-button>
-        <el-button>取消</el-button>
+        <el-button @click="goback()">取消</el-button>
       </el-tabs>
     </div>
   </div>
@@ -612,8 +480,8 @@ export default {
     }
   },
   created() {
-
-    this.getDetail()
+    this.projId = this.$route.query.data
+    //this.getDetail()
     //this.splitDetailData()
     this.projTypeOption = projTypeOption
 
@@ -622,7 +490,7 @@ export default {
   },
   methods: {
     getDetail() {
-      getDetailProjInfo({ projId: 1010202005001 })
+      getDetailProjInfo({ projId: this.projId })
         .then(res => {
           this.projDetail = res.data
 
@@ -761,6 +629,9 @@ export default {
       this.form.feeFollowUp = this.form.feeFollowUp.join(',')
 
     },
+    goback() {
+      this.$router.go(-1)
+    }
 
   }
 }

@@ -73,10 +73,7 @@
                 label="项目类型"
                 prop="projType"
               >
-                <el-select
-                  v-model="form.projType"
-                  @change="arrgTypeToEnable"
-                >
+                <el-select v-model="form.projType">
                   <el-option
                     v-for="item in projTypeOption"
                     :key="item.value"
@@ -92,7 +89,6 @@
                 <el-select
                   v-model="form.arrgType"
                   placeholder="请选择"
-                  :disabled="arrgTypeEnable"
                 >
                   <el-option
                     label="轮序"
@@ -505,9 +501,9 @@ export default {
   name: 'oldplanform',
   data() {
     return {
-      arrgTypeEnable: true,
       clientInputTypeChange: false,
       takenDate: '',
+      projTypeOption: [],
       form: {
         projNum: '',
         projDate: '',
@@ -527,7 +523,6 @@ export default {
         supInstruction: '',
         fldSrvyContact: '',
         fldSrvyContactInfo: '',
-        lendingBank: [],
         clientId: '',
         clientName: '',
         clientContact: '',
@@ -559,7 +554,7 @@ export default {
             takenDate: ''
           }
         ],
-        projTypeOption: []
+
       },
       rules: {
         projNum: [
@@ -597,7 +592,7 @@ export default {
         ],
       },
       assemGoalList: ['抵押', '交易', '资产处置（司法鉴定）', '出让', '挂牌出让', '补出让', '转让', '盘整收回', '征收补偿', '活立木拍卖', '出租', '置换', '股权转让', '作价入股', '增资扩股', '入账', '征收、完税', '企业改制', '清算', '复审', '评价', '咨询'],
-      contactTypeOption: ['正常接洽', '摇珠', '中行通知书'],
+      contactTypeOption: ['正常接洽', '摇珠', '中行通知书', '定点采购', '中介超市摇珠']
     }
   },
   created() {
@@ -608,14 +603,6 @@ export default {
 
   },
   methods: {
-    //当项目类型为1010、1030时才可选择安排类型
-    arrgTypeToEnable(val) {
-      if (val == 1010 || val == 1030) {
-        this.arrgTypeEnable = false
-      } else {
-        this.arrgTypeEnable = true
-      }
-    },
     //项目组成员添加、删除组件
     addDomain(type) {
       if (type == 1) {
@@ -700,28 +687,61 @@ export default {
         //没输入正评号的时候传空数组
         this.form.reportNums = null
         console.log('没有填写正评号')
+      }
+      console.log('form', this.form)
 
+      if (this.form.clientName == '' && this.form.clientId == '') {
+        this.$message.warning('请填写联系人')
+      } else {
+        if (this.form.clientId == 141) {
+          this.form.clientId = ''
+        } else {
+          let clientIdMid = this.form.clientId[this.form.clientId.length - 1]
+          this.form.clientId = ''
+          this.form.clientId = clientIdMid
+        }
+        this.$refs.ruleForm.validate((valid) => {
+          if (valid) {
+            this.transformPeop()
+              .then(res => {
+                console.log('form', this.form)
+                setOldProject(this.form)
+                  .then(res => {
+                    this.$message.success('录入成功')
+                    location.reload()
+                    console.log('res', res)
+                  })
+                  .catch(err => {
+                    console.log('err', err)
+                  })
+              })
+          } else {
+            this.$message.warning('请填写必填信息')
+          }
+        })
       }
 
-      this.$refs.ruleForm.validate((valid) => {
-        if (valid) {
-          this.transformPeop()
-            .then(res => {
-              console.log('form', this.form)
-              setOldProject(this.form)
-                .then(res => {
-                  this.$message.success('录入成功')
-                  location.reload()
-                  console.log('res', res)
-                })
-                .catch(err => {
-                  console.log('err', err)
-                })
-            })
-        } else {
-          this.$message.warning('请填写必填信息')
-        }
-      })
+
+
+      // this.$refs.ruleForm.validate((valid) => {
+      //   if (valid) {
+      //     this.transformPeop()
+      //       .then(res => {
+      //         console.log('form', this.form)
+      //         setOldProject(this.form)
+      //           .then(res => {
+      //             this.$message.success('录入成功')
+      //             location.reload()
+      //             console.log('res', res)
+      //           })
+      //           .catch(err => {
+      //             console.log('err', err)
+      //           })
+      //       })
+      //   } else {
+      //     this.$message.warning('请填写必填信息')
+      //   }
+      // })
     },
     //转化项目组成员
     transformPeop() {
@@ -730,12 +750,6 @@ export default {
         //  银行
         // if(!that.isEdit){
         //后端处理好号把这段加回去
-        let lendingBankNew = ''
-        console.log('that.form.lendingBank', that.form.lendingBank[1])
-        if (that.form.lendingBank) {
-          lendingBankNew = that.form.lendingBank[1]
-          that.form.lendingBank = lendingBankNew
-        }
         //}
         //  项目复核人
         let projReviewer = that.form.projReviewer

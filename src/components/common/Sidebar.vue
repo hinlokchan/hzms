@@ -95,16 +95,16 @@ export default {
           index: 'workbranch',
           icon: 'el-icon-receiving',
           title: '工作台',
-          subs: [
-            {
-              index: 'workbranch',
-              title: '我的项目'
-            },
-            // {
-            //   index: 'formalreg',
-            //   title: "正评登记"
-            // },
-          ]
+          // subs: [
+          //   {
+          //     index: 'workbranch',
+          //     title: '我的项目'
+          //   },
+          //   // {
+          //   //   index: 'formalreg',
+          //   //   title: "正评登记"
+          //   // },
+          // ]
         },
         {
           index: 'oldplanform',

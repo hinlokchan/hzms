@@ -6,7 +6,8 @@
           <el-breadcrumb-item>
             <i class="el-icon-lx-calendar"></i> 项目管理
           </el-breadcrumb-item>
-          <el-breadcrumb-item>新增项目计划</el-breadcrumb-item>
+          <el-breadcrumb-item v-if="this.isEdit == false">新增项目计划</el-breadcrumb-item>
+          <el-breadcrumb-item v-else>编辑项目计划</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
       <el-dialog
@@ -466,6 +467,7 @@ import clientOptions from '../../../public/clientName.json'
 import projTypeOption from '../../../public/projTypeOption.json'
 export default {
   name: 'planform',
+  inject: ['reload'],            //注入App里的reload方法
   data() {
     return {
       isEdit: false,
@@ -565,7 +567,7 @@ export default {
     closeNewInfo() {
       this.newInfo = false
       //this.goBack()
-      location.reload()
+      this.reload()
     },
     formatDate(now) {
       const time = new Date(now)
@@ -664,6 +666,27 @@ export default {
       data.baseDate = this.formatDate(data.baseDate)
       data.fldSrvySchedule = this.formatDate(data.fldSrvySchedule)
       this.form = data
+      //转化委托人
+      let value = data.clientId
+      this.searchJsonTree(clientOptions, value)
+      //this.form = data
+    },
+    //遍历clientName.json
+    searchJsonTree(jsonObj, value) {
+      for (let i in jsonObj) {
+        let element = jsonObj[i]
+        if (typeof (element) == 'object') {
+          this.searchJsonTree(element, value)
+        } else {
+          if (element == value) {
+            console.log('result', element)
+            this.form.clientId = element
+            console.log(this.form.clientId)
+          } else {
+            this.clientInputTypeChange = true
+          }
+        }
+      }
     },
     addDomain(type) {
       if (type == 1) {
@@ -724,9 +747,11 @@ export default {
           this.form.clientId = ''
         } else {
           //this.form.clientId = this.form.clientId[this.form.clientId.length - 1]
-          let clientIdMid = this.form.clientId[this.form.clientId.length - 1]
-          this.form.clientId = ''
-          this.form.clientId = clientIdMid
+          if (this.isEdit == false) {
+            let clientIdMid = this.form.clientId[this.form.clientId.length - 1]
+            this.form.clientId = ''
+            this.form.clientId = clientIdMid
+          }
         }
         console.log('form', this.form)
         this.$refs.ruleForm.validate((valid) => {

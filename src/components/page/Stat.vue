@@ -141,6 +141,7 @@ export default {
         document.body.appendChild(elink)
         elink.click()
         document.body.removeChild(elink)
+        
       }
       const fdata = new FormData()
       fdata.append('week', week)
