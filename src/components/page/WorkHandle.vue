@@ -410,6 +410,9 @@
         >生成合同号</el-button>
       </span>
     </div>
+    <el-tabs type="border-card">
+      <el-tab-pane label="项目信息"></el-tab-pane>
+    </el-tabs>
     <el-divider></el-divider>
     <div class="work-title">
       <span class="work-title-name">项目工作信息</span>
