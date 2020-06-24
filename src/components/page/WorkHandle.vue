@@ -192,9 +192,17 @@
     <el-dialog
       title="评估（估价）对象详情"
       :visible.sync="assemObjDetailVisible"
-    ></el-dialog>
+      width="80%"
+    >
+      <el-tabs>
+        <el-tab-pane label="基本信息">
+
+        </el-tab-pane>
+        <el-tab-pane label="房屋信息"></el-tab-pane>
+        <el-tab-pane label="项目信息"></el-tab-pane>
+      </el-tabs>
+    </el-dialog>
     <!--
-                          _____                    _____                    _____                    _____          
                   /\    \                  /\    \                  /\    \                  /\    \         
                   /::\____\                /::\    \                /::\    \                /::\____\        
                 /::::|   |               /::::\    \               \:::\    \              /::::|   |        
@@ -407,12 +415,11 @@
           icon="el-icon-info"
           size="medium"
           @click="handleAssemObjDetail()"
-        >生成合同号</el-button>
+          type="primary"
+        >展开详情</el-button>
       </span>
     </div>
-    <el-tabs type="border-card">
-      <el-tab-pane label="项目信息"></el-tab-pane>
-    </el-tabs>
+
     <el-divider></el-divider>
     <div class="work-title">
       <span class="work-title-name">项目工作信息</span>

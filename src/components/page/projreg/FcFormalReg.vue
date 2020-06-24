@@ -97,6 +97,7 @@
                   <el-input
                     v-model="form.landAssemUnitPrice"
                     oninput="value=value.replace(/[^\d.]/g,'')"
+                    @blur="calculate()"
                   ></el-input>
                 </el-form-item>
               </el-col>
@@ -422,7 +423,9 @@ export default {
         marketEnquiry: [],
         techExpDrafter: [],
         reportDrafter: [],
-        feeFollowUp: []
+        feeFollowUp: [],
+        //test
+
       },
       //项目信息
       // form: {
@@ -489,6 +492,14 @@ export default {
   mounted() {
   },
   methods: {
+    calculate() {
+      console.log(this.form.landAssemUnitPrice)
+      let i = parseFloat(this.form.landAssemUnitPrice)
+      let j = parseFloat(this.form.evalObjAcreage)
+      let m = i * j / 10000
+      m = m.toFixed(2)
+      console.log(m)
+    },
     getDetail() {
       getDetailProjInfo({ projId: this.projId })
         .then(res => {
