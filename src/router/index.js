@@ -76,6 +76,11 @@ export default new Router({
                     meta: { title: '项目工作管理' }
                 },
                 {
+                    path: '/subworkhandle',
+                    component: () => import('../components/page/SubWorkHandle.vue'),
+                    meta: { title: '子项目工作管理' }
+                },
+                {
                     path: '/workarrange',
                     component: () => import('../components/page/WorkArrange.vue'),
                     meta: { title: '工作安排' }

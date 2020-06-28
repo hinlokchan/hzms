@@ -356,7 +356,7 @@
 
 <script>
 import { getDetailProjInfo, getWorkAssignment, } from '@/api/index'
-import { submitFaRegister, getFaRegister, editFaRegister } from '@/api/formalReg'
+import { submitFaRegister, getFaRegister, editFaRegister } from '@/api/formalreg'
 import projTypeOption from '../../../../public/projTypeOption.json'
 import citys from '../../../../public/citys.json'
 export default {
@@ -638,7 +638,6 @@ export default {
       this.form.techExpDrafter = this.form.techExpDrafter.join(',')
       this.form.reportDrafter = this.form.reportDrafter.join(',')
       this.form.feeFollowUp = this.form.feeFollowUp.join(',')
-
     },
     goback() {
       this.$router.go(-1)
