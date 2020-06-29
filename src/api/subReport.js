@@ -15,7 +15,7 @@ export function addSubProject(data) {
 
 export function getSubProjectInfoList(data) {
   return request({
-    url: `${ProManageAPIServer}subProject/getSubProjectInfoList`,
+    url: `${ProManageAPIServer}subProject/getSubProjList`,
     headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
     method: 'post',
     data: qs.stringify(data)

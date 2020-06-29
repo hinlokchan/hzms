@@ -679,9 +679,7 @@ export default {
           this.searchJsonTree(element, value)
         } else {
           if (element == value) {
-            console.log('result', element)
             this.form.clientId = element
-            console.log(this.form.clientId)
           } else {
             this.clientInputTypeChange = true
           }
