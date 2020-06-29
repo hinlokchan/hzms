@@ -562,39 +562,39 @@ export default {
           this.$message.warning('读取项目信息失败，请重试')
         })
     },
-    checkRegister() {
-      getFaRegister({ projId: this.projDetail.projId, registerType: this.form.registerType, subReportNum: this.projDetail.subReportNum })
-        .then(res => {
-          console.log(res)
-          if (res.statusCode == 200) {
-            if (res.data.registered == true) {
-              this.$confirm('该项目已登记，是否要进行编辑？', '提示', {
-                type: 'info'
-              })
-                .then(() => {
-                  this.isReg = true
-                  //进行编辑
-                  this.form = res.data.registerData
-                  this.form.infoVerification = this.form.infoVerification.split(',')
-                  this.form.marketEnquiry = this.form.marketEnquiry.split(',')
-                  this.form.techExpDrafter = this.form.techExpDrafter.split(',')
-                  this.form.reportDrafter = this.form.reportDrafter.split(',')
-                  this.form.feeFollowUp = this.form.feeFollowUp.split(',')
-                  console.log('获取的登记信息', this.form)
+    // checkRegister() {
+    //   getFaRegister({ projId: this.projDetail.projId, registerType: this.form.registerType, subReportNum: this.projDetail.subReportNum })
+    //     .then(res => {
+    //       console.log(res)
+    //       if (res.statusCode == 200) {
+    //         if (res.data.registered == true) {
+    //           this.$confirm('该项目已登记，是否要进行编辑？', '提示', {
+    //             type: 'info'
+    //           })
+    //             .then(() => {
+    //               this.isReg = true
+    //               //进行编辑
+    //               this.form = res.data.registerData
+    //               this.form.infoVerification = this.form.infoVerification.split(',')
+    //               this.form.marketEnquiry = this.form.marketEnquiry.split(',')
+    //               this.form.techExpDrafter = this.form.techExpDrafter.split(',')
+    //               this.form.reportDrafter = this.form.reportDrafter.split(',')
+    //               this.form.feeFollowUp = this.form.feeFollowUp.split(',')
+    //               console.log('获取的登记信息', this.form)
 
-                })
-                .catch(() => {
-                  this.$router.go(-1)
-                })
-            }
-          } else {
-            this.$message.warning('服务器忙，请稍后重试')
-          }
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    },
+    //             })
+    //             .catch(() => {
+    //               this.$router.go(-1)
+    //             })
+    //         }
+    //       } else {
+    //         this.$message.warning('服务器忙，请稍后重试')
+    //       }
+    //     })
+    //     .catch(err => {
+    //       console.log(err)
+    //     })
+    // },
     onSubmit() {
       //有时间写更好的
       if (this.form.evalObjAcreage == '') {

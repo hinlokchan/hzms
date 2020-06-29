@@ -516,7 +516,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="标准收费">
+            <el-form-item label="标准收费（元）">
               <el-input
                 v-model="regForm.standardFee"
                 :disabled="true"
@@ -524,16 +524,13 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="应收费">
+            <el-form-item label="应收费（元）">
               <el-input v-model="regForm.actualFee"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="资料收集及验证">
-              <el-checkbox-group
-                v-model="regForm.infoVerification"
-                oninput="value=value.replace(/[^\d.]/g,'')"
-              >
+              <el-checkbox-group v-model="regForm.infoVerification">
                 <el-checkbox
                   v-for="item in projMember"
                   :key="item"
@@ -557,7 +554,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="技术说明">
-              <el-checkbox-group v-model="regForm.techExpDrafter">
+              <el-checkbox-group v-model="regForm.techExp">
                 <el-checkbox
                   v-for="item in projMember"
                   :key="item"
@@ -603,12 +600,36 @@
               </el-checkbox-group>
             </el-form-item>
           </el-col>
+          <el-col :span="6">
+            <el-form-item label="助理（归档）">
+              <el-checkbox-group v-model="regForm.projAsst">
+                <el-checkbox
+                  v-for="item in projMember"
+                  :key="item"
+                  :label="item"
+                  style="width: 100%"
+                ></el-checkbox>
+              </el-checkbox-group>
+            </el-form-item>
+          </el-col>
         </el-row>
       </el-form>
+      <div slot="footer">
+        <el-button
+          type="text"
+          @click="formalRegVisible = false"
+        >取 消</el-button>
+        <el-button
+          type="primary"
+          @click="submitFormalReg()"
+        >确认提交</el-button>
+      </div>
     </el-dialog>
-    <fc-reg-dialog
+    <fc-obj-detail-dialog
       :show.sync="fcDialogVisible"
       :obj="assemObjForm"
+      :isEdit="assemObjIsEdit"
+      :projId="projDetail.projId"
     />
     <!--
                   /\    \                  /\    \                  /\    \                  /\    \         
@@ -658,11 +679,11 @@
             size="medium"
             @click="handleQRCode()"
           >生成二维码</el-button>
-          <el-button
+          <!-- <el-button
             icon="el-icon-document"
             size="medium"
             @click="isFcDialogVisible()"
-          >正评登记</el-button>
+          >正评登记</el-button> -->
           <el-button
             icon="el-icon-printer"
             size="medium"
@@ -860,6 +881,12 @@
               </span>
             </div>
             <h4>Tips:取二维码前请先进行登记</h4>
+            <div class="text item">
+              <div class="item">
+                <span v-if="this.statusInfo.registerState == false">正评登记：未登记</span>
+                <span v-else>正评登记：已登记</span>
+              </div>
+            </div>
           </el-card>
         </el-col>
       </el-row>
@@ -868,6 +895,14 @@
       <span class="work-title-name">评估（估价）对象详情</span>
       <span class="work-title-button">
         <el-button
+          v-if="this.projDetail.projType == 1010"
+          icon="el-icon-info"
+          size="medium"
+          @click="isFcDialogVisible()"
+          type="text"
+        >展开详情</el-button>
+        <el-button
+          v-if="this.projDetail.projType == 1020"
           icon="el-icon-info"
           size="medium"
           @click="isFcDialogVisible()"
@@ -1017,16 +1052,17 @@ import QRCode from 'qrcodejs2'
 import { editProject, getDetailProjInfo, getWorkAssignment, setWorkAssignment, createReportNum, deleteReportNum, alterProjType, getProjInfoTable, getOldReportNum, createContractNum, deleteContractNum } from '@/api/index'
 import { addSubProject, getSubProjectInfoList, delSubProject } from '@/api/subReport'
 import { getEvalObjDetail } from '@/api/assemobjdetail'
+import { checkFaRegister, submitFaRegister, editFaRegister } from '@/api/formalreg'
 import projTypeOption from '../../../public/projTypeOption.json'
 import { host } from '@/config'
-import FcRegDialog from './FcRegDialog'
+import FcObjDetailDialog from './AssemObjDetailDialog/FcObjDetailDialog'
 var ProManageAPIServer = `${host.baseUrl}/${host.ProManageAPIServer}`
 
 export default {
   name: 'workhandle',
   inject: ['reload'],            //注入App里的reload方法
   components: {
-    FcRegDialog
+    FcObjDetailDialog
   },
   data() {
     return {
@@ -1180,18 +1216,28 @@ export default {
         // feeFollowUp: []
       },
       regForm: {
+        projId: '',
+        subReportNum: '',
+        
         projCompTime: '',
         standardFee: '',
         actualFee: '',
         //人员信息
         infoVerification: [],
         marketEnquiry: [],
-        techExpDrafter: [],
+        techExp: [],
         reportDrafter: [],
         feeFollowUp: [],
-        signedAppraiser: []
+        signedAppraiser: [],
+        projAsst: []
       },
-      assemObjForm: {}
+      assemObjForm: {},
+      assemObjIsEdit: false,
+      statusInfo: {
+        registerState: false,
+        evalObjState: false
+      },
+      regInfo: {}
       // assemGoalOption: ['房地产转让价格评估', '房地产分割、合并评估', '房地产纠纷估价', '房地产保险估价', '土地使用权出让价格评估', '房地产拍卖底价评估', '房地产抵押价值评估', '房地产课税估价', '房地产租赁价格评估', '企业各种经济活动中涉及的房地产估价', '其他目的的房地产估价'],
       // priceTypeOption: ['成交价格', '正常价格', '市场价格', '评估价值', '市场价值', '投资价值', '现状价值', '快速变现价值', '残余价值', '抵押价值', '抵押净值', '法定优先受偿款', '计税价值', '保险价值', '完全产权价值', '无租约限制价值', '出租人权益价值', '承租人权益价值', '建筑物价值', '土地价值', '楼面地价'],
       // housePurposeOption: ['住宅', '宗教', '园林绿化', '工业、交通、仓储', '别墅', '涉外', '医疗卫生', '文化、娱乐、体育', '公共运输', '新闻', '娱乐', '监狱', '集体宿舍', '成套住宅', '商业服务', '旅游', '军事', '体育', '物管用房', '铁路', '非成套住宅', '工业', '文化', '仓储', '电讯信息', '教育', '教育、医疗、卫生、可研', '民航', '高档公寓', '科研', '公共设施', '商业、金融、信息', '航运', '金融保险', '其他', '办公', '经营'],
@@ -1201,7 +1247,7 @@ export default {
       // houseModelOption: ['一居室', '二居室', '三居室', '四居室', '五居室', '其他'],
       // houseDirectionOption: ['东北', '东南', '西北', '西南', '东', '南', '西', '北', '西南双面', '东南双面', '南北通透双面', '其他通透双面', '其他非通透双面', '其他'],
       // houseDecorationOption: ['粗装修', '毛坯', '精装修']
-      
+
     }
   },
   created() {
@@ -1218,11 +1264,12 @@ export default {
     }
     //调项目详情接口
     this.getDetail()
+
     //调工作安排接口
 
     this.getWorkAssignmentData()
     //子项目信息接口
-
+    //this.check()
   },
   mounted() {
   },
@@ -1277,13 +1324,40 @@ export default {
             //   .catch(err => {
             //     console.log('failed to getSubProjectInfoList', err)
             //   })
+            this.check()
           })
         })
         .catch(err => {
           this.$message.error('获取项目详细信息失败')
           console.log('获取项目详情信息失败', err)
         })
-
+    },
+    check() {
+      checkFaRegister({ projId: this.projDetail.projId, subReportNum: '-' })
+        .then(res => {
+          console.log(res)
+          if (res.data.registerState == true && res.data.evalObjState == true) {
+            this.statusInfo.registerState = res.data.registerState
+            this.statusInfo.evalObjState = res.data.evalObjState
+            // this.regForm = res.data.registerInfo
+            // this.regForm.infoVerification = this.regForm.infoVerification.split(',')
+            // this.regForm.marketEnquiry = this.regForm.marketEnquiry.split(',')
+            // this.regForm.techExp = this.regForm.techExp.split(',')
+            // this.regForm.reportDrafter = this.regForm.reportDrafter.split(',')
+            // this.regForm.feeFollowUp = this.regForm.feeFollowUp.split(',')
+            // this.regForm.signedAppraiser = this.regForm.signedAppraiser.split(',')
+            // this.regForm.projAsst = this.regForm.projAsst.split(',')
+            console.log(res)
+          } else {
+            this.statusInfo.registerState = res.data.registerState
+            this.statusInfo.evalObjState = res.data.evalObjState
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      console.log('statusInfo', this.statusInfo)
+      console.log('regInfo', this.regInfo)
     },
     getWorkAssignmentData() {
       getWorkAssignment({ projId: this.queryData.projId })
@@ -1353,7 +1427,65 @@ export default {
       }
     },
     handleFormalReg() {
-      this.formalRegVisible = true
+      if (this.statusInfo.evalObjState == false) {
+        this.$message.warning('请先填写评估（估价）对象详情')
+      } else {
+        getEvalObjDetail({ projId: this.projDetail.projId, subReportNum: '-' })
+          .then(res => {
+            let i = res.data.projTotalValue
+            if (i <= 100) {
+              this.regForm.standardFee = (i * 0.005) * 10000
+            } else if (i <= 1000) {
+              this.regForm.standardFee = (i * 0.0025 + 0.25) * 10000
+            } else if (i <= 2000) {
+              this.regForm.standardFee = (i * 0.0015 + 1.25) * 10000
+            } else if (i <= 5000) {
+              this.regForm.standardFee = (i * 0.0008 + 2.65) * 10000
+            } else if (i <= 8000) {
+              this.regForm.standardFee = (i * 0.0004 + 4.65) * 10000
+            } else if (i <= 10000) {
+              this.regForm.standardFee = (i * 0.0002 + 6.25) * 10000
+            } else if (i > 10000) {
+              this.regForm.standardFee = (i * 0.0001 + 7.25) * 10000
+            }
+          })
+        this.formalRegVisible = true
+      }
+    },
+    submitFormalReg() {
+      if (this.statusInfo.registerState == false) {
+        this.regForm.projId = this.projDetail.projId
+        this.regForm.subReportNum = this.projDetail.subReportNum
+        //
+        this.regForm.infoVerification = this.regForm.infoVerification.join(',')
+        this.regForm.marketEnquiry = this.regForm.marketEnquiry.join(',')
+        this.regForm.techExp = this.regForm.techExp.join(',')
+        this.regForm.reportDrafter = this.regForm.reportDrafter.join(',')
+        this.regForm.feeFollowUp = this.regForm.feeFollowUp.join(',')
+        this.regForm.signedAppraiser = this.regForm.signedAppraiser.join(',')
+        this.regForm.projAsst = this.regForm.projAsst.join(',')
+        console.log(this.regForm)
+        submitFaRegister(this.regForm)
+          .then(res => {
+            console.log('addRes', res)
+            this.reload()
+          })
+          .catch(err => {
+            this.$message.error('服务器忙，请稍后重试')
+            console.log(err)
+          })
+      } else {
+        editFaRegister({ registerId: this.regInfo.registerId })
+          .then(res => {
+            console.log('editRes', res)
+            this.reload()
+          })
+          .catch(err => {
+            this.$message.error('服务器忙，请稍后重试')
+            console.log(err)
+          })
+
+      }
     },
     handleAssemObjDetail() {
       this.assemObjDetailVisible = true
@@ -1652,10 +1784,18 @@ export default {
     // },
     //
     isFcDialogVisible() {
-      getEvalObjDetail({projId: this.projDetail.projId, subReportNum: '-'})
+      getEvalObjDetail({ projId: this.projDetail.projId, subReportNum: '-' })
         .then(res => {
           console.log('估价对象详情res', res)
-          this.assemObjForm = res.data
+          if (res.data == null) {
+            console.log('用添加')
+            this.assemObjIsEdit = false
+          } else {
+            console.log('用编辑')
+            this.assemObjIsEdit = true
+            this.assemObjForm = res.data
+          }
+          //this.assemObjForm = res.data
         })
         .catch(err => {
           console.log('估价对象详情err', err)

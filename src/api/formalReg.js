@@ -13,9 +13,9 @@ export function submitFaRegister(data) {
   });
 }
 
-export function getFaRegister(data) {
+export function checkFaRegister(data) {
   return request({
-    url: `${ProManageAPIServer}faRegister/getProjInfo`,
+    url: `${ProManageAPIServer}faRegister/preVerdict`,
     headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
     method: 'post',
     data: qs.stringify(data)

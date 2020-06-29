@@ -9,10 +9,7 @@
   >
     <el-tabs>
       <el-tab-pane label="基本信息">
-        <el-form
-          :model="form"
-          :disabled="this.isReg"
-        >
+        <el-form :model="form">
           <el-row :gutter="20">
             <el-col :span="6">
               <el-form-item label="估价目的">
@@ -67,15 +64,15 @@
                 <el-input v-model="form.evalObjCommunity"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="6">
+            <!-- <el-col :span="6">
               <el-form-item label="项目完成时间">
                 <el-date-picker
                   style="width: 100%"
                   v-model="form.projCompTime"
                 ></el-date-picker>
               </el-form-item>
-            </el-col>
-            <el-col :span="6">
+            </el-col> -->
+            <el-col :span="12">
               <el-form-item label="估价方法说明">
                 <el-input v-model="form.assemMethodExp"></el-input>
               </el-form-item>
@@ -93,7 +90,7 @@
                 <el-input
                   v-model="form.landAssemUnitPrice"
                   oninput="value=value.replace(/[^\d.]/g,'')"
-                  @blur="calculate(form.evalObjAcreage, form.landAssemUnitPrice, 1)"
+                  @input="calculate(form.evalObjAcreage, form.landAssemUnitPrice, 1)"
                 ></el-input>
               </el-form-item>
             </el-col>
@@ -110,7 +107,7 @@
                 <el-input
                   v-model="form.buildingAssemUnitPrice"
                   oninput="value=value.replace(/[^\d.]/g,'')"
-                  @blur="calculate(form.evalObjArea, form.buildingAssemUnitPrice, 2)"
+                  @input="calculate(form.evalObjArea, form.buildingAssemUnitPrice, 2)"
                 ></el-input>
               </el-form-item>
             </el-col>
@@ -254,7 +251,6 @@
           </el-row>
         </el-form>
       </el-tab-pane>
-
       <el-button
         type="primary"
         @click="onSubmit"
@@ -266,43 +262,45 @@
 
 <script>
 import { getUserList } from '@/api/index'
-import { submitFaRegister, getFaRegister, editFaRegister } from '@/api/formalreg'
+import { submitEvalObjDetail, editEvalObjDetail } from '@/api/assemobjdetail'
 import { Form } from 'element-ui'
 export default {
-  name: 'FcRegDialog',
+  name: 'FcObjDetailDialog',
+  inject: ['reload'], 
   props: {
     show: { type: Boolean, default: false },
+    isEdit: { type: Boolean, default: false },
     obj: {
       type: Object
-    }
+    },
+    projId: { type: Number },
   },
 
   data() {
     return {
       visible: this.show,
       //
-      isReg: false,
+      edit: false,
       form: {
         projId: '',
-        registerType: '',
-        registerId: '',
         //基本信息
-        paReportNum: '',
-        faReportNum: '',
-        subReportNum: '',
+        subReportNum: '-',
+        //
         evalGoal: '',
         valueType: '',
         evalObjCount: '',
         evalObjCity: '',
         evalObjAdminRegion: '',
         evalObjCommunity: '',
+        evalMethod: '',
+        evalMethodExp: '',
 
-        assemGoal: '',
-        assemGoalExp: '',
         evalObjAcreage: 0,
         landAssemUnitPrice: 0,
         evalObjArea: 0,
         buildingAssemUnitPrice: 0,
+        projTotalAcreage: 0,
+        projTotalArea: 0,
         landTotalValue: 0,
         buildingTotalValue: 0,
         evalObjTotalAssemValue: 0,
@@ -336,32 +334,63 @@ export default {
         this.visible = this.show
       }
     },
-    obj: {
+    isEdit: {
       immediate: true,
-      handler(obj) {
-        if (obj == null) {
-          console.log('新建详情')
-        } else {
+      handler(isEdit) {
+        console.log('propIsEdit', isEdit)
+        if (isEdit == true) {
           this.form = this.obj
         }
       }
-
-    }
+    },
+    projId: {
+      immediate: true,
+      handler(projId) {
+        this.form.projId = projId
+        this.form.subReportNum = '-'
+      }
+    },
   },
   methods: {
     onClose() {
       this.$emit('update:show', false)
     },
     onSubmit() {
+      console.log(this.form)
+      console.log(this.isEdit)
+      if (this.isEdit) {
+        editEvalObjDetail(this.form)
+          .then(res => {
+            console.log('edit', res)
+            this.$message.success('提交成功')
+            this.reload()
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      } else {
+        submitEvalObjDetail(this.form)
+          .then(res => {
+            console.log('submit', res)
+            this.$message.success('提交成功')
+            this.reload()
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
+
     },
     calculate(i, j, id) {
       if (i != '' && j != '') {
         switch (id) {
           case 1:
             this.form.landTotalValue = (i * j / 10000).toFixed(2)
+            this.form.projTotalAcreage = this.form.landTotalValue
             break
           case 2:
             this.form.buildingTotalValue = (i * j / 10000).toFixed(2)
+            this.form.projTotalArea = this.form.buildingTotalValue
             break
         }
         this.form.evalObjTotalAssemValue = (parseFloat(this.form.landTotalValue) + parseFloat(this.form.buildingTotalValue)).toFixed(2)

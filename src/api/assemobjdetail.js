@@ -12,3 +12,21 @@ export function getEvalObjDetail(data) {
     data: qs.stringify(data)
   });
 }
+
+export function submitEvalObjDetail(data) {
+  return request({
+    url: `${ProManageAPIServer}evalObjDetail/add`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
+export function editEvalObjDetail(data) {
+  return request({
+    url: `${ProManageAPIServer}evalObjDetail/edit`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
