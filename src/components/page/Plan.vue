@@ -4,7 +4,7 @@
       <div class="crumbs">
         <el-breadcrumb separator="/">
           <el-breadcrumb-item>
-            <span style="vertical-align: middle">项目管理</span>
+            <span style="vertical-align: middle">查看项目</span>
             <el-button
               type="primary"
               icon="el-icon-plus"

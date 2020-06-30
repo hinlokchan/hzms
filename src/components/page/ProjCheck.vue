@@ -262,78 +262,8 @@
                 </div>
               </el-card>
             </el-col>
-
-            <!-- <el-row>
-              <el-col :span="3">
-                <div class="projTitle">项目负责人</div>
-              </el-col>
-              <el-col :span="9">
-                <div class="projContent">{{detailData.projLeader}}</div>
-              </el-col>
-            </el-row>
-            <el-col :span="3">
-              <div class="projTitle">项目复核人</div>
-            </el-col>
-            <el-col :span="9">
-              <div class="projContent">{{detailData.projReviewer}}</div>
-            </el-col>
-            <el-col :span="3">
-              <div class="projTitle">专业复核人</div>
-            </el-col>
-            <el-col :span="9">
-              <div class="projContent">{{detailData.projProReviewer}}</div>
-            </el-col> -->
-            <!-- <el-col :span="3">
-              <div class="projTitle">现勘调查人员</div>
-            </el-col>
-            <el-col :span="9">
-              <div class="projContent">{{detailData.fieldSrvy}}</div>
-            </el-col>
-            <el-col :span="3">
-              <div class="projTitle">资料核查验证人员</div>
-            </el-col>
-            <el-col :span="9">
-              <div class="projContent">{{detailData.infoVerification}}</div>
-            </el-col>
-            <el-col :span="3">
-              <div class="projTitle">市场询价调查人员</div>
-            </el-col>
-            <el-col :span="9">
-              <div class="projContent">{{detailData.marketEnquiry}}</div>
-            </el-col> -->
-            <!-- <el-col :span="3">
-              <div class="projTitle">项目助理</div>
-            </el-col>
-            <el-col :span="9">
-              <div class="projContent">{{detailData.projAsst}}</div>
-            </el-col> -->
-            <!-- <el-col :span="3">
-              <div class="projTitle">技术说明拟稿人</div>
-            </el-col>
-            <el-col :span="9">
-              <div class="projContent">{{detailData.techExpDrafter}}</div>
-            </el-col>
-            <el-col :span="3">
-              <div class="projTitle">外聘专家</div>
-            </el-col>
-            <el-col :span="9">
-              <div class="projContent">{{detailData.externalExpert}}</div>
-            </el-col>
-            <el-col :span="3">
-              <div class="projTitle">报告拟稿人</div>
-            </el-col>
-            <el-col :span="9">
-              <div class="projContent">{{detailData.reportDrafter}}</div>
-            </el-col>
-            <el-col :span="3">
-              <div class="projTitle">指导员</div>
-            </el-col>
-            <el-col :span="9">
-              <div class="projContent">{{detailData.instructor}}</div>
-            </el-col> -->
           </el-row>
         </div>
-
       </div>
     </div>
   </div>

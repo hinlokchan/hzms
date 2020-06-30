@@ -4,7 +4,7 @@ const port = 8080
 let publicPath = '/'
 switch (modeEnv) {
   case 'production':
-    publicPath = '/hzms/hzht'
+    publicPath = '/'
     break
   case 'test':
     publicPath = '/hzms/hzht'

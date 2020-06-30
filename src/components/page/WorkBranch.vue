@@ -15,7 +15,7 @@
             <div class="grid-content grid-con-1">
               <i class="el-icon-lx-edit grid-con-icon"></i>
               <div class="grid-cont-right">
-                <div class="grid-num">1234</div>
+                <div class="grid-num"></div>
                 <div>待完成项目数</div>
               </div>
             </div>
@@ -26,7 +26,7 @@
             <div class="grid-content grid-con-3">
               <i class="el-icon-lx-warn grid-con-icon"></i>
               <div class="grid-cont-right">
-                <div class="grid-num">50</div>
+                <div class="grid-num"></div>
                 <div>紧急项目数</div>
               </div>
             </div>
@@ -37,7 +37,7 @@
             <div class="grid-content grid-con-2">
               <i class="el-icon-lx-punch grid-con-icon"></i>
               <div class="grid-cont-right">
-                <div class="grid-num">100</div>
+                <div class="grid-num"></div>
                 <div>待归档项目数</div>
               </div>
             </div>

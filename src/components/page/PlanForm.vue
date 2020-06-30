@@ -1,7 +1,10 @@
 <template>
   <div>
     <div class="container">
-      <el-page-header @back="goBack"></el-page-header>
+      <el-page-header
+        @back="goBack"
+        style="margin-bottom: 15px"
+      ></el-page-header>
       <div class="crumbs">
         <el-breadcrumb separator="/">
           <el-breadcrumb-item>
@@ -85,14 +88,17 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="6">
+
+            <!-- <el-col :span="6">
               <el-form-item
                 label="接洽人"
                 prop="projContact"
               >
                 <el-input v-model="form.projContact"></el-input>
               </el-form-item>
-            </el-col>
+            </el-col> -->
+          </el-row>
+          <el-row :gutter="20">
             <el-col :span="6">
               <el-form-item
                 label="委托人"
@@ -104,7 +110,7 @@
                   v-model="form.clientId"
                   :options="clientOptions"
                   :props="{ expandTrigger: 'hover' }"
-                  style="width: 90%"
+                  style="width: 85%"
                   @change="selectToInput()"
                   filterable
                 >
@@ -151,12 +157,18 @@
                 <el-input v-model="form.clientContactInfo"></el-input>
               </el-form-item>
             </el-col>
+          </el-row>
+          <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item
                 label="项目名称"
                 prop="projName"
               >
-                <el-input v-model="form.projName"></el-input>
+                <el-input
+                  v-model="form.projName"
+                  maxlength="200"
+                  show-word-limit
+                ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -174,7 +186,11 @@
                 label="评估范围"
                 prop="projScope"
               >
-                <el-input v-model="form.projScope"></el-input>
+                <el-input
+                  v-model="form.projScope"
+                  maxlength="200"
+                  show-word-limit
+                ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -345,13 +361,14 @@
                 <el-input v-model="form.projLeader"></el-input>
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-row :gutter="20">
+            <!-- </el-row>
+          <el-row :gutter="20"> -->
             <el-col :span="6">
               <el-form-item
-                v-for="(item, index) in form.projReviewer"
-                :label="'项目复核人' + (index + 1)"
+                v-for="(item, index) in form.projContact"
+                :label="'接洽人' + (index + 1)"
                 :key="index"
+                prop="projContact"
               >
                 <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
                 <div class="flexBox">
@@ -370,6 +387,32 @@
                   class="el-icon-lx-roundadd"
                   style="font-size: 26px;color:#b5b5b5"
                   @click="addDomain(1)"
+                ></i>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item
+                v-for="(item, index) in form.projReviewer"
+                :label="'项目复核人' + (index + 1)"
+                :key="index"
+              >
+                <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
+                <div class="flexBox">
+                  <el-input
+                    style="width:90%"
+                    v-model="item.value"
+                  ></el-input><i
+                    class="el-icon-lx-roundclose"
+                    style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5"
+                    @click.prevent="removeDomain(index, 5)"
+                  ></i>
+                </div>
+              </el-form-item>
+              <el-form-item>
+                <i
+                  class="el-icon-lx-roundadd"
+                  style="font-size: 26px;color:#b5b5b5"
+                  @click="addDomain(5)"
                 ></i>
               </el-form-item>
             </el-col>
@@ -484,7 +527,7 @@ export default {
         test: '',
         projType: '',
         projName: '',
-        projContact: '',
+        projContact: [{ value: '' }],
         projContactType: '正常接洽',
         projDate: '',
         newOldType: '1001',
@@ -605,6 +648,36 @@ export default {
       })
     },
     dealEditData(data) {
+      // 接洽人
+      if (data.projContact !== '') {
+        if (data.projContact.indexOf(',') !== -1) {
+          let midData = data.projContact.split(',')
+          let endData = []
+          for (let i = 0; i < midData.length; i++) {
+            endData.push({ value: midData[i] })
+          }
+          data.projContact = endData
+        } else {
+          data.projContact = [{ value: data.projContact }]
+        }
+      } else {
+        data.projContact = [{ value: '' }]
+      }
+      //  专业复核人
+      if (data.projProReviewer !== '') {
+        if (data.projProReviewer.indexOf(',') !== -1) {
+          let midData = data.projProReviewer.split(',')
+          let endData = []
+          for (let i = 0; i < midData.length; i++) {
+            endData.push({ value: midData[i] })
+          }
+          data.projProReviewer = endData
+        } else {
+          data.projProReviewer = [{ value: data.projProReviewer }]
+        }
+      } else {
+        data.projProReviewer = [{ value: '' }]
+      }
       // 项目复核人
       if (data.projReviewer !== '') {
         if (data.projReviewer.indexOf(',') !== -1) {
@@ -708,6 +781,10 @@ export default {
         this.form.fieldSrvy.push({
           value: ''
         });
+      } else if (type == 5) {
+        this.form.projContact.push({
+          value: ''
+        });
       }
     },
     removeDomain(index, type) {
@@ -726,6 +803,10 @@ export default {
       } else if (type == 4) {
         if (this.form.fieldSrvy.length !== 1 && this.form.fieldSrvy.length !== 0) {
           this.form.fieldSrvy.splice(index, 1)
+        }
+      } else if (type == 5) {
+        if (this.form.projContact.length !== 1 && this.form.projContact.length !== 0) {
+          this.form.projContact.splice(index, 1)
         }
       }
     },

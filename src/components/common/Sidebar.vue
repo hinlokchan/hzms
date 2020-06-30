@@ -132,11 +132,11 @@ export default {
           title: "统计管理"
         },
 
-        // {
-        //   index: 'usermanage',
-        //   icon: 'el-icon-user',
-        //   title: '用户管理'
-        // },
+        {
+          index: 'usermanage',
+          icon: 'el-icon-user',
+          title: '用户管理'
+        },
         // {
         //     icon: 'el-icon-lx-copy',
         //     index: 'tabs',

@@ -1381,67 +1381,77 @@ export default {
     },
     handleCreateContractNum() {
       // if (queryData.projType == 1010)let const
-      if (this.contractNum) {
-        this.$message.warning('已存在合同号！')
-      } else {
-        switch (this.queryData.projType) {
-          case 1010:
-            this.contractNumType = '101'
-            break
-          case 1020:
-            this.contractNumType = '201'
-            break
-          case 1030:
-            this.contractNumType = '301'
-            break
-          case 1041:
-            this.contractNumType = '102'
-            break
-          case 1042:
-            this.contractNumType = '202'
-            break
-          case 1043:
-            this.contractNumType = '302'
-            break
-          case 1050:
-            this.contractNumType = '202'
-            break
-          case 1070:
-            this.contractNumType = '202'
-            break
-          case 1090:
-            this.contractNumType = '202'
-            break
-          case 1100:
-            this.contractNumType = '401'
-            break
-        }
-        console.log(this.contractNumType)
-        createContractNum({ projId: this.queryData.projId, contractNumType: this.contractNumType })
-          .then(res => {
-            console.log('createContractNum.res', res)
-            this.reload()
-          })
-          .catch(err => {
-            this.$message.warning('服务器忙，请稍后重试！')
-          })
-      }
+      this.$confirm('即将获取合同号', '提示', { type: 'info' })
+        .then(() => {
+          if (this.contractNum) {
+            this.$message.warning('已存在合同号！')
+          } else {
+            switch (this.queryData.projType) {
+              case 1010:
+                this.contractNumType = '101'
+                break
+              case 1020:
+                this.contractNumType = '201'
+                break
+              case 1030:
+                this.contractNumType = '301'
+                break
+              case 1041:
+                this.contractNumType = '102'
+                break
+              case 1042:
+                this.contractNumType = '202'
+                break
+              case 1043:
+                this.contractNumType = '302'
+                break
+              case 1050:
+                this.contractNumType = '202'
+                break
+              case 1070:
+                this.contractNumType = '202'
+                break
+              case 1090:
+                this.contractNumType = '202'
+                break
+              case 1100:
+                this.contractNumType = '401'
+                break
+            }
+            console.log(this.contractNumType)
+            createContractNum({ projId: this.queryData.projId, contractNumType: this.contractNumType })
+              .then(res => {
+                console.log('createContractNum.res', res)
+                this.reload()
+              })
+              .catch(err => {
+                this.$message.warning('服务器忙，请稍后重试！')
+              })
+          }
+        })
+        .catch(() => { })
+
+
     },
     handleDeleteContractNum() {
-      this.$confirm('即将删除合同号，确定吗？', '提示：即将删除[' + this.contractNum + ']')
-        .then(() => {
-          deleteContractNum({ contractNum: this.contractNum })
-            .then(res => {
-              this.$message.success('合同号已删除！')
-              this.reload()
-            })
-            .catch(err => {
-              this.$message.warning('服务器忙，请稍后重试！')
-            })
-        })
-        .catch(() => {
-          { }
-        })
+      if (this.projDetail.contractNum == null) {
+        this.$message.warning('尚未获取合同号')
+      } else {
+        this.$confirm('即将删除合同号，确定吗？', '提示：即将删除[' + this.contractNum + ']', { type: 'error' })
+          .then(() => {
+            deleteContractNum({ contractNum: this.contractNum })
+              .then(res => {
+                this.$message.success('合同号已删除！')
+                this.reload()
+              })
+              .catch(err => {
+                this.$message.warning('服务器忙，请稍后重试！')
+              })
+          })
+          .catch(() => {
+            { }
+          })
+      }
     },
     handlePrintProj(val) {
       //伪加载中，防止重复提交请求
