@@ -28,6 +28,15 @@ export function logout(data) {
   });
 }
 
+export function touch(data) {
+  return request({
+    url: `${ProManageAPIServer}user/isAuthenticated`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
 export function getAllAbstractProject(data) {
   return request({
     url: `${ProManageAPIServer}project/getAllAbstractProjInfoList`,

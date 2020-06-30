@@ -102,7 +102,7 @@
 </template>
 
 <script>
-import { getUserList } from '@/api/index'
+import { touch } from '@/api/index'
 import Schart from 'vue-schart';
 import bus from '../common/bus';
 export default {
@@ -231,7 +231,7 @@ export default {
     }
   },
   created() {
-    this.getData()
+    this.touchAPI()
   },
   components: {
     Schart
@@ -260,14 +260,10 @@ export default {
         item.name = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
       });
     },
-    getData() {
-      getUserList()
-        .then(res => {
-          console.log(res);
-        })
-        .catch(err => {
-
-        })
+    touchAPI() {
+      touch()
+        .then(res => { })
+        .catch(err => { })
     }
     // handleListener() {
     //     bus.$on('collapse', this.handleBus);
