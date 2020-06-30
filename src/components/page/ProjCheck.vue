@@ -13,6 +13,9 @@
         <div class="form-item-title">
           <h3>项目信息</h3>
         </div>
+        <div style="text-align:right;width:100%;">
+          <div style="font-size:13px;">计划录入：{{detailData.operator}}</div>
+        </div>
         <div class="project">
           <el-card style="margin-bottom: 20px">
             <div class="text">
@@ -22,9 +25,22 @@
               <h4 style="color: #009ad6">项目范围：</h4>{{detailData.projScope}}
             </div>
           </el-card>
-          <div style="text-align:right;width:100%;">
-            <div style="font-size:13px;">计划录入：{{detailData.operator}}</div>
-          </div>
+          <!-- <el-card class="proj-info">
+            <el-row>
+              <el-col :span="6">
+                <span>计划编号： </span>{{detailData.projNum}}
+              </el-col>
+              <el-col :span="6">
+                <span>计划编号： </span>{{detailData.projNum}}
+              </el-col>
+              <el-col :span="6">
+                <span>计划编号： </span>{{detailData.projNum}}
+              </el-col>
+              <el-col :span="6">
+                <span>计划编号： </span>{{detailData.projNum}}
+              </el-col>
+            </el-row>
+          </el-card> -->
           <el-row>
             <el-col :span="2">
               <div class="projTitle">计划编号</div>
@@ -464,5 +480,10 @@ export default {
 }
 .item {
   border-bottom: solid 1px #ebe8e8;
+}
+.proj-info span {
+  color: #409eff;
+  font-weight: bold;
+  font-size: 1px;
 }
 </style>

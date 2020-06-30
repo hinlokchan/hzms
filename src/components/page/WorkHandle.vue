@@ -281,6 +281,7 @@
             <el-form-item
               label="应收费（元）"
               prop="dutyFee"
+              oninput="value=value.replace(/[^\d.]/g,'')"
             >
               <el-input v-model="regForm.dutyFee"></el-input>
             </el-form-item>

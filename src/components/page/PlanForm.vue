@@ -105,7 +105,7 @@
                   :props="{ expandTrigger: 'hover' }"
                   style="width: 90%"
                   @change="selectToInput()"
-                  filterableƒ
+                  filterable
                 >
                 </el-cascader>
                 <el-button
@@ -210,6 +210,7 @@
                   v-model="form.compSchedule"
                   :min="1"
                   label="完成天数"
+                  oninput="value=value.replace(/[^\d.]/g,'')"
                 ></el-input-number>
               </el-form-item>
             </el-col>
@@ -302,7 +303,10 @@
             </el-col>
             <el-col :span="6">
               <el-form-item label="评估报价收费">
-                <el-input v-model="form.assemFeeQuote"></el-input>
+                <el-input
+                  v-model="form.assemFeeQuote"
+                  oninput="value=value.replace(/[^\d.]/g,'')"
+                ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -314,9 +318,9 @@
                 ></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="6">
+            <!-- <el-col :span="6">
               <el-form-item
-                label="编制时间"
+                label="编制日期"
                 prop="projDate"
               >
                 <el-date-picker
@@ -327,7 +331,7 @@
                   style="width: 100%;"
                 ></el-date-picker>
               </el-form-item>
-            </el-col>
+            </el-col> -->
           </el-row>
           <el-row :gutter="20">
             <el-col>
@@ -525,9 +529,9 @@ export default {
         assemGoal: [
           { required: true, message: '请选择评估目的', trigger: 'blur' }
         ],
-        projDate: [
-          { required: true, message: '请选择编制日期', trigger: 'blur' }
-        ],
+        // projDate: [
+        //   { required: true, message: '请选择编制日期', trigger: 'blur' }
+        // ],
         baseDate: [
           { required: true, message: '请选择基准日', trigger: 'blur' }
         ],
@@ -757,6 +761,12 @@ export default {
             this.transformPeop().then(res => {
               console.log('this.form', this.form)
               if (this.isEdit) {
+                //判断clientId是否为数组并提取最后的元素提交
+                if (Array.isArray(this.form.clientId) == true) {
+                  let clientIdMid = this.form.clientId[this.form.clientId.length - 1]
+                  this.form.clientId = ''
+                  this.form.clientId = clientIdMid
+                }
                 editProject(this.form).then(res => {
                   console.log('add>>>res', res)
                   this.$message.success('提交成功！');
