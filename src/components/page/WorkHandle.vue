@@ -9,6 +9,7 @@
         <el-breadcrumb-item>项目工作管理</el-breadcrumb-item>
       </el-breadcrumb>
     </div> -->
+    <el-page-header @back="goBack"></el-page-header>
     <el-dialog
       title="取号"
       :visible.sync="getNumVisible"
@@ -1682,6 +1683,9 @@ export default {
           console.log('估价对象详情err', err)
         })
       this.fcDialogVisible = true
+    },
+    goBack() {
+      this.$router.go(-1)
     }
   },
 }

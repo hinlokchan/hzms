@@ -1,6 +1,7 @@
 <template>
   <div>
     <div class="container">
+      <el-page-header @back="goBack"></el-page-header>
       <div class="crumbs">
         <el-breadcrumb separator="/">
           <el-breadcrumb-item>
@@ -439,6 +440,9 @@ export default {
       const fdata = new FormData()
       fdata.append('projId', parseInt(that.projId))
       oReq.send(fdata)
+    },
+    goBack() {
+      this.$router.go(-1)
     }
   }
 }

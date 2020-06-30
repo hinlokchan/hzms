@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <el-page-header @back="goBack"></el-page-header>
     <el-card style="width:50%">
       <div
         slot="header"
@@ -156,6 +157,9 @@ export default {
       var hour = time.getHours();     //返回日期中的小时数（0到23）
       return year + "-" + month + "-" + date
     },
+    goBack() {
+      this.$router.go(-1)
+    }
   }
 }
 </script>

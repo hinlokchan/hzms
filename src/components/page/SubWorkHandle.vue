@@ -1,10 +1,6 @@
 <template>
   <div class="container">
-    <el-page-header
-      @back="goBack"
-      s
-    >
-    </el-page-header>
+    <el-page-header @back="goBack"></el-page-header>
     <div class="work-title">
       <span class="work-title-name">子项目信息</span>
       <span class="work-title-button">

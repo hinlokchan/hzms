@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <el-page-header @back="goBack"></el-page-header>
     <div class="crumbs">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
