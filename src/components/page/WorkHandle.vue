@@ -97,7 +97,10 @@
             v-model="subProjForm.subProjName"
           ></el-input>
         </el-form-item>
-        <el-form-item label="子项目基准日" prop="subBaseDate">
+        <el-form-item
+          label="子项目基准日"
+          prop="subBaseDate"
+        >
           <el-date-picker
             type="date"
             value-format="yyyy-MM-dd"
@@ -114,7 +117,10 @@
             v-model="subProjForm.subProjScope"
           ></el-input>
         </el-form-item>
-        <el-form-item label="项目负责人" prop="subProjLeader">
+        <el-form-item
+          label="项目负责人"
+          prop="subProjLeader"
+        >
           <el-checkbox-group v-model="subProjForm.subProjLeader">
             <el-checkbox
               v-for="item in projMember"
@@ -123,7 +129,10 @@
             ></el-checkbox>
           </el-checkbox-group>
         </el-form-item>
-        <el-form-item label="项目复核人" prop="subProjReviewer">
+        <el-form-item
+          label="项目复核人"
+          prop="subProjReviewer"
+        >
           <el-checkbox-group v-model="subProjForm.subProjReviewer">
             <el-checkbox
               v-for="item in projMember"
@@ -132,7 +141,10 @@
             ></el-checkbox>
           </el-checkbox-group>
         </el-form-item>
-        <el-form-item label="专业复核人" prop="subProjProReviewer">
+        <el-form-item
+          label="专业复核人"
+          prop="subProjProReviewer"
+        >
           <el-checkbox-group v-model="subProjForm.subProjProReviewer">
             <el-checkbox
               v-for="item in projMember"
@@ -141,7 +153,10 @@
             ></el-checkbox>
           </el-checkbox-group>
         </el-form-item>
-        <el-form-item label="项目助理" prop="subProjAsst">
+        <el-form-item
+          label="项目助理"
+          prop="subProjAsst"
+        >
           <el-checkbox-group v-model="subProjForm.subProjAsst">
             <el-checkbox
               v-for="item in projMember"
@@ -150,7 +165,10 @@
             ></el-checkbox>
           </el-checkbox-group>
         </el-form-item>
-        <!-- <el-form-item label="现场勘查" prop="subFieldSrvy">
+        <el-form-item
+          label="现场勘查"
+          prop="subFieldSrvy"
+        >
           <el-checkbox-group v-model="subProjForm.subFieldSrvy">
             <el-checkbox
               v-for="item in projMember"
@@ -158,7 +176,7 @@
               :label="item"
             ></el-checkbox>
           </el-checkbox-group>
-        </el-form-item> -->
+        </el-form-item>
       </el-form>
       <div slot="footer">
         <el-button
@@ -660,13 +678,13 @@
                   size="medium"
                   @click="handleFormalReg()"
                 >登记正评</el-button>
-                <el-button
+                <!-- <el-button
                   v-if="this.projDetail.projType == 1020"
                   icon="el-icon-suitcase"
                   type="success"
                   plain
                   size="medium"
-                >登记</el-button>
+                >登记</el-button> -->
               </span>
             </div>
             <h4>Tips:取二维码前请先进行登记</h4>
@@ -728,7 +746,10 @@
         </el-card>
       </el-col>
     </el-row>
-    <el-row :gutter="20" style="margin-top: 15px">
+    <el-row
+      :gutter="20"
+      style="margin-top: 15px"
+    >
       <el-col :span="23">
         <el-card>
           <div slot="header">综合进度安排</div>
@@ -814,10 +835,7 @@
         label="子项目范围"
         prop="subProjScope"
       ></el-table-column>
-      <el-table-column
-        label="基准日"
-        width="120"
-      ></el-table-column>
+
       <el-table-column
         label="操作"
         width="200"
@@ -1584,7 +1602,12 @@ export default {
       //val传入对应父项目报告号
       this.$refs.subFormRules.validate((valid) => {
         if (valid) {
-          console.log(this.subProjForm)
+          this.subProjForm.subProjLeader = this.subProjForm.subProjLeader.join(',')
+          this.subProjForm.subProjReviewer = this.subProjForm.subProjReviewer.join(',')
+          this.subProjForm.subProjProReviewer = this.subProjForm.subProjProReviewer.join(',')
+          this.subProjForm.subProjAsst = this.subProjForm.subProjAsst.join(',')
+          this.subProjForm.subFieldSrvy = this.subProjForm.subFieldSrvy.join(',')
+          console.log('新增子项目（正评）form', this.subProjForm)
           this.subProjForm.reportNum = val
           addSubProject(this.subProjForm)
             .then(res => {
@@ -1604,14 +1627,18 @@ export default {
       })
     },
     delSubProj(row) {
-      delSubProject({ reportNum: row.reportNum, subReportNum: row.subReportNum })
-        .then(res => {
-          this.$message.success('删除子项目成功')
-          this.reload()
+      this.$confirm('确定要删除吗？', '提示', { type: 'warning' })
+        .then(() => {
+          delSubProject({ subProjId: row.subProjId })
+            .then(res => {
+              this.$message.success('删除子项目成功')
+              this.reload()
+            })
+            .catch(err => {
+              this.$message.warning('删除失败，请稍后重试')
+            })
         })
-        .catch(err => {
-          this.$message.warning('删除失败，请稍后重试')
-        })
+        .catch(() => { })
     },
     formatDate(now) {
       const time = new Date(now)

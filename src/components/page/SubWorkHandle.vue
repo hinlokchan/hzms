@@ -2,12 +2,13 @@
   <div class="container">
     <el-page-header
       @back="goBack"
-s    >
+      s
+    >
     </el-page-header>
     <div class="work-title">
       <span class="work-title-name">子项目信息</span>
       <span class="work-title-button">
-        <el-button
+        <!-- <el-button
           icon="el-icon-info"
           size="medium"
         >查看详情</el-button>
@@ -19,7 +20,7 @@ s    >
           icon="el-icon-lx-qrcode"
           size="medium"
           @click="handleQRCode()"
-        >生成二维码</el-button>
+        >生成二维码</el-button> -->
       </span>
     </div>
     <el-divider></el-divider>
@@ -34,8 +35,8 @@ s    >
           </div>
           <div class="text">
             <div class="item"><span>项目名称：</span>{{this.subProjData.subProjName}}</div>
-            <div class="item"><span>项目范围：</span></div>
-            <div class="item"><span>基准日：</span></div>
+            <div class="item"><span>项目范围：</span>{{this.subProjData.subProjScope}}</div>
+            <div class="item"><span>基准日：</span>{{this.subProjData.subBaseDate}}</div>
           </div>
         </el-card>
       </el-col>
@@ -46,15 +47,15 @@ s    >
             class="card-header"
           >项目组成员信息</div>
           <div class="text item">
-            <div class="item"><span>项目负责人：</span></div>
-            <div class="item"><span>项目复核人：</span></div>
-            <div class="item"><span>专业复核人：</span></div>
-            <div class="item"><span>项目助理：</span></div>
-            <div class="item"><span>现场勘查：</span></div>
+            <div class="item"><span>项目负责人：</span>{{this.subProjData.subProjLeader}}</div>
+            <div class="item"><span>项目复核人：</span>{{this.subProjData.subProjReviewer}}</div>
+            <div class="item"><span>专业复核人：</span>{{this.subProjData.subProjProReviewer}}</div>
+            <div class="item"><span>项目助理：</span>{{this.subProjData.subProjAsst}}</div>
+            <div class="item"><span>现场勘查：</span>{{this.subProjData.subFieldSrvy}}</div>
           </div>
         </el-card>
       </el-col>
-      <el-col
+      <!-- <el-col
         :span="12"
         style="margin-top: 10px"
       >
@@ -75,7 +76,7 @@ s    >
           </div>
           <h4>Tips:取二维码前请先进行登记</h4>
         </el-card>
-      </el-col>
+      </el-col> -->
     </el-row>
   </div>
 </template>
@@ -92,6 +93,13 @@ export default {
     let obj = JSON.parse(this.$route.query.data)
     console.log('obj', obj)
     this.subProjData = obj
+    this.subProjData.subBaseDate = this.$moment(this.subProjData.subBaseDate).format('YYYY-MM-DD')
+
+    this.subProjData.subProjLeader = this.subProjData.subProjLeader.split(',')
+    this.subProjData.subProjReviewer = this.subProjData.subProjReviewer.split(',')
+    this.subProjData.subProjProReviewer = this.subProjData.subProjProReviewer.split(',')
+    this.subProjData.subProjAsst = this.subProjData.subProjAsst.split(',')
+    this.subProjData.subFieldSrvy = this.subProjData.subFieldSrvy.split(',')
     console.log('subProjData', this.subProjData)
   },
   methods: {

@@ -558,7 +558,7 @@ export default {
       },
       rules: {
         projNum: [
-          { required: true, message: '请选择项目类型', trigger: 'blur' },
+          { required: true, message: '请填写计划编号', trigger: 'blur' },
         ],
         zph: [
           { min: 11, max: 12, message: '请输入11-12位报告号', trigger: 'blur' }
@@ -700,20 +700,21 @@ export default {
           this.form.clientId = ''
           this.form.clientId = clientIdMid
         }
+        console.log('ababa', this.form.clientId)
         this.$refs.ruleForm.validate((valid) => {
           if (valid) {
             this.transformPeop()
               .then(res => {
                 console.log('form', this.form)
-                setOldProject(this.form)
-                  .then(res => {
-                    this.$message.success('录入成功')
-                    location.reload()
-                    console.log('res', res)
-                  })
-                  .catch(err => {
-                    console.log('err', err)
-                  })
+                // setOldProject(this.form)
+                //   .then(res => {
+                //     this.$message.success('录入成功')
+                //     location.reload()
+                //     console.log('res', res)
+                //   })
+                //   .catch(err => {
+                //     console.log('err', err)
+                //   })
               })
           } else {
             this.$message.warning('请填写必填信息')
