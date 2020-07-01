@@ -166,7 +166,7 @@
               >
                 <el-input
                   v-model="form.projName"
-                  maxlength="200"
+                  maxlength="240"
                   show-word-limit
                 ></el-input>
               </el-form-item>
@@ -188,7 +188,7 @@
               >
                 <el-input
                   v-model="form.projScope"
-                  maxlength="200"
+                  maxlength="240"
                   show-word-limit
                 ></el-input>
               </el-form-item>
@@ -359,6 +359,11 @@
             <el-col :span="6">
               <el-form-item label="项目负责人">
                 <el-input v-model="form.projLeader"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6" v-if="this.form.projType == 1090">
+              <el-form-item label="总审">
+                <el-input v-model="form.finalReview"></el-input>
               </el-form-item>
             </el-col>
             <!-- </el-row>
@@ -550,6 +555,7 @@ export default {
         assemFeeQuote: '',
         assemValueQuote: '',
         projLeader: '',
+        finalReview: '',
         projAsst: [{ value: '' }],
         projProReviewer: [{ value: '' }],
         riskProfile: '1002',

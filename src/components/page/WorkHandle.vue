@@ -282,6 +282,7 @@
                 v-model="regForm.projCompTime"
                 value-format="yyyy-MM-dd"
                 type="date"
+                style="width: 100%"
               ></el-date-picker>
             </el-form-item>
           </el-col>
@@ -1472,7 +1473,7 @@ export default {
       oReq.responseType = 'blob'
       oReq.onload = function (oEvent) {
         //生产环境需要加上前缀/hzms/hzht
-        window.open('/hzms/hzht/static/pdf/web/viewer.html?file=' + encodeURIComponent(URL.createObjectURL(new Blob([oReq.response]))))
+        window.open('/static/pdf/web/viewer.html?file=' + encodeURIComponent(URL.createObjectURL(new Blob([oReq.response]))))
       }
       const fdata = new FormData()
       fdata.append('projId', parseInt(that.queryData.projId))
@@ -1532,10 +1533,12 @@ export default {
       if (val == '') {
         this.$message.warning('请选择时间')
         return 0
-      } else if (this.reportNum.zph !== '') {
-        this.$message.warning('已存在正评号')
-        return 0
-      } else {
+      } 
+      // else if (this.reportNum.zph !== '') {
+      //   this.$message.warning('已存在正评号')
+      //   return 0
+      // } 
+      else {
         //takenData格式化
         this.takenDate = this.$moment(val).format('YYYY-MM-DD')
         //reportNumType
@@ -1562,14 +1565,19 @@ export default {
             this.reload()
           })
           .catch(err => {
-            console.log('oldReportNum.err', err)
+            console.log('取往月号err', err)
+            //if (err.)
             this.$message.warning('获取失败，请稍后再试')
           })
       }
 
     },
     handleDelNum(obj) {
-      this.delNumVisible = true
+      if (this.reportNum.cph == '' && this.reportNum.zph == '' && this.reportNum.hhh == '') {
+        this.$message.warning('尚未生成报告号')
+      } else {
+        this.delNumVisible = true
+      }
     },
     delNum(val) {
       this.$confirm('删除后将不可恢复，确定要删除吗？', {
