@@ -12,238 +12,102 @@
         <el-form :model="form">
           <el-row :gutter="20">
             <el-col :span="6">
-              <el-form-item label="估价目的">
-                <el-select
-                  v-model="form.evalGoal"
-                  style="width: 100%"
-                  filterable
-                >
-                  <el-option
-                    v-for="item in assemGoalOption"
-                    :key="item"
-                    :value="item"
-                  ></el-option>
-                </el-select>
+              <el-form-item label="报备号">
+                <el-input v-model="form.recordNum"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="价值类型">
-                <el-select
-                  v-model="form.valueType"
-                  style="width: 100%"
-                  filterable
-                >
-                  <el-option
-                    v-for="item in priceTypeOption"
-                    :key="item"
-                    :value="item"
-                  ></el-option>
-                </el-select>
+              <el-form-item label="摇珠单或委托书编号">
+                <el-input v-model="form.entrustNum"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="本报告的估价对象个数">
-                <el-input
-                  v-model="form.evalObjCount"
-                  oninput="value=value.replace(/[^\d.]/g,'')"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="估价对象所在城市">
-                <el-input v-model="form.evalObjCity"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="估价对象所在行政区">
-                <el-input v-model="form.evalObjAdminRegion"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="估价对象所在小区">
-                <el-input v-model="form.evalObjCommunity"></el-input>
-              </el-form-item>
-            </el-col>
-            <!-- <el-col :span="6">
-              <el-form-item label="项目完成时间">
+              <el-form-item label="摇珠或委托时间">
                 <el-date-picker
+                  v-model="form.entrustTime"
+                  type="date"
+                  value-format="yyyy-MM-dd"
                   style="width: 100%"
-                  v-model="form.projCompTime"
                 ></el-date-picker>
               </el-form-item>
-            </el-col> -->
-            <el-col :span="12">
-              <el-form-item label="估价方法说明">
-                <el-input v-model="form.assemMethodExp"></el-input>
-              </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="估价对象土地面积（平方米）">
+              <el-form-item label="数量">
                 <el-input
-                  v-model="form.evalObjAcreage"
+                  v-model="form.count"
                   oninput="value=value.replace(/[^\d.]/g,'')"
                 ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="土地评估单价（元/平方米）">
-                <el-input
-                  v-model="form.landAssemUnitPrice"
-                  oninput="value=value.replace(/[^\d.]/g,'')"
-                  @input="calculate(form.evalObjAcreage, form.landAssemUnitPrice, 1)"
-                ></el-input>
+              <el-form-item label="行政区域">
+                <el-cascader
+                  v-model="form.adminRegion"
+                  style="width: 100%"
+                  filterable
+                  :options="cityOptions"
+                >
+                </el-cascader>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="估价对象建筑面积（平方米）">
+              <el-form-item label="升值率(%)">
                 <el-input
-                  v-model="form.evalObjArea"
+                  v-model="form.appriationRate"
                   oninput="value=value.replace(/[^\d.]/g,'')"
                 ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="建筑评估单价（元/平方米）">
-                <el-input
-                  v-model="form.buildingAssemUnitPrice"
-                  oninput="value=value.replace(/[^\d.]/g,'')"
-                  @input="calculate(form.evalObjArea, form.buildingAssemUnitPrice, 2)"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item>
-                <h4>土地总价值：{{this.form.landTotalValue}}万元</h4>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item>
-                <h4>建筑总价值：{{this.form.buildingTotalValue}}万元</h4>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item>
-                <h3 style="color: red">估价对象评估总价：{{this.form.evalObjTotalAssemValue}}万元</h3>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item>
-                <h3 style="color: red">项目总价值：{{this.form.projTotalValue}}万元</h3>
               </el-form-item>
             </el-col>
           </el-row>
-        </el-form>
-      </el-tab-pane>
-      <el-tab-pane label="房屋信息">
-        <el-form :model="form">
+          <el-divider content-position="left">评估前价值（元）</el-divider>
           <el-row :gutter="20">
             <el-col :span="6">
-              <el-form-item label="房屋用途">
-                <el-select
-                  style="width: 100%"
-                  v-model="form.unitUsage"
-                >
-                  <el-option
-                    v-for="item in housePurposeOption"
-                    :key="item"
-                    :value="item"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="房屋类型">
-                <el-select
-                  style="width: 100%"
-                  v-model="form.unitType"
-                >
-                  <el-option
-                    v-for="item in houseTypeOption"
-                    :key="item"
-                    :value="item"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="房屋性质">
-                <el-select
-                  style="width: 100%"
-                  v-model="form.unitProperty"
-                >
-                  <el-option
-                    v-for="item in houseAttributeOption"
-                    :key="item"
-                    :value="item"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="户型结构">
-                <el-select
-                  style="width: 100%"
-                  v-model="form.houseTypeStructure"
-                >
-                  <el-option
-                    v-for="item in houstStructureOption"
-                    :key="item"
-                    :value="item"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="户型">
-                <el-select
-                  style="width: 100%"
-                  v-model="form.houseType"
-                >
-                  <el-option
-                    v-for="item in houseModelOption"
-                    :key="item"
-                    :value="item"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="向">
-                <el-select
-                  style="width: 100%"
-                  v-model="form.towards"
-                >
-                  <el-option
-                    v-for="item in houseDirectionOption"
-                    :key="item"
-                    :value="item"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="所在楼">
-                <el-input v-model="form.buildingNum"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="装修程度">
-                <el-select
-                  style="width: 100%"
-                  v-model="form.decoDegree"
-                >
-                  <el-option
-                    v-for="item in houseDecorationOption"
-                    :key="item"
-                    :value="item"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="剩余年限">
+              <el-form-item label="评估前资产总值">
                 <el-input
-                  v-model="form.remainTerm"
+                  v-model="form.formerTotalAssets"
+                  oninput="value=value.replace(/[^\d.]/g,'')"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="评估前负债总值">
+                <el-input
+                  v-model="form.formerTotalDebet"
+                  oninput="value=value.replace(/[^\d.]/g,'')"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="评估前所有者权益">
+                <el-input
+                  v-model="form.formerOwnersEquity"
+                  oninput="value=value.replace(/[^\d.]/g,'')"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-divider content-position="left">评估后价值（元）</el-divider>
+          <el-row :gutter="20">
+            <el-col :span="6">
+              <el-form-item label="评估后资产总值">
+                <el-input
+                  v-model="form.latterTotalAssets"
+                  oninput="value=value.replace(/[^\d.]/g,'')"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="评估后负债总值">
+                <el-input
+                  v-model="form.latterTotalDebet"
+                  oninput="value=value.replace(/[^\d.]/g,'')"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="评估后所有者权益">
+                <el-input
+                  v-model="form.latterOwnersEquity"
                   oninput="value=value.replace(/[^\d.]/g,'')"
                 ></el-input>
               </el-form-item>
@@ -263,6 +127,7 @@
 <script>
 import { getUserList } from '@/api/index'
 import { submitEvalObjDetail, editEvalObjDetail } from '@/api/assemobjdetail'
+import cityOptions from '../../../../public/citys.json'
 import { Form } from 'element-ui'
 export default {
   name: 'ZcObjDetailDialog',
@@ -281,6 +146,7 @@ export default {
       visible: this.show,
       //
       edit: false,
+      cityOptions: [],
       form: {
         projId: '',
         subReportNum: '-',
@@ -306,6 +172,7 @@ export default {
       immediate: true,
       handler(show) {
         this.visible = this.show
+        this.cityOptions = cityOptions
       }
     },
     isEdit: {

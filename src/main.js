@@ -32,12 +32,15 @@ import 'babel-polyfill';
 import { isAuthenticated } from '@/api/index';
 import { formatDate } from './utils/comment';
 import moment from 'moment';
+import less from 'less'
 
 Vue.prototype.$formatDate = formatDate;
 Vue.prototype.$moment = moment;
 Vue.config.productionTip = false;
 window.router = router;
 Vue.use(VueI18n);
+Vue.use(less);
+
 Vue.use(ElementUI, {
   size: 'small'
 });

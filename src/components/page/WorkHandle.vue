@@ -445,6 +445,12 @@
       :isEdit="assemObjIsEdit"
       :projId="projDetail.projId"
     />
+    <zc-obj-detail-dialog
+      :show.sync="zcDialogVisible"
+      :obj="assemObjForm"
+      :isEdit="assemObjIsEdit"
+      :projId="projDetail.projId"
+    />
     <!--
                   /\    \                  /\    \                  /\    \                  /\    \         
                   /::\____\                /::\    \                /::\    \                /::\____\        
@@ -680,13 +686,13 @@
                   size="medium"
                   @click="handleFormalReg()"
                 >登记正评</el-button>
-                <!-- <el-button
+                <el-button
                   v-if="this.projDetail.projType == 1020"
                   icon="el-icon-suitcase"
                   type="success"
                   plain
                   size="medium"
-                >登记</el-button> -->
+                >登记</el-button>
               </span>
             </div>
             <h4>Tips:取二维码前请先进行登记</h4>
@@ -714,7 +720,7 @@
           v-if="this.projDetail.projType == 1020"
           icon="el-icon-info"
           size="medium"
-          @click="isFcDialogVisible()"
+          @click="isZcDialogVisible()"
           type="text"
         >展开详情</el-button>
       </span>
@@ -867,13 +873,15 @@ import { checkFaRegister, submitFaRegister, editFaRegister } from '@/api/formalr
 import projTypeOption from '../../../public/projTypeOption.json'
 import { host } from '@/config'
 import FcObjDetailDialog from './AssemObjDetailDialog/FcObjDetailDialog'
+import ZcObjDetailDialog from './AssemObjDetailDialog/ZcObjDetailDialog'
 var ProManageAPIServer = `${host.baseUrl}/${host.ProManageAPIServer}`
 
 export default {
   name: 'workhandle',
   inject: ['reload'],            //注入App里的reload方法
   components: {
-    FcObjDetailDialog
+    FcObjDetailDialog,
+    ZcObjDetailDialog
   },
   data() {
     return {
@@ -889,6 +897,7 @@ export default {
       takenDate: '',
       //
       fcDialogVisible: false,
+      zcDialogVisible: false,
       //
       addAssemCheck: false,
       workArrgEdit: false,
@@ -1252,19 +1261,19 @@ export default {
           .then(res => {
             let i = res.data.projTotalValue
             if (i <= 100) {
-              this.regForm.standardFee = (i * 0.005) * 10000
+              this.regForm.standardFee = ((i * 0.005) * 10000).toFixed(0)
             } else if (i <= 1000) {
-              this.regForm.standardFee = (i * 0.0025 + 0.25) * 10000
+              this.regForm.standardFee = ((i * 0.0025 + 0.25) * 10000).toFixed(0)
             } else if (i <= 2000) {
-              this.regForm.standardFee = (i * 0.0015 + 1.25) * 10000
+              this.regForm.standardFee = ((i * 0.0015 + 1.25) * 10000).toFixed(0)
             } else if (i <= 5000) {
-              this.regForm.standardFee = (i * 0.0008 + 2.65) * 10000
+              this.regForm.standardFee = ((i * 0.0008 + 2.65) * 10000).toFixed(0)
             } else if (i <= 8000) {
-              this.regForm.standardFee = (i * 0.0004 + 4.65) * 10000
+              this.regForm.standardFee = ((i * 0.0004 + 4.65) * 10000).toFixed(0)
             } else if (i <= 10000) {
-              this.regForm.standardFee = (i * 0.0002 + 6.25) * 10000
+              this.regForm.standardFee = ((i * 0.0002 + 6.25) * 10000).toFixed(0)
             } else if (i > 10000) {
-              this.regForm.standardFee = (i * 0.0001 + 7.25) * 10000
+              this.regForm.standardFee = ((i * 0.0001 + 7.25) * 10000).toFixed(0)
             }
           })
           .catch(err => {
@@ -1533,7 +1542,7 @@ export default {
       if (val == '') {
         this.$message.warning('请选择时间')
         return 0
-      } 
+      }
       // else if (this.reportNum.zph !== '') {
       //   this.$message.warning('已存在正评号')
       //   return 0
@@ -1566,8 +1575,12 @@ export default {
           })
           .catch(err => {
             console.log('取往月号err', err)
-            //if (err.)
-            this.$message.warning('获取失败，请稍后再试')
+            if (err.statusCode == 5001) {
+              this.$message.warning('已存在报告号！')
+              this.getOldNumVisible = false
+            } else {
+              this.$message.warning('服务器忙，请稍后再试')
+            }
           })
       }
 
@@ -1683,7 +1696,7 @@ export default {
     //   }
     // },
     //
-    isFcDialogVisible() {
+    getObjDetail() {
       getEvalObjDetail({ projId: this.projDetail.projId, subReportNum: '-' })
         .then(res => {
           console.log('估价对象详情res', res)
@@ -1700,7 +1713,13 @@ export default {
         .catch(err => {
           console.log('估价对象详情err', err)
         })
+    },
+    isFcDialogVisible() {
+      this.getObjDetail()
       this.fcDialogVisible = true
+    },
+    isZcDialogVisible() {
+      this.zcDialogVisible = true
     },
     goBack() {
       this.$router.go(-1)

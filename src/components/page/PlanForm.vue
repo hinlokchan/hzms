@@ -327,7 +327,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="其他补充说明">
+              <el-form-item label="补充说明">
                 <el-input
                   type="textarea"
                   autosize
@@ -335,20 +335,6 @@
                 ></el-input>
               </el-form-item>
             </el-col>
-            <!-- <el-col :span="6">
-              <el-form-item
-                label="编制日期"
-                prop="projDate"
-              >
-                <el-date-picker
-                  type="date"
-                  placeholder="选择日期"
-                  v-model="form.projDate"
-                  value-format="yyyy-MM-dd"
-                  style="width: 100%;"
-                ></el-date-picker>
-              </el-form-item>
-            </el-col> -->
           </el-row>
           <el-row :gutter="20">
             <el-col>
@@ -361,7 +347,10 @@
                 <el-input v-model="form.projLeader"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="6" v-if="this.form.projType == 1090">
+            <el-col
+              :span="6"
+              v-if="this.form.projType == 1090"
+            >
               <el-form-item label="总审">
                 <el-input v-model="form.finalReview"></el-input>
               </el-form-item>
@@ -383,7 +372,7 @@
                   ></el-input><i
                     class="el-icon-lx-roundclose"
                     style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5"
-                    @click.prevent="removeDomain(index, 1)"
+                    @click.prevent="removeDomain(index, 5)"
                   ></i>
                 </div>
               </el-form-item>
@@ -391,7 +380,7 @@
                 <i
                   class="el-icon-lx-roundadd"
                   style="font-size: 26px;color:#b5b5b5"
-                  @click="addDomain(1)"
+                  @click="addDomain(5)"
                 ></i>
               </el-form-item>
             </el-col>
@@ -409,7 +398,7 @@
                   ></el-input><i
                     class="el-icon-lx-roundclose"
                     style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5"
-                    @click.prevent="removeDomain(index, 5)"
+                    @click.prevent="removeDomain(index, 1)"
                   ></i>
                 </div>
               </el-form-item>
@@ -417,7 +406,7 @@
                 <i
                   class="el-icon-lx-roundadd"
                   style="font-size: 26px;color:#b5b5b5"
-                  @click="addDomain(5)"
+                  @click="addDomain(1)"
                 ></i>
               </el-form-item>
             </el-col>
@@ -447,6 +436,8 @@
                 ></i>
               </el-form-item>
             </el-col>
+          </el-row>
+          <el-row :gutter="20">
             <el-col :span="6">
               <el-form-item
                 v-for="(item, index) in form.projAsst"
@@ -507,6 +498,7 @@
             >表单提交</el-button>
             <el-button @click="goBack">取消</el-button>
           </el-form-item>
+          <h2>{{this.form.test}}</h2>
         </el-form>
       </div>
     </div>
@@ -515,9 +507,10 @@
 
 <script>
 import { createNewProject, editProject } from '@/api/index'
-import { getDetailProjInfo } from '@/api/index'
+import { getDetailProjInfo, getUserList } from '@/api/index'
 import clientOptions from '../../../public/clientName.json'
 import projTypeOption from '../../../public/projTypeOption.json'
+
 export default {
   name: 'planform',
   inject: ['reload'],            //注入App里的reload方法
@@ -593,7 +586,8 @@ export default {
         ]
       },
       assemGoalList: ['抵押', '交易', '资产处置（司法鉴定）', '出让', '挂牌出让', '补出让', '转让', '盘整收回', '征收补偿', '活立木拍卖', '出租', '置换', '股权转让', '作价入股', '增资扩股', '入账', '征收、完税', '企业改制', '清算', '复审', '评价', '咨询'],
-      contactTypeOption: ['正常接洽', '摇珠', '中行通知书', '定点采购', '中介超市摇珠']
+      contactTypeOption: ['正常接洽', '摇珠', '中行通知书', '定点采购', '中介超市摇珠'],
+      // userList: [],
     };
   },
   created() {
@@ -609,8 +603,33 @@ export default {
     }
     this.clientOptions = clientOptions
     this.projTypeOption = projTypeOption
+    // getUserList()
+    //   .then(res => {
+    //     this.userList = res.data
+    //     for (let i of userList) {
+    //       i.value = i.staffName
+    //     }
+    //   })
+    //   .catch(err => { })
   },
   methods: {
+    // querySearchAsync(queryString, callback) {
+    //   var userList = this.userList
+    //   this.userListType = false
+    //   for (let i of userList) {
+    //     i.value = i.staffName
+    //   }
+    //   var results = queryString ? userList.filter(this.createFilter(queryString)) : userList
+    //   callback(results)
+    // },
+    // createFilter(queryString) {
+    //   return (userList) => {
+    //     return (userList.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+
+    //     // return (userList.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+    //     // return (userList.staffId.indexOf(queryString) === 0)
+    //   }
+    // },
     arrgTypeToEnable(val) {
       if (val == 1010 || val == 1030) {
         this.form.arrgType = '1001'
@@ -868,14 +887,20 @@ export default {
                   console.log('add>>>res', res)
                   this.$message.success('提交成功！');
                   let riskProfile = ''
-                  if (this.form.riskProfile == 1001) {
+                  if (this.form.riskProfile == '1001') {
                     riskProfile == '低'
-                  } else if (this.form.riskProfile == 1002) {
-                    riskProfile == '中等'
-                  } else if (this.form.riskProfile == 1003) {
-                    riskProfile == '较高'
+                  } else if (this.form.riskProfile == '1002') {
+                    riskProfile = '中等'
+                  } else if (this.form.riskProfile == '1003') {
+                    riskProfile = '较高'
                   } else {
-                    riskProfile == '高'
+                    riskProfile = '高'
+                  }
+                  let newOldType = ''
+                  if (this.form.newOldType == '1001') {
+                    riskProfile = '新项目'
+                  } else if (this.form.newOldType == '1002') {
+                    riskProfile = '重评项目'
                   }
                   //处理value转为label展示
                   for (var i = 0; i < this.projTypeOption.length; i++) {
@@ -883,8 +908,9 @@ export default {
                       this.transedData.projType = this.projTypeOption[i].label
                     }
                   }
+
                   // ZP项目类型：资；委托 人：(其他):惠州市水务投资集团；项目名称：惠州大道大湖溪段667平方米租金；评估对象及其坐落：同上;；评估目的：物业出租价格；引荐人及其电话：惠州市水务投资集团王总135 0229 7502；现联系单位、人及电话：同上；现勘时间：现勘同事约；报告时间要求：5天；项目风险预测：；评估收费报价：待定；是否曾评估的项目：（若是，原项目组成员：）；项目接洽人""[52]-缨(注师：莎缨;助理：健;专业复核人:远。以下由项目负责人安排 现勘：;资料核查验证：;市场询价调查：;技术报告:；报告编制:; 归档：;对外沟通:
-                  this.newInfoData = `项目编号:${res.data.projNum};项目类型:${this.transedData.projType};委托人:${this.form.clientName};项目名称:${this.form.projName};评估对象及其坐落:同上;评估目的:${this.form.assemGoal};引荐人及其电话:${this.form.projReferer}${this.form.projRefererInfo};现勘联系单位人及电话：同上;现勘时间:${this.form.fldSrvySchedule};报告时间要求:${this.form.compSchedule}天;项目风险预测:${riskProfile};评估收费报价:${this.form.assemFeeQuote};是否曾评估项目:${this.form.newOldType};项目接洽人:${this.form.projContact},项目助理:${this.form.projAsst},专业复核人:${this.form.projProReviewer}。以下由项目负责人安排,现勘:${this.form.fieldSrvy};资料核查验证: ;市场询价调查: ;技术报告: ;报告编制: ;归档: ;对外沟通: 。`
+                  this.newInfoData = `项目编号:${res.data.projNum};项目类型:${this.transedData.projType};委托人:${this.form.clientName};项目名称:${this.form.projName};评估对象及其坐落:同上;评估目的:${this.form.assemGoal};引荐人及其电话:${this.form.projReferer}${this.form.projRefererInfo};现勘联系单位人及电话：同上;现勘时间:${this.form.fldSrvySchedule};报告时间要求:${this.form.compSchedule}天;项目风险预测:${riskProfile};评估收费报价:${this.form.assemFeeQuote};是否曾评估项目:${newOldType};项目接洽人:${this.form.projContact} ${this.form.projContactType}(注师：；助理：；专业复核人:)。以下由项目负责人安排,现勘:${this.form.fieldSrvy};资料核查验证: ;市场询价调查: ;技术报告: ;报告编制: ;归档: ;对外沟通: 。`
                   this.newInfo = true
                 }).catch(err => {
                   console.log('add>>>err', err)
@@ -910,6 +936,15 @@ export default {
         //   that.form.lendingBank = lendingBankNew
         // }
         //}
+        //  接洽人
+        let projContact = that.form.projContact
+        let projContactNew = ''
+        for (let i = 0; i < projContact.length; i++) {
+          if (projContact[i].value) {
+            projContactNew = projContactNew + projContact[i].value + ','
+          }
+        }
+        that.form.projContact = projContactNew.substr(0, projContactNew.length - 1)
         //  项目复核人
         let projReviewer = that.form.projReviewer
         let projReviewerNew = ''
@@ -960,7 +995,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="less">
 .form-item-title {
   width: 100px;
   text-align: center;
@@ -973,5 +1008,25 @@ export default {
 }
 .flexBox el-input {
   margin-right: 5px;
+}
+.my-autocomplete {
+  li {
+    line-height: normal;
+    padding: 7px;
+
+    .name {
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+    .id {
+      font-size: 12px;
+      color: #b4b4b4;
+      float: right;
+    }
+
+    .highlighted .id {
+      color: #ddd;
+    }
+  }
 }
 </style>
