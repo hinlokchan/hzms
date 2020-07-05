@@ -35,6 +35,8 @@
               >
                 <el-input
                   v-model="form.zph"
+                  @input="setUpper"
+                  @blur="checkNum"
                   show-word-limit
                 ></el-input>
                 <!-- <el-select style="width: 90px">
@@ -45,7 +47,7 @@
                 <el-input style="width: 120px"></el-input> -->
               </el-form-item>
             </el-col>
-            <el-col :span="6">
+            <!-- <el-col :span="6">
               <el-form-item label="报告号日期">
                 <el-date-picker
                   v-model="takenDate"
@@ -54,10 +56,10 @@
                   style="width: 100%;"
                 ></el-date-picker>
               </el-form-item>
-            </el-col>
+            </el-col> -->
             <el-col
               :span="6"
-              :offset="1"
+              :offset="7"
             >
               <span style="color: red">Tips: 没有取过号的项目请勿填写报告号</span>
             </el-col>
@@ -114,14 +116,8 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="6">
-              <el-form-item
-                label="接洽人"
-                prop="projContact"
-              >
-                <el-input v-model="form.projContact"></el-input>
-              </el-form-item>
-            </el-col>
+          </el-row>
+          <el-row :gutter="20">
             <el-col :span="6">
               <el-form-item
                 label="委托人"
@@ -160,19 +156,6 @@
                 ></el-button>
               </el-form-item>
             </el-col>
-            <!-- <el-col :span="6">
-              <el-form-item
-                label="贷款银行"
-                prop="lendingBank"
-              >
-                <el-cascader
-                  :show-all-levels="true"
-                  v-model="form.lendingBank"
-                  :props="{ expandTrigger: 'hover' }"
-                >
-                </el-cascader>
-              </el-form-item>
-            </el-col> -->
             <el-col :span="6">
               <el-form-item label="委托人联系人">
                 <el-input v-model="form.clientContact"></el-input>
@@ -183,6 +166,13 @@
                 <el-input v-model="form.clientContactInfo"></el-input>
               </el-form-item>
             </el-col>
+            <el-col :span="6">
+              <el-form-item label="产权持有人">
+                <el-input v-model="form.incumbrancer"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item
                 label="项目名称"
@@ -373,6 +363,33 @@
                 <el-input v-model="form.projLeader"></el-input>
               </el-form-item>
             </el-col>
+            <el-col :span="6">
+              <el-form-item
+                v-for="(item, index) in form.projContact"
+                :label="'接洽人' + (index + 1)"
+                :key="index"
+                prop="projContact"
+              >
+                <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
+                <div class="flexBox">
+                  <el-input
+                    style="width:90%"
+                    v-model="item.value"
+                  ></el-input><i
+                    class="el-icon-lx-roundclose"
+                    style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5"
+                    @click.prevent="removeDomain(index, 5)"
+                  ></i>
+                </div>
+              </el-form-item>
+              <el-form-item>
+                <i
+                  class="el-icon-lx-roundadd"
+                  style="font-size: 26px;color:#b5b5b5"
+                  @click="addDomain(5)"
+                ></i>
+              </el-form-item>
+            </el-col>
           </el-row>
           <el-row :gutter="20">
             <el-col :span="6">
@@ -529,7 +546,7 @@ export default {
         clientContactInfo: '',
         projReferer: '',
         projRefererInfo: '',
-        projContact: '',
+        projContact: [{ value: '' }],
         projLeader: '',
         projReviewer: [{ value: '' }],
         projProReviewer: [{ value: '' }],
@@ -546,6 +563,7 @@ export default {
         assemFeeQuote: '',
         assemValueQuote: '',
         projContactType: '',
+        //
         zph: '',
         reportNums: [
           {
@@ -621,6 +639,10 @@ export default {
         this.form.fieldSrvy.push({
           value: ''
         });
+      } else if (type == 5) {
+        this.form.projContact.push({
+          value: ''
+        });
       }
     },
     removeDomain(index, type) {
@@ -640,6 +662,10 @@ export default {
         if (this.form.fieldSrvy.length !== 1 && this.form.fieldSrvy.length !== 0) {
           this.form.fieldSrvy.splice(index, 1)
         }
+      } else if (type == 5) {
+        if (this.form.projContact.length !== 1 && this.form.projContact.length !== 0) {
+          this.form.projContact.splice(index, 1)
+        }
       }
     },
     selectToInput() {
@@ -654,16 +680,25 @@ export default {
       this.form.clientId = ''
       this.form.clientName = ''
     },
+    setUpper() {
+      this.form.zph = this.form.zph.toUpperCase()
+    },
+    checkNum() {
+      if (this.form.zph.length == 11 ) {
+        let type = this.form.zph.substr(4, 2)
+        
+      } else if (this.form.zph.length == 12 ) {
+        console.log('2')
+      }
+    },
     onSubmit() {
-      //this.form.projNum = JSON.stringify(this.form.projNum)
       //判断是否填写了正评号,赋值reportNumType
       if (this.form.zph) {
-        const ps = this.projTypeOption.filter((n) => n.value == this.form.projType)[0].ps
-        if (this.form.zph.indexOf(ps) == -1) {
+        const type = this.projTypeOption.filter((n) => n.value == this.form.projType)[0].type
+        if (this.form.zph.indexOf(type) == -1) {
           this.$message.warning('正评号与项目类型不符')
           return 0
         }
-        //if (this.form.zph.indexOf(''))
         if (this.form.projType == 1010 || this.form.projType == 1020 || this.form.projType == 1030) {
           this.form.reportNums[0].reportNumType = parseInt(this.form.projType) + 2//房地资正评
         } else if (this.form.projType == 1041 || this.form.projType == 1042 || this.form.projType == 1043) {
@@ -686,12 +721,12 @@ export default {
       } else {
         //没输入正评号的时候传空数组
         this.form.reportNums = null
-        console.log('没有填写正评号')
+        console.log('没有填写正评号的情况')
       }
       console.log('form', this.form)
 
       if (this.form.clientName == '' && this.form.clientId == '') {
-        this.$message.warning('请填写联系人')
+        this.$message.warning('请填写委托人')
       } else {
         if (this.form.clientId == 141) {
           this.form.clientId = ''
@@ -748,10 +783,14 @@ export default {
     transformPeop() {
       var that = this
       return new Promise(function (resolve, reject) {
-        //  银行
-        // if(!that.isEdit){
-        //后端处理好号把这段加回去
-        //}
+        //  接洽人
+        let projContact = that.form.projContact
+        let projContactNew = ''
+        for (let i = 0; i < projContact.length; i++) {
+          if (projContact[i].value) {
+            projContactNew = projContactNew + projContact[i].value + ','
+          }
+        }
         //  项目复核人
         let projReviewer = that.form.projReviewer
         let projReviewerNew = ''

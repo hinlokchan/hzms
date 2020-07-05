@@ -1306,6 +1306,7 @@ export default {
                 console.log(err)
               })
           } else {
+            console.log(this.regForm)
             editFaRegister({ registerId: this.regInfo.registerId })
               .then(res => {
                 console.log('editRes', res)
