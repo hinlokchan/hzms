@@ -447,8 +447,6 @@
     />
     <zc-obj-detail-dialog
       :show.sync="zcDialogVisible"
-      :obj="assemObjForm"
-      :isEdit="assemObjIsEdit"
       :projId="projDetail.projId"
     />
     <!--
@@ -1499,6 +1497,7 @@ export default {
           this.getNumType = this.queryData.projType + 1
         } else {
           this.$message.warning('非房地资项目请选择正评号')
+          return 0
         }
       } else if (val == 2) { //正评号
         if (this.queryData.projType == 1010 || this.queryData.projType == 1020 || this.queryData.projType == 1030) {

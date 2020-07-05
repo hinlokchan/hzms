@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    title="正评登记"
+    title="正评登记1"
     :visible.sync="formalRegVisible"
     width="80%"
   >
@@ -188,6 +188,15 @@ export default {
       type: Object
     },
     projId: { type: Number },
+  },
+  watch: {
+    show: {
+      immediate: true,
+      handler(show) {
+        this.visible = this.show
+        this.cityOptions = cityOptions
+      }
+    }
   },
   data() {
     return {
