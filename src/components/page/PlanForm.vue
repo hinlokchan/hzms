@@ -370,7 +370,11 @@
             </el-col>
             <el-col :span="6">
               <el-form-item label="项目负责人">
-                <el-input v-model="form.projLeader"></el-input>
+                <!-- <el-input v-model="form.projLeader"></el-input> -->
+                <el-autocomplete
+                  v-model="form.projLeader"
+                  :fetch-suggestions="querySearch"
+                ></el-autocomplete>
               </el-form-item>
             </el-col>
             <el-col
@@ -420,7 +424,12 @@
                   <el-input
                     style="width:90%"
                     v-model="item.value"
-                  ></el-input><i
+                  ></el-input>
+                  <!-- <el-autocomplete
+                    v-model="item.value"
+                    :fetch-suggestions="querySearch"
+                  ></el-autocomplete> -->
+                  <i
                     class="el-icon-lx-roundclose"
                     style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5"
                     @click.prevent="removeDomain(index, 1)"
@@ -446,7 +455,12 @@
                   <el-input
                     style="width:90%"
                     v-model="item.value"
-                  ></el-input><i
+                  ></el-input>
+                  <!-- <el-autocomplete
+                    v-model="item.value"
+                    :fetch-suggestions="querySearch"
+                  ></el-autocomplete> -->
+                  <i
                     class="el-icon-lx-roundclose"
                     style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5"
                     @click.prevent="removeDomain(index, 2)"
@@ -472,7 +486,12 @@
                   <el-input
                     style="width:90%"
                     v-model="item.value"
-                  ></el-input><i
+                  ></el-input>
+                  <!-- <el-autocomplete
+                    v-model="item.value"
+                    :fetch-suggestions="querySearch"
+                  ></el-autocomplete> -->
+                  <i
                     class="el-icon-lx-roundclose"
                     style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5"
                     @click.prevent="removeDomain(index, 3)"
@@ -500,7 +519,12 @@
                   <el-input
                     style="width:90%"
                     v-model="item.value"
-                  ></el-input><i
+                  ></el-input>
+                  <!-- <el-autocomplete
+                    v-model="item.value"
+                    :fetch-suggestions="querySearch"
+                  ></el-autocomplete> -->
+                  <i
                     class="el-icon-lx-roundclose"
                     style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5"
                     @click.prevent="removeDomain(index, 4)"
@@ -532,7 +556,7 @@
 
 <script>
 import { createNewProject, editProject } from '@/api/index'
-import { getDetailProjInfo, getUserList } from '@/api/index'
+import { getDetailProjInfo, getUserList, userQuery } from '@/api/index'
 import clientOptions from '../../../public/clientName.json'
 import projTypeOption from '../../../public/projTypeOption.json'
 
@@ -612,7 +636,7 @@ export default {
       },
       assemGoalList: ['抵押', '交易', '资产处置（司法鉴定）', '出让', '挂牌出让', '补出让', '转让', '盘整收回', '征收补偿', '活立木拍卖', '出租', '置换', '股权转让', '作价入股', '增资扩股', '入账', '征收、完税', '企业改制', '清算', '复审', '评价', '咨询'],
       contactTypeOption: ['正常接洽', '摇珠', '中行通知书', '定点采购', '中介超市摇珠'],
-      // userList: [],
+      userList: [],
     };
   },
   created() {
@@ -628,33 +652,33 @@ export default {
     }
     this.clientOptions = clientOptions
     this.projTypeOption = projTypeOption
-    // getUserList()
-    //   .then(res => {
-    //     this.userList = res.data
-    //     for (let i of userList) {
-    //       i.value = i.staffName
-    //     }
-    //   })
-    //   .catch(err => { })
+    getUserList()
+      .then(res => {
+        this.userList = res.data
+        for (let i of userList) {
+          i.value = i.staffName
+        }
+      })
+      .catch(err => { })
   },
   methods: {
-    // querySearchAsync(queryString, callback) {
-    //   var userList = this.userList
-    //   this.userListType = false
-    //   for (let i of userList) {
-    //     i.value = i.staffName
-    //   }
-    //   var results = queryString ? userList.filter(this.createFilter(queryString)) : userList
-    //   callback(results)
-    // },
-    // createFilter(queryString) {
-    //   return (userList) => {
-    //     return (userList.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+    querySearch(queryString, callback) {
+      var userList = this.userList
+      this.userListType = false
+      for (let i of userList) {
+        i.value = i.staffName
+      }
+      var results = queryString ? userList.filter(this.createFilter(queryString)) : userList
+      callback(results)
+    },
+    createFilter(queryString) {
+      return (userList) => {
+        return (userList.value.toLowerCase().indexOf(queryString.toLowerCase()) > -1)
 
-    //     // return (userList.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
-    //     // return (userList.staffId.indexOf(queryString) === 0)
-    //   }
-    // },
+        // return (userList.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+        // return (userList.staffId.indexOf(queryString) === 0)
+      }
+    },
     arrgTypeToEnable(val) {
       if (val == 1010 || val == 1030) {
         this.form.arrgType = '1001'
@@ -712,21 +736,6 @@ export default {
         }
       } else {
         data.projContact = [{ value: '' }]
-      }
-      //  专业复核人
-      if (data.projProReviewer !== '') {
-        if (data.projProReviewer.indexOf(',') !== -1) {
-          let midData = data.projProReviewer.split(',')
-          let endData = []
-          for (let i = 0; i < midData.length; i++) {
-            endData.push({ value: midData[i] })
-          }
-          data.projProReviewer = endData
-        } else {
-          data.projProReviewer = [{ value: data.projProReviewer }]
-        }
-      } else {
-        data.projProReviewer = [{ value: '' }]
       }
       // 项目复核人
       if (data.projReviewer !== '') {

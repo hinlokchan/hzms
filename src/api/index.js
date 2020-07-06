@@ -265,4 +265,13 @@ export function deleteContractNum(data) {
   });
 }
 
+export function userQuery(data) {
+  return request({
+    url: `${ProManageAPIServer}userManage/fuzzyQuery`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
 export var getProjInfoTable = 'statistics/getProjInfoTable';

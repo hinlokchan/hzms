@@ -87,7 +87,6 @@
         class="table"
         ref="multipleTable"
         header-cell-class-name="table-header"
-        :default-sort="{ prop:'projDate', order: 'descending' }"
       >
         <el-table-column type="expand">
           <template slot-scope="props">
@@ -156,7 +155,7 @@
         <el-table-column
           prop="projNum"
           label="计划编号"
-          width="110"
+          width="115"
         ></el-table-column>
         <el-table-column
           prop="projName"

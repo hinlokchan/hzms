@@ -11,6 +11,13 @@
     </div> -->
     <el-page-header @back="goBack"></el-page-header>
     <el-dialog
+      :visible.sync="workArrgVisible"
+      width="80%"
+      title="综合进度安排"
+    >
+      
+    </el-dialog>
+    <el-dialog
       title="取号"
       :visible.sync="getNumVisible"
       width="30%"
@@ -899,6 +906,7 @@ export default {
       //
       addAssemCheck: false,
       workArrgEdit: false,
+      workArrgVisible: false,
       assemValueEdit: false,
       isReg: false,
       formalRegVisible: false,
@@ -1215,7 +1223,8 @@ export default {
         })
     },
     handleWorkArrg() {
-      this.$router.push({ path: '/workarrange', query: { data: this.queryData, projMember: this.projMember, isEdit: this.workArrgEdit } })
+      //this.$router.push({ path: '/workarrange', query: { data: this.queryData, projMember: this.projMember, isEdit: this.workArrgEdit } })
+      this.workArrgVisible = true
     },
     handleDetail() {
       this.$router.push({ path: '/projcheck', query: { data: this.queryData.projId } })
