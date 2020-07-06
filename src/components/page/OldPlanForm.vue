@@ -34,6 +34,7 @@
                 prop="zph"
               >
                 <el-input
+                  ref="faReportNum"
                   v-model="form.zph"
                   @input="setUpper"
                   @blur="checkNum"
@@ -339,7 +340,7 @@
             </el-col>
             <el-col :span="6">
               <el-form-item
-                label="编制时间"
+                label="编制日期"
                 prop="projDate"
               >
                 <el-date-picker
@@ -684,11 +685,34 @@ export default {
       this.form.zph = this.form.zph.toUpperCase()
     },
     checkNum() {
-      if (this.form.zph.length == 11 ) {
+      if (this.form.zph.length == 11) {
         let type = this.form.zph.substr(4, 2)
-        
-      } else if (this.form.zph.length == 12 ) {
-        console.log('2')
+        const typeName = ['FG', 'ZP', 'TG', 'FZ', 'ZZ', 'TZ', 'WX', 'ZC', 'JX', 'QT']
+        for (let i in typeName) {
+          if (i == 9 && typeName[i] != type) {
+            this.$message.warning('正评号字母输入有误，请确认后重试')
+            this.$refs['faReportNum'].focus()
+          } else if (typeName[i] == type) {
+            let year = this.form.zph.substr(0, 4)
+            let month = this.form.zph.substr(6, 2)
+            if (month == 13) {
+              month = '01'
+            }
+            console.log(year + '-' + month)
+            return 0
+          }
+        }
+      } else if (this.form.zph.length == 12) {
+        let type = this.form.zph.substr(4, 3)
+        const typeName = ['FSF', 'FSZ', 'FST', 'PPP']
+        for (let i in typeName) {
+          if (i == 9 && typeName[i] != type) {
+            this.$message.warning('正评号字母输入有误，请确认后重试')
+            this.$refs['faReportNum'].focus()
+          } else if (typeName[i] == type) {
+            return 0
+          }
+        }
       }
     },
     onSubmit() {
