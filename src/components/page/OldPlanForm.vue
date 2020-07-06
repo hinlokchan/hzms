@@ -503,7 +503,7 @@
               type="primary"
               @click="onSubmit"
             >表单提交</el-button>
-            <el-button @click="goBack">取消</el-button>
+            <el-button @click="transformPeop()">取消</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -529,10 +529,10 @@ export default {
         projProgress: '',
         projType: '',
         projName: '',
-        projDegree: '',
+        projDegree: '1001',
         arrgType: '',
         projScope: '',
-        newOldType: '',
+        newOldType: '1001',
         baseDate: '',
         fldSrvySchedule: '',
         riskProfile: '',
@@ -603,9 +603,9 @@ export default {
         fldSrvySchedule: [
           { required: true, message: '请选择现勘日期', trigger: 'blur' }
         ],
-        projContact: [
-          { required: true, message: '请填写接洽人', trigge: 'blur' }
-        ],
+        // projContact: [
+        //   { required: true, message: '请填写接洽人', trigge: 'blur' }
+        // ],
         clientName: [
           { required: true, message: '请填写委托人', trigge: 'blur' }
         ],
@@ -695,10 +695,11 @@ export default {
           } else if (typeName[i] == type) {
             let year = this.form.zph.substr(0, 4)
             let month = this.form.zph.substr(6, 2)
-            if (month == 13) {
+            if (month == 13 || month == 19 || month == 20) {
               month = '01'
             }
-            console.log(year + '-' + month)
+            this.form.reportNums[0].takenDate = year + '-' + month + '-01'
+            console.log(this.form.reportNums[0].takenDate)
             return 0
           }
         }
@@ -706,10 +707,11 @@ export default {
         let type = this.form.zph.substr(4, 3)
         const typeName = ['FSF', 'FSZ', 'FST', 'PPP']
         for (let i in typeName) {
-          if (i == 9 && typeName[i] != type) {
+          if (i == 3 && typeName[i] != type) {
             this.$message.warning('正评号字母输入有误，请确认后重试')
             this.$refs['faReportNum'].focus()
           } else if (typeName[i] == type) {
+            this.form.reportNums[0].takenDate = year + '-' + month + '-01'
             return 0
           }
         }
@@ -741,14 +743,13 @@ export default {
         }
         //
         this.form.reportNums[0].reportNum = this.form.zph
-        this.form.reportNums[0].takenDate = this.$moment(this.takenDate).format('YYYY-MM-DD')
+        //this.form.reportNums[0].takenDate = this.$moment(this.takenDate).format('YYYY-MM-DD')
       } else {
         //没输入正评号的时候传空数组
         this.form.reportNums = null
         console.log('没有填写正评号的情况')
       }
       console.log('form', this.form)
-
       if (this.form.clientName == '' && this.form.clientId == '') {
         this.$message.warning('请填写委托人')
       } else {
@@ -759,21 +760,25 @@ export default {
           this.form.clientId = ''
           this.form.clientId = clientIdMid
         }
-        console.log('ababa', this.form.clientId)
         this.$refs.ruleForm.validate((valid) => {
           if (valid) {
             this.transformPeop()
               .then(res => {
-                console.log('form', this.form)
-                // setOldProject(this.form)
-                //   .then(res => {
-                //     this.$message.success('录入成功')
-                //     location.reload()
-                //     console.log('res', res)
-                //   })
-                //   .catch(err => {
-                //     console.log('err', err)
-                //   })
+                console.log('subform', this.form)
+                setOldProject(this.form)
+                  .then(res => {
+                    this.$message.success('录入成功')
+                    location.reload()
+                    console.log('res', res)
+                  })
+                  .catch(err => {
+                    console.log('err', err)
+                    if (err.statusCode == 5011) {
+                      this.$message.error('该项目编号已存在')
+                    } else {
+                      this.$message.error('提交失败，请稍后重试')
+                    }
+                  })
               })
           } else {
             this.$message.warning('请填写必填信息')
@@ -815,7 +820,8 @@ export default {
             projContactNew = projContactNew + projContact[i].value + ','
           }
         }
-        //  项目复核人
+        console.log('projContact', projContactNew.substr(0, projContactNew.length - 1))
+        that.form.projContact = projContactNew.substr(0, projContactNew.length - 1)
         let projReviewer = that.form.projReviewer
         let projReviewerNew = ''
         for (let i = 0; i < projReviewer.length; i++) {

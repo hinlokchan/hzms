@@ -53,19 +53,19 @@
               <div class="projTitle">初评号</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent"></div>
+              <div class="projContent">{{reportNum.cph}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">正评号</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent"></div>
+              <div class="projContent">{{reportNum.zph}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">回函号</div>
             </el-col>
             <el-col :span="4">
-              <div class="projContent"></div>
+              <div class="projContent">{{reportNum.hhh}}</div>
             </el-col>
             <el-col :span="2">
               <div class="projTitle">项目类型</div>
@@ -283,8 +283,8 @@ export default {
       cph: '',
       zph: '',
       hhh: '',
-      detailData: [],
-      reportNum: [],
+      detailData: {},
+      reportNum: {},
       clientOptions: [],
       projTypeOption: [],
       projTypeZH: '',
@@ -339,6 +339,8 @@ export default {
             this.transedData.projType = this.projTypeOption[i].label
           }
         }
+        this.reportNum = res.data.reportNumList
+        console.log(this.reportNum)
         //委托人（原银行）转译
         // let clientOptions = this.clientOptions
         // let bankAfter = []

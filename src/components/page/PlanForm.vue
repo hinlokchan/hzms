@@ -88,7 +88,33 @@
                 </el-select>
               </el-form-item>
             </el-col>
-
+            <el-col :span="6">
+              <el-form-item
+                v-for="(item, index) in form.projContact"
+                :label="'接洽人' + (index + 1)"
+                :key="index"
+                prop="projContact"
+              >
+                <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
+                <div class="flexBox">
+                  <el-input
+                    style="width:90%"
+                    v-model="item.value"
+                  ></el-input><i
+                    class="el-icon-lx-roundclose"
+                    style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5"
+                    @click.prevent="removeDomain(index, 5)"
+                  ></i>
+                </div>
+              </el-form-item>
+              <el-form-item>
+                <i
+                  class="el-icon-lx-roundadd"
+                  style="font-size: 26px;color:#b5b5b5"
+                  @click="addDomain(5)"
+                ></i>
+              </el-form-item>
+            </el-col>
             <!-- <el-col :span="6">
               <el-form-item
                 label="接洽人"
@@ -223,12 +249,12 @@
             </el-col>
             <el-col :span="6">
               <el-form-item label="计划完成天数">
-                <el-input-number
+                <el-input
                   v-model="form.compSchedule"
                   :min="1"
                   label="完成天数"
                   oninput="value=value.replace(/[^\d.]/g,'')"
-                ></el-input-number>
+                ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -357,14 +383,13 @@
             </el-col>
             <!-- </el-row>
           <el-row :gutter="20"> -->
-            <el-col :span="6">
+            <!-- <el-col :span="6">
               <el-form-item
                 v-for="(item, index) in form.projContact"
                 :label="'接洽人' + (index + 1)"
                 :key="index"
                 prop="projContact"
               >
-                <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
                 <div class="flexBox">
                   <el-input
                     style="width:90%"
@@ -383,7 +408,7 @@
                   @click="addDomain(5)"
                 ></i>
               </el-form-item>
-            </el-col>
+            </el-col> -->
             <el-col :span="6">
               <el-form-item
                 v-for="(item, index) in form.projReviewer"
@@ -436,8 +461,6 @@
                 ></i>
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-row :gutter="20">
             <el-col :span="6">
               <el-form-item
                 v-for="(item, index) in form.projAsst"
@@ -464,6 +487,8 @@
                 ></i>
               </el-form-item>
             </el-col>
+          </el-row>
+          <el-row :gutter="20">
             <el-col :span="6">
               <el-form-item
                 v-for="(item, index) in form.fieldSrvy"
@@ -497,8 +522,8 @@
               @click="onSubmit"
             >表单提交</el-button>
             <el-button @click="goBack">取消</el-button>
+            <!-- <el-button @click="info">短信</el-button> -->
           </el-form-item>
-          <h2>{{this.form.test}}</h2>
         </el-form>
       </div>
     </div>
@@ -853,6 +878,10 @@ export default {
         this.$message.warning('请填写委托人！')
       } else {
         if (this.form.clientId == 141) {
+          if (this.form.clientName == '') {
+            this.$message.warning('请填写委托人！')
+            return 0
+          }
           this.form.clientId = ''
         } else {
           //this.form.clientId = this.form.clientId[this.form.clientId.length - 1]
@@ -876,16 +905,16 @@ export default {
                 }
                 editProject(this.form).then(res => {
                   console.log('add>>>res', res)
-                  this.$message.success('提交成功！');
+                  this.$message.success('提交成功！')
                   this.goBack()
                 }).catch(err => {
-                  this.$message.warning('提交失败！');
+                  this.$message.warning('提交失败！')
                   console.log('add>>>err', err)
                 })
               } else {
                 createNewProject(this.form).then(res => {
                   console.log('add>>>res', res)
-                  this.$message.success('提交成功！');
+                  this.$message.success('提交成功！')
                   let riskProfile = ''
                   if (this.form.riskProfile == '1001') {
                     riskProfile == '低'
@@ -910,7 +939,7 @@ export default {
                   }
 
                   // ZP项目类型：资；委托 人：(其他):惠州市水务投资集团；项目名称：惠州大道大湖溪段667平方米租金；评估对象及其坐落：同上;；评估目的：物业出租价格；引荐人及其电话：惠州市水务投资集团王总135 0229 7502；现联系单位、人及电话：同上；现勘时间：现勘同事约；报告时间要求：5天；项目风险预测：；评估收费报价：待定；是否曾评估的项目：（若是，原项目组成员：）；项目接洽人""[52]-缨(注师：莎缨;助理：健;专业复核人:远。以下由项目负责人安排 现勘：;资料核查验证：;市场询价调查：;技术报告:；报告编制:; 归档：;对外沟通:
-                  this.newInfoData = `项目编号:${res.data.projNum};项目类型:${this.transedData.projType};委托人:${this.form.clientName};项目名称:${this.form.projName};评估对象及其坐落:同上;评估目的:${this.form.assemGoal};引荐人及其电话:${this.form.projReferer}${this.form.projRefererInfo};现勘联系单位人及电话：同上;现勘时间:${this.form.fldSrvySchedule};报告时间要求:${this.form.compSchedule}天;项目风险预测:${riskProfile};评估收费报价:${this.form.assemFeeQuote};是否曾评估项目:${newOldType};项目接洽人:${this.form.projContact} ${this.form.projContactType}(注师：；助理：；专业复核人:)。以下由项目负责人安排,现勘:${this.form.fieldSrvy};资料核查验证: ;市场询价调查: ;技术报告: ;报告编制: ;归档: ;对外沟通: 。`
+                  this.newInfoData = `项目编号:${res.data.projNum};项目类型:${this.transedData.projType};委托人:${this.form.clientName};项目名称:${this.form.projName};评估对象及其坐落:同上;评估目的:${this.form.assemGoal};引荐人及其电话:${this.form.projReferer}${this.form.projRefererInfo};现勘联系单位人及电话：${this.form.fldSrvyContact}${this.form.fldSrvyContactInfo};现勘时间:${this.form.fldSrvySchedule};报告时间要求:${this.form.compSchedule}天;项目风险预测:${riskProfile};评估收费报价:${this.form.assemFeeQuote};是否曾评估项目:${newOldType};项目接洽人:${this.form.projContact} ${this.form.projContactType}(注师：；助理：；专业复核人:)。以下由项目负责人安排,现勘:${this.form.fieldSrvy};资料核查验证: ;市场询价调查: ;技术报告: ;报告编制: ;归档: ;对外沟通: 。`
                   this.newInfo = true
                 }).catch(err => {
                   console.log('add>>>err', err)
@@ -922,6 +951,12 @@ export default {
           }
         })
       }
+    },
+    info() {
+      console.log('agds', this.form)
+      this.transformPeop()
+      this.newInfoData = `项目编号:;项目类型:${this.transedData.projType};委托人:${this.form.clientName};项目名称:${this.form.projName};评估对象及其坐落:同上;评估目的:${this.form.assemGoal};引荐人及其电话:${this.form.projReferer}${this.form.projRefererInfo};现勘联系单位人及电话：${this.form.fldSrvyContact}${this.form.fldSrvyContactInfo};现勘时间:${this.form.fldSrvySchedule};报告时间要求:${this.form.compSchedule}天;项目风险预测:;评估收费报价:${this.form.assemFeeQuote};是否曾评估项目:;项目接洽人:${this.form.projContact} ${this.form.projContactType}(注师：；助理：；专业复核人:)。以下由项目负责人安排,现勘:${this.form.fieldSrvy};资料核查验证: ;市场询价调查: ;技术报告: ;报告编制: ;归档: ;对外沟通: 。`
+      this.newInfo = true
     },
     transformPeop() {
       var that = this
