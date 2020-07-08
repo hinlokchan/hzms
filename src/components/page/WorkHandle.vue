@@ -208,6 +208,7 @@
               :key="item.value"
               :label="item.label"
               :value="item.value"
+              :disabled="item.disable"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -937,12 +938,12 @@ export default {
         toType: ''
       },
       typeOptions: [
-        { value: '1010', label: '房地产' },
-        { value: '1020', label: '资产' },
-        { value: '1030', label: '土地' },
-        { value: '1041', label: '房地产咨询' },
-        { value: '1042', label: '资产咨询' },
-        { value: '1043', label: '土地咨询' }
+        { value: '1010', label: '房地产', disable: false },
+        { value: '1020', label: '资产', disable: false },
+        { value: '1030', label: '土地', disable: false },
+        { value: '1041', label: '房地产咨询', disable: false },
+        { value: '1042', label: '资产咨询', disable: false },
+        { value: '1043', label: '土地咨询', disable: false }
       ],
       //子项目表单
       subProjForm: {
@@ -1141,6 +1142,14 @@ export default {
             console.log('projMember', this.projMember)
           }
           this.$nextTick(() => {
+            //禁用同类型的“更改项目类型”
+            for (let i of this.typeOptions) {
+              if (this.projDetail.projType == i.value) {
+                i.disable = true
+              }
+            }
+            console.log('啊啊啊啊',this.typeOptions)
+            //
             if (this.reportNum.cph != '' && this.reportNum.zph != '') {
               this.reportNumList = this.reportNum.cph + ',' + this.reportNum.zph
             } else if (this.reportNum.cph == '' && this.reportNum.zph == '') {
