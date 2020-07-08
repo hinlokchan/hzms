@@ -96,7 +96,10 @@
               class="demo-table-expand"
             >
               <el-form-item label="项目类型">
-                <div v-for="item in projTypeList" :key="item.value">
+                <div
+                  v-for="item in projTypeList"
+                  :key="item.value"
+                >
                   <span v-if="item.value == props.row.projType">{{ item.label }}</span>
                 </div>
               </el-form-item>
@@ -139,10 +142,10 @@
           align="center"
         >
           <template slot-scope="props">
-          <el-tag
-            :type="props.row.projState == '正常' ? 'primary' : 'warning'"
-            effect="dark"
-          >{{ props.row.projState }}</el-tag>
+            <el-tag
+              :type="props.row.projState == '正常' ? 'primary' : 'warning'"
+              effect="dark"
+            >{{ props.row.projState }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column
@@ -238,6 +241,7 @@
 <script>
 // import { fetchData } from '../../api/index';
 import { getAllAbstractProject, searchProject, delProject } from '@/api/index';
+import { checkFaRegister } from '@/api/formalreg'
 import projTypeOption from '../../../public/projTypeOption.json'
 export default {
   name: 'plan',
@@ -308,7 +312,7 @@ export default {
   },
   methods: {
     getData() {
-      if(sessionStorage.getItem('page')){
+      if (sessionStorage.getItem('page')) {
         this.changePage(parseInt(sessionStorage.getItem('page')))
         sessionStorage.removeItem('page')
       }
@@ -328,9 +332,9 @@ export default {
       // });
     },
     searchProjInfo() {
-      let newArr={}
-      for(let j in this.searchData){
-        if(this.searchData[j] !== ''){
+      let newArr = {}
+      for (let j in this.searchData) {
+        if (this.searchData[j] !== '') {
           newArr[j] = this.searchData[j]
         }
       }
@@ -373,19 +377,55 @@ export default {
     // 删除操作
     handleDelete(row) {
       // 二次确认删除
-      this.$confirm('删除后将不可恢复，确定要删除吗？', '提示: 即将删除['+row.projNum+']', {
-        type: 'warning'
-      })
-        .then(() => {
-          //接口会判断是否有报告号并对应删除
-          delProject({ projId: row.projId }).then(res => {
-            this.$message.success('删除成功');
-            this.getData()
-          }).catch(err => {
-            this.$message.warning('删除失败,请稍后重试');
-          })
+      checkFaRegister({ projId: row.projId, subReportNum: '-' })
+        .then(res => {
+          let status1 = res.data.registerState
+          let status2 = res.data.evalObjState
+          console.log(status1, status2)
+          if (status1 == true || status2 == true) {
+            this.$message.error('该项目已填写估价对象详情或已登记正评，请联系管理员删除')
+            return 0
+          } else {
+            this.$confirm('删除后将不可恢复，确定要删除吗？', '提示: 即将删除[' + row.projNum + ']', {
+              type: 'warning'
+            })
+              .then(() => {
+                //接口会判断是否有报告号并对应删除
+                // if (status1 == true || status2 == true) {
+                //   this.message.error('该项目已填写估价对象详情或已登记正评，请联系管理员删除')
+                //   return 0
+                // }
+                delProject({ projId: row.projId }).then(res => {
+                  this.$message.success('删除成功');
+                  this.getData()
+                }).catch(err => {
+                  this.$message.warning('删除失败,请稍后重试');
+                })
+              })
+              .catch(() => { })
+          }
         })
-        .catch(() => { });
+        .catch(err => {
+          console.log(err)
+        })
+
+      // this.$confirm('删除后将不可恢复，确定要删除吗？', '提示: 即将删除['+row.projNum+']', {
+      //   type: 'warning'
+      // })
+      //   .then(() => {
+      //     //接口会判断是否有报告号并对应删除
+      //     // if (status1 == true || status2 == true) {
+      //     //   this.message.error('该项目已填写估价对象详情或已登记正评，请联系管理员删除')
+      //     //   return 0
+      //     // }
+      //     delProject({ projId: row.projId }).then(res => {
+      //       this.$message.success('删除成功');
+      //       this.getData()
+      //     }).catch(err => {
+      //       this.$message.warning('删除失败,请稍后重试');
+      //     })
+      //   })
+      //   .catch(() => { })
     }
   }
 };
@@ -393,44 +433,44 @@ export default {
 
 <style scoped>
 .handle-box {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .handle-select {
-    width: 120px;
+  width: 120px;
 }
 
 .handle-input {
-    width: 300px;
-    display: inline-block;
+  width: 300px;
+  display: inline-block;
 }
 .table {
-    width: 100%;
-    font-size: 14px;
+  width: 100%;
+  font-size: 14px;
 }
 .red {
-    color: #ff0000;
+  color: #ff0000;
 }
 .mr10 {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 .table-td-thumb {
-    display: block;
-    margin: auto;
-    width: 40px;
-    height: 40px;
+  display: block;
+  margin: auto;
+  width: 40px;
+  height: 40px;
 }
 
 .demo-table-expand {
-    font-size: 0;
+  font-size: 0;
 }
 .demo-table-expand label {
-    width: 90px;
-    color: #99a9bf;
+  width: 90px;
+  color: #99a9bf;
 }
 .demo-table-expand .el-form-item {
-    margin-right: 0;
-    margin-bottom: 0;
-    width: 50%;
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 50%;
 }
 </style>

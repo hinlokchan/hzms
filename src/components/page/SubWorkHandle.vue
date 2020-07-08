@@ -91,11 +91,11 @@ export default {
     this.subProjData = obj
     this.subProjData.subBaseDate = this.$moment(this.subProjData.subBaseDate).format('YYYY-MM-DD')
 
-    this.subProjData.subProjLeader = this.subProjData.subProjLeader.split(',')
-    this.subProjData.subProjReviewer = this.subProjData.subProjReviewer.split(',')
-    this.subProjData.subProjProReviewer = this.subProjData.subProjProReviewer.split(',')
-    this.subProjData.subProjAsst = this.subProjData.subProjAsst.split(',')
-    this.subProjData.subFieldSrvy = this.subProjData.subFieldSrvy.split(',')
+    // this.subProjData.subProjLeader = this.subProjData.subProjLeader.join(',')
+    // this.subProjData.subProjReviewer = this.subProjData.subProjReviewer.join(',')
+    // this.subProjData.subProjProReviewer = this.subProjData.subProjProReviewer.join(',')
+    // this.subProjData.subProjAsst = this.subProjData.subProjAsst.join(',')
+    // this.subProjData.subFieldSrvy = this.subProjData.subFieldSrvy.join(',')
     console.log('subProjData', this.subProjData)
   },
   methods: {

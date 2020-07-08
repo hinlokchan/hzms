@@ -11,13 +11,6 @@
     </div> -->
     <el-page-header @back="goBack"></el-page-header>
     <el-dialog
-      :visible.sync="workArrgVisible"
-      width="80%"
-      title="综合进度安排"
-    >
-      
-    </el-dialog>
-    <el-dialog
       title="取号"
       :visible.sync="getNumVisible"
       width="30%"
@@ -446,16 +439,25 @@
         >确认提交</el-button>
       </div>
     </el-dialog>
-    <fc-obj-detail-dialog
+    <FcObjDetailDialog
+      v-if="this.projDetail.projType == 1010"
       :show.sync="fcDialogVisible"
       :obj="assemObjForm"
       :isEdit="assemObjIsEdit"
       :projId="projDetail.projId"
-    />
-    <zc-obj-detail-dialog
+    ></FcObjDetailDialog>
+    <ZcObjDetailDialog
+      v-if="this.projDetail.projType == 1020"
       :show.sync="zcDialogVisible"
       :projId="projDetail.projId"
     />
+    <WorkArrgDialog
+      :show.sync="workArrgDialogVisible"
+      :projId="projDetail.projId"
+      :projMember="projMember"
+      :arrgEdit="workArrgEdit"
+      :arrgData="arrgData"
+    ></WorkArrgDialog>
     <!--
                   /\    \                  /\    \                  /\    \                  /\    \         
                   /::\____\                /::\    \                /::\    \                /::\____\        
@@ -739,7 +741,7 @@
           icon="el-icon-s-order"
           size="medium"
           type="primary"
-          @click="handleWorkArrg"
+          @click="isWorkArrgDialog()"
         >安排</el-button>
       </span>
     </div>
@@ -752,7 +754,7 @@
           </div>
           <div v-else>
             <div class="text">
-              <div class="item"><span>评估方法：</span>{{arrgData.assemMethod}}</div>
+              <div class="item"><span>评估方法：</span>{{workAssemMethod}}</div>
               <div class="item"><span>现场调查内容：</span>{{arrgData.fldSrvyContent}}</div>
             </div>
           </div>
@@ -879,19 +881,21 @@ import projTypeOption from '../../../public/projTypeOption.json'
 import { host } from '@/config'
 import FcObjDetailDialog from './AssemObjDetailDialog/FcObjDetailDialog'
 import ZcObjDetailDialog from './AssemObjDetailDialog/ZcObjDetailDialog'
+import WorkArrgDialog from './WorkArrg/WorkArrgDialog'
 var ProManageAPIServer = `${host.baseUrl}/${host.ProManageAPIServer}`
 
 export default {
   name: 'workhandle',
   inject: ['reload'],            //注入App里的reload方法
   components: {
+    WorkArrgDialog,
     FcObjDetailDialog,
-    ZcObjDetailDialog
+    ZcObjDetailDialog,
   },
   data() {
     return {
       queryData: '',
-      projTotalValue: '',
+      projTotalValue: 0,
       arrgData: {},
       projDetail: {},
       projMember: [],
@@ -904,9 +908,10 @@ export default {
       fcDialogVisible: false,
       zcDialogVisible: false,
       //
+      workArrgDialogVisible: false,
+      //
       addAssemCheck: false,
       workArrgEdit: false,
-      workArrgVisible: false,
       assemValueEdit: false,
       isReg: false,
       formalRegVisible: false,
@@ -918,7 +923,6 @@ export default {
       changeTypeVisible: false,
       qrcodeVisible: false,
       getOldNumVisible: false,
-      assemObjDetailVisible: false,
       reportNumSelectVal: 2,
       deleteNumSelectVal: 2,
       getNumType: '',
@@ -960,41 +964,41 @@ export default {
         ],
         subProjName: [{ required: true, message: '请输入子项目名称', trigger: 'blur' }],
         subProjScope: [{ required: true, message: '请输入子项目范围', trigger: 'blur' }],
-        subBaseDate: [{ required: true, message: '请输入子项目范围', trigger: 'blur' }],
-        subProjLeader: [{ required: true, message: '请输入子项目范围', trigger: 'change' }],
-        subProjReviewer: [{ required: true, message: '请输入子项目范围', trigger: 'change' }],
-        subProjProReviewer: [{ required: true, message: '请输入子项目范围', trigger: 'change' }],
-        subProjAsst: [{ required: true, message: '请输入子项目范围', trigger: 'change' }],
+        subBaseDate: [{ required: true, message: '请输入子项目基准日', trigger: 'blur' }],
+        subProjLeader: [{ required: true, message: '请选择子项目负责人', trigger: 'change' }],
+        subProjReviewer: [{ required: true, message: '请选择子项目复核人', trigger: 'change' }],
+        subProjProReviewer: [{ required: true, message: '请选择子项目专业复核人', trigger: 'change' }],
+        subProjAsst: [{ required: true, message: '请选择子项目项目助理', trigger: 'change' }],
         //subProj: [{ required: true, message: '请输入子项目范围', trigger: 'change' }],
       },
       midMember: [],
-      workArrgForm: {
-        projId: '',
-        assemMethod: '成本法',
-        fldSrvyContent: '',
-        //人员
-        prePreparationPic: [],
-        fldSrvyPic: [],
-        mktSrvyPic: [],
-        assemEstPic: [],
-        issueValPic: [],
-        internalAuditPic: [],
-        commuClientPic: [],
-        assemChargePic: [],
-        amendFinalPic: [],
-        manuArchivePic: [],
-        // //日期
-        prePreparationSche: '',
-        fldSrvySche: '',
-        mktSrvySche: '',
-        assemEstcSche: '',
-        issueValSche: '',
-        internalAuditSche: '',
-        commuClientSche: '',
-        assemChargeSche: '',
-        amendFinalSche: '',
-        manuArchiveSche: ''
-      },
+      // workArrgForm: {
+      //   projId: '',
+      //   assemMethod: '成本法',
+      //   fldSrvyContent: '',
+      //   //人员
+      //   prePreparationPic: [],
+      //   fldSrvyPic: [],
+      //   mktSrvyPic: [],
+      //   assemEstPic: [],
+      //   issueValPic: [],
+      //   internalAuditPic: [],
+      //   commuClientPic: [],
+      //   assemChargePic: [],
+      //   amendFinalPic: [],
+      //   manuArchivePic: [],
+      //   // //日期
+      //   prePreparationSche: '',
+      //   fldSrvySche: '',
+      //   mktSrvySche: '',
+      //   assemEstcSche: '',
+      //   issueValSche: '',
+      //   internalAuditSche: '',
+      //   commuClientSche: '',
+      //   assemChargeSche: '',
+      //   amendFinalSche: '',
+      //   manuArchiveSche: ''
+      // },
       arrgFormRules: {
         assemMethod: [
           { required: true, message: '请选择评估方法', trigger: 'blur' }
@@ -1084,7 +1088,7 @@ export default {
   created() {
     //处理从工作台获取的val -> queryData
     this.queryData = JSON.parse(this.$route.query.data)
-    this.workArrgForm.projId = this.queryData.projId
+    //this.workArrgForm.projId = this.queryData.projId
     console.log('queryData', this.queryData)
     this.projTypeOption = projTypeOption
     //处理项目类型value转为label展示
@@ -1198,34 +1202,59 @@ export default {
           if (res.statusCode == 200) {
             if (res.data == null) {
               this.workArrgEdit = false
+              this.arrgData = null
               console.log('workArrgEdit', this.workArrgEdit)
+              // console.log('arrgData', this.arrgData)
             } else {
               this.workArrgEdit = true
-              this.arrgData = res.data
-              //后期看看让后端分割出date和people
+              this.workAssemMethod = res.data.assemMethod
               this.workPeople.push(res.data.prePreparationPic, res.data.fldSrvyPic, res.data.mktSrvyPic, res.data.assemEstPic, res.data.issueValPic, res.data.internalAuditPic, res.data.commuClientPic, res.data.assemChargePic, res.data.amendFinalPic, res.data.manuArchivePic)
               this.workDate.push(res.data.prePreparationSche, res.data.fldSrvySche, res.data.mktSrvySche, res.data.assemEstSche, res.data.issueValSche, res.data.internalAuditSche, res.data.commuClientSche, res.data.assemChargeSche, res.data.amendFinalSche, res.data.manuArchiveSche)
-              // for (var i = 0; i < this.workPeople.length; i++) {
-              //   if (this.workPeople[i] !== '') {
-              //     this.workArrgEdit = true
-              //     break
-              //   } else {
-              //     this.workArrgEdit = false
-              //   }
-              // }
-              console.log('arrgData', this.arrgData)
-              console.log('workArrgEdit', this.workArrgEdit)
+              this.arrgData = res.data
+              //
+              this.transData()
+              //后期看看让后端分割出date和people
+              // this.workPeople.push(res.data.prePreparationPic, res.data.fldSrvyPic, res.data.mktSrvyPic, res.data.assemEstPic, res.data.issueValPic, res.data.internalAuditPic, res.data.commuClientPic, res.data.assemChargePic, res.data.amendFinalPic, res.data.manuArchivePic)
+              // this.workDate.push(res.data.prePreparationSche, res.data.fldSrvySche, res.data.mktSrvySche, res.data.assemEstSche, res.data.issueValSche, res.data.internalAuditSche, res.data.commuClientSche, res.data.assemChargeSche, res.data.amendFinalSche, res.data.manuArchiveSche)
+              console.log('转类型后arrgData', this.arrgData)
+              // console.log('workPeople', this.workPeople)
+              // console.log('workArrgEdit', this.workArrgEdit)
             }
           }
         })
         .catch(err => {
-
+          console.log('获取项目安排信息', err)
         })
     },
-    handleWorkArrg() {
-      //this.$router.push({ path: '/workarrange', query: { data: this.queryData, projMember: this.projMember, isEdit: this.workArrgEdit } })
-      this.workArrgVisible = true
+    transData() {
+      this.arrgData.assemMethod = this.arrgData.assemMethod.split(',')
+      //
+      this.arrgData.prePreparationPic = this.arrgData.prePreparationPic.split(',')
+      this.arrgData.fldSrvyPic = this.arrgData.fldSrvyPic.split(',')
+      this.arrgData.mktSrvyPic = this.arrgData.mktSrvyPic.split(',')
+      this.arrgData.assemEstPic = this.arrgData.assemEstPic.split(',')
+      this.arrgData.issueValPic = this.arrgData.issueValPic.split(',')
+      this.arrgData.internalAuditPic = this.arrgData.internalAuditPic.split(',')
+      this.arrgData.commuClientPic = this.arrgData.commuClientPic.split(',')
+      this.arrgData.assemChargePic = this.arrgData.assemChargePic.split(',')
+      this.arrgData.amendFinalPic = this.arrgData.amendFinalPic.split(',')
+      this.arrgData.manuArchivePic = this.arrgData.manuArchivePic.split(',')
+      //
+      this.arrgData.prePreparationSche = this.arrgData.prePreparationSche.split('-')
+      this.arrgData.fldSrvySche = this.arrgData.fldSrvySche.split('-')
+      this.arrgData.mktSrvySche = this.arrgData.mktSrvySche.split('-')
+      this.arrgData.assemEstSche = this.arrgData.assemEstSche.split('-')
+      this.arrgData.issueValSche = this.arrgData.issueValSche.split('-')
+      this.arrgData.internalAuditSche = this.arrgData.internalAuditSche.split('-')
+      this.arrgData.commuClientSche = this.arrgData.commuClientSche.split('-')
+      this.arrgData.assemChargeSche = this.arrgData.assemChargeSche.split('-')
+      this.arrgData.amendFinalSche = this.arrgData.amendFinalSche.split('-')
+      this.arrgData.manuArchiveSche = this.arrgData.manuArchiveSche.split('-')
     },
+    // handleWorkArrg() {
+    //   //this.$router.push({ path: '/workarrange', query: { data: this.queryData, projMember: this.projMember, isEdit: this.workArrgEdit } })
+    //   this.workArrgVisible = true
+    // },
     handleDetail() {
       this.$router.push({ path: '/projcheck', query: { data: this.queryData.projId } })
     },
@@ -1233,6 +1262,10 @@ export default {
       this.$router.push({ path: '/planform', query: { data: this.queryData.projId } })
     },
     handleChangeType() {
+      if (this.statusInfo.registerState == true || this.statusInfo.evalObjState == true) {
+        this.$message.error('该项目已填写估价对象详情或已登记正评，不可改变类型')
+        return 0
+      }
       this.changeTypeVisible = true
       this.changeType.projId = this.queryData.projId
       let selOption = this.typeOptions
@@ -1308,6 +1341,7 @@ export default {
             submitFaRegister(this.regForm)
               .then(res => {
                 console.log('addRes', res)
+
                 this.reload()
               })
               .catch(err => {
@@ -1363,23 +1397,24 @@ export default {
       //     })
       // }
     },
-    handleAssemObjDetail() {
-      this.assemObjDetailVisible = true
-    },
     handleQRCode() {
       if (this.statusInfo.registerState == true && this.statusInfo.evalObjState == true) {
         getEvalObjDetail({ projId: this.projDetail.projId, subReportNum: '-' })
           .then(res => {
             this.projTotalValue = res.data.projTotalValue
-            console.log('1231231')
+            console.log('评估值:', res.data.projTotalValue)
+            this.qrcodeVisible = true
+            this.$nextTick(() => {
+              this.creatQRCode()
+            })
           })
           .catch(err => {
             this.$message.error('服务器忙，请稍后重试')
           })
-        this.qrcodeVisible = true
-        this.$nextTick(() => {
-          this.creatQRCode()
-        })
+        // this.qrcodeVisible = true
+        // this.$nextTick(() => {
+        //   this.creatQRCode()
+        // })
       } else {
         this.$message.error('请先登记正评后生成二维码')
       }
@@ -1388,8 +1423,8 @@ export default {
     creatQRCode() {
       console.log('createQRCode', this.projTotalValue)
       this.qr = new QRCode('qrcode', {
-        width: '150',
-        height: '150',
+        width: '200',
+        height: '200',
         //text: this.form.zph + this.form.xmmc + this.form.pgz + this.form.jzr,
         text: '项目报告号：' + this.reportNum.zph + ' ' + '项目名称：' + this.projDetail.projName + ' ' + '项目评估值：' + this.projTotalValue + '万元 ' + '基准日：' + this.formatDate(this.projDetail.projDate)
       })
@@ -1729,6 +1764,9 @@ export default {
     },
     isZcDialogVisible() {
       this.zcDialogVisible = true
+    },
+    isWorkArrgDialog() {
+      this.workArrgDialogVisible = true
     },
     goBack() {
       this.$router.go(-1)

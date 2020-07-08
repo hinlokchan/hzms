@@ -1,7 +1,10 @@
 <template>
   <div class="container">
     <el-page-header @back="goBack"></el-page-header>
-    <div class="crumbs" style="margin-top: 20px">
+    <div
+      class="crumbs"
+      style="margin-top: 20px"
+    >
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
           <i class="el-icon-receiving"></i> 我的项目
@@ -15,7 +18,7 @@
         <h2>安排项目：{{this.queryData.projNum}}</h2>
       </div>
       <el-form
-        :model="workArrgForm"
+        :model="arrgForm"
         ref="arrgFormRules"
         :rules="arrgFormRules"
         label-width="auto"
@@ -24,12 +27,12 @@
           label="评估方法"
           prop="assemMethod"
         >
-          <!-- <el-radio-group v-model="workArrgForm.assemMethod">
+          <!-- <el-radio-group v-model="arrgForm.assemMethod">
             <el-radio label="成本法">成本法</el-radio>
             <el-radio label="收益法">收益法</el-radio>
             <el-radio label="市场法">市场法</el-radio>
           </el-radio-group> -->
-          <el-checkbox-group v-model="workArrgForm.assemMethod">
+          <el-checkbox-group v-model="arrgForm.assemMethod">
             <el-checkbox label="成本法"></el-checkbox>
             <el-checkbox label="收益法"></el-checkbox>
             <el-checkbox label="市场法"></el-checkbox>
@@ -40,7 +43,7 @@
           prop="fldSrvyContent"
         >
           <el-input
-            v-model="workArrgForm.fldSrvyContent"
+            v-model="arrgForm.fldSrvyContent"
             type="textarea"
             rows="2"
           ></el-input>
@@ -55,7 +58,7 @@
               prop="prePreparationSche"
             >
               <el-date-picker
-                v-model="workArrgForm.prePreparationSche"
+                v-model="arrgForm.prePreparationSche"
                 type="daterange"
                 range-separator="-"
                 start-placeholde="开始日期"
@@ -69,7 +72,7 @@
               prop="prePreparationPic"
               label="责任人"
             >
-              <el-checkbox-group v-model="workArrgForm.prePreparationPic">
+              <el-checkbox-group v-model="arrgForm.prePreparationPic">
                 <el-checkbox-button
                   v-for="item in projMember"
                   :key="item"
@@ -86,7 +89,7 @@
               prop="fldSrvySche"
             >
               <el-date-picker
-                v-model="workArrgForm.fldSrvySche"
+                v-model="arrgForm.fldSrvySche"
                 type="daterange"
                 range-separator="-"
                 start-placeholde="开始日期"
@@ -100,7 +103,7 @@
               label="责任人"
               prop="fldSrvyPic"
             >
-              <el-checkbox-group v-model="workArrgForm.fldSrvyPic">
+              <el-checkbox-group v-model="arrgForm.fldSrvyPic">
                 <el-checkbox-button
                   v-for="item in projMember"
                   :key="item"
@@ -117,7 +120,7 @@
               prop="mktSrvySche"
             >
               <el-date-picker
-                v-model="workArrgForm.mktSrvySche"
+                v-model="arrgForm.mktSrvySche"
                 type="daterange"
                 range-separator="-"
                 start-placeholde="开始日期"
@@ -131,7 +134,7 @@
               label="责任人"
               prop="mktSrvyPic"
             >
-              <el-checkbox-group v-model="workArrgForm.mktSrvyPic">
+              <el-checkbox-group v-model="arrgForm.mktSrvyPic">
                 <el-checkbox-button
                   v-for="item in projMember"
                   :key="item"
@@ -148,7 +151,7 @@
               prop="assemEstSche"
             >
               <el-date-picker
-                v-model="workArrgForm.assemEstSche"
+                v-model="arrgForm.assemEstSche"
                 type="daterange"
                 range-separator="-"
                 start-placeholde="开始日期"
@@ -162,7 +165,7 @@
               label="责任人"
               prop="assemEstPic"
             >
-              <el-checkbox-group v-model="workArrgForm.assemEstPic">
+              <el-checkbox-group v-model="arrgForm.assemEstPic">
                 <el-checkbox-button
                   v-for="item in projMember"
                   :key="item"
@@ -179,7 +182,7 @@
               prop="issueValSche"
             >
               <el-date-picker
-                v-model="workArrgForm.issueValSche"
+                v-model="arrgForm.issueValSche"
                 type="daterange"
                 range-separator="-"
                 start-placeholde="开始日期"
@@ -193,7 +196,7 @@
               label="责任人"
               prop="issueValPic"
             >
-              <el-checkbox-group v-model="workArrgForm.issueValPic">
+              <el-checkbox-group v-model="arrgForm.issueValPic">
                 <el-checkbox-button
                   v-for="item in projMember"
                   :key="item"
@@ -210,7 +213,7 @@
               prop="internalAuditSche"
             >
               <el-date-picker
-                v-model="workArrgForm.internalAuditSche"
+                v-model="arrgForm.internalAuditSche"
                 type="daterange"
                 range-separator="-"
                 start-placeholde="开始日期"
@@ -224,7 +227,7 @@
               label="责任人"
               prop="internalAuditPic"
             >
-              <el-checkbox-group v-model="workArrgForm.internalAuditPic">
+              <el-checkbox-group v-model="arrgForm.internalAuditPic">
                 <el-checkbox-button
                   v-for="item in projMember"
                   :key="item"
@@ -241,7 +244,7 @@
               prop="commuClientSche"
             >
               <el-date-picker
-                v-model="workArrgForm.commuClientSche"
+                v-model="arrgForm.commuClientSche"
                 type="daterange"
                 range-separator="-"
                 start-placeholde="开始日期"
@@ -255,7 +258,7 @@
               label="责任人"
               prop="commuClientPic"
             >
-              <el-checkbox-group v-model="workArrgForm.commuClientPic">
+              <el-checkbox-group v-model="arrgForm.commuClientPic">
                 <el-checkbox-button
                   v-for="item in projMember"
                   :key="item"
@@ -272,7 +275,7 @@
               prop="assemChargeSche"
             >
               <el-date-picker
-                v-model="workArrgForm.assemChargeSche"
+                v-model="arrgForm.assemChargeSche"
                 type="daterange"
                 range-separator="-"
                 start-placeholde="开始日期"
@@ -286,7 +289,7 @@
               label="责任人"
               prop="assemChargePic"
             >
-              <el-checkbox-group v-model="workArrgForm.assemChargePic">
+              <el-checkbox-group v-model="arrgForm.assemChargePic">
                 <el-checkbox-button
                   v-for="item in projMember"
                   :key="item"
@@ -303,7 +306,7 @@
               prop="amendFinalSche"
             >
               <el-date-picker
-                v-model="workArrgForm.amendFinalSche"
+                v-model="arrgForm.amendFinalSche"
                 type="daterange"
                 range-separator="-"
                 start-placeholde="开始日期"
@@ -317,7 +320,7 @@
               label="责任人"
               prop="amendFinalPic"
             >
-              <el-checkbox-group v-model="workArrgForm.amendFinalPic">
+              <el-checkbox-group v-model="arrgForm.amendFinalPic">
                 <el-checkbox-button
                   v-for="item in projMember"
                   :key="item"
@@ -334,7 +337,7 @@
               prop="manuArchiveSche"
             >
               <el-date-picker
-                v-model="workArrgForm.manuArchiveSche"
+                v-model="arrgForm.manuArchiveSche"
                 type="daterange"
                 range-separator="-"
                 start-placeholde="开始日期"
@@ -348,7 +351,7 @@
               label="责任人"
               prop="manuArchivePic"
             >
-              <el-checkbox-group v-model="workArrgForm.manuArchivePic">
+              <el-checkbox-group v-model="arrgForm.manuArchivePic">
                 <el-checkbox-button
                   v-for="item in projMember"
                   :key="item"
@@ -384,8 +387,7 @@ export default {
       tableData: [],
       projMember: [],
       projNum: '',
-      workname: ['前期准备', '现场勘查及收集资料', '市场调查询价记录', '评定估算', '编制出具估价（估价）报告', '内部三级审核', '与委托人沟通', '评估收费', '修正定稿及提交报告', '工作底稿归档'],
-      workArrgForm: {
+      arrgForm: {
         projId: '',
         assemMethod: [],
         fldSrvyContent: '',
@@ -412,39 +414,39 @@ export default {
         amendFinalSche: [],
         manuArchiveSche: []
       },
-      arrgFormRules: {
-        assemMethod: [{ required: true, message: '请选择评估方法', trigger: 'change' }],
-        prePreparationSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
-        fldSrvySche: [{ required: true, message: '请选择日期', trigger: 'change' }],
-        mktSrvySche: [{ required: true, message: '请选择日期', trigger: 'change' }],
-        assemEstSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
-        issueValSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
-        internalAuditSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
-        commuClientSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
-        assemChargeSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
-        amendFinalSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
-        manuArchiveSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
-        //
-        prePreparationPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
-        prePreparationPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
-        fldSrvyPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
-        mktSrvyPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
-        assemEstPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
-        issueValPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
-        internalAuditPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
-        commuClientPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
-        assemChargePic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
-        amendFinalPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
-        manuArchivePic: [{ required: true, message: '请选择责任人', trigger: 'change' }]
+      // arrgFormRules: {
+      //   assemMethod: [{ required: true, message: '请选择评估方法', trigger: 'change' }],
+      //   prePreparationSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
+      //   fldSrvySche: [{ required: true, message: '请选择日期', trigger: 'change' }],
+      //   mktSrvySche: [{ required: true, message: '请选择日期', trigger: 'change' }],
+      //   assemEstSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
+      //   issueValSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
+      //   internalAuditSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
+      //   commuClientSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
+      //   assemChargeSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
+      //   amendFinalSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
+      //   manuArchiveSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
+      //   //
+      //   prePreparationPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
+      //   prePreparationPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
+      //   fldSrvyPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
+      //   mktSrvyPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
+      //   assemEstPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
+      //   issueValPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
+      //   internalAuditPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
+      //   commuClientPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
+      //   assemChargePic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
+      //   amendFinalPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
+      //   manuArchivePic: [{ required: true, message: '请选择责任人', trigger: 'change' }]
 
-      }
+      // }
 
     }
   },
   created() {
     this.queryData = this.$route.query.data
     this.projMember = this.$route.query.projMember
-    this.workArrgForm.projId = this.queryData.projId
+    this.arrgForm.projId = this.queryData.projId
     if (this.$route.query.isEdit == true) {
       this.getWorkAssg()
     } else {
@@ -455,94 +457,94 @@ export default {
 
   },
   methods: {
-    onSubmitWorkArrg() {
-      this.$refs.arrgFormRules.validate((valid) => {
-        if (valid) {
-          this.workArrgForm.prePreparationPic = this.workArrgForm.prePreparationPic.join(',')
-          this.workArrgForm.fldSrvyPic = this.workArrgForm.fldSrvyPic.join(',')
-          this.workArrgForm.mktSrvyPic = this.workArrgForm.mktSrvyPic.join(',')
-          this.workArrgForm.assemEstPic = this.workArrgForm.assemEstPic.join(',')
-          this.workArrgForm.issueValPic = this.workArrgForm.issueValPic.join(',')
-          this.workArrgForm.internalAuditPic = this.workArrgForm.internalAuditPic.join(',')
-          this.workArrgForm.commuClientPic = this.workArrgForm.commuClientPic.join(',')
-          this.workArrgForm.assemChargePic = this.workArrgForm.assemChargePic.join(',')
-          this.workArrgForm.amendFinalPic = this.workArrgForm.amendFinalPic.join(',')
-          this.workArrgForm.manuArchivePic = this.workArrgForm.manuArchivePic.join(',')
-          //
-          this.workArrgForm.prePreparationSche = this.workArrgForm.prePreparationSche.join('-')
-          this.workArrgForm.fldSrvySche = this.workArrgForm.fldSrvySche.join('-')
-          this.workArrgForm.mktSrvySche = this.workArrgForm.mktSrvySche.join('-')
-          this.workArrgForm.assemEstSche = this.workArrgForm.assemEstSche.join('-')
-          this.workArrgForm.issueValSche = this.workArrgForm.issueValSche.join('-')
-          this.workArrgForm.internalAuditSche = this.workArrgForm.internalAuditSche.join('-')
-          this.workArrgForm.commuClientSche = this.workArrgForm.commuClientSche.join('-')
-          this.workArrgForm.assemChargeSche = this.workArrgForm.assemChargeSche.join('-')
-          this.workArrgForm.amendFinalSche = this.workArrgForm.amendFinalSche.join('-')
-          this.workArrgForm.manuArchiveSche = this.workArrgForm.manuArchiveSche.join('-')
-          //
-          this.workArrgForm.assemMethod = this.workArrgForm.assemMethod.join(',')
-          console.log(this.workArrgForm)
-          setWorkAssignment(this.workArrgForm)
-            .then(res => {
-              this.$message.success('提交成功')
-              this.goBack(-1)
-            })
-            .catch(err => {
-              this.$message.warning('提交失败')
-              this.goBack(-1)
-            })
-        } else {
-          this.$message('请填写必填信息');
-        }
-      })
-    },
+    // onSubmitWorkArrg() {
+    //   this.$refs.arrgFormRules.validate((valid) => {
+    //     if (valid) {
+    //       this.arrgForm.prePreparationPic = this.arrgForm.prePreparationPic.join(',')
+    //       this.arrgForm.fldSrvyPic = this.arrgForm.fldSrvyPic.join(',')
+    //       this.arrgForm.mktSrvyPic = this.arrgForm.mktSrvyPic.join(',')
+    //       this.arrgForm.assemEstPic = this.arrgForm.assemEstPic.join(',')
+    //       this.arrgForm.issueValPic = this.arrgForm.issueValPic.join(',')
+    //       this.arrgForm.internalAuditPic = this.arrgForm.internalAuditPic.join(',')
+    //       this.arrgForm.commuClientPic = this.arrgForm.commuClientPic.join(',')
+    //       this.arrgForm.assemChargePic = this.arrgForm.assemChargePic.join(',')
+    //       this.arrgForm.amendFinalPic = this.arrgForm.amendFinalPic.join(',')
+    //       this.arrgForm.manuArchivePic = this.arrgForm.manuArchivePic.join(',')
+    //       //
+    //       this.arrgForm.prePreparationSche = this.arrgForm.prePreparationSche.join('-')
+    //       this.arrgForm.fldSrvySche = this.arrgForm.fldSrvySche.join('-')
+    //       this.arrgForm.mktSrvySche = this.arrgForm.mktSrvySche.join('-')
+    //       this.arrgForm.assemEstSche = this.arrgForm.assemEstSche.join('-')
+    //       this.arrgForm.issueValSche = this.arrgForm.issueValSche.join('-')
+    //       this.arrgForm.internalAuditSche = this.arrgForm.internalAuditSche.join('-')
+    //       this.arrgForm.commuClientSche = this.arrgForm.commuClientSche.join('-')
+    //       this.arrgForm.assemChargeSche = this.arrgForm.assemChargeSche.join('-')
+    //       this.arrgForm.amendFinalSche = this.arrgForm.amendFinalSche.join('-')
+    //       this.arrgForm.manuArchiveSche = this.arrgForm.manuArchiveSche.join('-')
+    //       //
+    //       this.arrgForm.assemMethod = this.arrgForm.assemMethod.join(',')
+    //       console.log(this.arrgForm)
+    //       setWorkAssignment(this.arrgForm)
+    //         .then(res => {
+    //           this.$message.success('提交成功')
+    //           this.goBack(-1)
+    //         })
+    //         .catch(err => {
+    //           this.$message.warning('提交失败')
+    //           this.goBack(-1)
+    //         })
+    //     } else {
+    //       this.$message('请填写必填信息');
+    //     }
+    //   })
+    // },
     getWorkAssg() {
       getWorkAssignment({ projId: this.queryData.projId })
         .then(res => {
           console.log('data', res.data)
-          this.workArrgForm = res.data
+          this.arrgForm = res.data
           this.dealArrgData()
-          console.log('arrgform', this.workArrgForm)
+          console.log('arrgform', this.arrgForm)
         })
         .catch(err => {
 
         })
     },
     dealArrgData() {
-      this.workArrgForm.assemMethod = this.workArrgForm.assemMethod.split(',')
+      this.arrgForm.assemMethod = this.arrgForm.assemMethod.split(',')
       //
-      this.workArrgForm.prePreparationPic = this.workArrgForm.prePreparationPic.split(',')
-      this.workArrgForm.fldSrvyPic = this.workArrgForm.fldSrvyPic.split(',')
-      this.workArrgForm.mktSrvyPic = this.workArrgForm.mktSrvyPic.split(',')
-      this.workArrgForm.assemEstPic = this.workArrgForm.assemEstPic.split(',')
-      this.workArrgForm.issueValPic = this.workArrgForm.issueValPic.split(',')
-      this.workArrgForm.internalAuditPic = this.workArrgForm.internalAuditPic.split(',')
-      this.workArrgForm.commuClientPic = this.workArrgForm.commuClientPic.split(',')
-      this.workArrgForm.assemChargePic = this.workArrgForm.assemChargePic.split(',')
-      this.workArrgForm.amendFinalPic = this.workArrgForm.amendFinalPic.split(',')
-      this.workArrgForm.manuArchivePic = this.workArrgForm.manuArchivePic.split(',')
+      this.arrgForm.prePreparationPic = this.arrgForm.prePreparationPic.split(',')
+      this.arrgForm.fldSrvyPic = this.arrgForm.fldSrvyPic.split(',')
+      this.arrgForm.mktSrvyPic = this.arrgForm.mktSrvyPic.split(',')
+      this.arrgForm.assemEstPic = this.arrgForm.assemEstPic.split(',')
+      this.arrgForm.issueValPic = this.arrgForm.issueValPic.split(',')
+      this.arrgForm.internalAuditPic = this.arrgForm.internalAuditPic.split(',')
+      this.arrgForm.commuClientPic = this.arrgForm.commuClientPic.split(',')
+      this.arrgForm.assemChargePic = this.arrgForm.assemChargePic.split(',')
+      this.arrgForm.amendFinalPic = this.arrgForm.amendFinalPic.split(',')
+      this.arrgForm.manuArchivePic = this.arrgForm.manuArchivePic.split(',')
       //
-      const pre = this.workArrgForm.prePreparationSche.substr(0, 10) + ',' + this.workArrgForm.prePreparationSche.substr(11, 10)
-      const fld = this.workArrgForm.fldSrvySche.substr(0, 10) + ',' + this.workArrgForm.fldSrvySche.substr(11, 10)
-      const mkt = this.workArrgForm.mktSrvySche.substr(0, 10) + ',' + this.workArrgForm.mktSrvySche.substr(11, 10)
-      const est = this.workArrgForm.assemEstSche.substr(0, 10) + ',' + this.workArrgForm.assemEstSche.substr(11, 10)
-      const issue = this.workArrgForm.issueValSche.substr(0, 10) + ',' + this.workArrgForm.issueValSche.substr(11, 10)
-      const inte = this.workArrgForm.internalAuditSche.substr(0, 10) + ',' + this.workArrgForm.internalAuditSche.substr(11, 10)
-      const com = this.workArrgForm.commuClientSche.substr(0, 10) + ',' + this.workArrgForm.commuClientSche.substr(11, 10)
-      const charge = this.workArrgForm.assemChargeSche.substr(0, 10) + ',' + this.workArrgForm.assemChargeSche.substr(11, 10)
-      const ame = this.workArrgForm.amendFinalSche.substr(0, 10) + ',' + this.workArrgForm.amendFinalSche.substr(11, 10)
-      const manu = this.workArrgForm.manuArchiveSche.substr(0, 10) + ',' + this.workArrgForm.manuArchiveSche.substr(11, 10)
+      const pre = this.arrgForm.prePreparationSche.substr(0, 10) + ',' + this.arrgForm.prePreparationSche.substr(11, 10)
+      const fld = this.arrgForm.fldSrvySche.substr(0, 10) + ',' + this.arrgForm.fldSrvySche.substr(11, 10)
+      const mkt = this.arrgForm.mktSrvySche.substr(0, 10) + ',' + this.arrgForm.mktSrvySche.substr(11, 10)
+      const est = this.arrgForm.assemEstSche.substr(0, 10) + ',' + this.arrgForm.assemEstSche.substr(11, 10)
+      const issue = this.arrgForm.issueValSche.substr(0, 10) + ',' + this.arrgForm.issueValSche.substr(11, 10)
+      const inte = this.arrgForm.internalAuditSche.substr(0, 10) + ',' + this.arrgForm.internalAuditSche.substr(11, 10)
+      const com = this.arrgForm.commuClientSche.substr(0, 10) + ',' + this.arrgForm.commuClientSche.substr(11, 10)
+      const charge = this.arrgForm.assemChargeSche.substr(0, 10) + ',' + this.arrgForm.assemChargeSche.substr(11, 10)
+      const ame = this.arrgForm.amendFinalSche.substr(0, 10) + ',' + this.arrgForm.amendFinalSche.substr(11, 10)
+      const manu = this.arrgForm.manuArchiveSche.substr(0, 10) + ',' + this.arrgForm.manuArchiveSche.substr(11, 10)
       //
-      this.workArrgForm.prePreparationSche = pre.split(',')
-      this.workArrgForm.fldSrvySche = fld.split(',')
-      this.workArrgForm.mktSrvySche = mkt.split(',')
-      this.workArrgForm.assemEstSche = est.split(',')
-      this.workArrgForm.issueValSche = issue.split(',')
-      this.workArrgForm.internalAuditSche = inte.split(',')
-      this.workArrgForm.commuClientSche = com.split(',')
-      this.workArrgForm.assemChargeSche = charge.split(',')
-      this.workArrgForm.amendFinalSche = ame.split(',')
-      this.workArrgForm.manuArchiveSche = manu.split(',')
+      this.arrgForm.prePreparationSche = pre.split(',')
+      this.arrgForm.fldSrvySche = fld.split(',')
+      this.arrgForm.mktSrvySche = mkt.split(',')
+      this.arrgForm.assemEstSche = est.split(',')
+      this.arrgForm.issueValSche = issue.split(',')
+      this.arrgForm.internalAuditSche = inte.split(',')
+      this.arrgForm.commuClientSche = com.split(',')
+      this.arrgForm.assemChargeSche = charge.split(',')
+      this.arrgForm.amendFinalSche = ame.split(',')
+      this.arrgForm.manuArchiveSche = manu.split(',')
     },
     goBack() {
       this.$router.go(-1)
