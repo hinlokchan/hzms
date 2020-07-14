@@ -450,7 +450,7 @@ export default {
     if (this.$route.query.isEdit == true) {
       this.getWorkAssg()
     } else {
-
+      
     }
   },
   mounted() {

@@ -68,7 +68,6 @@
         border
         ref="multipleTable"
         style="width: 100%"
-        :default-sort="{ prop: 'projDate', order: 'descending' }"
       >
         <!-- <el-table-column
           type="expand"

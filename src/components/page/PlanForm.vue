@@ -97,10 +97,15 @@
               >
                 <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
                 <div class="flexBox">
-                  <el-input
+                  <!-- <el-input
                     style="width:90%"
                     v-model="item.value"
-                  ></el-input><i
+                  ></el-input> -->
+                  <el-autocomplete
+                    v-model="item.value"
+                    :fetch-suggestions="querySearch"
+                  ></el-autocomplete>
+                  <i
                     class="el-icon-lx-roundclose"
                     style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5"
                     @click.prevent="removeDomain(index, 5)"
@@ -421,14 +426,14 @@
               >
                 <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
                 <div class="flexBox">
-                  <el-input
+                  <!-- <el-input
                     style="width:90%"
                     v-model="item.value"
-                  ></el-input>
-                  <!-- <el-autocomplete
+                  ></el-input> -->
+                  <el-autocomplete
                     v-model="item.value"
                     :fetch-suggestions="querySearch"
-                  ></el-autocomplete> -->
+                  ></el-autocomplete>
                   <i
                     class="el-icon-lx-roundclose"
                     style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5"
@@ -452,14 +457,14 @@
               >
                 <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
                 <div class="flexBox">
-                  <el-input
+                  <!-- <el-input
                     style="width:90%"
                     v-model="item.value"
-                  ></el-input>
-                  <!-- <el-autocomplete
+                  ></el-input> -->
+                  <el-autocomplete
                     v-model="item.value"
                     :fetch-suggestions="querySearch"
-                  ></el-autocomplete> -->
+                  ></el-autocomplete>
                   <i
                     class="el-icon-lx-roundclose"
                     style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5"
@@ -483,14 +488,14 @@
               >
                 <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
                 <div class="flexBox">
-                  <el-input
+                  <!-- <el-input
                     style="width:90%"
                     v-model="item.value"
-                  ></el-input>
-                  <!-- <el-autocomplete
+                  ></el-input> -->
+                  <el-autocomplete
                     v-model="item.value"
                     :fetch-suggestions="querySearch"
-                  ></el-autocomplete> -->
+                  ></el-autocomplete>
                   <i
                     class="el-icon-lx-roundclose"
                     style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5"
@@ -516,14 +521,14 @@
               >
                 <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
                 <div class="flexBox">
-                  <el-input
+                  <!-- <el-input
                     style="width:90%"
                     v-model="item.value"
-                  ></el-input>
-                  <!-- <el-autocomplete
+                  ></el-input> -->
+                  <el-autocomplete
                     v-model="item.value"
                     :fetch-suggestions="querySearch"
-                  ></el-autocomplete> -->
+                  ></el-autocomplete>
                   <i
                     class="el-icon-lx-roundclose"
                     style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5"

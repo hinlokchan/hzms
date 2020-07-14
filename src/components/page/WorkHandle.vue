@@ -302,9 +302,8 @@
             <el-form-item
               label="应收费（元）"
               prop="dutyFee"
-              oninput="value=value.replace(/[^\d.]/g,'')"
             >
-              <el-input v-model="regForm.dutyFee"></el-input>
+              <el-input v-model="regForm.dutyFee" oninput="value=value.replace(/[^\d.]/g,'')"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -673,7 +672,7 @@
           :span="12"
           style="margin-top: 10px"
         >
-          <el-card>
+          <el-card v-if="this.projDetail.projType == 1010">
             <div
               slot="header"
               class="card-header"
@@ -714,7 +713,7 @@
         </el-col>
       </el-row>
     </div>
-    <div class="work-title">
+    <div class="work-title" v-if="this.projDetail.projType == 1010">
       <span class="work-title-name">评估（估价）对象详情</span>
       <span class="work-title-button">
         <el-button
@@ -1349,8 +1348,7 @@ export default {
             console.log(this.regForm)
             submitFaRegister(this.regForm)
               .then(res => {
-                console.log('addRes', res)
-
+                this.$message.success('提交成功！')
                 this.reload()
               })
               .catch(err => {
@@ -1358,8 +1356,16 @@ export default {
                 console.log(err)
               })
           } else {
-            console.log(this.regForm)
-            editFaRegister({ registerId: this.regInfo.registerId })
+            this.regForm.infoVerification = this.regForm.infoVerification.join(',')
+            this.regForm.marketEnquiry = this.regForm.marketEnquiry.join(',')
+            this.regForm.techExp = this.regForm.techExp.join(',')
+            this.regForm.reportDrafter = this.regForm.reportDrafter.join(',')
+            this.regForm.feeFollowUp = this.regForm.feeFollowUp.join(',')
+            this.regForm.signedAppraiser = this.regForm.signedAppraiser.join(',')
+            this.regForm.projAsst = this.regForm.projAsst.join(',')
+            this.regForm.fieldSrvy = this.regForm.fieldSrvy.join(',')
+            console.log('正评登记编辑Form', this.regForm)
+            editFaRegister(this.regForm)
               .then(res => {
                 console.log('editRes', res)
                 this.reload()

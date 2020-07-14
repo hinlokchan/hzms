@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <el-page-header @back="goBack"></el-page-header>
-    <el-card style="width:50%">
+    <el-card style="width:50%; margin-top: 20px">
       <div
         slot="header"
         class="clearfix"
@@ -24,7 +24,7 @@
         </el-date-picker>
       </div>
     </el-card>
-    <el-card style="width:50%">
+    <el-card style="width:50%; margin-top: 20px">
       <div
         slot="header"
         class="clearfix"
@@ -114,6 +114,16 @@ export default {
       const fdata = new FormData()
       fdata.append('dateStr', val)
       oReq.send(fdata)
+      //伪加载中，防止重复提交请求
+      const loading = this.$loading({
+        lock: true,
+        text: '加载中',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+      setTimeout(() => {
+        loading.close()
+      }, 3500)
     },
     printWeekReport(val) {
       if (val == '') {
@@ -142,12 +152,21 @@ export default {
         document.body.appendChild(elink)
         elink.click()
         document.body.removeChild(elink)
-        
       }
       const fdata = new FormData()
       fdata.append('week', week)
       fdata.append('year', year)
       oReq.send(fdata)
+      //伪加载中，防止重复提交请求
+      const loading = this.$loading({
+        lock: true,
+        text: '加载中',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+      setTimeout(() => {
+        loading.close()
+      }, 5000)
     },
     formatDate(now) {
       const time = new Date(now)

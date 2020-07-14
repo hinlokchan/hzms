@@ -40,12 +40,6 @@
                   @blur="checkNum"
                   show-word-limit
                 ></el-input>
-                <!-- <el-select style="width: 90px">
-                  <el-option></el-option>
-                  <el-option></el-option>
-                  <el-option></el-option>
-                </el-select>
-                <el-input style="width: 120px"></el-input> -->
               </el-form-item>
             </el-col>
             <!-- <el-col :span="6">
@@ -56,6 +50,20 @@
                   placeholder="选择月份"
                   style="width: 100%;"
                 ></el-date-picker>
+              </el-form-item>
+            </el-col> -->
+            <!-- <el-col :span="6">
+              <el-form-item
+                label="初评号"
+                prop="cph"
+              >
+                <el-input
+                  ref="faReportNum"
+                  v-model="form.cph"
+                  @input="setUpper"
+                  @blur="checkNum"
+                  show-word-limit
+                ></el-input>
               </el-form-item>
             </el-col> -->
             <el-col
@@ -69,7 +77,7 @@
             <h3>项目信息</h3>
           </div>
 
-          <el-row>
+          <el-row :gutter="10">
             <el-col :span="6">
               <el-form-item
                 :span="6"
@@ -118,7 +126,7 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row :gutter="20">
+          <el-row :gutter="10">
             <el-col :span="6">
               <el-form-item
                 label="委托人"
@@ -173,7 +181,7 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row :gutter="20">
+          <el-row :gutter="10">
             <el-col :span="12">
               <el-form-item
                 label="项目名称"
@@ -230,11 +238,12 @@
             </el-col>
             <el-col :span="6">
               <el-form-item label="计划完成天数">
-                <el-input-number
+                <el-input
                   v-model="form.compSchedule"
                   :min="1"
                   label="完成天数"
-                ></el-input-number>
+                  oninput="value=value.replace(/[^\d.]/g,'')"
+                ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -504,6 +513,7 @@
               @click="onSubmit"
             >表单提交</el-button>
             <el-button @click="transformPeop()">取消</el-button>
+            <!-- <el-button @click="test()">test</el-button> -->
           </el-form-item>
         </el-form>
       </div>
@@ -517,6 +527,8 @@ import clientOptions from '../../../public/clientName.json'
 import projTypeOption from '../../../public/projTypeOption.json'
 export default {
   name: 'oldplanform',
+  inject: ['reload'],            //注入App里的reload方法
+
   data() {
     return {
       clientInputTypeChange: false,
@@ -535,9 +547,9 @@ export default {
         newOldType: '1001',
         baseDate: '',
         fldSrvySchedule: '',
-        riskProfile: '',
+        riskProfile: '1002',
         assemGoal: '',
-        compSchedule: '',
+        compSchedule: 3,
         supInstruction: '',
         fldSrvyContact: '',
         fldSrvyContactInfo: '',
@@ -566,12 +578,18 @@ export default {
         projContactType: '',
         //
         zph: '',
+        //cph: '',
         reportNums: [
           {
             reportNum: '',
             reportNumType: '',
             takenDate: ''
-          }
+          },
+          // {
+          //   reportNum: '',
+          //   reportNumType: '',
+          //   takenDate: ''
+          // }
         ],
 
       },
@@ -580,6 +598,9 @@ export default {
           { required: true, message: '请填写计划编号', trigger: 'blur' },
         ],
         zph: [
+          { min: 11, max: 12, message: '请输入11-12位报告号', trigger: 'blur' }
+        ],
+        cph: [
           { min: 11, max: 12, message: '请输入11-12位报告号', trigger: 'blur' }
         ],
         projType: [
@@ -683,6 +704,7 @@ export default {
     },
     setUpper() {
       this.form.zph = this.form.zph.toUpperCase()
+      // this.form.cph = this.form.cph.toUpperCase()
     },
     checkNum() {
       if (this.form.zph.length == 11) {
@@ -711,12 +733,26 @@ export default {
             this.$message.warning('正评号字母输入有误，请确认后重试')
             this.$refs['faReportNum'].focus()
           } else if (typeName[i] == type) {
-            this.form.reportNums[0].takenDate = year + '-' + month + '-01'
+            let year = this.form.zph.substr(0, 4)
+            //let month = this.form.zph.substr(0, 2)
+            this.form.reportNums[0].takenDate = year + '-' + '01' + '-01'
             return 0
           }
         }
       }
     },
+    test() {
+      this.form.reportNums[1].reportNum = '2020FG03001'
+      console.log(this.form.reportNums)
+    },
+    // check() {
+    //   let clientIdMid = [...this.form.clientId].pop()
+    //   this.form.clientId = clientIdMid
+    //   console.log('clientIdMid', this.form.clientId)
+    //   console.log('ppppp', this.form)
+    //   console.log(this.form.clientId.length)
+    //   //console.log('clientId', this.form)
+    // },
     onSubmit() {
       //判断是否填写了正评号,赋值reportNumType
       if (this.form.zph) {
@@ -756,9 +792,14 @@ export default {
         if (this.form.clientId == 141) {
           this.form.clientId = ''
         } else {
-          let clientIdMid = this.form.clientId[this.form.clientId.length - 1]
-          this.form.clientId = ''
+          let clientIdMid = [...this.form.clientId].pop()
           this.form.clientId = clientIdMid
+          if (this.form.clientId.length <= 1) {
+            this.$message.warning('请重新选择委托人')
+            this.clientId = ''
+            this.clientName = ''
+            return 0
+          }
         }
         this.$refs.ruleForm.validate((valid) => {
           if (valid) {
@@ -768,7 +809,7 @@ export default {
                 setOldProject(this.form)
                   .then(res => {
                     this.$message.success('录入成功')
-                    location.reload()
+                    this.reload()
                     console.log('res', res)
                   })
                   .catch(err => {

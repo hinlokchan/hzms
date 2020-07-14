@@ -9,10 +9,17 @@
   >
     <el-tabs>
       <el-tab-pane label="基本信息">
-        <el-form :model="form">
+        <el-form
+          :model="form"
+          ref="form"
+          :rules="rule"
+        >
           <el-row :gutter="20">
             <el-col :span="6">
-              <el-form-item label="估价目的">
+              <el-form-item
+                label="估价目的"
+                prop="evalGoal"
+              >
                 <el-select
                   v-model="form.evalGoal"
                   style="width: 100%"
@@ -27,7 +34,10 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="价值类型">
+              <el-form-item
+                label="价值类型"
+                prop="valueType"
+              >
                 <el-select
                   v-model="form.valueType"
                   style="width: 100%"
@@ -42,7 +52,10 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="本报告的估价对象个数">
+              <el-form-item
+                label="本报告的估价对象个数"
+                prop="evalObjCount"
+              >
                 <el-input
                   v-model="form.evalObjCount"
                   oninput="value=value.replace(/[^\d.]/g,'')"
@@ -50,17 +63,26 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="估价对象所在城市">
+              <el-form-item
+                label="估价对象所在城市"
+                prop="evalObjCity"
+              >
                 <el-input v-model="form.evalObjCity"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="估价对象所在行政区">
+              <el-form-item
+                label="估价对象所在行政区"
+                prop="evalObjAdminRegion"
+              >
                 <el-input v-model="form.evalObjAdminRegion"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="估价对象所在小区">
+              <el-form-item
+                label="估价对象所在小区"
+                prop="evalObjCommunity"
+              >
                 <el-input v-model="form.evalObjCommunity"></el-input>
               </el-form-item>
             </el-col>
@@ -73,12 +95,18 @@
               </el-form-item>
             </el-col> -->
             <el-col :span="12">
-              <el-form-item label="估价方法说明">
+              <el-form-item
+                label="估价方法说明"
+                prop="evalMethodExp"
+              >
                 <el-input v-model="form.assemMethodExp"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="估价对象土地面积（平方米）">
+              <el-form-item
+                label="估价对象土地面积（平方米）"
+                prop="evalObjAcreage"
+              >
                 <el-input
                   v-model="form.evalObjAcreage"
                   oninput="value=value.replace(/[^\d.]/g,'')"
@@ -86,7 +114,10 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="土地评估单价（元/平方米）">
+              <el-form-item
+                label="土地评估单价（元/平方米）"
+                prop="landAssemUnitPrice"
+              >
                 <el-input
                   v-model="form.landAssemUnitPrice"
                   oninput="value=value.replace(/[^\d.]/g,'')"
@@ -95,7 +126,10 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="估价对象建筑面积（平方米）">
+              <el-form-item
+                label="估价对象建筑面积（平方米）"
+                prop="evalObjArea"
+              >
                 <el-input
                   v-model="form.evalObjArea"
                   oninput="value=value.replace(/[^\d.]/g,'')"
@@ -103,7 +137,10 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="建筑评估单价（元/平方米）">
+              <el-form-item
+                label="建筑评估单价（元/平方米）"
+                prop="buildingAssemUnitPrice"
+              >
                 <el-input
                   v-model="form.buildingAssemUnitPrice"
                   oninput="value=value.replace(/[^\d.]/g,'')"
@@ -138,7 +175,10 @@
         <el-form :model="form">
           <el-row :gutter="20">
             <el-col :span="6">
-              <el-form-item label="房屋用途">
+              <el-form-item
+                label="房屋用途"
+                prop="unitUsage"
+              >
                 <el-select
                   style="width: 100%"
                   v-model="form.unitUsage"
@@ -152,7 +192,10 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="房屋类型">
+              <el-form-item
+                label="房屋类型"
+                prop="unitUsage"
+              >
                 <el-select
                   style="width: 100%"
                   v-model="form.unitType"
@@ -166,7 +209,10 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="房屋性质">
+              <el-form-item
+                label="房屋性质"
+                prop="unitProperty"
+              >
                 <el-select
                   style="width: 100%"
                   v-model="form.unitProperty"
@@ -180,7 +226,10 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="户型结构">
+              <el-form-item
+                label="户型结构"
+                prop="houseTypeStructure"
+              >
                 <el-select
                   style="width: 100%"
                   v-model="form.houseTypeStructure"
@@ -194,7 +243,10 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="户型">
+              <el-form-item
+                label="户型"
+                prop="houseType"
+              >
                 <el-select
                   style="width: 100%"
                   v-model="form.houseType"
@@ -208,7 +260,10 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="向">
+              <el-form-item
+                label="向"
+                prop="towards"
+              >
                 <el-select
                   style="width: 100%"
                   v-model="form.towards"
@@ -222,12 +277,18 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="所在楼">
+              <el-form-item
+                label="所在楼"
+                prop="buildingNum"
+              >
                 <el-input v-model="form.buildingNum"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="装修程度">
+              <el-form-item
+                label="装修程度"
+                prop="decoDegree"
+              >
                 <el-select
                   style="width: 100%"
                   v-model="form.decoDegree"
@@ -241,7 +302,10 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="剩余年限">
+              <el-form-item
+                label="剩余年限"
+                prop="remainTerm"
+              >
                 <el-input
                   v-model="form.remainTerm"
                   oninput="value=value.replace(/[^\d.]/g,'')"
@@ -266,7 +330,7 @@ import { submitEvalObjDetail, editEvalObjDetail } from '@/api/assemobjdetail'
 import { Form } from 'element-ui'
 export default {
   name: 'FcObjDetailDialog',
-  inject: ['reload'], 
+  inject: ['reload'],
   props: {
     show: { type: Boolean, default: false },
     isEdit: { type: Boolean, default: false },
@@ -324,7 +388,17 @@ export default {
       houstStructureOption: ['错层', '复式楼', '土地价值', '跃层', '平层', '其他'],
       houseModelOption: ['一居室', '二居室', '三居室', '四居室', '五居室', '其他'],
       houseDirectionOption: ['东北', '东南', '西北', '西南', '东', '南', '西', '北', '西南双面', '东南双面', '南北通透双面', '其他通透双面', '其他非通透双面', '其他'],
-      houseDecorationOption: ['粗装修', '毛坯', '精装修']
+      houseDecorationOption: ['粗装修', '毛坯', '精装修'],
+      //
+      rule: {
+        evalGoal: [{ required: true, message: '请选择估价目的', trigger: 'blur' }],
+        valueType: [{ required: true, message: '请选择价值类型', trigger: 'blur' }],
+        evalObjCount: [{ required: true, message: '请填写估价对象个数', trigger: 'blur' }],
+        evalObjCity: [{ required: true, message: '请填写城市', trigger: 'blur' }],
+        evalObjAdminRegion: [{ required: true, message: '请填写行政区', trigger: 'blur' }],
+        evalObjCommunity: [{ required: true, message: '请填写小区', trigger: 'blur' }],
+        evalMethod: [{ required: true, message: '请选择估价方法', trigger: 'blur' }]
+      }
     }
   },
   watch: {
@@ -356,29 +430,55 @@ export default {
       this.$emit('update:show', false)
     },
     onSubmit() {
-      console.log(this.form)
       console.log(this.isEdit)
-      if (this.isEdit) {
-        editEvalObjDetail(this.form)
-          .then(res => {
-            console.log('edit', res)
-            this.$message.success('提交成功')
-            this.reload()
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      } else {
-        submitEvalObjDetail(this.form)
-          .then(res => {
-            console.log('submit', res)
-            this.$message.success('提交成功')
-            this.reload()
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      }
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          if (this.isEdit) {
+            editEvalObjDetail(this.form)
+              .then(res => {
+                console.log('edit', res)
+                this.$message.success('提交成功')
+                this.reload()
+              })
+              .catch(err => {
+                console.log(err)
+              })
+          } else {
+            submitEvalObjDetail(this.form)
+              .then(res => {
+                console.log('submit', res)
+                this.$message.success('提交成功')
+                this.reload()
+              })
+              .catch(err => {
+                console.log(err)
+              })
+          }
+        } else {
+          this.$message.error('请填写必填信息')
+        }
+      })
+      // if (this.isEdit) {
+      //   editEvalObjDetail(this.form)
+      //     .then(res => {
+      //       console.log('edit', res)
+      //       this.$message.success('提交成功')
+      //       this.reload()
+      //     })
+      //     .catch(err => {
+      //       console.log(err)
+      //     })
+      // } else {
+      //   submitEvalObjDetail(this.form)
+      //     .then(res => {
+      //       console.log('submit', res)
+      //       this.$message.success('提交成功')
+      //       this.reload()
+      //     })
+      //     .catch(err => {
+      //       console.log(err)
+      //     })
+      // }
 
     },
     calculate(i, j, id) {
