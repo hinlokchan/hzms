@@ -1,7 +1,7 @@
 <template>
   <div class="login-wrap">
     <div class="login-title">
-      <h1>欢迎使用惠正评估管理系统<br />*试行版本</h1>
+      <h1>欢迎使用惠正评估管理系统</h1>
     </div>
     <div class="ms-login">
       <el-form

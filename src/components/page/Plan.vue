@@ -16,22 +16,15 @@
       </div>
       <div class="handle-box">
         <el-row :gutter="20">
-          <!-- <el-col :span="2.5">
-            <el-select
-              v-model="searchData.searchType"
-              placeholder="项目类型"
-              class="handle-select mr10"
+          <el-col :span="4">
+            <el-input
+              v-model="searchData.projNum"
               size="medium"
-            >
-              <el-option
-                v-for="item in proTypeList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-col> -->
-          <el-col :span="2.5">
+              placeholder="计划编号"
+              @keyup.enter.native="handleSearch"
+            ></el-input>
+          </el-col>
+          <el-col :span="4">
             <el-input
               v-model="searchData.reportNum"
               placeholder="初、正评号"
@@ -39,7 +32,7 @@
               @keyup.enter.native="handleSearch"
             ></el-input>
           </el-col>
-          <el-col :span="2.5">
+          <el-col :span="4">
             <el-input
               v-model="searchData.projName"
               placeholder="项目名称"
@@ -47,7 +40,7 @@
               @keyup.enter.native="handleSearch"
             ></el-input>
           </el-col>
-          <el-col :span="2.5">
+          <el-col :span="4">
             <el-input
               v-model="searchData.projScope"
               placeholder="项目范围"
@@ -55,7 +48,7 @@
               @keyup.enter.native="handleSearch"
             ></el-input>
           </el-col>
-          <el-col :span="2.5">
+          <el-col :span="4">
             <el-input
               v-model="searchData.clientName"
               placeholder="委托人"
@@ -63,7 +56,7 @@
               @keyup.enter.native="handleSearch"
             ></el-input>
           </el-col>
-          <el-col :span="2.5">
+          <el-col :span="4">
             <el-input
               v-model="searchData.projMember"
               placeholder="项目成员"
@@ -71,9 +64,11 @@
               @keyup.enter.native="handleSearch"
             ></el-input>
           </el-col>
-          <el-col :span="2">
+        </el-row>
+        <el-row>
+          <el-col>
             <el-button
-              type="primary"
+              type="text"
               icon="el-icon-search"
               @click="handleSearch"
               size="medium"
@@ -84,13 +79,14 @@
       <!-- table -->
       <el-table
         :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+        height="650"
         stripe
         border
         class="table"
         ref="multipleTable"
         header-cell-class-name="table-header"
       >
-        <el-table-column type="expand">
+        <!-- <el-table-column type="expand">
           <template slot-scope="props">
             <el-form
               label-position="left"
@@ -119,8 +115,8 @@
               </el-form-item>
             </el-form>
           </template>
-        </el-table-column>
-        <!-- <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column> -->
+        </el-table-column> -->
+
         <!-- <el-table-column
           prop="projDegree"
           label="紧急程度"
@@ -137,13 +133,15 @@
             </el-tag>
           </template>
         </el-table-column> -->
-        <!-- <el-table-column
+        <el-table-column
           prop="projType"
           label="项目类型"
           width="100"
           align="center"
+          :filters="this.projTypeFilters"
+          :filter-method="filterProjType"
         >
-        </el-table-column> -->
+        </el-table-column>
         <!-- <el-table-column
           prop="projState"
           label="项目状态"
@@ -173,11 +171,13 @@
           prop="projName"
           label="评估项目名称"
           width="300"
+          :show-overflow-tooltip="true"
         ></el-table-column>
         <el-table-column
           prop="projScope"
           label="评估项目范围"
           width="300"
+          :show-overflow-tooltip="true"
         ></el-table-column>
         <el-table-column
           prop="clientName"
@@ -261,7 +261,7 @@ export default {
       //   pagecount: 10
       // },
       currentPage: 1, // 当前页码
-      pageSize: 10, // 每页的数据条数
+      pageSize: 20, // 每页的数据条数
       pageTotal: 0,
       projTypeList: [
         {
@@ -308,11 +308,27 @@ export default {
           value: '1100'
         }
       ],
-      searchData: { reportNum: '', projName: '', projScope: '', clientName: '', projMember: '' },
+      searchData: { projNum: '', reportNum: '', projName: '', projScope: '', clientName: '', projMember: '' },
       tableData: [],
       editVisible: false,
-      form: {}
-    };
+      form: {},
+      projTypeFilters: [
+        { text: '房地产', value: 1010 },
+        { text: '资产', value: 1020 },
+        { text: '土地', value: 1030 },
+        { text: '房地产咨询', value: 1041 },
+        { text: '资产咨询', value: 1042 },
+        { text: '土地咨询', value: 1043 },
+        { text: 'PPP', value: 1050 },
+        { text: '房地产复审', value: 1061 },
+        { text: '资产复审', value: 1062 },
+        { text: '土地复审', value: 1063 },
+        { text: '外协', value: 1070 },
+        { text: '政策修订', value: 1080 },
+        { text: '绩效', value: 1090 },
+        { text: '其他', value: 1100 }
+      ]
+    }
   },
   created() {
     this.getData();
@@ -357,7 +373,7 @@ export default {
     },
     changePage(val) {
       console.log(val)
-      this.currentPage = val;
+      this.currentPage = val
     },
     searchChange() {
     },
@@ -435,8 +451,7 @@ export default {
       }
     },
     filterProjType(value, row) {
-      console.log(value, row)
-      return row.projNum === value
+      return row.projType === value
     }
   }
 };

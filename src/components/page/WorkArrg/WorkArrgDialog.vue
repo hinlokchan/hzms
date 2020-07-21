@@ -13,6 +13,7 @@
       :rules="arrgFormRules"
       label-width="150px"
     >
+      <el-button @click="defaultArrg">默认安排</el-button>
       <el-form-item
         label="评估方法"
         prop="assemMethod"
@@ -299,7 +300,7 @@
             label="评估收费"
             prop="assemChargeSche"
           >
-            <el-date-picker
+            <!-- <el-date-picker
               style="width: 100%"
               v-model="arrgForm.assemChargeSche"
               type="daterange"
@@ -307,7 +308,11 @@
               start-placeholde="开始日期"
               end-placeholde="结束日期"
               value-format="MM/dd"
-            ></el-date-picker>
+            ></el-date-picker> -->
+            <el-input
+              v-model="arrgForm.assemChargeSche"
+              :disabled="true"
+            ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="14">
@@ -371,7 +376,7 @@
             label="工作底稿归档"
             prop="manuArchiveSche"
           >
-            <el-date-picker
+            <!-- <el-date-picker
               style="width: 100%"
               v-model="arrgForm.manuArchiveSche"
               type="daterange"
@@ -379,7 +384,11 @@
               start-placeholde="开始日期"
               end-placeholde="结束日期"
               value-format="MM/dd"
-            ></el-date-picker>
+            ></el-date-picker> -->
+            <el-input
+              v-model="arrgForm.manuArchiveSche"
+              :disabled="true"
+            ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="14">
@@ -424,11 +433,18 @@ export default {
     arrgData: { type: Object },
     projId: { type: Number },
     projMember: { type: Array },
+    projDate: { type: Number },
+    projLeader: { type: String },
+    projReviewer: { type: String },
+    projProReviewer: { type: String },
+    projAsst: { type: String },
+    fieldSrvy: { type: String }
   },
   watch: {
     show: {
       immediate: true,
       handler(show) {
+        console.log(this.projReviewer)
         this.visible = this.show
         this.arrgForm.projId = this.projId
         if (show == true) {
@@ -470,12 +486,13 @@ export default {
         issueValSche: [],
         internalAuditSche: [],
         commuClientSche: [],
-        assemChargeSche: [],
+        assemChargeSche: '出具正式报告时',
         amendFinalSche: [],
-        manuArchiveSche: []
+        manuArchiveSche: '出正评后3个月内'
       },
-      assemMethodOptions: ['成本法', '收益法', '比较法'],
+      assemMethodOptions: ['成本法', '收益法', '比较法', '市场法'],
       arrgFormRules: {
+        assemMethod: [{ required: true, message: '请填写评估方法', trigger: 'change' }],
         prePreparationSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
         fldSrvySche: [{ required: true, message: '请选择日期', trigger: 'change' }],
         mktSrvySche: [{ required: true, message: '请选择日期', trigger: 'change' }],
@@ -483,9 +500,7 @@ export default {
         issueValSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
         internalAuditSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
         commuClientSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
-        assemChargeSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
         amendFinalSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
-        manuArchiveSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
         //
         prePreparationPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
         prePreparationPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
@@ -538,9 +553,9 @@ export default {
           this.arrgForm.issueValSche = this.arrgForm.issueValSche.join('-')
           this.arrgForm.internalAuditSche = this.arrgForm.internalAuditSche.join('-')
           this.arrgForm.commuClientSche = this.arrgForm.commuClientSche.join('-')
-          this.arrgForm.assemChargeSche = this.arrgForm.assemChargeSche.join('-')
+          //this.arrgForm.assemChargeSche = this.arrgForm.assemChargeSche.join('-')
           this.arrgForm.amendFinalSche = this.arrgForm.amendFinalSche.join('-')
-          this.arrgForm.manuArchiveSche = this.arrgForm.manuArchiveSche.join('-')
+          //this.arrgForm.manuArchiveSche = this.arrgForm.manuArchiveSche.join('-')
           //
           console.log('提交arrgForm', this.arrgForm)
           setWorkAssignment(this.arrgForm)
@@ -555,6 +570,48 @@ export default {
           this.$message.warning('请填写必填信息')
         }
       })
+    },
+    defaultArrg() {
+      let day = this.projDate
+      let day1 = this.$moment(day).format('MM/DD')
+      let day2 = this.$moment(day + 86400000).format('MM/DD')
+      let day3 = this.$moment(day + 172800000).format('MM/DD')
+      let day4 = this.$moment(day + 259200000).format('MM/DD')
+      console.log(day, day1, day2, day3, day4)
+      this.arrgForm.prePreparationSche.push(day1, day1)
+      this.arrgForm.fldSrvySche.push(day1, day1)
+      this.arrgForm.mktSrvySche.push(day1, day1)
+      this.arrgForm.assemEstSche.push(day2, day2)
+      this.arrgForm.issueValSche.push(day2, day2)
+      this.arrgForm.internalAuditSche.push(day3, day3)
+      this.arrgForm.commuClientSche.push(day3, day3)
+      this.arrgForm.amendFinalSche.push(day4, day4)
+
+      let leader = this.projLeader.split(',')
+      let reviewer = this.projReviewer.split(',')
+      let asst = this.projAsst.split(',')
+      let srvy = this.fieldSrvy.split(',')
+      for (let i of leader) {
+        this.arrgForm.prePreparationPic.push(i)
+        this.arrgForm.internalAuditPic.push(i)
+        this.arrgForm.commuClientPic.push(i)
+        this.arrgForm.assemChargePic.push(i)
+        this.arrgForm.amendFinalPic.push(i)
+      }
+      for (let i of reviewer) {
+        this.arrgForm.internalAuditPic.push(i)
+        this.arrgForm.commuClientPic.push(i)
+      }
+      for (let i of asst) {
+        this.arrgForm.mktSrvyPic.push(i)
+        this.arrgForm.assemEstPic.push(i)
+        this.arrgForm.issueValPic.push(i)
+        this.arrgForm.internalAuditPic.push(i)
+        this.arrgForm.manuArchivePic.push(i)
+      }
+      for (let i of srvy) {
+        this.arrgForm.fldSrvyPic.push(i)
+      }
     },
     transData() {
       this.arrgForm.assemMethod = this.arrgForm.assemMethod.split(',')
@@ -577,11 +634,9 @@ export default {
       this.arrgForm.issueValSche = this.arrgForm.issueValSche.split('-')
       this.arrgForm.internalAuditSche = this.arrgForm.internalAuditSche.split('-')
       this.arrgForm.commuClientSche = this.arrgForm.commuClientSche.split('-')
-      this.arrgForm.assemChargeSche = this.arrgForm.assemChargeSche.split('-')
+      //this.arrgForm.assemChargeSche = this.arrgForm.assemChargeSche.split('-')
       this.arrgForm.amendFinalSche = this.arrgForm.amendFinalSche.split('-')
-      this.arrgForm.manuArchiveSche = this.arrgForm.manuArchiveSche.split('-')
-
-
+      //this.arrgForm.manuArchiveSche = this.arrgForm.manuArchiveSche.split('-')
     }
   }
 }

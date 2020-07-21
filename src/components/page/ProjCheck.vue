@@ -2,268 +2,266 @@
   <div>
     <div class="container">
       <el-page-header @back="goBack"></el-page-header>
-      <div class="crumbs" style="margin-top: 15px">
-        <el-breadcrumb separator="/">
-          <el-breadcrumb-item>
-            <i class="el-icon-lx-calendar"></i> 项目管理
-          </el-breadcrumb-item>
+      <div
+        class="crumbs"
+        style="margin-top: 15px"
+      >
+        <el-breadcrumb>
           <el-breadcrumb-item>查看项目详情</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
-      <div class="form-box">
-        <div class="form-item-title">
-          <h3>项目信息</h3>
-        </div>
-        <div style="text-align:right;width:100%;">
-          <div style="font-size:13px;">计划录入：{{detailData.operator}}</div>
-        </div>
-        <div class="project">
-          <el-card style="margin-bottom: 20px">
-            <div class="text">
-              <h4 style="color: #009ad6">项目名称：</h4>{{detailData.projName}}
-            </div>
-            <div class="text">
-              <h4 style="color: #009ad6">项目范围：</h4>{{detailData.projScope}}
-            </div>
-          </el-card>
-          <!-- <el-card class="proj-info">
+      <div>
+        <el-card>
+          <div slot="header">
+            <!-- <span style="color: #009AD6; font-size: 18px;">项目名称</span> -->
+            <span v-if="detailData.projDegree == 1002">
+              <el-tag
+                type="danger"
+                size="medium"
+              >紧急项目</el-tag>
+            </span>
+            <span
+              v-for="item in risk"
+              :key="'info1'+item.value"
+            >
+              <span
+                v-if="detailData.riskProfile == item.value"
+                style="margin-left: 10px;"
+              >
+                <el-tag
+                  :type="item.tag"
+                  size="medium"
+                >{{item.label}}风险</el-tag>
+              </span>
+            </span>
+            <span
+              v-for="item in arrgType"
+              :key="'info2'+item.value"
+            >
+              <span
+                v-if="detailData.arrgType == item.value"
+                style="margin-left: 10px;"
+              >
+                <el-tag
+                  type="primary"
+                  size="medium"
+                >{{item.label}}</el-tag>
+              </span>
+            </span>
+            <span
+              v-for="item in newOldType"
+              :key="'info3'+item.value"
+            >
+              <span
+                v-if="detailData.newOldType == item.value"
+                style="margin-left: 10px;"
+              >
+                <el-tag
+                  type="primary"
+                  size="medium"
+                >{{item.label}}</el-tag>
+              </span>
+            </span>
+            <span style="float: right; font-size: 14px;">计划录入:{{detailData.operator}}，编制日期:{{this.formatDate(detailData.projDate)}}</span>
+          </div>
+          <div style="font-size: 20px">{{detailData.projName}}</div>
+        </el-card>
+        <el-form
+          label-position="right"
+          label-width="110px"
+        >
+
+          <div class="detail">
+            <div class="title">基本信息</div>
+
             <el-row>
-              <el-col :span="6">
-                <span>计划编号： </span>{{detailData.projNum}}
+              <el-col :span="8">
+                <el-form-item
+                  label="计划编号"
+                  class="label"
+                >
+                  <span class="detail-content">{{detailData.projNum}}</span>
+                </el-form-item>
               </el-col>
-              <el-col :span="6">
-                <span>计划编号： </span>{{detailData.projNum}}
+              <el-col :span="8">
+                <el-form-item
+                  label="项目类型"
+                  class="label"
+                >
+                  <span class="detail-content">{{transedData.projType}}</span>
+                </el-form-item>
               </el-col>
-              <el-col :span="6">
-                <span>计划编号： </span>{{detailData.projNum}}
+              <el-col :span="8">
+                <el-form-item
+                  label="评估目的"
+                  class="label"
+                >
+                  <span class="detail-content">{{detailData.assemGoal}}</span>
+                </el-form-item>
               </el-col>
-              <el-col :span="6">
-                <span>计划编号： </span>{{detailData.projNum}}
+              <el-col :span="8">
+                <el-form-item
+                  label="初评号"
+                  class="label"
+                >
+                  <span class="detail-content">{{reportNum.cph}}</span>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item
+                  label="正评号"
+                  class="label"
+                >
+                  <span class="detail-content">{{reportNum.zph}}</span>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item
+                  label="回函号"
+                  class="label"
+                >
+                  <span class="detail-content">{{reportNum.hhh}}</span>
+                </el-form-item>
               </el-col>
             </el-row>
-          </el-card> -->
-          <el-row>
-            <el-col :span="2">
-              <div class="projTitle">计划编号</div>
-            </el-col>
-            <el-col :span="4">
-              <div class="projContent">{{detailData.projNum}}</div>
-            </el-col>
-            <el-col :span="2">
-              <div class="projTitle">初评号</div>
-            </el-col>
-            <el-col :span="4">
-              <div class="projContent">{{reportNum.cph}}</div>
-            </el-col>
-            <el-col :span="2">
-              <div class="projTitle">正评号</div>
-            </el-col>
-            <el-col :span="4">
-              <div class="projContent">{{reportNum.zph}}</div>
-            </el-col>
-            <el-col :span="2">
-              <div class="projTitle">回函号</div>
-            </el-col>
-            <el-col :span="4">
-              <div class="projContent">{{reportNum.hhh}}</div>
-            </el-col>
-            <el-col :span="2">
-              <div class="projTitle">项目类型</div>
-            </el-col>
-            <el-col :span="4">
-              <div class="projContent">{{transedData.projType}}</div>
-            </el-col>
-            <el-col :span="2">
-              <div class="projTitle">安排/轮序</div>
-            </el-col>
-            <el-col :span="4">
-              <div
-                class="projContent"
-                v-if="detailData.arrgType == 1001"
-              >轮序</div>
-              <div
-                class="projContent"
-                v-else
-              >安排</div>
-            </el-col>
-            <el-col :span="2">
-              <div class="projTitle">新/重评项目</div>
-            </el-col>
-            <el-col :span="4">
-              <div
-                class="projContent"
-                v-if="detailData.newOldType == 1001"
-              >新项目</div>
-              <div
-                class="projContent"
-                v-else
-              >轮序项目</div>
-            </el-col>
-            <el-col :span="2">
-              <div class="projTitle">紧急程度</div>
-            </el-col>
-            <el-col :span="4">
-              <div
-                class="projContent"
-                v-if="detailData.projDegree == 1001"
-              >正常</div>
-              <div
-                class="projContent"
-                v-else
-              >紧急</div>
-            </el-col>
-            <!-- <el-col :span="2">
-              <div class="projTitle">项目名称</div>
-            </el-col>
-            <el-col :span="22">
-              <div class="projContent">{{detailData.projName}}</div>
-            </el-col>
-            <el-col :span="2">
-              <div class="projTitle">项目范围</div>
-            </el-col>
-            <el-col :span="22">
-              <div class="projContent">{{detailData.projScope}}</div>
-            </el-col> -->
-
-            <el-col :span="2">
-              <div class="projTitle">评估目的</div>
-            </el-col>
-            <el-col :span="4">
-              <div class="projContent">{{detailData.assemGoal}}</div>
-            </el-col>
-            <el-col :span="2">
-              <div class="projTitle">编制时间</div>
-            </el-col>
-            <el-col :span="4">
-              <div class="projContent">{{this.formatDate(detailData.projDate)}}</div>
-            </el-col>
-            <el-col :span="2">
-              <div class="projTitle">基准日</div>
-            </el-col>
-            <el-col :span="4">
-              <div class="projContent">{{this.formatDate(detailData.baseDate)}}</div>
-            </el-col>
-            <el-col :span="2">
-              <div class="projTitle">计划现勘日</div>
-            </el-col>
-            <el-col :span="4">
-              <div class="projContent">{{this.formatDate(detailData.fldSrvySchedule)}}</div>
-            </el-col>
-            <el-col :span="2">
-              <div class="projTitle">委托人</div>
-            </el-col>
-            <el-col :span="4">
-              <div class="projContent">{{detailData.clientName}}</div>
-            </el-col>
-            <el-col :span="2">
-              <div class="projTitle">产权持有人</div>
-            </el-col>
-            <el-col :span="4">
-              <div class="projContent">{{detailData.incumbrancer}}</div>
-            </el-col>
-            <el-col :span="4">
-              <div class="projTitle">委托人联系人及联系方式</div>
-            </el-col>
-            <el-col :span="8">
-              <div class="projContent">{{detailData.clientContact}}{{detailData.clientContactInfo}}</div>
-            </el-col>
-            <el-col :span="4">
-              <div class="projTitle">引荐人及联系方式</div>
-            </el-col>
-            <el-col :span="8">
-              <div class="projContent">{{detailData.projReferer}}{{detailData.projRefererInfo}}</div>
-            </el-col>
-            <el-col :span="4">
-              <div class="projTitle">现勘联系人及联系方式</div>
-            </el-col>
-            <el-col :span="8">
-              <div class="projContent">{{detailData.fldSrvyContact}}{{detailData.fldSrvyContactInfo}}</div>
-            </el-col>
-            <el-col :span="2">
-              <div class="projTitle">接洽人</div>
-            </el-col>
-            <el-col :span="4">
-              <div class="projContent">{{detailData.projContact}}</div>
-            </el-col>
-            <el-col :span="2">
-              <div class="projTitle">风险预测</div>
-            </el-col>
-            <el-col :span="4">
-              <div class="projContent">
-                <span
-                  v-for="item in fengxian"
-                  :key="item.value"
+            <el-row>
+              <el-col :span="8">
+                <el-form-item
+                  label="基准日"
+                  class="label"
                 >
-                  <span v-if="detailData.riskProfile == item.value">{{item.label}}</span>
-                </span>
-              </div>
-            </el-col>
-            <el-col :span="2">
-              <div class="projTitle">评估值报价</div>
-            </el-col>
-            <el-col :span="4">
-              <div class="projContent">{{detailData.assemValueQuote}}</div>
-            </el-col>
-            <el-col :span="2">
-              <div class="projTitle">评估收费报价</div>
-            </el-col>
-            <el-col :span="4">
-              <div class="projContent">{{detailData.assemFeeQuote}}</div>
-            </el-col>
-          </el-row>
-          <!-- <el-row>
-            <el-col :span="4">
-              <div class="form-item-title">
-                <h3>项目进度 - (跟进功能开发中...)</h3>
-              </div>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="20">
-              <el-steps
-                :active="1"
-                simple
-              >
-                <el-step
-                  title="计划"
-                  icon="el-icon-s-order"
-                ></el-step>
-                <el-step
-                  title="现勘"
-                  icon="el-icon-place"
-                ></el-step>
-                <el-step
-                  title="撰写报告"
-                  icon="el-icon-edit"
-                ></el-step>
-                <el-step
-                  title="收费、送达"
-                  icon="el-icon-s-custom"
-                ></el-step>
-                <el-step
-                  title="归档"
-                  icon="el-icon-check"
-                ></el-step>
-              </el-steps>
-            </el-col>
-          </el-row> -->
-          <el-row>
-            <div class="form-item-title">
-              <h3>项目组成员</h3>
-            </div>
-            <el-col :span="12">
-              <el-card>
-                <div class="text">
-                  <div class="item"><span>项目负责人：</span>{{this.detailData.projLeader}}</div>
-                  <div class="item"><span>项目复核人：</span>{{this.detailData.projReviewer}}</div>
-                  <div class="item"><span>专业复核人：</span>{{this.detailData.projProReviewer}}</div>
-                  <div class="item"><span>项目助理：</span>{{this.detailData.projAsst}}</div>
-                  <div class="item"><span>现场勘查：</span>{{this.detailData.fieldSrvy}}</div>
-                </div>
-              </el-card>
-            </el-col>
-          </el-row>
-        </div>
+                  <span class="detail-content">{{this.formatDate(detailData.baseDate)}}</span>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="24">
+                <el-form-item
+                  label="项目范围"
+                  class="label"
+                >
+                  <span class="detail-content">{{detailData.projScope}}</span>
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item
+                  label="补充说明"
+                  class="label"
+                >
+                  <span class="detail-content">{{detailData.supInstruction}}</span>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <div class="title">委托信息</div>
+            <el-row>
+              <el-col :span="8">
+                <el-form-item
+                  label="接洽人"
+                  class="label"
+                >
+                  <span class="detail-content">{{detailData.projContactType}} {{detailData.projContact}}</span>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item
+                  label="委托人"
+                  class="label"
+                >
+                  <span class="detail-content">{{detailData.clientName}}</span>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item
+                  label="委托人联系人"
+                  class="label"
+                >
+                  <span class="detail-content">{{detailData.clientContact}} {{detailData.clientContactInfo}}</span>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="8">
+                <el-form-item
+                  label="产权持有人"
+                  class="label"
+                >
+                  <span class="detail-content">{{detailData.incumbrancer}}</span>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item
+                  label="计划现勘日"
+                  class="label"
+                >
+                  <span class="detail-content">{{this.formatDate(detailData.fldSrvySchedule)}}</span>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item
+                  label="现勘联系人"
+                  class="label"
+                >
+                  <span class="detail-content">{{detailData.fldSrvyContact}} {{detailData.fldSrvyContactInfo}}</span>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="8">
+                <el-form-item
+                  label="引荐人"
+                  class="label"
+                >
+                  <span class="detail-content">{{detailData.projReferer}} {{detailData.projRefererInfo}}</span>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <div class="title">项目组成员</div>
+            <el-row>
+              <el-col :span="8">
+                <el-form-item
+                  label="项目负责人"
+                  class="label"
+                >
+                  <span class="detail-content">{{detailData.projLeader}}</span>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item
+                  label="项目复核人"
+                  class="label"
+                >
+                  <span class="detail-content">{{detailData.projReviewer}}</span>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item
+                  label="专业复核人"
+                  class="label"
+                >
+                  <span class="detail-content">{{detailData.projProReviewer}}</span>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="8">
+                <el-form-item
+                  label="项目助理"
+                  class="label"
+                >
+                  <span>{{detailData.projAsst}}</span>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item
+                  label="现场勘查"
+                  class="label"
+                >
+                  <span class="detail-content">{{detailData.fieldSrvy}}</span>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </div>
+        </el-form>
       </div>
     </div>
   </div>
@@ -289,32 +287,40 @@ export default {
       projTypeOption: [],
       projTypeZH: '',
       transedData: {},
-      fengxian: [
+      risk: [
         {
           value: '1001',
-          label: '低'
+          label: '低',
+          tag: 'success'
         },
         {
           value: '1002',
-          label: '中等'
+          label: '中等',
+          tag: 'primary'
         },
         {
           value: '1003',
-          label: '较高'
+          label: '较高',
+          tag: 'warning'
         },
         {
           value: '1004',
-          label: '高'
+          label: '高',
+          tag: 'danger'
         }
+      ],
+      arrgType: [
+        { value: '1001', label: '轮序项目' }, { value: '1002', label: '安排项目' }
+      ],
+      newOldType: [
+        { value: '1001', label: '新项目' }, { value: '1002', label: '重评项目' }
       ]
     }
   },
   created() {
-    console.log('11', this.$route.query.data)
     this.projId = this.$route.query.data
     this.getDetail()
     this.projTypeOption = projTypeOption
-    console.log('projTypeOption', this.projTypeOption);
     this.clientOptions = clientOptions
   },
   mounted() {
@@ -340,7 +346,7 @@ export default {
           }
         }
         this.reportNum = res.data.reportNumList
-        console.log(this.reportNum)
+        console.log('reportNum', this.reportNum)
         //委托人（原银行）转译
         // let clientOptions = this.clientOptions
         // let bankAfter = []
@@ -358,21 +364,6 @@ export default {
         // this.detailData.lendingBankLable = clientOptions[indexBefore].label + ' - ' + bankAfter[index].label
       })
     },
-    printProj(val) {
-      console.log(val)
-      var that = this
-      var oReq = new XMLHttpRequest()
-      // url参数为拿后台数据的接口
-      let pathUrl = ProManageAPIServer + getProjInfoTable
-      oReq.open('POST', pathUrl, true)
-      oReq.responseType = 'blob'
-      oReq.onload = function (oEvent) {
-        window.open('/static/pdf/web/viewer.html?file=' + encodeURIComponent(URL.createObjectURL(new Blob([oReq.response]))))
-      }
-      const fdata = new FormData()
-      fdata.append('projId', parseInt(that.projId))
-      oReq.send(fdata)
-    },
     goBack() {
       this.$router.go(-1)
     }
@@ -380,46 +371,27 @@ export default {
 }
 </script>
 
-<style scoped>
-.project {
-  width: 100%;
-  height: inherit;
+<style>
+.detail {
+  padding: 10px;
 }
-.projTitle {
-  background-color: #cbe5ff;
-  text-align: center;
-  height: 50px;
-  line-height: 50px;
-  border: 1px solid #d3d3d3;
+.detail-content {
+  color: #2f2f2f;
 }
-.projContent {
-  text-align: center;
-  height: 50px;
-  line-height: 50px;
-  border: 1px solid #d3d3d3;
-}
-.form-item-title {
-  width: 100%;
-  text-align: left;
-  padding-left: 10px;
-  margin: 20px 0 5px 0;
-  border-left: solid 5px #409eff;
-}
-.text {
-  margin-top: 15px;
-}
-.text {
+.el-tag--medium {
+  font-size: 16px;
+  height: 30px;
   line-height: 30px;
 }
-.text span {
-  color: #707781;
+.label span {
+  font-size: 16px;
 }
-.item {
-  border-bottom: solid 1px #ebe8e8;
+.label .el-form-item__label {
+  color: #009ad6;
+  font-size: 16px;
 }
-.proj-info span {
-  color: #409eff;
-  font-weight: bold;
-  font-size: 1px;
+.title {
+  margin: 30px 0 30px 0;
+  font-size: 20px;
 }
 </style>

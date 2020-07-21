@@ -414,33 +414,6 @@ export default {
         amendFinalSche: [],
         manuArchiveSche: []
       },
-      // arrgFormRules: {
-      //   assemMethod: [{ required: true, message: '请选择评估方法', trigger: 'change' }],
-      //   prePreparationSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
-      //   fldSrvySche: [{ required: true, message: '请选择日期', trigger: 'change' }],
-      //   mktSrvySche: [{ required: true, message: '请选择日期', trigger: 'change' }],
-      //   assemEstSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
-      //   issueValSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
-      //   internalAuditSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
-      //   commuClientSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
-      //   assemChargeSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
-      //   amendFinalSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
-      //   manuArchiveSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
-      //   //
-      //   prePreparationPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
-      //   prePreparationPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
-      //   fldSrvyPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
-      //   mktSrvyPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
-      //   assemEstPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
-      //   issueValPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
-      //   internalAuditPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
-      //   commuClientPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
-      //   assemChargePic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
-      //   amendFinalPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
-      //   manuArchivePic: [{ required: true, message: '请选择责任人', trigger: 'change' }]
-
-      // }
-
     }
   },
   created() {

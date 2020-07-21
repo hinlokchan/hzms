@@ -328,6 +328,7 @@
 import { getUserList } from '@/api/index'
 import { submitEvalObjDetail, editEvalObjDetail } from '@/api/assemobjdetail'
 import { Form } from 'element-ui'
+import city from '../../../../public/citys.json'
 export default {
   name: 'FcObjDetailDialog',
   inject: ['reload'],
@@ -339,12 +340,15 @@ export default {
     },
     projId: { type: Number },
   },
-
+  created() {
+    this.city = city
+  },
   data() {
     return {
       visible: this.show,
       //
       edit: false,
+      city: [],
       form: {
         projId: '',
         //基本信息
@@ -380,6 +384,7 @@ export default {
         decoDegree: '',
         remainTerm: '',
       },
+      test: '',
       assemGoalOption: ['房地产转让价格评估', '房地产分割、合并评估', '房地产纠纷估价', '房地产保险估价', '土地使用权出让价格评估', '房地产拍卖底价评估', '房地产抵押价值评估', '房地产课税估价', '房地产租赁价格评估', '企业各种经济活动中涉及的房地产估价', '其他目的的房地产估价'],
       priceTypeOption: ['成交价格', '正常价格', '市场价格', '评估价值', '市场价值', '投资价值', '现状价值', '快速变现价值', '残余价值', '抵押价值', '抵押净值', '法定优先受偿款', '计税价值', '保险价值', '完全产权价值', '无租约限制价值', '出租人权益价值', '承租人权益价值', '建筑物价值', '土地价值', '楼面地价'],
       housePurposeOption: ['住宅', '宗教', '园林绿化', '工业、交通、仓储', '别墅', '涉外', '医疗卫生', '文化、娱乐、体育', '公共运输', '新闻', '娱乐', '监狱', '集体宿舍', '成套住宅', '商业服务', '旅游', '军事', '体育', '物管用房', '铁路', '非成套住宅', '工业', '文化', '仓储', '电讯信息', '教育', '教育、医疗、卫生、可研', '民航', '高档公寓', '科研', '公共设施', '商业、金融、信息', '航运', '金融保险', '其他', '办公', '经营'],

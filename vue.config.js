@@ -1,3 +1,4 @@
+//MD5 69A9916A949CFAD7
 'use strict'
 const modeEnv = process.env.VUE_APP_MODE_ENV
 const port = 8080

@@ -95,7 +95,6 @@
                 :key="index"
                 prop="projContact"
               >
-                <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
                 <div class="flexBox">
                   <!-- <el-input
                     style="width:90%"
@@ -120,14 +119,6 @@
                 ></i>
               </el-form-item>
             </el-col>
-            <!-- <el-col :span="6">
-              <el-form-item
-                label="接洽人"
-                prop="projContact"
-              >
-                <el-input v-model="form.projContact"></el-input>
-              </el-form-item>
-            </el-col> -->
           </el-row>
           <el-row :gutter="20">
             <el-col :span="6">
@@ -375,7 +366,6 @@
             </el-col>
             <el-col :span="6">
               <el-form-item label="项目负责人">
-                <!-- <el-input v-model="form.projLeader"></el-input> -->
                 <el-autocomplete
                   v-model="form.projLeader"
                   :fetch-suggestions="querySearch"
@@ -424,7 +414,6 @@
                 :label="'项目复核人' + (index + 1)"
                 :key="index"
               >
-                <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
                 <div class="flexBox">
                   <!-- <el-input
                     style="width:90%"
@@ -455,7 +444,6 @@
                 :label="'专业复核人' + (index + 1)"
                 :key="index"
               >
-                <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
                 <div class="flexBox">
                   <!-- <el-input
                     style="width:90%"
@@ -486,7 +474,6 @@
                 :label="'项目助理' + (index + 1)"
                 :key="index"
               >
-                <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
                 <div class="flexBox">
                   <!-- <el-input
                     style="width:90%"
@@ -519,7 +506,6 @@
                 :label="'现场勘查' + (index + 1)"
                 :key="index"
               >
-                <!-- <el-button @click.prevent="removeDomain(index)">删除</el-button> -->
                 <div class="flexBox">
                   <!-- <el-input
                     style="width:90%"
@@ -551,7 +537,7 @@
               @click="onSubmit"
             >表单提交</el-button>
             <el-button @click="goBack">取消</el-button>
-            <!-- <el-button @click="info">短信</el-button> -->
+            <!-- <el-button @click="test">test</el-button> -->
           </el-form-item>
         </el-form>
       </div>
@@ -576,7 +562,6 @@ export default {
       transedData: {},
       clientInputTypeChange: false,
       form: {
-        test: '',
         projType: '',
         projName: '',
         projContact: [{ value: '' }],
@@ -634,9 +619,6 @@ export default {
         ],
         fldSrvySchedule: [
           { required: true, message: '请选择现勘日期', trigger: 'blur' }
-        ],
-        projContact: [
-          { required: true, message: '请填写接洽人', trigger: 'blur' }
         ]
       },
       assemGoalList: ['抵押', '交易', '资产处置（司法鉴定）', '出让', '挂牌出让', '补出让', '转让', '盘整收回', '征收补偿', '活立木拍卖', '出租', '置换', '股权转让', '作价入股', '增资扩股', '入账', '征收、完税', '企业改制', '清算', '复审', '评价', '咨询'],
@@ -667,6 +649,11 @@ export default {
       .catch(err => { })
   },
   methods: {
+    // test() {
+    //   let a = this.form.supInstruction.split(';')
+    //   let b = a[0].split(':')
+    //   console.log(a.length, b)
+    // },
     querySearch(queryString, callback) {
       var userList = this.userList
       this.userListType = false
@@ -679,9 +666,6 @@ export default {
     createFilter(queryString) {
       return (userList) => {
         return (userList.value.toLowerCase().indexOf(queryString.toLowerCase()) > -1)
-
-        // return (userList.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
-        // return (userList.staffId.indexOf(queryString) === 0)
       }
     },
     arrgTypeToEnable(val) {
@@ -917,14 +901,16 @@ export default {
                   this.form.clientId = ''
                   this.form.clientId = clientIdMid
                 }
-                editProject(this.form).then(res => {
-                  console.log('add>>>res', res)
-                  this.$message.success('提交成功！')
-                  this.goBack()
-                }).catch(err => {
-                  this.$message.warning('提交失败！')
-                  console.log('add>>>err', err)
-                })
+                editProject(this.form)
+                  .then(res => {
+                    console.log('add>>>res', res)
+                    this.$message.success('提交成功！')
+                    this.goBack()
+                  })
+                  .catch(err => {
+                    this.$message.warning('提交失败！')
+                    console.log('add>>>err', err)
+                  })
               } else {
                 createNewProject(this.form).then(res => {
                   console.log('add>>>res', res)
@@ -966,6 +952,7 @@ export default {
         })
       }
     },
+    //测试用的，无关
     info() {
       console.log('agds', this.form)
       this.transformPeop()
