@@ -125,7 +125,7 @@
           width="95"
         >
         </el-table-column>
-        <el-table-column
+        <!-- <el-table-column
           prop="projState"
           label="项目进度"
           width="90"
@@ -134,7 +134,7 @@
           <template slot-scope="props">
             <el-tag type="primary">{{ props.row.projState }}</el-tag>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column
           label="操作"
           align="center"

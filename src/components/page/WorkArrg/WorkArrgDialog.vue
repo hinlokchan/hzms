@@ -490,7 +490,7 @@ export default {
         amendFinalSche: [],
         manuArchiveSche: '出正评后3个月内'
       },
-      assemMethodOptions: ['成本法', '收益法', '比较法', '市场法'],
+      assemMethodOptions: ['成本法', '收益法', '比较法', '假设开发法'],
       arrgFormRules: {
         assemMethod: [{ required: true, message: '请填写评估方法', trigger: 'change' }],
         prePreparationSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
@@ -592,25 +592,36 @@ export default {
       let asst = this.projAsst.split(',')
       let srvy = this.fieldSrvy.split(',')
       for (let i of leader) {
-        this.arrgForm.prePreparationPic.push(i)
-        this.arrgForm.internalAuditPic.push(i)
-        this.arrgForm.commuClientPic.push(i)
-        this.arrgForm.assemChargePic.push(i)
-        this.arrgForm.amendFinalPic.push(i)
+        if (i != '') {
+          this.arrgForm.prePreparationPic.push(i)
+          this.arrgForm.internalAuditPic.push(i)
+          this.arrgForm.commuClientPic.push(i)
+          this.arrgForm.assemChargePic.push(i)
+          this.arrgForm.amendFinalPic.push(i)
+        }
+
       }
       for (let i of reviewer) {
-        this.arrgForm.internalAuditPic.push(i)
-        this.arrgForm.commuClientPic.push(i)
+        if (i != '') {
+          this.arrgForm.internalAuditPic.push(i)
+          this.arrgForm.commuClientPic.push(i)
+        }
+
       }
       for (let i of asst) {
-        this.arrgForm.mktSrvyPic.push(i)
-        this.arrgForm.assemEstPic.push(i)
-        this.arrgForm.issueValPic.push(i)
-        this.arrgForm.internalAuditPic.push(i)
-        this.arrgForm.manuArchivePic.push(i)
+        if (i != '') {
+          this.arrgForm.mktSrvyPic.push(i)
+          this.arrgForm.assemEstPic.push(i)
+          this.arrgForm.issueValPic.push(i)
+          this.arrgForm.internalAuditPic.push(i)
+          this.arrgForm.manuArchivePic.push(i)
+        }
+
       }
       for (let i of srvy) {
-        this.arrgForm.fldSrvyPic.push(i)
+        if (i != '') {
+          this.arrgForm.fldSrvyPic.push(i)
+        }
       }
     },
     transData() {

@@ -510,7 +510,12 @@
             v-if="this.queryData.projType == 1010 || this.queryData.projType == 1020 || this.queryData.projType == 1030 || this.queryData.projType == 1041 || this.queryData.projType == 1042 || this.queryData.projType == 1043"
             @click="handleChangeType()"
           >更改项目类型</el-button>
-
+          <el-button
+            v-if="this.projDetail.projType == 1010 || this.projDetail.projType == 1030"
+            icon="el-icon-lx-qrcode"
+            size="medium"
+            @click="handleQRCode()"
+          >生成二维码</el-button>
           <el-button
             icon="el-icon-printer"
             size="medium"
@@ -786,7 +791,7 @@
           </el-card>
 
         </el-col>
-        <el-col
+        <!-- <el-col
           :span="12"
           style="margin-top: 10px"
         >
@@ -797,12 +802,6 @@
             >
               <span>报告登记信息</span>
               <span style="float: right">
-                <!-- <el-button
-                  icon="el-icon-suitcase"
-                  type="warning"
-                  plain
-                  size="medium"
-                >登记初评</el-button> -->
                 <el-button
                   v-if="this.projDetail.projType == 1010"
                   icon="el-icon-suitcase"
@@ -812,7 +811,7 @@
                   @click="handleFormalReg()"
                 >登记正评</el-button>
                 <el-button
-                  v-if="this.projDetail.projType == 1010"
+                  v-if="this.projDetail.projType == 1010 || this.projDetail.projType == 1030"
                   icon="el-icon-lx-qrcode"
                   size="medium"
                   @click="handleQRCode()"
@@ -834,10 +833,10 @@
               </div>
             </div>
           </el-card>
-        </el-col>
+        </el-col> -->
       </el-row>
     </div>
-    <div
+    <!-- <div
       class="work-title"
       v-if="this.projDetail.projType == 1010"
     >
@@ -858,7 +857,7 @@
           type="text"
         >展开详情</el-button>
       </span>
-    </div>
+    </div> -->
 
     <el-divider></el-divider>
     <div class="work-title">
@@ -1623,26 +1622,30 @@ export default {
       // }
     },
     handleQRCode() {
-      if (this.statusInfo.registerState == true && this.statusInfo.evalObjState == true) {
-        getEvalObjDetail({ projId: this.projDetail.projId, subReportNum: '-' })
-          .then(res => {
-            this.projTotalValue = res.data.projTotalValue
-            console.log('评估值:', res.data.projTotalValue)
-            this.qrcodeVisible = true
-            this.$nextTick(() => {
-              this.creatQRCode()
-            })
-          })
-          .catch(err => {
-            this.$message.error('服务器忙，请稍后重试')
-          })
-        // this.qrcodeVisible = true
-        // this.$nextTick(() => {
-        //   this.creatQRCode()
-        // })
-      } else {
-        this.$message.error('请先登记正评后生成二维码')
-      }
+      this.qrcodeVisible = true
+      this.$nextTick(() => {
+        this.creatQRCode()
+      })
+      // if (this.statusInfo.registerState == true && this.statusInfo.evalObjState == true) {
+      //   getEvalObjDetail({ projId: this.projDetail.projId, subReportNum: '-' })
+      //     .then(res => {
+      //       this.projTotalValue = res.data.projTotalValue
+      //       console.log('评估值:', res.data.projTotalValue)
+      //       this.qrcodeVisible = true
+      //       this.$nextTick(() => {
+      //         this.creatQRCode()
+      //       })
+      //     })
+      //     .catch(err => {
+      //       this.$message.error('服务器忙，请稍后重试')
+      //     })
+      //   // this.qrcodeVisible = true
+      //   // this.$nextTick(() => {
+      //   //   this.creatQRCode()
+      //   // })
+      // } else {
+      //   this.$message.error('请先登记正评后生成二维码')
+      // }
 
     },
     creatQRCode() {
@@ -1651,7 +1654,7 @@ export default {
         width: '200',
         height: '200',
         //text: this.form.zph + this.form.xmmc + this.form.pgz + this.form.jzr,
-        text: '项目报告号：' + this.reportNum.zph + ' ' + '项目名称：' + this.projDetail.projName + ' ' + '项目评估值：' + this.projTotalValue + '万元 ' + '基准日：' + this.formatDate(this.projDetail.projDate)
+        text: '项目报告号：' + this.reportNum.zph + ' ' + '项目名称：' + this.projDetail.projName + ' ' + '项目评估值：' /*+ this.projTotalValue */ + '万元 ' + '基准日：' + this.formatDate(this.projDetail.projDate)
       })
     },
     closeQRCode() {
@@ -1697,7 +1700,7 @@ export default {
             //     break
             // }
             console.log(this.contractNumType)
-            createContractNum({ projId: this.queryData.projId})
+            createContractNum({ projId: this.queryData.projId })
               .then(res => {
                 console.log('createContractNum.res', res)
                 this.reload()

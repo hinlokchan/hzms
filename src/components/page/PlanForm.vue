@@ -27,6 +27,34 @@
           size="medium"
         ></el-input>
       </el-dialog>
+      <el-dialog
+        title="新增委托人"
+        :visible.sync="showAddClient"
+        width="40%"
+      >
+        <el-form :model="clientForm">
+          <el-form-item label="类别">
+            <el-cascader
+              v-model="clientForm.clientType"
+              :options="clientTypeOptions"
+              filterable
+            >
+            </el-cascader>
+          </el-form-item>
+          <el-form-item label="名称">
+            <el-input v-model="clientForm.clientName"></el-input>
+            <h4 style="color: #ed1941">银行委托人添加格式:类别选择银行名称，名称填写分（支）行名字</h4>
+          </el-form-item>
+        </el-form>
+        <el-button
+          type="primary"
+          @click="submitAddClient"
+        >提交</el-button>
+        <el-button
+          type="text"
+          @click="showAddClient = false"
+        >取消</el-button>
+      </el-dialog>
       <div class="form-box">
         <div class="form-item-title">
           <h3>项目信息</h3>
@@ -43,6 +71,7 @@
                 :span="6"
                 label="项目类型"
                 prop="projType"
+                class="red-item"
               >
                 <el-select
                   v-model="form.projType"
@@ -122,32 +151,40 @@
           </el-row>
           <el-row :gutter="20">
             <el-col :span="6">
+              <h2>{{this.form.clientId}}</h2>
               <el-form-item
                 label="委托人"
                 prop="clientName"
                 v-if="clientInputTypeChange == false"
+                class="red-item"
               >
                 <el-cascader
                   :show-all-levels="false"
                   v-model="form.clientId"
-                  :options="clientOptions"
+                  :options="clientList"
                   :props="{ expandTrigger: 'hover' }"
                   style="width: 85%"
                   @change="selectToInput()"
                   filterable
                 >
                 </el-cascader>
+
                 <el-button
                   type="text"
                   icon="el-icon-refresh-right"
                   style="width: 10%"
                   @click="resetClientName()"
                 ></el-button>
+                <!-- <el-button
+                  type="text"
+                  @click="showAddClientDialog"
+                >新增</el-button> -->
               </el-form-item>
               <el-form-item
                 label="委托人"
                 prop="clientName"
                 v-if="clientInputTypeChange == true"
+                class="red-item"
               >
                 <el-input
                   v-model="form.clientName"
@@ -160,6 +197,7 @@
                   @click="resetClientName()"
                 ></el-button>
               </el-form-item>
+
             </el-col>
             <el-col :span="6">
               <el-form-item
@@ -185,6 +223,7 @@
               <el-form-item
                 label="项目名称"
                 prop="projName"
+                class="red-item"
               >
                 <el-input
                   v-model="form.projName"
@@ -203,10 +242,13 @@
                 <el-input v-model="form.projRefererInfo"></el-input>
               </el-form-item>
             </el-col>
+          </el-row>
+          <el-row>
             <el-col :span="12">
               <el-form-item
                 label="评估范围"
                 prop="projScope"
+                class="red-item"
               >
                 <el-input
                   v-model="form.projScope"
@@ -229,10 +271,13 @@
               <el-form-item
                 label="评估目的"
                 prop="assemGoal"
+                class="red-item"
               >
                 <el-select
                   v-model="form.assemGoal"
                   placeholder="请选择"
+                  filterable
+                  allow-create
                 >
                   <el-option
                     v-for="item in assemGoalList"
@@ -257,6 +302,7 @@
               <el-form-item
                 label="基准日"
                 prop="baseDate"
+                class="red-item"
               >
                 <el-date-picker
                   type="date"
@@ -271,6 +317,7 @@
               <el-form-item
                 label="计划现勘日期"
                 prop="fldSrvySchedule"
+                class="red-item"
               >
                 <el-date-picker
                   type="date"
@@ -547,7 +594,7 @@
 
 <script>
 import { createNewProject, editProject } from '@/api/index'
-import { getDetailProjInfo, getUserList, userQuery } from '@/api/index'
+import { getDetailProjInfo, getUserList, userQuery, getClientList, addClient } from '@/api/index'
 import clientOptions from '../../../public/clientName.json'
 import projTypeOption from '../../../public/projTypeOption.json'
 
@@ -560,7 +607,13 @@ export default {
       newInfo: false,
       newInfoData: '',
       transedData: {},
+      clientList: [],
       clientInputTypeChange: false,
+      showAddClient: false,
+      clientForm: {
+        clientType: '',
+        clientName: ''
+      },
       form: {
         projType: '',
         projName: '',
@@ -622,8 +675,45 @@ export default {
         ]
       },
       assemGoalList: ['抵押', '交易', '资产处置（司法鉴定）', '出让', '挂牌出让', '补出让', '转让', '盘整收回', '征收补偿', '活立木拍卖', '出租', '置换', '股权转让', '作价入股', '增资扩股', '入账', '征收、完税', '企业改制', '清算', '复审', '评价', '咨询'],
-      contactTypeOption: ['正常接洽', '摇珠', '中行通知书', '定点采购', '中介超市摇珠'],
+      contactTypeOption: ['正常接洽', '摇珠', '中行通知书', '定点采购', '中介超市摇珠', '河源分公司'],
       userList: [],
+      clientTypeOptions: [
+        {
+          value: '1',
+          label: '银行',
+          children: [
+            { value: '101', label: '中国银行' },
+            { value: '102', label: '建设银行' },
+            { value: '103', label: '农业银行' },
+            { value: '104', label: '工商银行' },
+            { value: '105', label: '交通银行' },
+            { value: '106', label: '广发银行' },
+            { value: '107', label: '浦发银行' },
+            { value: '108', label: '民生银行' },
+            { value: '109', label: '兴业银行' },
+            { value: '110', label: '中信银行' },
+            { value: '122', label: '招商银行' },
+            { value: '111', label: '平安银行' },
+            { value: '112', label: '南粤银行' },
+            { value: '113', label: '邮政储蓄银行' },
+            { value: '114', label: '光大银行' },
+            { value: '115', label: '广州银行' },
+            { value: '116', label: '华润银行' },
+            { value: '117', label: '东莞农商银行' },
+            { value: '118', label: '惠州东盈村镇银行' },
+            { value: '119', label: '惠民村镇银行' },
+            { value: '120', label: '广东华兴银行' },
+            { value: '121', label: '农商银行' },
+          ]
+        },
+        { value: '1001', label: '自然资源局' },
+        { value: '1002', label: '法院' },
+        { value: '1003', label: '国资委' },
+        { value: '1004', label: '财政局' },
+        { value: '1005', label: '政府部门' },
+        { value: '1006', label: '担保公司' },
+        { value: '1100', label: '其他' }
+      ]
     };
   },
   created() {
@@ -647,8 +737,22 @@ export default {
         }
       })
       .catch(err => { })
+      this.getClientList()
   },
+
   methods: {
+    getClientList() {
+      getClientList()
+        .then(res => {
+          this.clientList = res.data
+          console.log(this.clientList)
+          console.log('local', this.clientOptions)
+        })
+        .catch(err => { })
+    },
+    showAddClientDialog() {
+      this.showAddClient = true
+    },
     // test() {
     //   let a = this.form.supInstruction.split(';')
     //   let b = a[0].split(':')
@@ -884,8 +988,7 @@ export default {
         } else {
           //this.form.clientId = this.form.clientId[this.form.clientId.length - 1]
           if (this.isEdit == false) {
-            let clientIdMid = this.form.clientId[this.form.clientId.length - 1]
-            this.form.clientId = ''
+            let clientIdMid = [...this.form.clientId].pop()
             this.form.clientId = clientIdMid
           }
         }
@@ -1024,6 +1127,32 @@ export default {
         resolve(1)
       })
     },
+    submitAddClient() {
+      if (this.clientForm.clientName == '' || this.clientForm.clientType == '') {
+        this.$message.warning('类别、名称不能为空')
+        return 0
+      }
+      
+      let clientTypeMid = this.clientForm.clientType[this.clientForm.clientType.length - 1]
+      console.log(clientTypeMid)
+      this.clientForm.clientType = clientTypeMid
+      addClient(this.clientForm)
+        .then(res => {
+          this.$message.success('添加成功！')
+          let client = res.data
+          console.log(res, client)
+          this.getClientList()
+          this.form.clientId = client
+          this.showAddClient = false
+          
+        })
+        .catch(err => {
+          if (err.statusCode == 5002) {
+            this.$message.warning('该委托人已存在！')
+          }
+          console.log(err)
+        })
+    },
     goBack() {
       this.$router.go(-1)
     }
@@ -1064,5 +1193,8 @@ export default {
       color: #ddd;
     }
   }
+}
+.red-item .el-form-item__label {
+  color: #ed1941;
 }
 </style>

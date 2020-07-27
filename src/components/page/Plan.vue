@@ -79,7 +79,7 @@
       <!-- table -->
       <el-table
         :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)"
-        height="650"
+        height="550"
         stripe
         border
         class="table"
@@ -136,7 +136,7 @@
         <el-table-column
           prop="projType"
           label="项目类型"
-          width="100"
+          width="90"
           align="center"
           :filters="this.projTypeFilters"
           :filter-method="filterProjType"
@@ -170,13 +170,13 @@
         <el-table-column
           prop="projName"
           label="评估项目名称"
-          width="300"
+          width="250"
           :show-overflow-tooltip="true"
         ></el-table-column>
         <el-table-column
           prop="projScope"
           label="评估项目范围"
-          width="300"
+          width="250"
           :show-overflow-tooltip="true"
         ></el-table-column>
         <el-table-column
@@ -211,6 +211,7 @@
           label="操作"
           width="190"
           align="center"
+          fixed="right"
         >
           <template slot-scope="scope">
             <el-button
@@ -248,7 +249,6 @@
 </template>
 
 <script>
-// import { fetchData } from '../../api/index';
 import { getAllAbstractProject, searchProject, delProject } from '@/api/index';
 import { checkFaRegister } from '@/api/formalreg'
 import projTypeOption from '../../../public/projTypeOption.json'
@@ -256,10 +256,6 @@ export default {
   name: 'plan',
   data() {
     return {
-      // query: {
-      //   startFrom: 1,
-      //   pagecount: 10
-      // },
       currentPage: 1, // 当前页码
       pageSize: 20, // 每页的数据条数
       pageTotal: 0,
@@ -349,12 +345,7 @@ export default {
         })
         .catch(err => {
           console.log(err);
-        });
-      // fetchData(this.query).then(res => {
-      //     console.log(res);
-      //     this.tableData = res.list;
-      //     this.pageTotal = res.pageTotal || 50;
-      // });
+        })
     },
     searchProjInfo() {
       let newArr = {}

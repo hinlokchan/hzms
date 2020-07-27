@@ -274,4 +274,22 @@ export function userQuery(data) {
   });
 }
 
+export function getClientList(data) {
+  return request({
+    url: `${ProManageAPIServer}client/getClientList`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
+export function addClient(data) {
+  return request({
+    url: `${ProManageAPIServer}client/addClient`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
 export var getProjInfoTable = 'statistics/getProjInfoTable';

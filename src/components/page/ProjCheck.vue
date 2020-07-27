@@ -391,7 +391,7 @@ export default {
   font-size: 16px;
 }
 .title {
-  margin: 30px 0 30px 0;
+  margin: 10px 0 10px 0;
   font-size: 20px;
 }
 </style>
