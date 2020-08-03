@@ -56,11 +56,6 @@ export default new Router({
                     meta: { title: '正评登记' }
                 },
                 {
-                    path: '/qrcode',
-                    component: () => import('../components/page/QRCode.vue'),
-                    meta: { title: '二维码生成' }
-                },
-                {
                     path: '/workhandle',
                     component: () => import('../components/page/WorkHandle.vue'),
                     meta: { title: '项目工作管理' }
@@ -79,6 +74,11 @@ export default new Router({
                     path: '/stat',
                     component: () => import('../components/page/Stat.vue'),
                     meta: { title: '统计管理' }
+                },
+                {
+                    path: '/client',
+                    component: () => import('../components/page/Client.vue'),
+                    meta: { title: '维护' }
                 },
                 {
                     path: '/usermanage',

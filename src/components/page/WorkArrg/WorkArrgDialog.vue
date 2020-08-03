@@ -433,7 +433,7 @@ export default {
     arrgData: { type: Object },
     projId: { type: Number },
     projMember: { type: Array },
-    projDate: { type: Number },
+    baseDate: { type: Number },
     projLeader: { type: String },
     projReviewer: { type: String },
     projProReviewer: { type: String },
@@ -503,7 +503,6 @@ export default {
         amendFinalSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
         //
         prePreparationPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
-        prePreparationPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
         fldSrvyPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
         mktSrvyPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
         assemEstPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
@@ -572,7 +571,7 @@ export default {
       })
     },
     defaultArrg() {
-      let day = this.projDate
+      let day = this.baseDate
       let day1 = this.$moment(day).format('MM/DD')
       let day2 = this.$moment(day + 86400000).format('MM/DD')
       let day3 = this.$moment(day + 172800000).format('MM/DD')

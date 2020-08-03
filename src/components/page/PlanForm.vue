@@ -151,7 +151,6 @@
           </el-row>
           <el-row :gutter="20">
             <el-col :span="6">
-              <h2>{{this.form.clientId}}</h2>
               <el-form-item
                 label="委托人"
                 prop="clientName"
@@ -159,9 +158,10 @@
                 class="red-item"
               >
                 <el-cascader
+                  ref="cascaderAddr"
                   :show-all-levels="false"
                   v-model="form.clientId"
-                  :options="clientList"
+                  :options="clientOptions"
                   :props="{ expandTrigger: 'hover' }"
                   style="width: 85%"
                   @change="selectToInput()"
@@ -267,6 +267,8 @@
                 <el-input v-model="form.fldSrvyContactInfo"></el-input>
               </el-form-item>
             </el-col>
+          </el-row>
+          <el-row>
             <el-col :span="6">
               <el-form-item
                 label="评估目的"
@@ -328,6 +330,21 @@
                 ></el-date-picker>
               </el-form-item>
             </el-col>
+            <!-- <el-col :span="6">
+              <el-form-item
+                label="编制日期"
+                prop="projDate"
+                class="red-item"
+              >
+                <el-date-picker
+                  type="date"
+                  placeholder="选择日期"
+                  v-model="form.projDate"
+                  value-format="yyyy-MM-dd"
+                  style="width: 100%;"
+                ></el-date-picker>
+              </el-form-item>
+            </el-col> -->
           </el-row>
           <el-row :gutter="20">
             <el-divider></el-divider>
@@ -737,7 +754,7 @@ export default {
         }
       })
       .catch(err => { })
-      this.getClientList()
+    //this.getClientList()
   },
 
   methods: {
@@ -978,6 +995,7 @@ export default {
     onSubmit() {
       if (this.form.clientName == '' && this.form.clientId == '') {
         this.$message.warning('请填写委托人！')
+        return 0
       } else {
         if (this.form.clientId == 141) {
           if (this.form.clientName == '') {
@@ -985,25 +1003,25 @@ export default {
             return 0
           }
           this.form.clientId = ''
-        } else {
-          //this.form.clientId = this.form.clientId[this.form.clientId.length - 1]
-          if (this.isEdit == false) {
-            let clientIdMid = [...this.form.clientId].pop()
-            this.form.clientId = clientIdMid
-          }
         }
+        // else {
+        //   //this.form.clientId = this.form.clientId[this.form.clientId.length - 1]
+        //   if (this.isEdit == false) {
+        //     let clientIdMid = [...this.form.clientId].pop()
+        //     this.form.clientId = clientIdMid
+        //   }
+        // }
         console.log('form', this.form)
         this.$refs.ruleForm.validate((valid) => {
           if (valid) {
+            if (Array.isArray(this.form.clientId) == true) {
+              let clientIdMid = [...this.form.clientId].pop()
+              console.log(clientIdMid)
+              this.form.clientId = clientIdMid
+            }
             this.transformPeop().then(res => {
               console.log('this.form', this.form)
               if (this.isEdit) {
-                //判断clientId是否为数组并提取最后的元素提交
-                if (Array.isArray(this.form.clientId) == true) {
-                  let clientIdMid = this.form.clientId[this.form.clientId.length - 1]
-                  this.form.clientId = ''
-                  this.form.clientId = clientIdMid
-                }
                 editProject(this.form)
                   .then(res => {
                     console.log('add>>>res', res)
@@ -1042,7 +1060,12 @@ export default {
                   }
 
                   // ZP项目类型：资；委托 人：(其他):惠州市水务投资集团；项目名称：惠州大道大湖溪段667平方米租金；评估对象及其坐落：同上;；评估目的：物业出租价格；引荐人及其电话：惠州市水务投资集团王总135 0229 7502；现联系单位、人及电话：同上；现勘时间：现勘同事约；报告时间要求：5天；项目风险预测：；评估收费报价：待定；是否曾评估的项目：（若是，原项目组成员：）；项目接洽人""[52]-缨(注师：莎缨;助理：健;专业复核人:远。以下由项目负责人安排 现勘：;资料核查验证：;市场询价调查：;技术报告:；报告编制:; 归档：;对外沟通:
-                  this.newInfoData = `项目编号:${res.data.projNum};项目类型:${this.transedData.projType};委托人:${this.form.clientName};项目名称:${this.form.projName};评估对象及其坐落:同上;评估目的:${this.form.assemGoal};引荐人及其电话:${this.form.projReferer}${this.form.projRefererInfo};现勘联系单位人及电话：${this.form.fldSrvyContact}${this.form.fldSrvyContactInfo};现勘时间:${this.form.fldSrvySchedule};报告时间要求:${this.form.compSchedule}天;项目风险预测:${riskProfile};评估收费报价:${this.form.assemFeeQuote};是否曾评估项目:${newOldType};项目接洽人:${this.form.projContact} ${this.form.projContactType}(注师：；助理：；专业复核人:)。以下由项目负责人安排,现勘:${this.form.fieldSrvy};资料核查验证: ;市场询价调查: ;技术报告: ;报告编制: ;归档: ;对外沟通: 。`
+                  if (this.form.clientName != '') {
+                    var clientName = this.form.clientName
+                  } else {
+                    var clientName = this.$refs['cascaderAddr'].getCheckedNodes()[0].label
+                  }
+                  this.newInfoData = `项目编号:${res.data.projNum};项目类型:${this.transedData.projType};委托人:${clientName};项目名称:${this.form.projName};评估对象及其坐落:同上;评估目的:${this.form.assemGoal};引荐人及其电话:${this.form.projReferer}${this.form.projRefererInfo};现勘联系单位人及电话：${this.form.fldSrvyContact}${this.form.fldSrvyContactInfo};现勘时间:${this.form.fldSrvySchedule};报告时间要求:${this.form.compSchedule}天;项目风险预测:${riskProfile};评估收费报价:${this.form.assemFeeQuote};是否曾评估项目:${newOldType};项目接洽人:${this.form.projContact} ${this.form.projContactType}(注师：；助理：；专业复核人:)。以下由项目负责人安排,现勘:${this.form.fieldSrvy};资料核查验证: ;市场询价调查: ;技术报告: ;报告编制: ;归档: ;对外沟通: 。`
                   this.newInfo = true
                 }).catch(err => {
                   console.log('add>>>err', err)
@@ -1132,7 +1155,7 @@ export default {
         this.$message.warning('类别、名称不能为空')
         return 0
       }
-      
+
       let clientTypeMid = this.clientForm.clientType[this.clientForm.clientType.length - 1]
       console.log(clientTypeMid)
       this.clientForm.clientType = clientTypeMid
@@ -1144,7 +1167,7 @@ export default {
           this.getClientList()
           this.form.clientId = client
           this.showAddClient = false
-          
+
         })
         .catch(err => {
           if (err.statusCode == 5002) {

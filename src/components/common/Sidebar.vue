@@ -137,6 +137,11 @@ export default {
           icon: 'el-icon-user',
           title: '用户管理'
         },
+        {
+          index: 'client',
+          icon: 'el-icon-setting',
+          title: "维护"
+        },
         // {
         //     icon: 'el-icon-lx-copy',
         //     index: 'tabs',

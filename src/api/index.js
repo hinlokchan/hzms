@@ -292,4 +292,13 @@ export function addClient(data) {
   });
 }
 
+export function delWorkAssignment(data) {
+  return request({
+    url: `${ProManageAPIServer}project/deleteWorkAssignment`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
 export var getProjInfoTable = 'statistics/getProjInfoTable';

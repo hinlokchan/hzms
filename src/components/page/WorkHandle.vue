@@ -231,6 +231,8 @@
       :visible.sync="qrcodeVisible"
       append-to-body
     >
+      <!-- <el-input v-model="totalValue"></el-input>
+      <el-button @click="newQRCode(totalValue)">确定</el-button> -->
       <div>
         <span style="color: red">Tips: 右键二维码-图片另存为即可保存</span>
       </div>
@@ -460,7 +462,7 @@
       :projMember="projMember"
       :arrgEdit="workArrgEdit"
       :arrgData="arrgData"
-      :projDate="projDetail.projDate"
+      :baseDate="projDetail.baseDate"
       :projLeader="projDetail.projLeader"
       :projReviewer="projDetail.projReviewer"
       :projProReviewer="projDetail.projProReviewer"
@@ -869,6 +871,12 @@
           type="primary"
           @click="isWorkArrgDialog()"
         >安排</el-button>
+        <el-button
+          v-if="workArrgEdit == true"
+          icon="el-icon-refresh-right"
+          size="medium"
+          @click="resetArrg()"
+        >清空安排</el-button>
       </span>
     </div>
     <el-divider></el-divider>
@@ -1000,7 +1008,7 @@
 <script>
 import Clipboard from 'clipboard'
 import QRCode from 'qrcodejs2'
-import { editProject, getDetailProjInfo, getWorkAssignment, setWorkAssignment, createReportNum, deleteReportNum, alterProjType, getProjInfoTable, getOldReportNum, createContractNum, deleteContractNum } from '@/api/index'
+import { editProject, getDetailProjInfo, getWorkAssignment, delWorkAssignment, setWorkAssignment, createReportNum, deleteReportNum, alterProjType, getProjInfoTable, getOldReportNum, createContractNum, deleteContractNum } from '@/api/index'
 import { addSubProject, getSubProjectInfoList, delSubProject } from '@/api/subReport'
 import { getEvalObjDetail } from '@/api/assemobjdetail'
 import { checkFaRegister, submitFaRegister, editFaRegister } from '@/api/formalreg'
@@ -1022,7 +1030,6 @@ export default {
   data() {
     return {
       queryData: '',
-      projTotalValue: 0,
       arrgData: {},
       projDetail: {},
       projMember: [],
@@ -1032,6 +1039,9 @@ export default {
         zph: '',
         hhh: ''
       },
+      //qrcode
+      totalValue: '',
+      //
       projTypeOption: [],
       transedProjType: {},
       tableData: [],
@@ -1464,9 +1474,9 @@ export default {
       this.arrgData.issueValSche = this.arrgData.issueValSche.split('-')
       this.arrgData.internalAuditSche = this.arrgData.internalAuditSche.split('-')
       this.arrgData.commuClientSche = this.arrgData.commuClientSche.split('-')
-      this.arrgData.assemChargeSche = this.arrgData.assemChargeSche.split('-')
+      //this.arrgData.assemChargeSche = this.arrgData.assemChargeSche.split('-')
       this.arrgData.amendFinalSche = this.arrgData.amendFinalSche.split('-')
-      this.arrgData.manuArchiveSche = this.arrgData.manuArchiveSche.split('-')
+      //this.arrgData.manuArchiveSche = this.arrgData.manuArchiveSche.split('-')
     },
     // handleWorkArrg() {
     //   //this.$router.push({ path: '/workarrange', query: { data: this.queryData, projMember: this.projMember, isEdit: this.workArrgEdit } })
@@ -1623,38 +1633,21 @@ export default {
     },
     handleQRCode() {
       this.qrcodeVisible = true
+
       this.$nextTick(() => {
         this.creatQRCode()
       })
-      // if (this.statusInfo.registerState == true && this.statusInfo.evalObjState == true) {
-      //   getEvalObjDetail({ projId: this.projDetail.projId, subReportNum: '-' })
-      //     .then(res => {
-      //       this.projTotalValue = res.data.projTotalValue
-      //       console.log('评估值:', res.data.projTotalValue)
-      //       this.qrcodeVisible = true
-      //       this.$nextTick(() => {
-      //         this.creatQRCode()
-      //       })
-      //     })
-      //     .catch(err => {
-      //       this.$message.error('服务器忙，请稍后重试')
-      //     })
-      //   // this.qrcodeVisible = true
-      //   // this.$nextTick(() => {
-      //   //   this.creatQRCode()
-      //   // })
-      // } else {
-      //   this.$message.error('请先登记正评后生成二维码')
-      // }
-
+    },
+    newQRCode(val) {
+      console.log(val)
+      this.creatQRCode()
     },
     creatQRCode() {
-      console.log('createQRCode', this.projTotalValue)
       this.qr = new QRCode('qrcode', {
         width: '200',
         height: '200',
         //text: this.form.zph + this.form.xmmc + this.form.pgz + this.form.jzr,
-        text: '项目报告号：' + this.reportNum.zph + ' ' + '项目名称：' + this.projDetail.projName + ' ' + '项目评估值：' /*+ this.projTotalValue */ + '万元 ' + '基准日：' + this.formatDate(this.projDetail.projDate)
+        text: '项目报告号：' + this.reportNum.zph + ' ' + '项目名称：' + this.projDetail.projName + ' ' + '项目评估值：' + '万元 ' + '基准日：' + this.formatDate(this.projDetail.baseDate)
       })
     },
     closeQRCode() {
@@ -2001,6 +1994,26 @@ export default {
     },
     isWorkArrgDialog() {
       this.workArrgDialogVisible = true
+    },
+    resetArrg() {
+
+
+      this.$confirm('确定要清空工作安排吗？', '提示', {
+        type: 'warning'
+      })
+        .then(() => {
+          delWorkAssignment({ projId: this.projDetail.projId })
+            .then(res => {
+              console.log(res)
+              this.reload()
+            })
+            .catch(err => {
+              this.$message.warning('服务器忙，请稍后重试')
+            })
+        })
+        .catch(() => { })
+
+
     },
     goBack() {
       this.$router.go(-1)
