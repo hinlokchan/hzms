@@ -35,15 +35,27 @@
         <el-form :model="clientForm">
           <el-form-item label="类别">
             <el-cascader
+              clearable
+              ref="clientType"
               v-model="clientForm.clientType"
               :options="clientTypeOptions"
-              filterable
             >
             </el-cascader>
           </el-form-item>
           <el-form-item label="名称">
-            <el-input v-model="clientForm.clientName"></el-input>
+            <el-input
+              ref="clientName"
+              v-model.trim="clientForm.clientName"
+              @blur="checkClientName(clientForm.clientName)"
+            ></el-input>
             <h4 style="color: #ed1941">银行委托人添加格式:类别选择银行名称，名称填写分（支）行名字</h4>
+            <h4>例:中国银行惠州分行 -> 类别选择中国银行，名称填写惠州分行</h4>
+            <el-tree
+              ref="tree"
+              :data="clientList"
+              :props="defaultProps"
+              :filter-node-method="filterNode"
+            ></el-tree>
           </el-form-item>
         </el-form>
         <el-button
@@ -161,7 +173,7 @@
                   ref="cascaderAddr"
                   :show-all-levels="false"
                   v-model="form.clientId"
-                  :options="clientOptions"
+                  :options="clientList"
                   :props="{ expandTrigger: 'hover' }"
                   style="width: 85%"
                   @change="selectToInput()"
@@ -175,10 +187,11 @@
                   style="width: 10%"
                   @click="resetClientName()"
                 ></el-button>
-                <!-- <el-button
+                <el-button
                   type="text"
                   @click="showAddClientDialog"
-                >新增</el-button> -->
+                >新增</el-button>
+                <!-- <el-button type="text" @click="setUnconfirmClient()">待定</el-button> -->
               </el-form-item>
               <el-form-item
                 label="委托人"
@@ -631,6 +644,7 @@ export default {
         clientType: '',
         clientName: ''
       },
+      searchClientType: '',
       form: {
         projType: '',
         projName: '',
@@ -730,7 +744,11 @@ export default {
         { value: '1005', label: '政府部门' },
         { value: '1006', label: '担保公司' },
         { value: '1100', label: '其他' }
-      ]
+      ],
+      defaultProps: {
+        children: 'children',
+        label: 'label'
+      }
     };
   },
   created() {
@@ -754,16 +772,44 @@ export default {
         }
       })
       .catch(err => { })
-    //this.getClientList()
+    this.getClientList()
   },
+  watch: {
+    'clientForm.clientName': {
+      handler(val) {
+        let type = this.searchClientType + val
+        this.$refs.tree.filter(type)
+      }
+    },
+    'clientForm.clientType': {
+      handler(val) {
+        if (val == '') {
+          this.$refs.tree.filter(val)
+          return 0
+        }
 
+        var label = this.$refs['clientType'].getCheckedNodes()[0].label
+        if (val[0] == 1) {
+          this.searchClientType = label
+        } else {
+          this.searchClientType = ''
+        }
+        //this.searchClientType = label
+        console.log(label)
+        this.$refs.tree.filter(label)
+      }
+    }
+  },
   methods: {
+    filterNode(value, data) {
+      if (!value) return true
+      return data.label.indexOf(value) !== -1
+    },
     getClientList() {
       getClientList()
         .then(res => {
           this.clientList = res.data
           console.log(this.clientList)
-          console.log('local', this.clientOptions)
         })
         .catch(err => { })
     },
@@ -928,7 +974,7 @@ export default {
           if (element == value) {
             this.form.clientId = element
           } else {
-            this.clientInputTypeChange = true
+            //this.clientInputTypeChange = true
           }
         }
       }
@@ -979,13 +1025,9 @@ export default {
         }
       }
     },
-    //
-    selectToInput() {
-      if (this.form.clientId == '141') {
-        this.clientInputTypeChange = true
-      } else {
-        this.clientInputTypeChange = false
-      }
+    //委托人待处理
+    setUnconfirmClient() {
+      this.form.clientId = '0'
     },
     resetClientName() {
       this.clientInputTypeChange = false
@@ -1058,7 +1100,6 @@ export default {
                       this.transedData.projType = this.projTypeOption[i].label
                     }
                   }
-
                   // ZP项目类型：资；委托 人：(其他):惠州市水务投资集团；项目名称：惠州大道大湖溪段667平方米租金；评估对象及其坐落：同上;；评估目的：物业出租价格；引荐人及其电话：惠州市水务投资集团王总135 0229 7502；现联系单位、人及电话：同上；现勘时间：现勘同事约；报告时间要求：5天；项目风险预测：；评估收费报价：待定；是否曾评估的项目：（若是，原项目组成员：）；项目接洽人""[52]-缨(注师：莎缨;助理：健;专业复核人:远。以下由项目负责人安排 现勘：;资料核查验证：;市场询价调查：;技术报告:；报告编制:; 归档：;对外沟通:
                   if (this.form.clientName != '') {
                     var clientName = this.form.clientName
@@ -1150,15 +1191,23 @@ export default {
         resolve(1)
       })
     },
+    checkClientName(str) {
+      var patrn = /[`~!@#$%^&*()_\-+=<>?:"{}|,.\/;'\\[\]·~！@#￥%……&*（）——\-+={}|《》？：“”【】、；‘'，。、]/im
+      if (patrn.test(str)) {
+        this.$message.warning('请勿输入特殊符号')
+        this.$refs['clientName'].focus()
+      }
+    },
     submitAddClient() {
       if (this.clientForm.clientName == '' || this.clientForm.clientType == '') {
         this.$message.warning('类别、名称不能为空')
         return 0
       }
-
-      let clientTypeMid = this.clientForm.clientType[this.clientForm.clientType.length - 1]
-      console.log(clientTypeMid)
-      this.clientForm.clientType = clientTypeMid
+      if (this.clientForm.clientType instanceof Array) {
+        let clientTypeMid = this.clientForm.clientType[this.clientForm.clientType.length - 1]
+        this.clientForm.clientType = clientTypeMid
+      }
+      console.log(this.clientForm)
       addClient(this.clientForm)
         .then(res => {
           this.$message.success('添加成功！')
@@ -1172,10 +1221,14 @@ export default {
         .catch(err => {
           if (err.statusCode == 5002) {
             this.$message.warning('该委托人已存在！')
+            this.clientForm.clientName = ''
           }
           console.log(err)
         })
     },
+    // btKeyUp(e) {
+    //   e.target.value = e.target.value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g, "")
+    // },
     goBack() {
       this.$router.go(-1)
     }
