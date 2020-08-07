@@ -166,21 +166,25 @@
               <el-form-item
                 label="委托人"
                 prop="clientName"
-                v-if="clientInputTypeChange == false"
                 class="red-item"
               >
                 <el-cascader
+                  v-if="clientInputTypeChange == false"
                   ref="cascaderAddr"
                   :show-all-levels="false"
                   v-model="form.clientId"
                   :options="clientList"
                   :props="{ expandTrigger: 'hover' }"
                   style="width: 85%"
-                  @change="selectToInput()"
                   filterable
                 >
                 </el-cascader>
-
+                <el-input
+                  v-if="clientInputTypeChange == true"
+                  :disabled="true"
+                  style="width: 90%"
+                  v-model="form.clientName"
+                ></el-input>
                 <el-button
                   type="text"
                   icon="el-icon-refresh-right"
@@ -191,17 +195,21 @@
                   type="text"
                   @click="showAddClientDialog"
                 >新增</el-button>
-                <!-- <el-button type="text" @click="setUnconfirmClient()">待定</el-button> -->
+                <el-button
+                  type="text"
+                  @click="setUnconfirmClient()"
+                >待定</el-button>
               </el-form-item>
-              <el-form-item
+              <!-- <el-form-item
                 label="委托人"
                 prop="clientName"
-                v-if="clientInputTypeChange == true"
+                v-if="clientInputTypeChange == false"
                 class="red-item"
               >
                 <el-input
-                  v-model="form.clientName"
+                  :disabled="true"
                   style="width: 90%"
+                  placeholder="待定"
                 ></el-input>
                 <el-button
                   type="text"
@@ -209,7 +217,7 @@
                   style="width: 10%"
                   @click="resetClientName()"
                 ></el-button>
-              </el-form-item>
+              </el-form-item> -->
 
             </el-col>
             <el-col :span="6">
@@ -752,6 +760,7 @@ export default {
     };
   },
   created() {
+    this.getClientList()
     if (this.$route.query.data == undefined) {
       this.isEdit = false
       this.form.projDate = this.getToday()
@@ -772,7 +781,7 @@ export default {
         }
       })
       .catch(err => { })
-    this.getClientList()
+    // this.getClientList()
   },
   watch: {
     'clientForm.clientName': {
@@ -809,7 +818,6 @@ export default {
       getClientList()
         .then(res => {
           this.clientList = res.data
-          console.log(this.clientList)
         })
         .catch(err => { })
     },
@@ -961,10 +969,15 @@ export default {
       this.form = data
       //转化委托人
       let value = data.clientId
-      this.searchJsonTree(clientOptions, value)
+      if (value == '0') {
+        this.clientInputTypeChange = true
+      } else {
+        this.searchJsonTree(this.clientList, value)
+      }
+      // this.searchJsonTree(this.clientList, value)
       //this.form = data
     },
-    //遍历clientName.json
+    //遍历clientList
     searchJsonTree(jsonObj, value) {
       for (let i in jsonObj) {
         let element = jsonObj[i]
@@ -1027,7 +1040,9 @@ export default {
     },
     //委托人待处理
     setUnconfirmClient() {
+      this.clientInputTypeChange = true
       this.form.clientId = '0'
+      this.form.clientName = '委托人待处理'
     },
     resetClientName() {
       this.clientInputTypeChange = false
@@ -1103,6 +1118,8 @@ export default {
                   // ZP项目类型：资；委托 人：(其他):惠州市水务投资集团；项目名称：惠州大道大湖溪段667平方米租金；评估对象及其坐落：同上;；评估目的：物业出租价格；引荐人及其电话：惠州市水务投资集团王总135 0229 7502；现联系单位、人及电话：同上；现勘时间：现勘同事约；报告时间要求：5天；项目风险预测：；评估收费报价：待定；是否曾评估的项目：（若是，原项目组成员：）；项目接洽人""[52]-缨(注师：莎缨;助理：健;专业复核人:远。以下由项目负责人安排 现勘：;资料核查验证：;市场询价调查：;技术报告:；报告编制:; 归档：;对外沟通:
                   if (this.form.clientName != '') {
                     var clientName = this.form.clientName
+                  } else if (this.form.clientId == '0') {
+                    var clientName = '委托人待定'
                   } else {
                     var clientName = this.$refs['cascaderAddr'].getCheckedNodes()[0].label
                   }
