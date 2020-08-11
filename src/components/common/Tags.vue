@@ -8,6 +8,17 @@
                 <span class="tags-li-icon" @click="closeTags(index)"><i class="el-icon-close"></i></span>
             </li>
         </ul>
+        <div class="tags-close-box">
+            <el-dropdown @command="handleTags">
+                <el-button size="mini" type="primary">
+                    标签选项<i class="el-icon-arrow-down el-icon--right"></i>
+                </el-button>
+                <el-dropdown-menu size="small" slot="dropdown">
+                    <el-dropdown-item command="other">关闭其他</el-dropdown-item>
+                    <el-dropdown-item command="all">关闭所有</el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
+        </div>
     </div>
 </template>
 
@@ -33,18 +44,18 @@
                     this.$router.push('/');
                 }
             },
-            // // 关闭全部标签
-            // closeAll(){
-            //     this.tagsList = [];
-            //     this.$router.push('/');
-            // },
-            // // 关闭其他标签
-            // closeOther(){
-            //     const curItem = this.tagsList.filter(item => {
-            //         return item.path === this.$route.fullPath;
-            //     })
-            //     this.tagsList = curItem;
-            // },
+            // 关闭全部标签
+            closeAll(){
+                this.tagsList = [];
+                this.$router.push('/');
+            },
+            // 关闭其他标签
+            closeOther(){
+                const curItem = this.tagsList.filter(item => {
+                    return item.path === this.$route.fullPath;
+                })
+                this.tagsList = curItem;
+            },
             // 设置标签
             setTags(route){
                 const isExist = this.tagsList.some(item => {
@@ -108,7 +119,7 @@
         overflow: hidden;
         background: #fff;
         padding-right: 120px;
-        box-shadow: 0 5px 3px rgb(66, 161, 255, 0.5);
+        box-shadow: 0 1px 1px rgb(66, 161, 255, 0.3);
 
     }
 
