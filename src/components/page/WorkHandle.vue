@@ -761,7 +761,7 @@
           :span="12"
           style="margin-top: 10px"
         >
-          <el-card>
+          <!-- <el-card>
             <div
               slot="header"
               class="card-header"
@@ -790,7 +790,7 @@
                 <span v-else>合同号：</span>{{this.contractNum}}
               </div>
             </div>
-          </el-card>
+          </el-card> -->
 
         </el-col>
         <!-- <el-col
@@ -1310,7 +1310,7 @@ export default {
               .catch(err => {
                 console.log('获取子项目信息失败err', err)
               })
-            this.check()
+            //this.check()
           })
         })
         .catch(err => {
