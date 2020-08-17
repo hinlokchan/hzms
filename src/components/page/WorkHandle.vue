@@ -19,7 +19,7 @@
       <el-radio-group v-model="reportNumSelectVal">
         <el-radio :label="1">初评号</el-radio>
         <el-radio :label="2">正评号</el-radio>
-        <el-radio :label="3">回函号</el-radio>
+        <el-radio :label="3">回函（其他）号</el-radio>
       </el-radio-group>
       <div style="margin-top: 25px">
         <el-button
@@ -721,7 +721,7 @@
                   <el-col
                     :span="2"
                     class="report-title"
-                  >回函号</el-col>
+                  >回函（其他）号</el-col>
                   <el-col
                     :span="6"
                     class="report-content"

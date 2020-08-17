@@ -248,8 +248,9 @@
               >
                 <el-input
                   v-model="form.projName"
+                  type="textarea"
+                  autosize
                   maxlength="240"
-                  show-word-limit
                 ></el-input>
               </el-form-item>
             </el-col>
@@ -273,8 +274,9 @@
               >
                 <el-input
                   v-model="form.projScope"
+                  type="textarea"
+                  autosize
                   maxlength="240"
-                  show-word-limit
                 ></el-input>
               </el-form-item>
             </el-col>
