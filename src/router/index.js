@@ -66,11 +66,6 @@ export default new Router({
                     meta: { title: '子项目工作管理' }
                 },
                 {
-                    path: '/workarrange',
-                    component: () => import('../components/page/WorkArrange.vue'),
-                    meta: { title: '工作安排' }
-                },
-                {
                     path: '/stat',
                     component: () => import('../components/page/Stat.vue'),
                     meta: { title: '统计管理' }

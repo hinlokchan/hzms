@@ -52,6 +52,12 @@
               placeholder="计划编号"
             ></el-input>
           </el-col>
+          <el-col :span="4">
+            <el-input
+              v-model="searchValReportNum"
+              placeholder="报告号"
+            ></el-input>
+          </el-col>
           <el-col :span="5">
             <el-input
               v-model="searchValProjName"
@@ -201,6 +207,7 @@ export default {
         toType: ''
       },
       searchValProjNum: '',
+      searchValReportNum: '',
       searchValProjName: '',
       searchValProjScope: '',
       midNum: 0,
@@ -280,7 +287,7 @@ export default {
         this.changePage(parseInt(sessionStorage.getItem('page')))
         sessionStorage.removeItem('page')
       }
-      searchMyProject({ projName: this.searchValProjName, projNum: this.searchValProjNum, projScope: this.searchValProjScope })
+      searchMyProject({ projName: this.searchValProjName,reportNum: this.searchValReportNum, projNum: this.searchValProjNum, projScope: this.searchValProjScope })
         .then(res => {
           console.log(res.data)
           this.tableData = res.data
