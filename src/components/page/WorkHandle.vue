@@ -613,7 +613,7 @@
           :span="24"
           style="margin-top: 10px;"
         >
-          <el-card>
+          <el-card style="height: 180px">
             <div
               slot="header"
               class="card-header"
@@ -655,7 +655,7 @@
                   >初评号
                   </el-col>
                   <el-col
-                    :span="6"
+                    :span="5"
                     class="report-content"
                   >
                     <span v-if="reportNum.cph == ''">未取号</span>
@@ -689,7 +689,7 @@
                     class="report-title"
                   >正评号</el-col>
                   <el-col
-                    :span="6"
+                    :span="5"
                     class="report-content"
                   >
                     <span v-if="this.reportNum.zph == ''">未取号</span>
@@ -719,7 +719,7 @@
                     </span>
                   </el-col>
                   <el-col
-                    :span="2"
+                    :span="4"
                     class="report-title"
                   >回函（其他）号</el-col>
                   <el-col
@@ -1387,12 +1387,12 @@ export default {
             projType = '资评报字'
           } else if (this.projDetail.projType == 1030) {
             projType = '土地估字'
-          } else if (this.projDetail.projType == 1013) {
-            projType = '房地资字'
-          } else if (this.projDetail.projType == 1023) {
+          } else if (this.projDetail.projType == 1041) {
+            projType = '房地咨字'
+          } else if (this.projDetail.projType == 1042) {
             projType = '资咨报字'
-          } else if (this.projDetail.projType == 1033) {
-            projType = '土地估字'
+          } else if (this.projDetail.projType == 1043) {
+            projType = '土地咨字'
           } else if (this.projDetail.projType == 1061 || this.projDetail.projType == 1062 || this.projDetail.projType == 1063) {
             projType = '审报字'
           } else if (this.projDetail.projType == 1050 || this.projDetail.projType == 1080) {
