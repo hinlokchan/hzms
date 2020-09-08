@@ -471,6 +471,7 @@
     <WorkArrgDialog
       :show.sync="workArrgDialogVisible"
       :projId="projDetail.projId"
+      :projType="projDetail.projType"
       :projMember="projMember"
       :arrgEdit="workArrgEdit"
       :arrgData="arrgData"
@@ -1537,8 +1538,8 @@ export default {
             console.log(res)
             this.$message.success('修改成功');
             this.changeTypeVisible = false
-            this.getDetail()
-            //this.$router.go(-1)
+            //this.getDetail()
+            this.$router.go(-1)
           })
           .catch(err => {
             console.log(err)

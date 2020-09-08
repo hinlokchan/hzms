@@ -25,8 +25,30 @@
           allow-create
           placeholder="请选择评估方法"
         >
+        <el-option
+            v-if="projType == 1010"
+            v-for="item in assemMethodOptionsFc"
+            :key="item"
+            :label="item"
+            :value="item"
+          ></el-option>
           <el-option
-            v-for="item in assemMethodOptions"
+            v-if="projType == 1020"
+            v-for="item in assemMethodOptionsZc"
+            :key="item"
+            :label="item"
+            :value="item"
+          ></el-option>
+          <el-option
+            v-if="projType == 1030"
+            v-for="item in assemMethodOptionsTd"
+            :key="item"
+            :label="item"
+            :value="item"
+          ></el-option>
+          <el-option
+            v-if="projType != 1010 && projType != 1020 && projType != 1030 "
+            v-for="item in assemMethodOptionsNr"
             :key="item"
             :label="item"
             :value="item"
@@ -432,6 +454,7 @@ export default {
     arrgEdit: { type: Boolean, default: false },
     arrgData: { type: Object },
     projId: { type: Number },
+    projType: { type: Number },
     projMember: { type: Array },
     baseDate: { type: Number },
     projLeader: { type: String },
@@ -490,7 +513,10 @@ export default {
         amendFinalSche: [],
         manuArchiveSche: '出正评后3个月内'
       },
-      assemMethodOptions: ['成本法', '收益法', '比较法', '假设开发法'],
+      assemMethodOptionsNr: ['成本法', '收益法', '市场法'],
+      assemMethodOptionsZc: ['成本法', '收益法', '市场法', '实物期权法'],
+      assemMethodOptionsFc: ['成本法', '剩余法', '市场比较法', '收益法', '假设开发法', '公示地价系数修正法'],
+      assemMethodOptionsTd: ['市场比较法', '收益还原法', '剩余法', '成本逼近法', '基准地价系数修正法'],
       arrgFormRules: {
         assemMethod: [{ required: true, message: '请填写评估方法', trigger: 'change' }],
         prePreparationSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
