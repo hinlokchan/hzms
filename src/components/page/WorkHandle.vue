@@ -16,9 +16,21 @@
       width="30%"
       prop="reportNumSelectVal"
     >
-      <el-radio-group v-model="reportNumSelectVal">
+      <el-radio-group
+        v-model="reportNumSelectVal"
+        v-if="projDetail.projType != 1080"
+      >
         <el-radio :label="1">初评号</el-radio>
         <el-radio :label="2">正评号</el-radio>
+        <el-radio :label="3">回函（其他）号</el-radio>
+      </el-radio-group>
+      <el-radio-group
+        v-model="reportNumSelectVal"
+        v-if="projDetail.projType == 1080"
+      >
+        <el-radio :label="4">房地产</el-radio>
+        <el-radio :label="5">资产</el-radio>
+        <el-radio :label="6">土地</el-radio>
         <el-radio :label="3">回函（其他）号</el-radio>
       </el-radio-group>
       <div style="margin-top: 25px">
@@ -509,7 +521,7 @@
           <el-button
             icon="el-icon-set-up"
             size="medium"
-            v-if="this.queryData.projType == 1010 || this.queryData.projType == 1020 || this.queryData.projType == 1030 || this.queryData.projType == 1041 || this.queryData.projType == 1042 || this.queryData.projType == 1043"
+            v-if="this.queryData.projType == 1010 || this.queryData.projType == 1020 || this.queryData.projType == 1030 || this.queryData.projType == 1041 || this.queryData.projType == 1042 || this.queryData.projType == 1043 || this.queryData.projType == 1061 || this.queryData.projType == 1062 || this.queryData.projType == 1063"
             @click="handleChangeType()"
           >更改项目类型</el-button>
           <el-button
@@ -1002,21 +1014,30 @@
         </template>
       </el-table-column>
     </el-table>
+    <div class="work-title">
+      <span class="work-title-name">操作记录</span>
+    </div>
+    <el-divider></el-divider>
+    <OpRecord />
   </div>
 </template>
 
 <script>
 import Clipboard from 'clipboard'
 import QRCode from 'qrcodejs2'
+import { host } from '@/config'
+//api
 import { editProject, getDetailProjInfo, getWorkAssignment, delWorkAssignment, setWorkAssignment, createReportNum, deleteReportNum, alterProjType, getProjInfoTable, getOldReportNum, createContractNum, deleteContractNum } from '@/api/index'
 import { addSubProject, getSubProjectInfoList, delSubProject } from '@/api/subReport'
 import { getEvalObjDetail } from '@/api/assemobjdetail'
 import { checkFaRegister, submitFaRegister, editFaRegister } from '@/api/formalreg'
+//json
 import projTypeOption from '../../../public/projTypeOption.json'
-import { host } from '@/config'
+//components
 import FcObjDetailDialog from './AssemObjDetailDialog/FcObjDetailDialog'
 import ZcObjDetailDialog from './AssemObjDetailDialog/ZcObjDetailDialog'
 import WorkArrgDialog from './WorkArrg/WorkArrgDialog'
+import OpRecord from './OpRecord'
 var ProManageAPIServer = `${host.baseUrl}/${host.ProManageAPIServer}`
 
 export default {
@@ -1026,6 +1047,7 @@ export default {
     WorkArrgDialog,
     FcObjDetailDialog,
     ZcObjDetailDialog,
+    OpRecord
   },
   data() {
     return {
@@ -1085,7 +1107,10 @@ export default {
         { value: '1030', label: '土地', disable: false },
         { value: '1041', label: '房地产咨询', disable: false },
         { value: '1042', label: '资产咨询', disable: false },
-        { value: '1043', label: '土地咨询', disable: false }
+        { value: '1043', label: '土地咨询', disable: false },
+        { value: '1061', label: '房地产复审', disable: false },
+        { value: '1062', label: '资产复审', disable: false },
+        { value: '1063', label: '土地复审', disable: false }
       ],
       //子项目表单
       subProjForm: {
@@ -1512,7 +1537,8 @@ export default {
             console.log(res)
             this.$message.success('修改成功');
             this.changeTypeVisible = false
-            this.$router.go(-1)
+            this.getDetail()
+            //this.$router.go(-1)
           })
           .catch(err => {
             console.log(err)
@@ -1784,6 +1810,12 @@ export default {
         }
       } else if (val == 3) { //回函号
         this.getNumType = 1100
+      } else if (val == 4) { //政策项目中的房地产咨询
+        this.getNumType = 1013
+      } else if (val == 5) { //政策项目中的土地咨询
+        this.getNumType = 1023
+      } else if (val == 6) { //政策项目中的资产咨询
+        this.getNumType = 1033
       }
       //结束判断类型，调取号接口
       createReportNum({ projId: this.queryData.projId, reportNumType: this.getNumType })

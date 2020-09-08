@@ -301,4 +301,14 @@ export function delWorkAssignment(data) {
   });
 }
 
+export function opRecord(data) {
+  return request({
+    url: `${ProManageAPIServer}record/getProjOpRec`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
+
 export var getProjInfoTable = 'statistics/getProjInfoTable';

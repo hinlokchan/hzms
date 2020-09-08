@@ -81,6 +81,11 @@ export default new Router({
                     meta: { title: '用户管理' }
                 },
                 {
+                    path: '/oprecord',
+                    component: () => import('../components/page/OpRecord.vue'),
+                    meta: { title: '操作记录' }
+                },
+                {
                     path: '/icon',
                     component: () => import('../components/page/Icon.vue'),
                     meta: { title: '图标' }
