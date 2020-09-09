@@ -50,39 +50,52 @@
             <el-input
               v-model="searchValProjNum"
               placeholder="计划编号"
+              @keyup.enter.native="getData"
             ></el-input>
           </el-col>
           <el-col :span="4">
             <el-input
               v-model="searchValReportNum"
               placeholder="报告号"
+              @keyup.enter.native="getData"
             ></el-input>
           </el-col>
           <el-col :span="5">
             <el-input
               v-model="searchValProjName"
               placeholder="项目名称"
+              @keyup.enter.native="getData"
             ></el-input>
           </el-col>
           <el-col :span="5">
             <el-input
               v-model="searchValProjScope"
               placeholder="项目范围"
+              @keyup.enter.native="getData"
             ></el-input>
           </el-col>
-          <el-col :span="3">
+        </el-row>
+        <el-row>
+          <el-col :span="12">
             <el-button
+              icon="el-icon-search"
               @click="getData"
-              type="primary"
+              type="text"
             >搜 索</el-button>
-            <el-button @click="reset">重 置</el-button>
+            <el-button
+              @click="reset"
+              type="text"
+              icon="el-icon-refresh-right"
+            >重 置</el-button>
           </el-col>
         </el-row>
       </div>
       <!-- table -->
       <el-table
         class="table"
-        :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+        :data="
+          tableData.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+        "
         height="600"
         border
         ref="multipleTable"
@@ -181,7 +194,16 @@
 </template>
 
 <script>
-import { getAllAbstractProject, searchMyProject, getReportNum, createReportNum, alterProjType, getSubReportNum, addSubReportNum, deleteReportNum } from '@/api/index'
+import {
+  getAllAbstractProject,
+  searchMyProject,
+  getReportNum,
+  createReportNum,
+  alterProjType,
+  getSubReportNum,
+  addSubReportNum,
+  deleteReportNum
+} from '@/api/index';
 export default {
   name: 'workbranch',
   data() {
@@ -215,13 +237,12 @@ export default {
       getNumType: 0,
       getNumData: {},
       getSubNum: ''
-    }
+    };
   },
   created() {
-    this.getData()
+    this.getData();
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
     // deleteReportNum(reportNum) {
     //   deleteReportNum({ reportNum: reportNum }).then(res => {
@@ -233,99 +254,139 @@ export default {
     //   })
     // },
     alterProjType() {
-      console.log('this.changeType', this.changeType)
+      console.log('this.changeType', this.changeType);
       if (this.changeType.toType == '') {
         this.$message.info('请选择修改类型');
       } else {
-        alterProjType(this.changeType).then(res => {
-          this.$message.success('修改成功');
-          this.changeNumVisible = false
-          this.getData();
-        }).catch(err => {
-          this.$message.error('修改失败');
-        })
+        alterProjType(this.changeType)
+          .then(res => {
+            this.$message.success('修改成功');
+            this.changeNumVisible = false;
+            this.getData();
+          })
+          .catch(err => {
+            this.$message.error('修改失败');
+          });
       }
     },
     //完整号显示
     changeNum(num, type) {
       if (num) {
-        const comp = '惠正'
-        const year = '[' + num.substr(0, 4) + ']'
-        const lastNum = '第' + num.substr(4) + '号'
-        let midType = ''
-        let numType = ''
-        if (this.getNumData.projType == 1010 || this.getNumData.projType == 1020 || this.getNumData.projType == 1030) {
-          if (this.getNumData.projType == 1010) { midType = '房地' } else if (this.getNumData.projType == 1020) { midType = '土地' } else { midType = '资产' }
-          if (type == 1) { numType = '初评字' } else if (type == 2) { numType = '估字' } else if (type == 3) { numType = '资字' }
-        } else if (this.getNumData.projType == 1061 || this.getNumData.projType == 1062 || this.getNumData.projType == 1063) {
-          midType = '申报字'
+        const comp = '惠正';
+        const year = '[' + num.substr(0, 4) + ']';
+        const lastNum = '第' + num.substr(4) + '号';
+        let midType = '';
+        let numType = '';
+        if (
+          this.getNumData.projType == 1010 ||
+          this.getNumData.projType == 1020 ||
+          this.getNumData.projType == 1030
+        ) {
+          if (this.getNumData.projType == 1010) {
+            midType = '房地';
+          } else if (this.getNumData.projType == 1020) {
+            midType = '土地';
+          } else {
+            midType = '资产';
+          }
+          if (type == 1) {
+            numType = '初评字';
+          } else if (type == 2) {
+            numType = '估字';
+          } else if (type == 3) {
+            numType = '资字';
+          }
+        } else if (
+          this.getNumData.projType == 1061 ||
+          this.getNumData.projType == 1062 ||
+          this.getNumData.projType == 1063
+        ) {
+          midType = '申报字';
         } else if (this.getNumData.projType == 1090) {
-          midType = '绩效评字'
-        } else if (this.getNumData.projType == 1050 || this.getNumData.projType == 1080) {
-          midType = '资字'
-        } else if (this.getNumData.projType == 1070) { midType = '测绘' } else if (this.getNumData.projType == 1100) { midType = '函' }
-        if (type == 4) { midType = '函'; numType = '' }
-        return comp + midType + numType + year + lastNum
+          midType = '绩效评字';
+        } else if (
+          this.getNumData.projType == 1050 ||
+          this.getNumData.projType == 1080
+        ) {
+          midType = '资字';
+        } else if (this.getNumData.projType == 1070) {
+          midType = '测绘';
+        } else if (this.getNumData.projType == 1100) {
+          midType = '函';
+        }
+        if (type == 4) {
+          midType = '函';
+          numType = '';
+        }
+        return comp + midType + numType + year + lastNum;
       } else {
-        return ''
+        return '';
       }
     },
     changeProjType(data) {
-      console.log('data>>>', data)
-      this.changeType.projId = data.projId
-      this.changeNumVisible = true
-      let selOption = this.typeOptions
+      console.log('data>>>', data);
+      this.changeType.projId = data.projId;
+      this.changeNumVisible = true;
+      let selOption = this.typeOptions;
       const index = selOption.findIndex((item, index, arr) => {
-        console.log('value>>>', item)
-        return item.value == data.projType
-      })
+        console.log('value>>>', item);
+        return item.value == data.projType;
+      });
       //selOption.splice(index, 1)
-      this.typeOptions = selOption
+      this.typeOptions = selOption;
     },
     getData() {
       if (sessionStorage.getItem('page')) {
-        this.changePage(parseInt(sessionStorage.getItem('page')))
-        sessionStorage.removeItem('page')
+        this.changePage(parseInt(sessionStorage.getItem('page')));
+        sessionStorage.removeItem('page');
       }
-      searchMyProject({ projName: this.searchValProjName,reportNum: this.searchValReportNum, projNum: this.searchValProjNum, projScope: this.searchValProjScope })
+      searchMyProject({
+        projName: this.searchValProjName,
+        reportNum: this.searchValReportNum,
+        projNum: this.searchValProjNum,
+        projScope: this.searchValProjScope
+      })
         .then(res => {
-          console.log(res.data)
-          this.tableData = res.data
-          this.pageTotal = res.data.length
+          console.log(res.data);
+          this.tableData = res.data;
+          this.pageTotal = res.data.length;
         })
         .catch(err => {
           console.log('field to search myproject');
-        })
+        });
     },
     reset() {
-      this.searchValProjName = ''
-      this.searchValProjNum = ''
+      this.searchValProjName = '';
+      this.searchValProjNum = '';
       searchMyProject()
         .then(res => {
-          console.log(res.data)
-          this.tableData = res.data
-          this.pageTotal = res.data.length
+          console.log(res.data);
+          this.tableData = res.data;
+          this.pageTotal = res.data.length;
         })
         .catch(err => {
           console.log('field to search');
-        })
+        });
     },
     handleDetail(val) {
-      sessionStorage.setItem('page', this.currentPage)
+      sessionStorage.setItem('page', this.currentPage);
       // const index2 = (this.currentPage - 1)*10 + index
-      console.log('当前行信息 >>>', val)
-      this.$router.push({ path: '/projcheck', query: { data: val.projId } })
+      console.log('当前行信息 >>>', val);
+      this.$router.push({ path: '/projcheck', query: { data: val.projId } });
     },
     handleHandle(val) {
-      sessionStorage.setItem('page', this.currentPage)
-      this.$router.push({ path: '/workhandle', query: { data: JSON.stringify(val) } })
+      sessionStorage.setItem('page', this.currentPage);
+      this.$router.push({
+        path: '/workhandle',
+        query: { data: JSON.stringify(val) }
+      });
     },
     changePage(val) {
-      console.log(val)
+      console.log(val);
       this.currentPage = val;
-    },
+    }
   }
-}
+};
 </script>
 
 <style scoped>

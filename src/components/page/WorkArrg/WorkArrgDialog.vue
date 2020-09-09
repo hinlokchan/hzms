@@ -17,37 +17,62 @@
       <el-form-item
         label="评估方法"
         prop="assemMethod"
+        
       >
         <el-select
+        v-if="projType == 1010"
           v-model="arrgForm.assemMethod"
           multiple
           filterable
           allow-create
           placeholder="请选择评估方法"
         >
-        <el-option
-            v-if="projType == 1010"
+          <el-option
             v-for="item in assemMethodOptionsFc"
             :key="item"
             :label="item"
             :value="item"
           ></el-option>
+        </el-select>
+        <el-select
+        v-if="projType == 1020"
+          v-model="arrgForm.assemMethod"
+          multiple
+          filterable
+          allow-create
+          placeholder="请选择评估方法"
+        >
           <el-option
-            v-if="projType == 1020"
             v-for="item in assemMethodOptionsZc"
             :key="item"
             :label="item"
             :value="item"
           ></el-option>
+        </el-select>
+        <el-select
+        v-if="projType == 1030"
+          v-model="arrgForm.assemMethod"
+          multiple
+          filterable
+          allow-create
+          placeholder="请选择评估方法"
+        >
           <el-option
-            v-if="projType == 1030"
             v-for="item in assemMethodOptionsTd"
             :key="item"
             :label="item"
             :value="item"
           ></el-option>
+        </el-select>
+        <el-select
+        v-if="projType != 1010 && projType != 1020 && projType != 1030 "
+          v-model="arrgForm.assemMethod"
+          multiple
+          filterable
+          allow-create
+          placeholder="请选择评估方法"
+        >
           <el-option
-            v-if="projType != 1010 && projType != 1020 && projType != 1030 "
             v-for="item in assemMethodOptionsNr"
             :key="item"
             :label="item"
@@ -444,8 +469,8 @@
 </template>
 
 <script>
-import { setWorkAssignment, getWorkAssignment } from '@/api/index'
-import { Form } from 'element-ui'
+import { setWorkAssignment, getWorkAssignment } from '@/api/index';
+import { Form } from 'element-ui';
 export default {
   name: 'WorkArrgDialog',
   inject: ['reload'],
@@ -467,14 +492,14 @@ export default {
     show: {
       immediate: true,
       handler(show) {
-        console.log(this.projReviewer)
-        this.visible = this.show
-        this.arrgForm.projId = this.projId
+        console.log(this.projReviewer);
+        this.visible = this.show;
+        this.arrgForm.projId = this.projId;
         if (show == true) {
-          this.checkData()
+          this.checkData();
         }
       }
-    },
+    }
     // arrgEdit: {
     //   immediate: true,
     //   handler(arrgEdit) {
@@ -515,167 +540,231 @@ export default {
       },
       assemMethodOptionsNr: ['成本法', '收益法', '市场法'],
       assemMethodOptionsZc: ['成本法', '收益法', '市场法', '实物期权法'],
-      assemMethodOptionsFc: ['成本法', '剩余法', '市场比较法', '收益法', '假设开发法', '公示地价系数修正法'],
-      assemMethodOptionsTd: ['市场比较法', '收益还原法', '剩余法', '成本逼近法', '基准地价系数修正法'],
+      assemMethodOptionsFc: [
+        '成本法',
+        '剩余法',
+        '市场比较法',
+        '收益法',
+        '假设开发法',
+        '公示地价系数修正法'
+      ],
+      assemMethodOptionsTd: [
+        '市场比较法',
+        '收益还原法',
+        '剩余法',
+        '成本逼近法',
+        '基准地价系数修正法'
+      ],
       arrgFormRules: {
-        assemMethod: [{ required: true, message: '请填写评估方法', trigger: 'change' }],
-        prePreparationSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
-        fldSrvySche: [{ required: true, message: '请选择日期', trigger: 'change' }],
-        mktSrvySche: [{ required: true, message: '请选择日期', trigger: 'change' }],
-        assemEstSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
-        issueValSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
-        internalAuditSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
-        commuClientSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
-        amendFinalSche: [{ required: true, message: '请选择日期', trigger: 'change' }],
+        assemMethod: [
+          { required: true, message: '请填写评估方法', trigger: 'change' }
+        ],
+        prePreparationSche: [
+          { required: true, message: '请选择日期', trigger: 'change' }
+        ],
+        fldSrvySche: [
+          { required: true, message: '请选择日期', trigger: 'change' }
+        ],
+        mktSrvySche: [
+          { required: true, message: '请选择日期', trigger: 'change' }
+        ],
+        assemEstSche: [
+          { required: true, message: '请选择日期', trigger: 'change' }
+        ],
+        issueValSche: [
+          { required: true, message: '请选择日期', trigger: 'change' }
+        ],
+        internalAuditSche: [
+          { required: true, message: '请选择日期', trigger: 'change' }
+        ],
+        commuClientSche: [
+          { required: true, message: '请选择日期', trigger: 'change' }
+        ],
+        amendFinalSche: [
+          { required: true, message: '请选择日期', trigger: 'change' }
+        ],
         //
-        prePreparationPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
-        fldSrvyPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
-        mktSrvyPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
-        assemEstPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
-        issueValPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
-        internalAuditPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
-        commuClientPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
-        assemChargePic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
-        amendFinalPic: [{ required: true, message: '请选择责任人', trigger: 'change' }],
-        manuArchivePic: [{ required: true, message: '请选择责任人', trigger: 'change' }]
-
+        prePreparationPic: [
+          { required: true, message: '请选择责任人', trigger: 'change' }
+        ],
+        fldSrvyPic: [
+          { required: true, message: '请选择责任人', trigger: 'change' }
+        ],
+        mktSrvyPic: [
+          { required: true, message: '请选择责任人', trigger: 'change' }
+        ],
+        assemEstPic: [
+          { required: true, message: '请选择责任人', trigger: 'change' }
+        ],
+        issueValPic: [
+          { required: true, message: '请选择责任人', trigger: 'change' }
+        ],
+        internalAuditPic: [
+          { required: true, message: '请选择责任人', trigger: 'change' }
+        ],
+        commuClientPic: [
+          { required: true, message: '请选择责任人', trigger: 'change' }
+        ],
+        assemChargePic: [
+          { required: true, message: '请选择责任人', trigger: 'change' }
+        ],
+        amendFinalPic: [
+          { required: true, message: '请选择责任人', trigger: 'change' }
+        ],
+        manuArchivePic: [
+          { required: true, message: '请选择责任人', trigger: 'change' }
+        ]
       }
-
-    }
+    };
   },
   methods: {
     checkData() {
       if (this.arrgData == null) {
-        this.$message.success('新增安排')
+        this.$message.success('新增安排');
       } else {
-        this.$message.success('编辑安排')
-        this.arrgForm = this.arrgData
+        this.$message.success('编辑安排');
+        this.arrgForm = this.arrgData;
       }
     },
     onClose() {
-      this.$emit('update:show', false)
+      this.$emit('update:show', false);
     },
     onSubmitWorkArrg() {
-      this.$refs.arrgForm.validate((valid) => {
+      this.$refs.arrgForm.validate(valid => {
         if (valid) {
-          this.arrgForm.assemMethod = this.arrgForm.assemMethod.join(',')
+          this.arrgForm.assemMethod = this.arrgForm.assemMethod.join(',');
           //
-          this.arrgForm.prePreparationPic = this.arrgForm.prePreparationPic.join(',')
-          this.arrgForm.fldSrvyPic = this.arrgForm.fldSrvyPic.join(',')
-          this.arrgForm.mktSrvyPic = this.arrgForm.mktSrvyPic.join(',')
-          this.arrgForm.assemEstPic = this.arrgForm.assemEstPic.join(',')
-          this.arrgForm.issueValPic = this.arrgForm.issueValPic.join(',')
-          this.arrgForm.internalAuditPic = this.arrgForm.internalAuditPic.join(',')
-          this.arrgForm.commuClientPic = this.arrgForm.commuClientPic.join(',')
-          this.arrgForm.assemChargePic = this.arrgForm.assemChargePic.join(',')
-          this.arrgForm.amendFinalPic = this.arrgForm.amendFinalPic.join(',')
-          this.arrgForm.manuArchivePic = this.arrgForm.manuArchivePic.join(',')
+          this.arrgForm.prePreparationPic = this.arrgForm.prePreparationPic.join(
+            ','
+          );
+          this.arrgForm.fldSrvyPic = this.arrgForm.fldSrvyPic.join(',');
+          this.arrgForm.mktSrvyPic = this.arrgForm.mktSrvyPic.join(',');
+          this.arrgForm.assemEstPic = this.arrgForm.assemEstPic.join(',');
+          this.arrgForm.issueValPic = this.arrgForm.issueValPic.join(',');
+          this.arrgForm.internalAuditPic = this.arrgForm.internalAuditPic.join(
+            ','
+          );
+          this.arrgForm.commuClientPic = this.arrgForm.commuClientPic.join(',');
+          this.arrgForm.assemChargePic = this.arrgForm.assemChargePic.join(',');
+          this.arrgForm.amendFinalPic = this.arrgForm.amendFinalPic.join(',');
+          this.arrgForm.manuArchivePic = this.arrgForm.manuArchivePic.join(',');
           //
-          this.arrgForm.prePreparationSche = this.arrgForm.prePreparationSche.join('-')
-          this.arrgForm.fldSrvySche = this.arrgForm.fldSrvySche.join('-')
-          this.arrgForm.mktSrvySche = this.arrgForm.mktSrvySche.join('-')
-          this.arrgForm.assemEstSche = this.arrgForm.assemEstSche.join('-')
-          this.arrgForm.issueValSche = this.arrgForm.issueValSche.join('-')
-          this.arrgForm.internalAuditSche = this.arrgForm.internalAuditSche.join('-')
-          this.arrgForm.commuClientSche = this.arrgForm.commuClientSche.join('-')
+          this.arrgForm.prePreparationSche = this.arrgForm.prePreparationSche.join(
+            '-'
+          );
+          this.arrgForm.fldSrvySche = this.arrgForm.fldSrvySche.join('-');
+          this.arrgForm.mktSrvySche = this.arrgForm.mktSrvySche.join('-');
+          this.arrgForm.assemEstSche = this.arrgForm.assemEstSche.join('-');
+          this.arrgForm.issueValSche = this.arrgForm.issueValSche.join('-');
+          this.arrgForm.internalAuditSche = this.arrgForm.internalAuditSche.join(
+            '-'
+          );
+          this.arrgForm.commuClientSche = this.arrgForm.commuClientSche.join(
+            '-'
+          );
           //this.arrgForm.assemChargeSche = this.arrgForm.assemChargeSche.join('-')
-          this.arrgForm.amendFinalSche = this.arrgForm.amendFinalSche.join('-')
+          this.arrgForm.amendFinalSche = this.arrgForm.amendFinalSche.join('-');
           //this.arrgForm.manuArchiveSche = this.arrgForm.manuArchiveSche.join('-')
           //
-          console.log('提交arrgForm', this.arrgForm)
+          console.log('提交arrgForm', this.arrgForm);
           setWorkAssignment(this.arrgForm)
             .then(res => {
-              this.$message.success('提交成功')
-              this.reload()
+              this.$message.success('提交成功');
+              this.reload();
             })
             .catch(err => {
-              this.$message.error('提交失败，请稍后重试')
-            })
+              this.$message.error('提交失败，请稍后重试');
+            });
         } else {
-          this.$message.warning('请填写必填信息')
+          this.$message.warning('请填写必填信息');
         }
-      })
+      });
     },
     defaultArrg() {
-      let day = this.baseDate
-      let day1 = this.$moment(day).format('MM/DD')
-      let day2 = this.$moment(day + 86400000).format('MM/DD')
-      let day3 = this.$moment(day + 172800000).format('MM/DD')
-      let day4 = this.$moment(day + 259200000).format('MM/DD')
-      console.log(day, day1, day2, day3, day4)
-      this.arrgForm.prePreparationSche.push(day1, day1)
-      this.arrgForm.fldSrvySche.push(day1, day1)
-      this.arrgForm.mktSrvySche.push(day1, day1)
-      this.arrgForm.assemEstSche.push(day2, day2)
-      this.arrgForm.issueValSche.push(day2, day2)
-      this.arrgForm.internalAuditSche.push(day3, day3)
-      this.arrgForm.commuClientSche.push(day3, day3)
-      this.arrgForm.amendFinalSche.push(day4, day4)
+      let day = this.baseDate;
+      let day1 = this.$moment(day).format('MM/DD');
+      let day2 = this.$moment(day + 86400000).format('MM/DD');
+      let day3 = this.$moment(day + 172800000).format('MM/DD');
+      let day4 = this.$moment(day + 259200000).format('MM/DD');
+      console.log(day, day1, day2, day3, day4);
+      this.arrgForm.prePreparationSche.push(day1, day1);
+      this.arrgForm.fldSrvySche.push(day1, day1);
+      this.arrgForm.mktSrvySche.push(day1, day1);
+      this.arrgForm.assemEstSche.push(day2, day2);
+      this.arrgForm.issueValSche.push(day2, day2);
+      this.arrgForm.internalAuditSche.push(day3, day3);
+      this.arrgForm.commuClientSche.push(day3, day3);
+      this.arrgForm.amendFinalSche.push(day4, day4);
 
-      let leader = this.projLeader.split(',')
-      let reviewer = this.projReviewer.split(',')
-      let asst = this.projAsst.split(',')
-      let srvy = this.fieldSrvy.split(',')
+      let leader = this.projLeader.split(',');
+      let reviewer = this.projReviewer.split(',');
+      let asst = this.projAsst.split(',');
+      let srvy = this.fieldSrvy.split(',');
       for (let i of leader) {
         if (i != '') {
-          this.arrgForm.prePreparationPic.push(i)
-          this.arrgForm.internalAuditPic.push(i)
-          this.arrgForm.commuClientPic.push(i)
-          this.arrgForm.assemChargePic.push(i)
-          this.arrgForm.amendFinalPic.push(i)
+          this.arrgForm.prePreparationPic.push(i);
+          this.arrgForm.internalAuditPic.push(i);
+          this.arrgForm.commuClientPic.push(i);
+          this.arrgForm.assemChargePic.push(i);
+          this.arrgForm.amendFinalPic.push(i);
         }
-
       }
       for (let i of reviewer) {
         if (i != '') {
-          this.arrgForm.internalAuditPic.push(i)
-          this.arrgForm.commuClientPic.push(i)
+          this.arrgForm.internalAuditPic.push(i);
+          this.arrgForm.commuClientPic.push(i);
         }
-
       }
       for (let i of asst) {
         if (i != '') {
-          this.arrgForm.mktSrvyPic.push(i)
-          this.arrgForm.assemEstPic.push(i)
-          this.arrgForm.issueValPic.push(i)
-          this.arrgForm.internalAuditPic.push(i)
-          this.arrgForm.manuArchivePic.push(i)
+          this.arrgForm.mktSrvyPic.push(i);
+          this.arrgForm.assemEstPic.push(i);
+          this.arrgForm.issueValPic.push(i);
+          this.arrgForm.internalAuditPic.push(i);
+          this.arrgForm.manuArchivePic.push(i);
         }
-
       }
       for (let i of srvy) {
         if (i != '') {
-          this.arrgForm.fldSrvyPic.push(i)
+          this.arrgForm.fldSrvyPic.push(i);
         }
       }
     },
     transData() {
-      this.arrgForm.assemMethod = this.arrgForm.assemMethod.split(',')
+      this.arrgForm.assemMethod = this.arrgForm.assemMethod.split(',');
       //
-      this.arrgForm.prePreparationPic = this.arrgForm.prePreparationPic.split(',')
-      this.arrgForm.fldSrvyPic = this.arrgForm.fldSrvyPic.split(',')
-      this.arrgForm.mktSrvyPic = this.arrgForm.mktSrvyPic.split(',')
-      this.arrgForm.assemEstPic = this.arrgForm.assemEstPic.split(',')
-      this.arrgForm.issueValPic = this.arrgForm.issueValPic.split(',')
-      this.arrgForm.internalAuditPic = this.arrgForm.internalAuditPic.split(',')
-      this.arrgForm.commuClientPic = this.arrgForm.commuClientPic.split(',')
-      this.arrgForm.assemChargePic = this.arrgForm.assemChargePic.split(',')
-      this.arrgForm.amendFinalPic = this.arrgForm.amendFinalPic.split(',')
-      this.arrgForm.manuArchivePic = this.arrgForm.manuArchivePic.split(',')
+      this.arrgForm.prePreparationPic = this.arrgForm.prePreparationPic.split(
+        ','
+      );
+      this.arrgForm.fldSrvyPic = this.arrgForm.fldSrvyPic.split(',');
+      this.arrgForm.mktSrvyPic = this.arrgForm.mktSrvyPic.split(',');
+      this.arrgForm.assemEstPic = this.arrgForm.assemEstPic.split(',');
+      this.arrgForm.issueValPic = this.arrgForm.issueValPic.split(',');
+      this.arrgForm.internalAuditPic = this.arrgForm.internalAuditPic.split(
+        ','
+      );
+      this.arrgForm.commuClientPic = this.arrgForm.commuClientPic.split(',');
+      this.arrgForm.assemChargePic = this.arrgForm.assemChargePic.split(',');
+      this.arrgForm.amendFinalPic = this.arrgForm.amendFinalPic.split(',');
+      this.arrgForm.manuArchivePic = this.arrgForm.manuArchivePic.split(',');
       //
-      this.arrgForm.prePreparationSche = this.arrgForm.prePreparationSche.split('-')
-      this.arrgForm.fldSrvySche = this.arrgForm.fldSrvySche.split('-')
-      this.arrgForm.mktSrvySche = this.arrgForm.mktSrvySche.split('-')
-      this.arrgForm.assemEstSche = this.arrgForm.assemEstSche.split('-')
-      this.arrgForm.issueValSche = this.arrgForm.issueValSche.split('-')
-      this.arrgForm.internalAuditSche = this.arrgForm.internalAuditSche.split('-')
-      this.arrgForm.commuClientSche = this.arrgForm.commuClientSche.split('-')
+      this.arrgForm.prePreparationSche = this.arrgForm.prePreparationSche.split(
+        '-'
+      );
+      this.arrgForm.fldSrvySche = this.arrgForm.fldSrvySche.split('-');
+      this.arrgForm.mktSrvySche = this.arrgForm.mktSrvySche.split('-');
+      this.arrgForm.assemEstSche = this.arrgForm.assemEstSche.split('-');
+      this.arrgForm.issueValSche = this.arrgForm.issueValSche.split('-');
+      this.arrgForm.internalAuditSche = this.arrgForm.internalAuditSche.split(
+        '-'
+      );
+      this.arrgForm.commuClientSche = this.arrgForm.commuClientSche.split('-');
       //this.arrgForm.assemChargeSche = this.arrgForm.assemChargeSche.split('-')
-      this.arrgForm.amendFinalSche = this.arrgForm.amendFinalSche.split('-')
+      this.arrgForm.amendFinalSche = this.arrgForm.amendFinalSche.split('-');
       //this.arrgForm.manuArchiveSche = this.arrgForm.manuArchiveSche.split('-')
     }
   }
-}
+};
 </script>
 
 <style>
