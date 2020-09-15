@@ -506,6 +506,16 @@
                                                                                                               
     -->
     <div class="work">
+      <div style="margin-top:20px">
+        <h1 v-if="projDetail.projState == 0" style="color: #009ad6">进行中</h1>
+        <h1 v-if="projDetail.projState == 1" style="color: #1d953f">已完成</h1>
+        <h1 v-if="projDetail.projState == 2" style="color: #d71345">项目中止</h1>
+      </div>
+      <div>
+        <el-button type="success" icon="el-icon-success" @click="changeState(1)">标记为完成</el-button>
+        <el-button type="primary" icon="el-icon-edit" @click="changeState(0)">标记为进行中</el-button>
+        <el-button type="danger" icon="el-icon-error" @click="changeState(2)">标记为中止</el-button>
+      </div>
       <div class="work-title">
         <span class="work-title-name">项目信息</span>
         <span class="work-title-button">
@@ -1028,7 +1038,7 @@ import Clipboard from 'clipboard'
 import QRCode from 'qrcodejs2'
 import { host } from '@/config'
 //api
-import { editProject, getDetailProjInfo, getWorkAssignment, delWorkAssignment, setWorkAssignment, createReportNum, deleteReportNum, alterProjType, getProjInfoTable, getOldReportNum, createContractNum, deleteContractNum } from '@/api/index'
+import { editProject, getDetailProjInfo, getWorkAssignment, delWorkAssignment, setWorkAssignment, createReportNum, deleteReportNum, alterProjType, getProjInfoTable, getOldReportNum, createContractNum, deleteContractNum, setProjState } from '@/api/index'
 import { addSubProject, getSubProjectInfoList, delSubProject } from '@/api/subReport'
 import { getEvalObjDetail } from '@/api/assemobjdetail'
 import { checkFaRegister, submitFaRegister, editFaRegister } from '@/api/formalreg'
@@ -2029,8 +2039,6 @@ export default {
       this.workArrgDialogVisible = true
     },
     resetArrg() {
-
-
       this.$confirm('确定要清空工作安排吗？', '提示', {
         type: 'warning'
       })
@@ -2045,8 +2053,26 @@ export default {
             })
         })
         .catch(() => { })
-
-
+    },
+    changeState(val) {
+      // this.$confirm('确定要删除吗？', '提示', {type: 'warning'})
+      //   .then(() => {
+      //     this.$message.success('删除成功');
+          
+      //   })
+      //   .catch(() => {});
+      if (this.projDetail.projState == val) {
+        this.$message.warning('项目已是本状态，无须更改')
+      }
+      setProjState({projId: this.projDetail.projId, stateCode: val})
+        .then(res => {
+          console.log(res)
+          this.getDetail()
+        })
+        .catch(err => {
+          this.$message.warning('切换项目状态失败，请刷新页面后重试')
+        })
+      
     },
     goBack() {
       this.$router.go(-1)
@@ -2080,7 +2106,7 @@ export default {
   width: 100%;
   text-align: left;
   padding-left: 10px;
-  margin: 50px 0 5px 0;
+  margin: 30px 0 5px 0;
   border-left: solid 5px #409eff;
 }
 .work-title-name {

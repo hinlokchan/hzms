@@ -310,5 +310,14 @@ export function opRecord(data) {
   });
 }
 
+export function setProjState(data) {
+  return request({
+    url: `${ProManageAPIServer}project/updateProjState`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
 
 export var getProjInfoTable = 'statistics/getProjInfoTable';

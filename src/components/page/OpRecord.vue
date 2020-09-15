@@ -2,12 +2,13 @@
   <div>
     <el-table
       :data="tableData"
-      :default-sort="{ prop: 'timestamp', order: 'descending' }"
+      :default-sort="{ prop: 'id', order: 'descending' }"
     >
       <el-table-column
         prop="id"
         label="id"
         width="100"
+        sortable
       ></el-table-column>
       <el-table-column
         prop="staffName"
@@ -18,7 +19,7 @@
         prop="timestamp"
         label="操作时间"
         width="200"
-        sortable
+        
       ></el-table-column>
       <el-table-column
         prop="detail"

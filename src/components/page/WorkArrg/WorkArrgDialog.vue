@@ -14,13 +14,9 @@
       label-width="150px"
     >
       <el-button @click="defaultArrg">默认安排</el-button>
-      <el-form-item
-        label="评估方法"
-        prop="assemMethod"
-        
-      >
+      <el-form-item label="评估方法" prop="assemMethod">
         <el-select
-        v-if="projType == 1010"
+          v-if="projType == 1010 || projType == 1041"
           v-model="arrgForm.assemMethod"
           multiple
           filterable
@@ -35,7 +31,7 @@
           ></el-option>
         </el-select>
         <el-select
-        v-if="projType == 1020"
+          v-if="projType == 1020 || projType == 1042"
           v-model="arrgForm.assemMethod"
           multiple
           filterable
@@ -50,7 +46,7 @@
           ></el-option>
         </el-select>
         <el-select
-        v-if="projType == 1030"
+          v-if="projType == 1030 || projType == 1043"
           v-model="arrgForm.assemMethod"
           multiple
           filterable
@@ -65,7 +61,7 @@
           ></el-option>
         </el-select>
         <el-select
-        v-if="projType != 1010 && projType != 1020 && projType != 1030 "
+          v-if="projType != 1010 && projType != 1020 && projType != 1030 && projType != 1041 && projType != 1042 && projType != 1043 "
           v-model="arrgForm.assemMethod"
           multiple
           filterable
@@ -79,7 +75,9 @@
             :value="item"
           ></el-option>
         </el-select>
-        <div style="color: red">Tips:选项中没有的评估方法可直接在框内输入创建</div>
+        <div style="color: red">
+          Tips:选项中没有的评估方法可直接在框内输入创建
+        </div>
       </el-form-item>
       <el-form-item label="现场勘查内容">
         <el-input
@@ -91,10 +89,7 @@
 
       <el-row :gutter="10">
         <el-col :span="8">
-          <el-form-item
-            label="前期准备"
-            prop="prePreparationSche"
-          >
+          <el-form-item label="前期准备" prop="prePreparationSche">
             <el-date-picker
               style="width: 100%"
               v-model="arrgForm.prePreparationSche"
@@ -107,10 +102,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="14">
-          <el-form-item
-            prop="prePreparationPic"
-            label="责任人"
-          >
+          <el-form-item prop="prePreparationPic" label="责任人">
             <el-checkbox-group
               v-model="arrgForm.prePreparationPic"
               style="width: 100%"
@@ -127,10 +119,7 @@
 
       <el-row :gutter="10">
         <el-col :span="8">
-          <el-form-item
-            label="现场勘查及收集资料"
-            prop="fldSrvySche"
-          >
+          <el-form-item label="现场勘查及收集资料" prop="fldSrvySche">
             <el-date-picker
               style="width: 100%"
               v-model="arrgForm.fldSrvySche"
@@ -143,10 +132,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="14">
-          <el-form-item
-            label="责任人"
-            prop="fldSrvyPic"
-          >
+          <el-form-item label="责任人" prop="fldSrvyPic">
             <el-checkbox-group
               v-model="arrgForm.fldSrvyPic"
               style="width: 100%"
@@ -163,10 +149,7 @@
 
       <el-row :gutter="10">
         <el-col :span="8">
-          <el-form-item
-            label="市场调查询价记录"
-            prop="mktSrvySche"
-          >
+          <el-form-item label="市场调查询价记录" prop="mktSrvySche">
             <el-date-picker
               style="width: 100%"
               v-model="arrgForm.mktSrvySche"
@@ -179,10 +162,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="14">
-          <el-form-item
-            label="责任人"
-            prop="mktSrvyPic"
-          >
+          <el-form-item label="责任人" prop="mktSrvyPic">
             <el-checkbox-group
               v-model="arrgForm.mktSrvyPic"
               style="width: 100%"
@@ -199,10 +179,7 @@
 
       <el-row :gutter="10">
         <el-col :span="8">
-          <el-form-item
-            label="评定估算"
-            prop="assemEstSche"
-          >
+          <el-form-item label="评定估算" prop="assemEstSche">
             <el-date-picker
               style="width: 100%"
               v-model="arrgForm.assemEstSche"
@@ -215,10 +192,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="14">
-          <el-form-item
-            label="责任人"
-            prop="assemEstPic"
-          >
+          <el-form-item label="责任人" prop="assemEstPic">
             <el-checkbox-group
               v-model="arrgForm.assemEstPic"
               style="width: 100%"
@@ -235,10 +209,7 @@
 
       <el-row :gutter="10">
         <el-col :span="8">
-          <el-form-item
-            label="编制出具报告"
-            prop="issueValSche"
-          >
+          <el-form-item label="编制出具报告" prop="issueValSche">
             <el-date-picker
               style="width: 100%"
               v-model="arrgForm.issueValSche"
@@ -251,10 +222,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="14">
-          <el-form-item
-            label="责任人"
-            prop="issueValPic"
-          >
+          <el-form-item label="责任人" prop="issueValPic">
             <el-checkbox-group
               v-model="arrgForm.issueValPic"
               style="width: 100%"
@@ -271,10 +239,7 @@
 
       <el-row :gutter="10">
         <el-col :span="8">
-          <el-form-item
-            label="内部三级审核"
-            prop="internalAuditSche"
-          >
+          <el-form-item label="内部三级审核" prop="internalAuditSche">
             <el-date-picker
               style="width: 100%"
               v-model="arrgForm.internalAuditSche"
@@ -287,10 +252,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="14">
-          <el-form-item
-            label="责任人"
-            prop="internalAuditPic"
-          >
+          <el-form-item label="责任人" prop="internalAuditPic">
             <el-checkbox-group
               v-model="arrgForm.internalAuditPic"
               style="width: 100%"
@@ -307,10 +269,7 @@
 
       <el-row :gutter="10">
         <el-col :span="8">
-          <el-form-item
-            label="与委托人沟通"
-            prop="commuClientSche"
-          >
+          <el-form-item label="与委托人沟通" prop="commuClientSche">
             <el-date-picker
               style="width: 100%"
               v-model="arrgForm.commuClientSche"
@@ -323,10 +282,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="14">
-          <el-form-item
-            label="责任人"
-            prop="commuClientPic"
-          >
+          <el-form-item label="责任人" prop="commuClientPic">
             <el-checkbox-group
               v-model="arrgForm.commuClientPic"
               style="width: 100%"
@@ -343,10 +299,7 @@
 
       <el-row :gutter="10">
         <el-col :span="8">
-          <el-form-item
-            label="评估收费"
-            prop="assemChargeSche"
-          >
+          <el-form-item label="评估收费" prop="assemChargeSche">
             <!-- <el-date-picker
               style="width: 100%"
               v-model="arrgForm.assemChargeSche"
@@ -363,10 +316,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="14">
-          <el-form-item
-            label="责任人"
-            prop="assemChargePic"
-          >
+          <el-form-item label="责任人" prop="assemChargePic">
             <el-checkbox-group
               v-model="arrgForm.assemChargePic"
               style="width: 100%"
@@ -383,10 +333,7 @@
 
       <el-row :gutter="10">
         <el-col :span="8">
-          <el-form-item
-            label="修正定稿及提交报告"
-            prop="amendFinalSche"
-          >
+          <el-form-item label="修正定稿及提交报告" prop="amendFinalSche">
             <el-date-picker
               style="width: 100%"
               v-model="arrgForm.amendFinalSche"
@@ -399,10 +346,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="14">
-          <el-form-item
-            label="责任人"
-            prop="amendFinalPic"
-          >
+          <el-form-item label="责任人" prop="amendFinalPic">
             <el-checkbox-group
               v-model="arrgForm.amendFinalPic"
               style="width: 100%"
@@ -419,10 +363,7 @@
 
       <el-row :gutter="10">
         <el-col :span="8">
-          <el-form-item
-            label="工作底稿归档"
-            prop="manuArchiveSche"
-          >
+          <el-form-item label="工作底稿归档" prop="manuArchiveSche">
             <!-- <el-date-picker
               style="width: 100%"
               v-model="arrgForm.manuArchiveSche"
@@ -439,10 +380,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="14">
-          <el-form-item
-            label="责任人"
-            prop="manuArchivePic"
-          >
+          <el-form-item label="责任人" prop="manuArchivePic">
             <el-checkbox-group
               v-model="arrgForm.manuArchivePic"
               style="width: 100%"
@@ -456,14 +394,8 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-button
-        type="primary"
-        @click="onSubmitWorkArrg()"
-      >提交</el-button>
-      <el-button
-        type="text"
-        @click="onClose()"
-      >取消</el-button>
+      <el-button type="primary" @click="onSubmitWorkArrg()">提交</el-button>
+      <el-button type="text" @click="onClose()">取消</el-button>
     </el-form>
   </el-dialog>
 </template>

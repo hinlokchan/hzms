@@ -103,18 +103,19 @@
         @row-dblclick="handleHandle"
       >
         <el-table-column
-          prop="projDegree"
-          label="紧急程度"
+          prop="projState"
+          label="项目状态"
           width="80"
           align="center"
         >
           <template slot-scope="props">
             <el-tag
-              :type="props.row.projDegree === '1001' ? 'success' : 'danger'"
+              :type="tagType(props.row.projState)"
               disable-transitions
             >
-              <span v-if="props.row.projDegree == 1001">正常</span>
-              <span v-else>紧急</span>
+              <span v-if="props.row.projState == 0">进行中</span>
+              <span v-if="props.row.projState == 1">已完成</span>
+              <span v-if="props.row.projState == 2">中止</span>
             </el-tag>
           </template>
         </el-table-column>
@@ -384,6 +385,15 @@ export default {
     changePage(val) {
       console.log(val);
       this.currentPage = val;
+    },
+    tagType(val) {
+      if (val == 0) {
+        return 'primary'
+      } else if (val == 1) {
+        return 'success'
+      } else if (val == 2) {
+        return 'danger'
+      }
     }
   }
 };
