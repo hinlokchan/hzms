@@ -3,6 +3,7 @@
     <el-table
       :data="tableData"
       :default-sort="{ prop: 'id', order: 'descending' }"
+      max-height="300"
     >
       <el-table-column
         prop="id"

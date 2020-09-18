@@ -107,6 +107,11 @@ export default {
           // ]
         },
         {
+          index: 'projstat',
+          icon: 'el-icon-date',
+          title: '成员项目状态'
+        },
+        {
           index: 'oldplanform',
           icon: 'el-icon-document-add',
           title: '旧项目录入'
@@ -129,7 +134,7 @@ export default {
         {
           index: 'stat',
           icon: 'el-icon-data-analysis',
-          title: "统计管理"
+          title: "统计管理",
         },
 
         {
@@ -137,11 +142,11 @@ export default {
           icon: 'el-icon-user',
           title: '用户管理'
         },
-        {
-          index: 'client',
-          icon: 'el-icon-setting',
-          title: "维护"
-        },
+        // {
+        //   index: 'client',
+        //   icon: 'el-icon-setting',
+        //   title: "维护"
+        // },
         // {
         //     icon: 'el-icon-lx-copy',
         //     index: 'tabs',

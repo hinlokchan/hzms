@@ -34,7 +34,7 @@
           <div class="grid-content grid-con-1">
             <i class="el-icon-lx-remind grid-con-icon"></i>
             <div class="grid-cont-right">
-              <div class="grid-num"></div>
+              <div class="grid-num">{{missionData.onGoing}}</div>
               <div>待完成项目数</div>
             </div>
           </div>
@@ -45,10 +45,10 @@
           style="margin-top: 10px;"
         >
           <div class="grid-content grid-con-2">
-            <i class="el-icon-lx-punch grid-con-icon"></i>
+            <i class="el-icon-bell grid-con-icon"></i>
             <div class="grid-cont-right">
-              <div class="grid-num"></div>
-              <div>待归档项目数</div>
+              <div class="grid-num">{{missionData.new}}</div>
+              <div>本日新项目</div>
             </div>
           </div>
         </el-card>
@@ -60,8 +60,8 @@
           <div class="grid-content grid-con-3">
             <i class="el-icon-lx-warn grid-con-icon"></i>
             <div class="grid-cont-right">
-              <div class="grid-num"></div>
-              <div>紧急项目数</div>
+              <div class="grid-num">{{missionData.urgent}}</div>
+              <div>紧急项目</div>
             </div>
           </div>
         </el-card>
@@ -103,12 +103,14 @@
 
 <script>
 import { touch } from '@/api/index'
+import { getCurrentMission } from '@/api/statistics'
 import Schart from 'vue-schart';
 import bus from '../common/bus';
 export default {
   name: 'dashboard',
   data() {
     return {
+      missionData: {},
       sfList: [
         {
           label: '超级管理员',
@@ -232,6 +234,7 @@ export default {
   },
   created() {
     this.touchAPI()
+    this.getCurrent()
   },
   components: {
     Schart
@@ -264,6 +267,16 @@ export default {
       touch()
         .then(res => { })
         .catch(err => { })
+    },
+    getCurrent() {
+      getCurrentMission()
+        .then(res => {
+          this.missionData = res.data
+          console.log(this.missionData)
+        })
+        .catch(err => {
+          console.log('error', err)
+        })
     }
     // handleListener() {
     //     bus.$on('collapse', this.handleBus);

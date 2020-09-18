@@ -262,6 +262,8 @@
             </el-row>
           </div>
         </el-form>
+        <div class="title">操作记录</div>
+        <OpRecord />
       </div>
     </div>
   </div>
@@ -269,12 +271,16 @@
 
 <script>
 import { getDetailProjInfo, getReportNum, getProjInfoTable } from '@/api/index'
+import OpRecord from './OpRecord'
 import projTypeOption from '../../../public/projTypeOption.json'
 import clientOptions from '../../../public/clientName.json'
 import { host } from '@/config'
 var ProManageAPIServer = `${host.baseUrl}/`
 export default {
   name: 'projcheck',
+  components: {
+    OpRecord
+  },
   data() {
     return {
       projId: '',

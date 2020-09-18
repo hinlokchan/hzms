@@ -15,8 +15,8 @@
             <div class="grid-content grid-con-1">
               <i class="el-icon-lx-edit grid-con-icon"></i>
               <div class="grid-cont-right">
-                <div class="grid-num"></div>
-                <div>待完成项目数</div>
+                <div class="grid-num">{{missionData.onGoing}}</div>
+                <div>待完成项目</div>
               </div>
             </div>
           </el-card>
@@ -26,8 +26,8 @@
             <div class="grid-content grid-con-3">
               <i class="el-icon-lx-warn grid-con-icon"></i>
               <div class="grid-cont-right">
-                <div class="grid-num"></div>
-                <div>紧急项目数</div>
+                <div class="grid-num">{{missionData.urgent}}</div>
+                <div>紧急项目</div>
               </div>
             </div>
           </el-card>
@@ -35,10 +35,10 @@
         <el-col :span="8">
           <el-card :body-style="{ padding: '0px' }">
             <div class="grid-content grid-con-2">
-              <i class="el-icon-lx-punch grid-con-icon"></i>
+              <i class="el-icon-bell grid-con-icon"></i>
               <div class="grid-cont-right">
-                <div class="grid-num"></div>
-                <div>待归档项目数</div>
+                <div class="grid-num">{{missionData.new}}</div>
+                <div>本日新项目</div>
               </div>
             </div>
           </el-card>
@@ -204,7 +204,8 @@ import {
   getSubReportNum,
   addSubReportNum,
   deleteReportNum
-} from '@/api/index';
+} from '@/api/index'
+import {getCurrentMission} from '@/api/statistics'
 export default {
   name: 'workbranch',
   data() {
@@ -213,6 +214,7 @@ export default {
       pageSize: 15, // 每页的数据条数
       pageTotal: 0, // 数据数
       tableData: [],
+      missionData: {},
       typeOptions: [
         { value: '1010', label: '房地产' },
         { value: '1020', label: '资产' },
@@ -241,7 +243,7 @@ export default {
     };
   },
   created() {
-    this.getData();
+    this.getData()
   },
   mounted() {},
   methods: {
@@ -354,7 +356,16 @@ export default {
         })
         .catch(err => {
           console.log('field to search myproject');
-        });
+        })
+        getCurrentMission()
+          .then(res => {
+            this.missionData = res.data
+            console.log(this.missionData)
+          })
+          .catch(err => {
+            console.log('error', err)
+          })
+    
     },
     reset() {
       this.searchValProjName = '';
@@ -396,7 +407,7 @@ export default {
       }
     }
   }
-};
+}
 </script>
 
 <style scoped>

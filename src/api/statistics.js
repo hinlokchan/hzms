@@ -41,3 +41,30 @@ export function getWeekReport(data) {
     responseType: 'blob'
   });
 }
+
+export function getAllMission(data) {
+  return request({
+    url: `${ProManageAPIServer}statistics/missionLoad/getAll`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    method: 'post',
+    data: qs.stringify(data),
+  });
+}
+
+export function getUserDetailMission(data) {
+  return request({
+    url: `${ProManageAPIServer}statistics/missionLoad/getDetail`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    method: 'post',
+    data: qs.stringify(data),
+  });
+}
+
+export function getCurrentMission(data) {
+  return request({
+    url: `${ProManageAPIServer}statistics/missionLoad/getCurrentUser`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    method: 'post',
+    data: qs.stringify(data),
+  });
+}

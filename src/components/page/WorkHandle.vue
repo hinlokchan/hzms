@@ -512,9 +512,27 @@
         <h1 v-if="projDetail.projState == 2" style="color: #d71345">项目中止</h1>
       </div>
       <div>
-        <el-button type="success" icon="el-icon-success" @click="changeState(1)">标记为完成</el-button>
-        <el-button type="primary" icon="el-icon-edit" @click="changeState(0)">标记为进行中</el-button>
-        <el-button type="danger" icon="el-icon-error" @click="changeState(2)">标记为中止</el-button>
+        <el-button
+          type="success"
+          icon="el-icon-success"
+          @click="changeState(1)"
+          :disabled="projDetail.projState == 1 ? true : false"
+          v-if="projDetail.projState != 1"
+        >标记为完成</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-edit"
+          @click="changeState(0)"
+          :disabled="projDetail.projState == 0 ? true : false"
+          v-if="projDetail.projState != 1"
+        >标记为进行中</el-button>
+        <el-button
+          type="danger"
+          icon="el-icon-error"
+          @click="changeState(2)"
+          :disabled="projDetail.projState == 2 ? true : false"
+          v-if="projDetail.projState != 1"
+        >标记为中止</el-button>
       </div>
       <div class="work-title">
         <span class="work-title-name">项目信息</span>

@@ -56,6 +56,11 @@ export default new Router({
                     meta: { title: '正评登记' }
                 },
                 {
+                    path: '/projstat',
+                    component: () => import('../components/page/ProjStateStat.vue'),
+                    meta: { title: '成员项目状态' }
+                },
+                {
                     path: '/workhandle',
                     component: () => import('../components/page/WorkHandle.vue'),
                     meta: { title: '项目工作管理' }
