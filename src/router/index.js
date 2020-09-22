@@ -33,7 +33,7 @@ export default new Router({
                 {
                     path: '/planform',
                     component: () => import('../components/page/PlanForm.vue'),
-                    meta: { title: '表单' }
+                    meta: { title: '项目计划录入表单' }
                 },
                 {
                     path: '/projcheck',

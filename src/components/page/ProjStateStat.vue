@@ -1,14 +1,33 @@
 <template>
   <div class="container">
-    <el-dialog title="进行中的项目" :visible.sync="detailVisible" width="70%">
+    <el-dialog
+      title="进行中的项目"
+      :visible.sync="detailVisible"
+      width="70%"
+      @close="clearData"
+    >
       <el-table
         :data="missionDetailData"
+        height="600"
         stripe
+        border
+        :default-sort = "{prop: 'arrgType', order: 'descending'}"
+        show-summary
       >
         <el-table-column label="序号" type="index" width="50" align="center"></el-table-column>
+        <el-table-column prop="arrgType" label="安排类型" sortable width="100">
+          <template slot-scope="scope">
+            <span v-if="scope.row.arrgType == 1001">轮序</span>
+            <span v-if="scope.row.arrgType == 1002">安排</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="projName" label="项目名称" width="300"></el-table-column>
+        <el-table-column prop="projScope" label="项目范围" width="300"></el-table-column>
         <el-table-column prop="projLeader" label="项目负责人" width="100"></el-table-column>
         <el-table-column prop="projReviewer" label="项目复核人" width="100"></el-table-column>
+        <el-table-column prop="projProReviewer" label="专业复核人" width="100"></el-table-column>
+        <el-table-column prop="projAsst" label="项目助理" width="120"></el-table-column>
+        <el-table-column prop="fieldSrvy" label="现场勘查" width="120"></el-table-column>
         <el-table-column prop="baseDate" label="基准日" width="150"></el-table-column>
         <el-table-column label="编制日期" width="150">
           <template slot-scope="scope">
@@ -19,14 +38,16 @@
     </el-dialog>
     <el-table
       :data="tableData"
-      :default-sort="{ prop: 'staffInfo.staffId', order: 'ascending' }"
+      :default-sort="{ prop: 'onGoing', order: 'descending' }"
       show-summary
       stripe
+      height="700"
     >
       <el-table-column
         prop="staffInfo.staffId"
         label="工号"
         width="70"
+        sortable
       >
         <template slot-scope="scope">
           <el-tag size="medium">{{scope.row.staffInfo.staffId}}</el-tag>
@@ -37,7 +58,12 @@
         label="姓名"
         width="120"
       ></el-table-column>
-      <el-table-column prop="onGoing" label="进行中项目数"></el-table-column>
+      <el-table-column
+        prop="onGoing"
+        label="进行中项目数"
+        sortable
+      >
+      </el-table-column>
       <el-table-column label="安排类型">
         <el-table-column prop="arrg1001" label="轮序"></el-table-column>
         <el-table-column prop="arrg1002" label="安排"></el-table-column>
@@ -89,6 +115,9 @@ export default {
           this.$message.danger('获取详情失败，请刷新后重试')
         })
       this.detailVisible = true
+    },
+    clearData() {
+      this.missionDetailData = []
     },
     formatDate(now) {
       const time = new Date(now)

@@ -34,26 +34,28 @@
 import { opRecord } from '@/api/index'
 export default {
   name: 'oprecord',
+  props: {
+    projId: Number
+  },
+  watch: {
+    projId(val) {
+      this.pId = val
+      this.getRecord(val)
+    }
+  },
   data() {
     return {
-      tableData: [
-        // { 
-        //   id: 1,
-        //   staffName: '李家乐'
-        // },
-        // {
-        //   id: 2,
-        //   staffName: '陈世达'
-        // }
-      ]
+      pId: '',
+      tableData: []
     }
   },
   created() {
-    this.getRecord()
+    //this.getRecord()
   },
   methods: {
-    getRecord() {
-      opRecord({ projId: 1010202009003 })
+    getRecord(val) {
+      console.log(val)
+      opRecord({ projId: val })
         .then(res => {
           this.tableData = res.data
         })

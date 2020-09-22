@@ -424,7 +424,6 @@ export default {
     show: {
       immediate: true,
       handler(show) {
-        console.log(this.projReviewer);
         this.visible = this.show;
         this.arrgForm.projId = this.projId;
         if (show == true) {

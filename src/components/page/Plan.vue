@@ -11,6 +11,8 @@
               style="height:auto;padding: 0px 8px 7px 8px;margin-left:15px"
               @click="handleAdd"
             ><span style="font-size:14px;color:#fff;">新增项目计划</span></el-button>
+            <!-- <el-button @click="setCookie">Cookie</el-button>
+            <el-button @click="getCookie('/plan')">get</el-button> -->
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
@@ -73,6 +75,12 @@
               @click="handleSearch"
               size="medium"
             >搜 索</el-button>
+            <el-button
+              type="text"
+              icon="el-icon-refresh-right"
+              @click="handleRefresh"
+              size="medium"
+            >重置搜索条件</el-button>
           </el-col>
         </el-row>
       </div>
@@ -362,6 +370,33 @@ export default {
         console.log(err)
       })
     },
+    //----feature
+    // setCookie() {
+    //   let name = this.$route.path
+    //   //存入的参数
+    //   let value = [this.searchData]
+    //   let day = '1'
+    //   if (day !== 0) {
+    //     var expires = day * 24 * 60 * 60 * 1000
+    //     var date = new Date(+new Date() + expires)
+    //     document.cookie = name + '=' + escape(JSON.stringify(value)) + ';expires=' + date.toUTCString()
+    //   } else {
+    //     document.cookie = name + '=' + escape(JSON.stringify(value))
+    //   }
+    //   console.log(name, JSON.stringify(value))
+    // },
+    // getCookie(data){
+    //   if("/plan" == data){
+    //     var arr
+    //     var name = this.$route.path
+    //     var reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)")
+    //     if (arr = document.cookie.match(reg)) {
+    //       var test = JSON.parse(unescape(arr[4]))
+    //       console.log(test)
+    //     }
+    //     console.log(reg, document.cookie.match(reg))
+    //   }  
+    // },
     changePage(val) {
       console.log(val)
       this.currentPage = val
@@ -371,6 +406,11 @@ export default {
     // 触发搜索按钮
     handleSearch() {
       // this.$set(this.query, 'pageIndex', 1);
+      this.searchProjInfo()
+    },
+    handleRefresh() {
+      Object.keys(this.searchData).forEach(key => (this.searchData[key] = ''))
+      console.log(this.searchData)
       this.searchProjInfo()
     },
     //新增操作

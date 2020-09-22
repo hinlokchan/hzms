@@ -1047,7 +1047,9 @@
       <span class="work-title-name">操作记录</span>
     </div>
     <el-divider></el-divider>
-    <OpRecord />
+    <OpRecord
+      :projId="projDetail.projId"
+    ></OpRecord>
   </div>
 </template>
 
@@ -2073,24 +2075,27 @@ export default {
         .catch(() => { })
     },
     changeState(val) {
-      // this.$confirm('确定要删除吗？', '提示', {type: 'warning'})
-      //   .then(() => {
-      //     this.$message.success('删除成功');
-          
-      //   })
-      //   .catch(() => {});
-      if (this.projDetail.projState == val) {
-        this.$message.warning('项目已是本状态，无须更改')
+      let state = ''
+      if (val == 1) {
+        state = '已完成'
+      } else if (val == 0) {
+        state = '进行中'
+      } else if (val == 2) {
+        state = '项目中止'
       }
-      setProjState({projId: this.projDetail.projId, stateCode: val})
-        .then(res => {
-          console.log(res)
-          this.getDetail()
+      this.$confirm('确定要设置为'+ state + '吗？', '提示', {type: 'warning'})
+        .then(() => {
+          setProjState({projId: this.projDetail.projId, stateCode: val})
+            .then(res => {
+              console.log(res)
+              this.reload()
+            })
+            .catch(err => {
+              this.$message.warning('切换项目状态失败，请刷新页面后重试')
+            })
+          this.$message.success('项目状态设置成功');  
         })
-        .catch(err => {
-          this.$message.warning('切换项目状态失败，请刷新页面后重试')
-        })
-      
+        .catch(() => {})
     },
     goBack() {
       this.$router.go(-1)
