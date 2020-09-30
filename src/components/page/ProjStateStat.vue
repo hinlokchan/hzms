@@ -12,7 +12,6 @@
         stripe
         border
         :default-sort = "{prop: 'arrgType', order: 'descending'}"
-        show-summary
       >
         <el-table-column label="序号" type="index" width="50" align="center"></el-table-column>
         <el-table-column prop="arrgType" label="安排类型" sortable width="100">

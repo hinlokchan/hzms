@@ -238,6 +238,29 @@
       </div>
     </el-dialog>
     <el-dialog
+      width="40%"
+      :visible.sync="setQRCodeVisible"
+    >
+      <el-form :model="qrcodeForm">
+        <el-form-item label="项目报告号">{{this.reportNum.zph}}</el-form-item>
+        <el-form-item label="项目名称">{{this.projDetail.projName}}</el-form-item>
+        <el-form-item label="项目基准日">{{formatDate(this.projDetail.baseDate)}}</el-form-item>
+        <el-form-item label="项目评估值(万元)">
+          <el-input v-model="qrcodeForm.totalValue"></el-input>
+        </el-form-item>
+      </el-form>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="setQRCodeVisible = false">取 消</el-button>
+        <el-button
+          @click="handleQRCode()"
+          type="primary"
+        >生成</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog
       width="30%"
       @close="closeQRCode"
       :visible.sync="qrcodeVisible"
@@ -277,7 +300,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog
+    <!-- <el-dialog
       title="正评登记"
       :visible.sync="formalRegVisible"
       width="80%"
@@ -455,7 +478,7 @@
           @click="submitFormalReg()"
         >确认提交</el-button>
       </div>
-    </el-dialog>
+    </el-dialog> -->
     <FcObjDetailDialog
       v-if="this.projDetail.projType == 1010"
       :show.sync="fcDialogVisible"
@@ -517,21 +540,18 @@
           icon="el-icon-success"
           @click="changeState(1)"
           :disabled="projDetail.projState == 1 ? true : false"
-          v-if="projDetail.projState != 1"
         >标记为完成</el-button>
         <el-button
           type="primary"
           icon="el-icon-edit"
           @click="changeState(0)"
           :disabled="projDetail.projState == 0 ? true : false"
-          v-if="projDetail.projState != 1"
         >标记为进行中</el-button>
         <el-button
           type="danger"
           icon="el-icon-error"
           @click="changeState(2)"
           :disabled="projDetail.projState == 2 ? true : false"
-          v-if="projDetail.projState != 1"
         >标记为中止</el-button>
       </div>
       <div class="work-title">
@@ -554,10 +574,10 @@
             @click="handleChangeType()"
           >更改项目类型</el-button>
           <el-button
-            v-if="this.projDetail.projType == 1010 || this.projDetail.projType == 1030"
+            v-if="this.projDetail.projType == 1010 || this.projDetail.projType == 1030 || this.projDetail.projType == 1041 || this.projDetail.projType == 1042"
             icon="el-icon-lx-qrcode"
             size="medium"
-            @click="handleQRCode()"
+            @click="setQRCode()"
           >生成二维码</el-button>
           <el-button
             icon="el-icon-printer"
@@ -1093,7 +1113,10 @@ export default {
         hhh: ''
       },
       //qrcode
-      totalValue: '',
+      setQRCodeVisible: false,
+      qrcodeForm: {
+        totalValue: ''
+      },
       //
       projTypeOption: [],
       transedProjType: {},
@@ -1545,10 +1568,10 @@ export default {
       this.$router.push({ path: '/planform', query: { data: this.queryData.projId } })
     },
     handleChangeType() {
-      if (this.statusInfo.registerState == true || this.statusInfo.evalObjState == true) {
-        this.$message.error('该项目已填写估价对象详情或已登记正评，不可改变类型')
-        return 0
-      }
+      // if (this.statusInfo.registerState == true || this.statusInfo.evalObjState == true) {
+      //   this.$message.error('该项目已填写估价对象详情或已登记正评，不可改变类型')
+      //   return 0
+      // }
       this.changeTypeVisible = true
       this.changeType.projId = this.queryData.projId
       let selOption = this.typeOptions
@@ -1688,23 +1711,29 @@ export default {
       //     })
       // }
     },
+
+    setQRCode() {
+      this.setQRCodeVisible = true
+    },
+
     handleQRCode() {
+      if (this.qrcodeForm.totalValue == '') {
+        this.$message.warning('请填写项目评估值')
+        return 0
+      }
       this.qrcodeVisible = true
 
       this.$nextTick(() => {
-        this.creatQRCode()
+        this.creatQRCode(this.qrcodeForm.totalValue)
       })
     },
-    newQRCode(val) {
+    creatQRCode(val) {
       console.log(val)
-      this.creatQRCode()
-    },
-    creatQRCode() {
-      this.qr = new QRCode('qrcode', {
+      let qrcode = new QRCode('qrcode', {
         width: '200',
         height: '200',
         //text: this.form.zph + this.form.xmmc + this.form.pgz + this.form.jzr,
-        text: '项目报告号：' + this.reportNum.zph + ' ' + '项目名称：' + this.projDetail.projName + ' ' + '项目评估值：' + '万元 ' + '基准日：' + this.formatDate(this.projDetail.baseDate)
+        text: '项目报告号：' + this.reportNum.zph + ';' + '项目名称：' + this.projDetail.projName + ';' + ';' + '项目评估值：' + val +'万元 ' + ';' + '基准日：' + this.formatDate(this.projDetail.baseDate)
       })
     },
     closeQRCode() {

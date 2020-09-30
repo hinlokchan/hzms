@@ -81,12 +81,24 @@
               icon="el-icon-search"
               @click="getData"
               type="text"
+              size="medium"
             >搜 索</el-button>
             <el-button
               @click="reset"
               type="text"
               icon="el-icon-refresh-right"
+              size="medium"
             >重 置</el-button>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col>
+            <el-switch
+              v-model="onGoing"
+              active-text="进行中项目"
+              inactive-text="所有项目"
+              @change="getOnGoingProj"
+            ></el-switch>
           </el-col>
         </el-row>
       </div>
@@ -94,8 +106,7 @@
       <el-table
         class="table"
         :data="
-          tableData.slice((currentPage - 1) * pageSize, currentPage * pageSize)
-        "
+          tableData.slice((currentPage - 1) * pageSize, currentPage * pageSize)"
         height="600"
         border
         ref="multipleTable"
@@ -211,10 +222,11 @@ export default {
   data() {
     return {
       currentPage: 1, // 当前页码
-      pageSize: 15, // 每页的数据条数
+      pageSize: 50, // 每页的数据条数
       pageTotal: 0, // 数据数
       tableData: [],
       missionData: {},
+      onGoing: false,
       typeOptions: [
         { value: '1010', label: '房地产' },
         { value: '1020', label: '资产' },
@@ -366,6 +378,28 @@ export default {
             console.log('error', err)
           })
     
+    },
+    getOnGoingProj() {
+      if (this.onGoing == true) {
+        searchMyProject({
+        projName: this.searchValProjName,
+        reportNum: this.searchValReportNum,
+        projNum: this.searchValProjNum,
+        projScope: this.searchValProjScope
+      })
+        .then(res => {
+          let arr = []
+          for(let i of res.data) {
+            if(i.projState == 0) {
+              arr.push(i)
+            }
+          }
+          this.tableData = arr
+        })
+        .catch(err => {})
+      } else {
+        this.reset()
+      }
     },
     reset() {
       this.searchValProjName = '';

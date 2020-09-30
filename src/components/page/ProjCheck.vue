@@ -263,7 +263,9 @@
           </div>
         </el-form>
         <div class="title">操作记录</div>
-        <OpRecord />
+        <OpRecord
+          :projId="detailData.projId"
+        ></OpRecord>
       </div>
     </div>
   </div>

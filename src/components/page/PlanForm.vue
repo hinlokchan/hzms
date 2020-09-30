@@ -855,8 +855,7 @@ export default {
     closeNewInfo() {
       this.newInfo = false
       //this.goBack()
-      //this.reload()
-      Object.keys(this.form).forEach(key => (form[key] = ''))
+      this.reload()
     },
     formatDate(now) {
       const time = new Date(now)

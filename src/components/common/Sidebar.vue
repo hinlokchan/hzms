@@ -111,11 +111,11 @@ export default {
           icon: 'el-icon-date',
           title: '成员项目状态'
         },
-        {
-          index: 'oldplanform',
-          icon: 'el-icon-document-add',
-          title: '旧项目录入'
-        },
+        // {
+        //   index: 'oldplanform',
+        //   icon: 'el-icon-document-add',
+        //   title: '旧项目录入'
+        // },
         // {
         //   icon: 'el-icon-search',
         //   title: '历史项目信息查询',
