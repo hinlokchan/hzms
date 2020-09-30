@@ -2,72 +2,86 @@
   {
     "label": "房地产",
     "value": "1010",
-    "type": "FG"
+    "type": "FG",
+    "disable": false
   },
   {
     "label": "资产",
     "value": "1020",
-    "type": "ZP"
+    "type": "ZP",
+    "disable": false
   },
   {
     "label": "土地",
     "value": "1030",
-    "type": "TG"
+    "type": "TG",
+    "disable": false
   },
   {
     "label": "房地产咨询",
     "value": "1041",
-    "type": "FZ"
+    "type": "FZ",
+    "disable": false
   },
   {
     "label": "资产咨询",
     "value": "1042",
-    "type": "ZZ"
+    "type": "ZZ",
+    "disable": false
   },
   {
     "label": "土地咨询",
     "value": "1043",
-    "type": "TZ"
+    "type": "TZ",
+    "disable": false
 
   },
   {
     "label": "PPP",
     "value": "1050",
-    "type": "PPP"
+    "type": "PPP",
+    "disable": false
   },
   {
     "label": "房地产复审",
     "value": "1061",
-    "type": "FSF"
+    "type": "FSF",
+    "disable": false
   },
   {
     "label": "资产复审",
     "value": "1062",
-    "type": "FSZ"
+    "type": "FSZ",
+    "disable": false
   },
   {
     "label": "土地复审",
     "value": "1063",
-    "type": "FST"
+    "type": "FST",
+    "disable": false
   },
   {
     "label": "外协",
     "value": "1070",
-    "type": "WX"
+    "type": "WX",
+    "disable": false
   },
   {
     "label": "政策修订",
     "value": "1080",
-    "type": "ZC"
+    "type": "ZC",
+    "disable": false
   },
   {
     "label": "绩效",
     "value": "1090",
-    "type": "JX"
+    "type": "JX",
+    "disable": false
   },
   {
     "label": "其他",
     "value": "1100",
-    "type": "QT"
+    "type": "QT",
+    "disable": false
   }
 ]

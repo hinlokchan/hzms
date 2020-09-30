@@ -16,6 +16,43 @@
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
+      <el-dialog
+      title="更改项目类型"
+      :visible.sync="changeTypeVisible"
+      @close="closeChangeProjType"
+    >
+      <el-form>
+        <el-form-item
+          label="选择需要更改的类型"
+          label-width="200"
+        >
+          <el-select
+            v-model="changeType.toType"
+            placeholder="请选择"
+          >
+            <el-option
+              v-for="item in projTypeOption"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+              :disabled="item.disable"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div style="color: red">Tips:更改后原报告号及计划编号将改变</div>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="changeTypeVisible = false">取 消</el-button>
+        <el-button
+          @click="changeProjType()"
+          type="primary"
+        >确认更改</el-button>
+      </div>
+    </el-dialog>
+
       <div class="handle-box">
         <el-row :gutter="20">
           <el-col :span="4">
@@ -217,7 +254,7 @@
         </el-table-column> -->
         <el-table-column
           label="操作"
-          width="190"
+          width="310"
           align="center"
           fixed="right"
         >
@@ -234,6 +271,12 @@
               size="medium"
               @click="handleEdit(scope.row)"
             >编辑</el-button>
+            <el-button
+              type="text"
+              icon="el-icon-edit"
+              size="medium"
+              @click="handleProjType(scope.row)"
+            >更改项目类型</el-button>
             <el-button
               type="text"
               icon="el-icon-delete"
@@ -257,11 +300,12 @@
 </template>
 
 <script>
-import { getAllAbstractProject, searchProject, delProject } from '@/api/index';
+import { getAllAbstractProject, searchProject, delProject, alterProjType } from '@/api/index';
 import { checkFaRegister } from '@/api/formalreg'
 import projTypeOption from '../../../public/projTypeOption.json'
 export default {
   name: 'plan',
+  inject: ['reload'],
   data() {
     return {
       currentPage: 1, // 当前页码
@@ -315,6 +359,7 @@ export default {
       searchData: { projNum: '', reportNum: '', projName: '', projScope: '', clientName: '', projMember: '' },
       tableData: [],
       editVisible: false,
+      changeTypeVisible: false,
       form: {},
       projTypeFilters: [
         { text: '房地产', value: 1010 },
@@ -331,11 +376,17 @@ export default {
         { text: '政策修订', value: 1080 },
         { text: '绩效', value: 1090 },
         { text: '其他', value: 1100 }
-      ]
+      ],
+      projTypeOption: [],
+      changeType: {
+        projId: '',
+        toType: ''
+      },
     }
   },
   created() {
-    this.getData();
+    this.getData()
+    this.projTypeOption = projTypeOption
   },
   mounted() {
   },
@@ -422,6 +473,35 @@ export default {
     handleEdit(val) {
       sessionStorage.setItem('page', this.currentPage)
       this.$router.push({ path: '/planform', query: { data: val.projId } })
+    },
+    handleProjType(val) {
+      for (let i of this.projTypeOption) {
+        if (val.projType == i.value) {
+          i.disable = true
+        }
+      }
+      this.changeTypeVisible = true
+      this.changeType.projId = val.projId
+    },
+    closeChangeProjType() {
+      for (let i of this.projTypeOption) {
+        i.disable = false
+      }
+    },
+    changeProjType() {
+      if (this.changeType.toType == '') {
+        this.$message.info('请选择修改类型');
+      } else {
+        alterProjType(this.changeType)
+          .then(res => {
+            this.$message.success('修改成功');
+            this.changeTypeVisible = false
+            this.reload()
+          })
+          .catch(err => {
+            this.$message.error('修改失败');
+          })
+      }
     },
     //查看详情操作
     handleCheck(val) {
