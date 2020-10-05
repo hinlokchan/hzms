@@ -117,7 +117,7 @@
               icon="el-icon-refresh-right"
               @click="handleRefresh"
               size="medium"
-            >重置搜索条件</el-button>
+            >重置</el-button>
           </el-col>
         </el-row>
       </div>

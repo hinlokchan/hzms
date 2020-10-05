@@ -112,6 +112,7 @@
         ref="multipleTable"
         style="width: 100%"
         @row-dblclick="handleHandle"
+        stripe
       >
         <el-table-column
           prop="projState"
