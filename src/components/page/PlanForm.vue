@@ -689,7 +689,6 @@ export default {
         compSchedule: 3,
         projReviewer: [{ value: '' }],
         //lendingBank: [],
-        incumbrancer: '',
         projTypeOption: []
       },
       rules: {
@@ -716,7 +715,7 @@ export default {
         ]
       },
       assemGoalList: ['抵押', '交易', '资产处置（司法鉴定）', '出让', '挂牌出让', '补出让', '转让', '盘整收回', '征收补偿', '活立木拍卖', '出租', '置换', '股权转让', '作价入股', '增资扩股', '入账', '征收、完税', '企业改制', '清算', '复审', '评价', '咨询'],
-      contactTypeOption: ['正常接洽', '摇珠', '中行通知书', '定点采购', '中介超市摇珠', '河源分公司', '政府采购'],
+      contactTypeOption: ['正常接洽', '摇珠', '中行通知书', '定点采购', '中介超市摇珠', '河源分公司', '政府采购', '招标委托'],
       userList: [],
       clientTypeOptions: [
         {
