@@ -107,6 +107,11 @@ export default {
           // ]
         },
         {
+          index: 'casesearchdock',
+          icon: 'el-icon-folder',
+          title: '案例查询（Demo）'
+        },
+        {
           index: 'projstat',
           icon: 'el-icon-date',
           title: '成员项目状态'

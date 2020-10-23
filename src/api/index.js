@@ -319,5 +319,14 @@ export function setProjState(data) {
   });
 }
 
+export function caseSearch(data) {
+  return request({
+    url: `${ProManageAPIServer}es/matchQuery`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
 
 export var getProjInfoTable = 'statistics/getProjInfoTable';
