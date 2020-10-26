@@ -93,7 +93,7 @@ export function editProject(data) {
 
 export function isAuthenticated(data) {
   return request({
-    url: `${ProManageAPIServer}project/isAuthenticated`,
+    url: `${ProManageAPIServer}user/isAuthenticated`,
     headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
     method: 'post',
     data: qs.stringify(data)
