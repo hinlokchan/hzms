@@ -11,16 +11,16 @@
       </div>
       <div style="margin-top: 15px;">
         <el-input placeholder="请输入搜索关键字" v-model="keyword" @change="doSearch" class="input-with-select">
-          <el-select v-model="searchType" slot="prepend" placeholder="请选择" class="input-with-select-select">
-            <el-option label="模糊查询" value="0"></el-option>
-            <el-option label="精确查询" value="1"></el-option>
-          </el-select>
+<!--          <el-select v-model="searchType" slot="prepend" placeholder="请选择" class="input-with-select-select">-->
+<!--            <el-option label="模糊查询" value="0"></el-option>-->
+<!--            <el-option label="精确查询" value="1"></el-option>-->
+<!--          </el-select>-->
           <el-button slot="append" type="primary" icon="el-icon-search" @click="doSearch" ></el-button>
         </el-input>
         <br>
         <div class="useDbRadio">
-          <el-radio v-model="radio" label="0" >内网数据</el-radio>
-          <el-radio v-model="radio" label="1" >公网数据（仅房地产）</el-radio>
+          <el-radio v-model="radio" label="0" >内部数据</el-radio>
+          <el-radio v-model="radio" label="1" >公网数据（二手房）</el-radio>
         </div>
         <el-table
             :data="tableData.list"
@@ -31,7 +31,7 @@
             <template slot-scope="props">
               <el-form label-position="left" inline class="demo-table-expand">
                 <el-form-item label="项目类型">
-                  <span>{{ props.row.projType }}</span>
+                  <span>{{ props.row.typeName }}</span>
                 </el-form-item>
                 <el-form-item label="项目负责人">
                   <span>{{ props.row.projLeader }}</span>
@@ -75,6 +75,12 @@
               prop="projScope"
           >
           </el-table-column>
+          <el-table-column
+              label="委托人"
+              prop="clientName"
+              width="200px"
+          >
+          </el-table-column>
         </el-table>
         <el-table
             :data="tableData.list"
@@ -84,6 +90,10 @@
           <el-table-column type="expand">
             <template slot-scope="props">
               <el-form label-position="left" inline class="demo-table-expand">
+<!--                <el-form-item label="简介">-->
+<!--                  <span>{{ props.row.profile }}</span>-->
+<!--                </el-form-item>-->
+                <br>
                 <el-form-item label="装修程度">
                   <span>{{ props.row.decorationDegree }}</span>
                 </el-form-item>
@@ -92,12 +102,6 @@
                 </el-form-item>
                 <el-form-item label="建筑年份">
                   <span>{{ props.row.yearBuilt }}年</span>
-                </el-form-item>
-                <el-form-item label="建筑面积">
-                  <span>{{ props.row.buildingArea }}平方米</span>
-                </el-form-item>
-                <el-form-item label="简介">
-                  <span>{{ props.row.profile }}</span>
                 </el-form-item>
                 <el-form-item label="信息来源">
                   <span>{{ props.row.sourceFrom }}</span>
@@ -142,6 +146,12 @@
           <el-table-column
               label="总价（万元）"
               prop="totalPrice"
+              width="150px"
+          >
+          </el-table-column>
+          <el-table-column
+              label="数据来源"
+              prop="sourceFrom"
               width="150px"
           >
           </el-table-column>
@@ -216,7 +226,7 @@ export default {
 
 <style scoped>
 .input-with-select {
-  width: 800px;
+  width: 50%;
   margin-left: 25%;
   margin-bottom: 5px;
 }

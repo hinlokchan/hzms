@@ -46,10 +46,68 @@
         </el-date-picker>
       </div>
     </el-card>
+    <el-card style="width:50%; margin-top: 20px">
+      <div slot="header"
+           class="clearfix">
+        <span>多条件筛选导出计划报表</span>
+        <el-button
+            style="float:right"
+            type="text"
+            @click="exportPlan"
+        >导出</el-button>
+      </div>
+      <div style="margin-bottom: 20px">
+        <span class="demonstration">编制日期&nbsp;&nbsp;</span>
+        <el-date-picker
+            v-model="multiConProjDate"
+            type="daterange"
+            placeholder="请选择日期"
+            value-format="yyyy-MM-dd"
+        >
+        </el-date-picker>
+      </div>
+      <div style="margin-bottom: 20px">
+        <span class="demonstration">项目类型&nbsp;&nbsp;</span>
+        <el-select v-model="multiConProjType" multiple placeholder="请选择">
+          <el-option
+              v-for="item in multiConProjTypeOps"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+          </el-option>
+        </el-select>
+      </div>
+      <div style="margin-bottom: 20px">
+        <span class="demonstration">委托人&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <el-cascader
+            ref="cascaderAddr"
+            :show-all-levels="false"
+            v-model="multiConClientId"
+            :options="clientList"
+            :props="{ expandTrigger: 'hover' }"
+            filterable
+            clearable
+        >
+        </el-cascader>
+      </div>
+      <div>
+        <span class="demonstration">项目组成员&nbsp;&nbsp;</span>
+        <el-select v-model="multiConStaffName" placeholder="请选择" clearable filterable>
+          <el-option
+              v-for="item in staffList"
+              :key="item.staffId"
+              :label="item.staffName"
+              :value="item.staffId"
+          >
+          </el-option>
+        </el-select>
+      </div>
+    </el-card>
   </div>
 </template>
 
 <script>
+import { getUserList,getClientList } from '@/api/index'
 import { getDayReport } from '@/api/statistics'
 import { Base64 } from 'js-base64'
 import { host } from '@/config'
@@ -78,10 +136,52 @@ export default {
           }
         }]
       },
+      multiConProjDate: '',
+      multiConProjType: '',
+      multiConProjTypeOps:[
+        {
+          value: '1010',
+          label: '房地产'
+        },
+        {
+          value: '1020',
+          label: '资产'
+        },
+        {
+          value: '1030',
+          label: '土地'
+        },
+        {
+          value: '1031',
+          label: '房地产咨询'
+        },
+        {
+          value: '1032',
+          label: '资产咨询'
+        },
+        {
+          value: '1033',
+          label: '土地咨询'
+        },
+      ],
+      clientList:[],
+      staffList:[],
+      multiConClientName: '',
+      multiConClientId:'',
+      multiConStaffName: ''
     }
   },
   created() {
-
+    getClientList().then(
+        res => {
+          this.clientList = res.data
+        }
+    );
+    getUserList().then(
+        res => {
+          this.staffList = res.data;
+        }
+    );
   },
   mounted() {
 
@@ -121,9 +221,9 @@ export default {
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       })
-      setTimeout(() => {
-        loading.close()
-      }, 3500)
+      // setTimeout(() => {
+      //   loading.close()
+      // }, 3500)
     },
     printWeekReport(val) {
       if (val == '') {
@@ -178,6 +278,21 @@ export default {
     },
     goBack() {
       this.$router.go(-1)
+    },
+    exportPlan() {
+      if (this.multiConProjDate === '') {
+        this.$message.error('请至少选择编制日期范围作为筛选条件')
+        return
+      }
+
+    },
+    parseArray(array) {
+      let str = '';
+      for (let i = 0; i < array.length; i++) {
+        str += array[i] + ',';
+      }
+      str = str.slice(0, str.length - 1);
+      console.log(str);
     }
   }
 }

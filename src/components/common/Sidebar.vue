@@ -109,7 +109,7 @@ export default {
         {
           index: 'casesearchdock',
           icon: 'el-icon-folder',
-          title: '案例查询（Demo）'
+          title: '案例数据库'
         },
         {
           index: 'projstat',
@@ -239,6 +239,11 @@ export default {
           index: 'stat',
           icon: "el-icon-data-analysis",
           title: "统计管理"
+        },
+        {
+          index: 'casesearchdock',
+          icon: 'el-icon-folder',
+          title: '案例查询（Demo）'
         }
       ],
       //业务部门
@@ -258,6 +263,11 @@ export default {
             }
           ]
         },
+        {
+          index: 'casesearchdock',
+          icon: 'el-icon-folder',
+          title: '案例查询（Demo）'
+        }
         // {
         //   index: 'oldplanform',
         //   icon: 'el-icon-document-add',
