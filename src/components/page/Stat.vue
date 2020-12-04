@@ -152,16 +152,45 @@ export default {
           label: '土地'
         },
         {
-          value: '1031',
+          value: '1041',
           label: '房地产咨询'
         },
         {
-          value: '1032',
+          value: '1042',
           label: '资产咨询'
         },
         {
-          value: '1033',
+          value: '1043',
           label: '土地咨询'
+        },
+        {
+          value: '1050',
+          label: 'PPP'
+        },{
+          value: '1061',
+          label: '房地产复审'
+        },{
+          value: '1062',
+          label: '资产复审'
+        },{
+          value: '1063',
+          label: '土地复审'
+        },
+        {
+          value: '1070',
+          label: '外协'
+        },
+        {
+          value: '1080',
+          label: '政策修订'
+        },
+        {
+          value: '1090',
+          label: '绩效'
+        },
+        {
+          value: '1100',
+          label: '其他'
         },
       ],
       clientList:[],
