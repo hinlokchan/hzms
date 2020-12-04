@@ -75,11 +75,11 @@ export default new Router({
                     component: () => import('../components/page/Stat.vue'),
                     meta: { title: '统计管理' }
                 },
-                {
-                    path: '/casesearchdock',
-                    component: () => import('../components/page/CaseSearchDock.vue'),
-                    meta: { title: '案例查询（Demo）' }
-                },
+                // {
+                //     path: '/casesearchdock',
+                //     component: () => import('../components/page/CaseSearchDock.vue'),
+                //     meta: { title: '案例查询（Demo）' }
+                // },
                 {
                     path: '/client',
                     component: () => import('../components/page/Client.vue'),

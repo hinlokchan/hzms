@@ -97,7 +97,7 @@
               v-for="item in staffList"
               :key="item.staffId"
               :label="item.staffName"
-              :value="item.staffId"
+              :value="item.staffName"
           >
           </el-option>
         </el-select>
@@ -280,19 +280,60 @@ export default {
       this.$router.go(-1)
     },
     exportPlan() {
-      if (this.multiConProjDate === '') {
-        this.$message.error('请至少选择编制日期范围作为筛选条件')
+      console.log(this.multiConStaffName)
+      if (this.multiConProjDate === '' || this.multiConProjDate == null) {
+        this.$message.error('请至少选择编制日期范围作为筛选条件');
         return
       }
+
+      var oReq = new XMLHttpRequest()
+      // url参数为拿后台数据的接口
+      let pathUrl = ProManageAPIServer + 'statistics/export/exportPlan'
+      oReq.open('POST', pathUrl, true)
+      oReq.responseType = 'blob'
+      oReq.onload = function (oEvent) {
+        var content = oReq.response
+        var elink = document.createElement('a')
+        // name为后台返给前端的文件名，根据下载文件格式加后缀名，后缀名必须加，不然下载在本地不方便打开。
+        var headers = oReq.getResponseHeader('content-disposition')
+        console.log(headers)
+        const headers2 = headers.split(';')[1].split('=')[1].substr(10)
+        elink.download = headers2
+        elink.style.display = 'none'
+        var blob = new Blob([content])
+        elink.href = URL.createObjectURL(blob)
+        document.body.appendChild(elink)
+        elink.click()
+        document.body.removeChild(elink)
+      }
+      const fdata = new FormData()
+      fdata.append('projDateArrStr', this.parseArray(this.multiConProjDate))
+      fdata.append('projTypeArrStr', this.parseArray(this.multiConProjType))
+      fdata.append('projMemberStr', this.multiConStaffName)
+      fdata.append('clientIdStr', this.multiConClientId)
+      oReq.send(fdata)
+
+      const loading = this.$loading({
+        lock: true,
+        text: '加载中',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+      setTimeout(() => {
+        loading.close()
+      }, 3000)
 
     },
     parseArray(array) {
       let str = '';
+      if (array.length === 0) {
+        return str
+      }
       for (let i = 0; i < array.length; i++) {
         str += array[i] + ',';
       }
       str = str.slice(0, str.length - 1);
-      console.log(str);
+      return str
     }
   }
 }
