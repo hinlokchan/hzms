@@ -196,7 +196,7 @@ export default {
       clientList:[],
       staffList:[],
       multiConClientName: '',
-      multiConClientId:'',
+      multiConClientId:[],
       multiConStaffName: ''
     }
   },
@@ -336,10 +336,12 @@ export default {
         document.body.removeChild(elink)
       }
       const fdata = new FormData()
+      if (this.multiConClientId.length > 0) {
+        fdata.append('clientIdStr', this.multiConClientId[this.multiConClientId.length-1])
+      }
       fdata.append('projDateArrStr', this.parseArray(this.multiConProjDate))
       fdata.append('projTypeArrStr', this.parseArray(this.multiConProjType))
       fdata.append('projMemberStr', this.multiConStaffName)
-      fdata.append('clientIdStr', this.multiConClientId)
       oReq.send(fdata)
 
       const loading = this.$loading({
