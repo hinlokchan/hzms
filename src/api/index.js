@@ -328,5 +328,15 @@ export function caseSearch(data) {
   });
 }
 
+export function createReportQrCode(data) {
+  return request({
+    url: `${ProManageAPIServer}qrCode/createReportQrCode`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    method: 'post',
+    data: qs.stringify(data),
+    responseType:'blob'
+  });
+}
+
 
 export var getProjInfoTable = 'statistics/getProjInfoTable';

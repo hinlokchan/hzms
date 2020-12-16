@@ -271,11 +271,12 @@
       <div>
         <span style="color: red">Tips: 右键二维码-图片另存为即可保存</span>
       </div>
-      <div
-        id="qrcode"
-        ref="qrcode"
-        style="margin-left:27%"
-      ></div>
+<!--      <div-->
+<!--        id="qrcode"-->
+<!--        ref="qrcode"-->
+<!--        style="margin-left:27%"-->
+<!--      ></div>-->
+      <img :src="qrCodeSrc" alt="">
     </el-dialog>
     <el-dialog
       title="取往月报告号"
@@ -1078,7 +1079,7 @@ import Clipboard from 'clipboard'
 import QRCode from 'qrcodejs2'
 import { host } from '@/config'
 //api
-import { editProject, getDetailProjInfo, getWorkAssignment, delWorkAssignment, setWorkAssignment, createReportNum, deleteReportNum, alterProjType, getProjInfoTable, getOldReportNum, createContractNum, deleteContractNum, setProjState } from '@/api/index'
+import { createReportQrCode,editProject, getDetailProjInfo, getWorkAssignment, delWorkAssignment, setWorkAssignment, createReportNum, deleteReportNum, alterProjType, getProjInfoTable, getOldReportNum, createContractNum, deleteContractNum, setProjState } from '@/api/index'
 import { addSubProject, getSubProjectInfoList, delSubProject } from '@/api/subReport'
 import { getEvalObjDetail } from '@/api/assemobjdetail'
 import { checkFaRegister, submitFaRegister, editFaRegister } from '@/api/formalreg'
@@ -1117,6 +1118,7 @@ export default {
       qrcodeForm: {
         totalValue: ''
       },
+      qrCodeSrc:'',
       //
       projTypeOption: [],
       transedProjType: {},
@@ -1721,10 +1723,13 @@ export default {
         this.$message.warning('请填写项目评估值')
         return 0
       }
+
       this.qrcodeVisible = true
 
       this.$nextTick(() => {
-        this.creatQRCode(this.qrcodeForm.totalValue)
+        // this.creatQRCode(this.qrcodeForm.totalValue)
+        this.qrCodeSrc = 'http://localhost:8080/qrCode/createReportQrCode?'+
+            'projId='+this.projDetail.projId
       })
     },
     creatQRCode(val) {
@@ -1738,6 +1743,7 @@ export default {
     },
     closeQRCode() {
       this.$refs.qrcode.innerHTML = ''
+      this.qrCodeSrc = ''
     },
     handleCreateContractNum() {
       // if (queryData.projType == 1010)let const
