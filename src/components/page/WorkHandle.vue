@@ -246,7 +246,7 @@
         <el-form-item label="项目名称">{{this.projDetail.projName}}</el-form-item>
         <el-form-item label="项目基准日">{{formatDate(this.projDetail.baseDate)}}</el-form-item>
         <el-form-item label="项目评估值(万元)">
-          <el-input v-model="qrcodeForm.totalValue"></el-input>
+          <el-input v-model="qrcodeForm.assessedValue"></el-input>
         </el-form-item>
       </el-form>
       <div
@@ -1116,7 +1116,8 @@ export default {
       //qrcode
       setQRCodeVisible: false,
       qrcodeForm: {
-        totalValue: ''
+        assessedValue: '',
+        projId:''
       },
       qrCodeSrc:'',
       //
@@ -1719,18 +1720,25 @@ export default {
     },
 
     handleQRCode() {
-      if (this.qrcodeForm.totalValue == '') {
+      if (this.qrcodeForm.assessedValue == '') {
         this.$message.warning('请填写项目评估值')
         return 0
       }
+      this.qrcodeForm.projId = this.projDetail.projId
 
-      this.qrcodeVisible = true
-
-      this.$nextTick(() => {
-        // this.creatQRCode(this.qrcodeForm.totalValue)
-        this.qrCodeSrc = 'http://localhost:8080/qrCode/createReportQrCode?'+
-            'projId='+this.projDetail.projId
-      })
+      createReportQrCode(this.qrcodeForm)
+          .then(res => {
+            this.qrCodeSrc = `${ProManageAPIServer}qrCode/readReportQrCode/`+this.projDetail.projId
+            this.qrcodeVisible = true
+            // this.$nextTick(() => {
+            //   this.qrCodeSrc = `${ProManageAPIServer}/qrCode/readReportQrCode/`+this.projDetail.projId
+            // })
+            console.log(this.qrCodeSrc)
+          })
+          .catch(err => {
+            console.log(err)
+            this.$message.error('二维码生成失败');
+          });
     },
     creatQRCode(val) {
       console.log(val)

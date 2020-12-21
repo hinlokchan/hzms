@@ -333,8 +333,7 @@ export function createReportQrCode(data) {
     url: `${ProManageAPIServer}qrCode/createReportQrCode`,
     headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
     method: 'post',
-    data: qs.stringify(data),
-    responseType:'blob'
+    data: qs.stringify(data)
   });
 }
 
