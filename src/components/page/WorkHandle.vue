@@ -823,7 +823,7 @@
           :span="12"
           style="margin-top: 10px"
         >
-          <!-- <el-card>
+          <el-card>
             <div
               slot="header"
               class="card-header"
@@ -852,7 +852,7 @@
                 <span v-else>合同号：</span>{{this.contractNum}}
               </div>
             </div>
-          </el-card> -->
+          </el-card>
 
         </el-col>
         <!-- <el-col
@@ -1792,7 +1792,7 @@ export default {
             //     this.contractNumType = '401'
             //     break
             // }
-            console.log(this.contractNumType)
+            // console.log(this.contractNumType)
             createContractNum({ projId: this.queryData.projId })
               .then(res => {
                 console.log('createContractNum.res', res)
@@ -1808,24 +1808,26 @@ export default {
 
     },
     handleDeleteContractNum() {
-      if (this.projDetail.contractNum == null) {
-        this.$message.warning('尚未获取合同号')
-      } else {
-        this.$confirm('即将删除合同号，确定吗？', '提示：即将删除[' + this.contractNum + ']', { type: 'error' })
-          .then(() => {
-            deleteContractNum({ contractNum: this.contractNum })
-              .then(res => {
-                this.$message.success('合同号已删除！')
-                this.reload()
-              })
-              .catch(err => {
-                this.$message.warning('服务器忙，请稍后重试！')
-              })
-          })
-          .catch(() => {
-            { }
-          })
-      }
+      this.$message.warning("请联系管理员进行删除")
+
+      // if (this.projDetail.contractNum == null) {
+      //   this.$message.warning('尚未获取合同号')
+      // } else {
+      //   this.$confirm('即将删除合同号，确定吗？', '提示：即将删除[' + this.contractNum + ']', { type: 'error' })
+      //     .then(() => {
+      //       deleteContractNum({ contractNum: this.contractNum })
+      //         .then(res => {
+      //           this.$message.success('合同号已删除！')
+      //           this.reload()
+      //         })
+      //         .catch(err => {
+      //           this.$message.warning('服务器忙，请稍后重试！')
+      //         })
+      //     })
+      //     .catch(() => {
+      //       { }
+      //     })
+      // }
     },
     handlePrintProj(val) {
       //伪加载中，防止重复提交请求
