@@ -75,6 +75,11 @@ export default new Router({
                     component: () => import('../components/page/Stat.vue'),
                     meta: { title: '统计管理' }
                 },
+                {
+                    path: '/contract',
+                    component: () => import('../components/page/ContractManage.vue'),
+                    meta: { title: '合同管理' }
+                },
                 // {
                 //     path: '/casesearchdock',
                 //     component: () => import('../components/page/CaseSearchDock.vue'),

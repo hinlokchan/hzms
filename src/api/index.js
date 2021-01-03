@@ -337,5 +337,13 @@ export function createReportQrCode(data) {
   });
 }
 
+export function getContractList() {
+  return request({
+    url: `${ProManageAPIServer}contract/getContractList`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    method: 'post'
+  });
+}
+
 
 export var getProjInfoTable = 'statistics/getProjInfoTable';

@@ -147,6 +147,11 @@ export default {
           icon: 'el-icon-user',
           title: '用户管理'
         },
+          {
+              index: 'contract',
+              icon: 'el-icon-data-analysis',
+              title: '合同管理'
+          },
         // {
         //   index: 'client',
         //   icon: 'el-icon-setting',
@@ -239,6 +244,11 @@ export default {
           index: 'stat',
           icon: "el-icon-data-analysis",
           title: "统计管理"
+        },
+        {
+          index: 'contract',
+          icon: 'el-icon-data-analysis',
+          title: '合同管理'
         },
         // {
         //   index: 'casesearchdock',
