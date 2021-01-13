@@ -1457,7 +1457,7 @@ export default {
             projType = '房地'
           } else if (this.projDetail.projType == 1020) {
             projType = '资'
-          } else if (this.projDetail.projType == 100) {
+          } else if (this.projDetail.projType == 1030) {
             projType = '土地'
           }
           break
