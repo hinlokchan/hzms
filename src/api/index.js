@@ -345,5 +345,14 @@ export function getContractList() {
   });
 }
 
+export function updateContractInfo(data) {
+  return request({
+    url: `${ProManageAPIServer}contract/updateContractInfo`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
 
 export var getProjInfoTable = 'statistics/getProjInfoTable';
