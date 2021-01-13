@@ -100,8 +100,8 @@
                   <el-form-item label="回收日期">
                     <span>{{ props.row.recoverDate }}</span>
                   </el-form-item>
-                  <el-form-item label="归档负责人">
-                    <span>{{ props.row.archivePic }}</span>
+                  <el-form-item label="归档经办人">
+                    <span>{{ props.row.archiveOperator }}</span>
                   </el-form-item>
                   <el-form-item label="备注">
                     <span>{{ props.row.notes }}</span>
