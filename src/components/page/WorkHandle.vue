@@ -288,6 +288,7 @@
         v-model="takenDate"
         type="month"
         placeholder="选择月份"
+        :picker-options="postMonthPickerOps"
       ></el-date-picker>
       <div
         slot="footer"
@@ -1308,7 +1309,16 @@ export default {
         registerState: false,
         evalObjState: false
       },
-      regInfo: {}
+      regInfo: {},
+      postMonthPickerOps: {
+        disabledDate(time) {
+          var date = new Date();
+          if (time.getMonth() === date.getMonth() && time.getFullYear() === date.getFullYear()) {
+            return true
+          }
+          return time.getMonth() >= date.getMonth() && time.getFullYear() >= date.getFullYear();
+        }
+      }
     }
   },
   created() {
