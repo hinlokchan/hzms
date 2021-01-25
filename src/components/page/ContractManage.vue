@@ -91,6 +91,9 @@
                   <el-form-item label="项目负责人">
                     <span>{{ props.row.projLeader }}</span>
                   </el-form-item>
+                  <el-form-item label="项目助理">
+                    <span>{{ props.row.projAsst }}</span>
+                  </el-form-item>
                   <el-form-item label="签约负责人">
                     <span>{{ props.row.signingPic }}</span>
                   </el-form-item>
