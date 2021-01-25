@@ -258,7 +258,7 @@ export function createContractNum(data) {
 
 export function deleteContractNum(data) {
   return request({
-    url: `${ProManageAPIServer}project/deleteContractNum`,
+    url: `${ProManageAPIServer}contract/deleteContractNum`,
     headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
     method: 'post',
     data: qs.stringify(data)
