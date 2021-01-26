@@ -75,9 +75,9 @@
 <!--                    width="120">-->
 <!--                </el-table-column>-->
 <!--            </el-table>-->
-
           <el-table
               :data="tableData"
+              :row-class-name="tableRowClassName"
               style="width: 100%">
             <el-table-column type="expand">
               <template slot-scope="props">
@@ -201,10 +201,18 @@ export default {
               archiveOperator: '',
               notes: '',
               signingDate: ''
-            }
+            },
+            filterRecover:true
         };
     },
     methods:{
+      tableRowClassName({row, rowIndex}) {
+        console.log(row.recoverDate)
+        if (row.recoverDate != '' && row.recoverDate != null) {
+          return 'success-row';
+        }
+        return '';
+      },
       handleEdit(index, row) {
         this.dialogFormVisible = true;
         this.editForm.contractNum = row.contractNum;
@@ -248,14 +256,12 @@ export default {
               console.log(res.data)
             }
         );
-      },
-      test() {
-        console.log(this.editForm.signingDate)
       }
     },
-    created() {
-        this.getData()
-    }
+  created() {
+    this.getData();
+  }
+
 }
 </script>
 
@@ -274,5 +280,9 @@ export default {
 }
 .el-form-item{
   width: 500px;
+}
+
+.el-table .success-row {
+  background: #f0f9eb;
 }
 </style>
