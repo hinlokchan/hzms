@@ -641,7 +641,7 @@
                   style="margin-left: 10px;"
                 >
                   <el-tag
-                    type="primary"
+                    :type="item.tag"
                     size="medium"
                   >{{item.label}}</el-tag>
                 </span>
@@ -1224,7 +1224,7 @@ export default {
         { value: '1001', label: '轮序项目' }, { value: '1002', label: '安排项目' }
       ],
       newOldType: [
-        { value: '1001', label: '新项目' }, { value: '1002', label: '重评项目' }
+        { value: '1001', label: '新项目', tag: 'success' }, { value: '1002', label: '重评项目' , tag: 'warning'}
       ],
       arrgFormRules: {
         assemMethod: [
