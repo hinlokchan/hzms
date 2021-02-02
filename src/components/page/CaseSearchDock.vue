@@ -18,105 +18,129 @@
           <el-button slot="append" type="primary" icon="el-icon-search" @click="doSearch" ></el-button>
         </el-input>
         <br>
-        <div class="useDbRadio">
-          <el-radio v-model="radio" label="0" >内部数据</el-radio>
-          <el-radio v-model="radio" label="1" >公网数据（二手房）</el-radio>
-        </div>
-        <el-table
-            :data="tableData.list"
-            style="width: 100%"
-            v-if="tableData.list.length>0&&tableData.dataSource==='0'"
-        >
-          <el-table-column type="expand">
-            <template slot-scope="props">
-              <el-form label-position="left" inline class="demo-table-expand">
-                <el-form-item label="项目类型">
-                  <span>{{ props.row.typeName }}</span>
-                </el-form-item>
-                <el-form-item label="项目负责人">
-                  <span>{{ props.row.projLeader }}</span>
-                </el-form-item>
-                <el-form-item label="项目复核人">
-                  <span>{{ props.row.projReviewer }}</span>
-                </el-form-item>
-                <el-form-item label="专业复核人">
-                  <span>{{ props.row.projProReviewer }}</span>
-                </el-form-item>
-                <el-form-item label="项目助理">
-                  <span>{{ props.row.projAsst }}</span>
-                </el-form-item>
-                <el-form-item label="现场勘察">
-                  <span>{{ props.row.fieldSrvy }}</span>
-                </el-form-item>
-              </el-form>
-            </template>
-          </el-table-column>
-          <el-table-column
-              label="计划编号"
-              prop="projNum"
-              width="100px"
-              align="center"
-          >
-          </el-table-column>
+<!--        <div class="useDbRadio">-->
+<!--          <el-radio v-model="radio" label="0" >内部数据</el-radio>-->
+<!--          <el-radio v-model="radio" label="1" >公网数据（二手房）</el-radio>-->
+<!--        </div>-->
+<!--        <el-table-->
+<!--            :data="tableData.list"-->
+<!--            style="width: 100%"-->
+<!--            v-if="tableData.list.length>0&&tableData.dataSource==='0'"-->
+<!--        >-->
+<!--          <el-table-column type="expand">-->
+<!--            <template slot-scope="props">-->
+<!--              <el-form label-position="left" inline class="demo-table-expand">-->
+<!--                <el-form-item label="项目类型">-->
+<!--                  <span>{{ props.row.typeName }}</span>-->
+<!--                </el-form-item>-->
+<!--                <el-form-item label="项目负责人">-->
+<!--                  <span>{{ props.row.projLeader }}</span>-->
+<!--                </el-form-item>-->
+<!--                <el-form-item label="项目复核人">-->
+<!--                  <span>{{ props.row.projReviewer }}</span>-->
+<!--                </el-form-item>-->
+<!--                <el-form-item label="专业复核人">-->
+<!--                  <span>{{ props.row.projProReviewer }}</span>-->
+<!--                </el-form-item>-->
+<!--                <el-form-item label="项目助理">-->
+<!--                  <span>{{ props.row.projAsst }}</span>-->
+<!--                </el-form-item>-->
+<!--                <el-form-item label="现场勘察">-->
+<!--                  <span>{{ props.row.fieldSrvy }}</span>-->
+<!--                </el-form-item>-->
+<!--              </el-form>-->
+<!--            </template>-->
+<!--          </el-table-column>-->
 <!--          <el-table-column-->
-<!--              label="编制日期"-->
-<!--              prop="projDate"-->
-<!--              width="150px"-->
+<!--              label="计划编号"-->
+<!--              prop="projNum"-->
+<!--              width="100px"-->
 <!--              align="center"-->
 <!--          >-->
 <!--          </el-table-column>-->
-          <el-table-column
-              label="项目名称"
-              prop="projName"
-          >
-          </el-table-column>
-          <el-table-column
-              label="项目范围"
-              prop="projScope"
-          >
-          </el-table-column>
-          <el-table-column
-              label="委托人"
-              prop="clientName"
-              width="200px"
-          >
-          </el-table-column>
-        </el-table>
+<!--&lt;!&ndash;          <el-table-column&ndash;&gt;-->
+<!--&lt;!&ndash;              label="编制日期"&ndash;&gt;-->
+<!--&lt;!&ndash;              prop="projDate"&ndash;&gt;-->
+<!--&lt;!&ndash;              width="150px"&ndash;&gt;-->
+<!--&lt;!&ndash;              align="center"&ndash;&gt;-->
+<!--&lt;!&ndash;          >&ndash;&gt;-->
+<!--&lt;!&ndash;          </el-table-column>&ndash;&gt;-->
+<!--          <el-table-column-->
+<!--              label="项目名称"-->
+<!--              prop="projName"-->
+<!--          >-->
+<!--          </el-table-column>-->
+<!--          <el-table-column-->
+<!--              label="项目范围"-->
+<!--              prop="projScope"-->
+<!--          >-->
+<!--          </el-table-column>-->
+<!--          <el-table-column-->
+<!--              label="委托人"-->
+<!--              prop="clientName"-->
+<!--              width="200px"-->
+<!--          >-->
+<!--          </el-table-column>-->
+<!--        </el-table>-->
         <el-table
             :data="tableData.list"
             style="width: 100%"
-            v-if="tableData.list.length>0&&tableData.dataSource==='1'"
+            v-if="tableData.list.length>0"
         >
           <el-table-column type="expand">
             <template slot-scope="props">
               <el-form label-position="left" inline class="demo-table-expand">
-<!--                <el-form-item label="简介">-->
-<!--                  <span>{{ props.row.profile }}</span>-->
-<!--                </el-form-item>-->
-                <br>
                 <el-form-item label="装修程度">
-                  <span>{{ props.row.decorationDegree }}</span>
+                  <span>{{ props.row.decoDegree }}</span>
                 </el-form-item>
                 <el-form-item label="朝向">
-                  <span>{{ props.row.toward }}</span>
+                  <span>{{ props.row.towards }}</span>
                 </el-form-item>
-                <el-form-item label="建筑年份">
-                  <span>{{ props.row.yearBuilt }}年</span>
+                <el-form-item label="户型结构">
+                  <span>{{ props.row.houseTypeStructure }}</span>
                 </el-form-item>
-                <el-form-item label="信息来源">
-                  <span>{{ props.row.sourceFrom }}</span>
+                <el-form-item label="房屋用途">
+                  <span>{{ props.row.unitUsage }}</span>
+                </el-form-item>
+                <el-form-item label="房屋类型">
+                  <span>{{ props.row.unitType }}</span>
+                </el-form-item>
+                <el-form-item label="房屋属性">
+                  <span>{{ props.row.unitType }}</span>
+                </el-form-item>
+                <el-form-item label="所在楼栋">
+                  <span>#{{ props.row.buildingNum }}</span>
+                </el-form-item>
+                <br>
+                <el-form-item label="价值类型">
+                  <span>{{ props.row.valueType }}</span>
+                </el-form-item>
+                <br>
+                <el-form-item label="评估方法">
+                  <span>{{ props.row.evalMethod }}</span>
+                </el-form-item>
+                <el-form-item label="评估方法说明">
+                  <span>{{ props.row.evalMethodExp }}</span>
                 </el-form-item>
               </el-form>
             </template>
           </el-table-column>
           <el-table-column
               label="小区名称"
-              prop="communityName"
+              prop="evalObjCommunity"
+              width="200px"
           >
           </el-table-column>
           <el-table-column
-              label="所在区域"
-              prop="locationDistrict"
+              label="所在市"
+              prop="evalObjCity"
+              width="100px"
+          >
+          </el-table-column>
+          <el-table-column
+              label="所在行政区/县"
+              prop="evalObjAdminRegion"
+              width="100px"
           >
           </el-table-column>
           <el-table-column
@@ -126,14 +150,8 @@
           >
           </el-table-column>
           <el-table-column
-              label="楼层"
-              prop="floor"
-              width="150px"
-          >
-          </el-table-column>
-          <el-table-column
               label="建筑面积（平方米）"
-              prop="buildingArea"
+              prop="evalObjAcreage"
               width="150px"
           >
           </el-table-column>
@@ -145,15 +163,21 @@
           </el-table-column>
           <el-table-column
               label="总价（万元）"
-              prop="totalPrice"
+              prop="evalObjTotalAssemValue"
               width="150px"
           >
           </el-table-column>
           <el-table-column
-              label="数据来源"
-              prop="sourceFrom"
+              label="基准日"
+              :formatter="formatDate"
+              prop="baseDate"
               width="150px"
           >
+          </el-table-column>
+          <el-table-column
+              label="操作"
+          >
+            <el-button type="primary">详情</el-button>
           </el-table-column>
         </el-table>
         <el-button class="loadMoreBtn" type="text" @click="loadMore" v-show="loadMoreBoolean && tableData.list.length>0" style="float:right">加载更多</el-button>
@@ -185,7 +209,9 @@ export default {
     }
   },
   methods: {
-
+    formatDate: function(row, column, cellValue) {
+      return this.$moment(row.baseDate).format('YYYY年MM月DD日');
+    },
     doSearch() {
       if (this.keyword.length === 0) {
         return;
@@ -195,8 +221,7 @@ export default {
       // } else {
       //   this.lastKeyword = this.keyword;
       // }
-      this.tableData.dataSource = this.radio;
-      caseSearch({ keyword: this.keyword, showAll: false ,dataSource: this.radio}).then(res => {
+      caseSearch({ keyword: this.keyword}).then(res => {
         this.tableData.list = res.data;
         this.loadMoreBoolean = true;
       }).catch(error => {
