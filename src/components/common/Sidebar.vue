@@ -137,9 +137,18 @@ export default {
         //   ]
         // },
         {
-          index: 'stat',
           icon: 'el-icon-data-analysis',
           title: "统计管理",
+          subs: [
+            {
+              index: 'stat',
+              title: '计划统计'
+            },
+            {
+              index: 'stat4Common',
+              title: '业务统计'
+            }
+          ]
         },
 
         {
@@ -272,6 +281,11 @@ export default {
               title: '工作台'
             }
           ]
+        },
+        {
+          index: 'stat4Common',
+          icon: "el-icon-data-analysis",
+          title: "统计管理"
         },
         // {
         //   index: 'casesearchdock',
