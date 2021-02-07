@@ -445,6 +445,41 @@
               </el-form-item>
             </el-col>
           </el-row>
+          <el-row :gutter="20"
+                  v-if="this.form.projType === '1010' || this.form.projType === '1041' "
+          >
+            <el-col>
+              <div class="form-item-title">
+                <h3>估价对象</h3>
+              </div>
+            </el-col>
+            <el-col :span="6">
+                <el-form-item
+                    v-for="(item, index) in form.evalObjArray"
+                    :label="'估价对象' + (index + 1)"
+                    :key="index"
+                >
+                  <div class="flexBox">
+                    <el-input
+                        v-model="item[index]"
+                        placeholder=""
+                    ></el-input>
+                    <i
+                        class="el-icon-lx-roundclose"
+                        style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5"
+                        @click.prevent="removeDomain(index, 6)"
+                    ></i>
+                  </div>
+                </el-form-item>
+              <el-form-item>
+                <el-button type="primary" icon="el-icon-edit" circle
+                           @click="addDomain(6)"
+                >
+                </el-button>
+                添加估价对象
+              </el-form-item>
+            </el-col>
+          </el-row>
           <el-row :gutter="20">
             <el-col>
               <div class="form-item-title">
@@ -689,7 +724,8 @@ export default {
         compSchedule: 3,
         projReviewer: [{ value: '' }],
         //lendingBank: [],
-        projTypeOption: []
+        projTypeOption: [],
+        evalObjArray:[]
       },
       rules: {
         projType: [
@@ -994,48 +1030,54 @@ export default {
       }
     },
     addDomain(type) {
-      if (type == 1) {
+      if (type === 1) {
         this.form.projReviewer.push({
           value: ''
         });
-      } else if (type == 2) {
+      } else if (type === 2) {
         this.form.projProReviewer.push({
           value: ''
         });
-      } else if (type == 3) {
+      } else if (type === 3) {
         this.form.projAsst.push({
           value: ''
         });
-      } else if (type == 4) {
+      } else if (type === 4) {
         this.form.fieldSrvy.push({
           value: ''
         });
-      } else if (type == 5) {
+      } else if (type === 5) {
         this.form.projContact.push({
           value: ''
         });
+      } else if (type === 6) {
+        this.form.evalObjArray.push('');
       }
     },
     removeDomain(index, type) {
-      if (type == 1) {
+      if (type === 1) {
         if (this.form.projReviewer.length !== 1 && this.form.projReviewer.length !== 0) {
           this.form.projReviewer.splice(index, 1)
         }
-      } else if (type == 2) {
+      } else if (type === 2) {
         if (this.form.projProReviewer.length !== 1 && this.form.projProReviewer.length !== 0) {
           this.form.projProReviewer.splice(index, 1)
         }
-      } else if (type == 3) {
+      } else if (type === 3) {
         if (this.form.projAsst.length !== 1 && this.form.projAsst.length !== 0) {
           this.form.projAsst.splice(index, 1)
         }
-      } else if (type == 4) {
+      } else if (type === 4) {
         if (this.form.fieldSrvy.length !== 1 && this.form.fieldSrvy.length !== 0) {
           this.form.fieldSrvy.splice(index, 1)
         }
-      } else if (type == 5) {
+      } else if (type === 5) {
         if (this.form.projContact.length !== 1 && this.form.projContact.length !== 0) {
           this.form.projContact.splice(index, 1)
+        }
+      } else if (type === 6) {
+        if (this.form.evalObjArray.length !== 1 && this.form.evalObjArray.length !== 0) {
+          this.form.evalObjArray.splice(index, 1)
         }
       }
     },
@@ -1051,6 +1093,12 @@ export default {
       this.form.clientName = ''
     },
     onSubmit() {
+      console.log(">>>>>>>>>>submit button")
+      console.log(this.form.evalObjArray)
+      for (let i = 0; i < this.form.evalObjArray.length; i++) {
+        console.log(this.form.evalObjArray[i])
+      }
+      return ;
       if (this.form.clientName == '' && this.form.clientId == '') {
         this.$message.warning('请填写委托人！')
         return 0
