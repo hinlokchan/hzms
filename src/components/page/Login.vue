@@ -15,7 +15,7 @@
         <el-form-item prop="username">
           <el-input
             v-model="param.username"
-            placeholder="username"
+            placeholder="工号"
             size="medium"
           >
             <el-button
@@ -28,7 +28,7 @@
           <el-input
             type="password"
             size="medium"
-            placeholder="password"
+            placeholder="密码"
             v-model="param.password"
             @keyup.enter.native="submitForm()"
           >
@@ -60,7 +60,7 @@ export default {
         password: '',
       },
       rules: {
-        username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+        username: [{ required: true, message: '请输入工号', trigger: 'blur' }],
         password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
       },
     };

@@ -7,7 +7,6 @@ let role = localStorage.getItem('role')
 if(!role){
     let role = localStorage.getItem('role')
 }
-console.log('role>>>>>>>', role)
 export default new Router({
     routes: [
         {
@@ -28,7 +27,7 @@ export default new Router({
                 {
                     path: '/plan',
                     component: () => import('../components/page/Plan.vue'),
-                    meta: { title: '项目管理' }
+                    meta: { title: '项目管理' , permission: true }
                 },
                 {
                     path: '/planform',
@@ -45,35 +44,35 @@ export default new Router({
                     component: () => import('../components/page/WorkBranch.vue'),
                     meta: { title: '工作台' }
                 },
-                {
-                    path: '/oldplanform',
-                    component: () => import('../components/page/OldPlanForm.vue'),
-                    meta: { title: '旧项目录入' }
-                },
-                {
-                    path: '/formalreg',
-                    component: () => import('../components/page/FormalReg.vue'),
-                    meta: { title: '正评登记' }
-                },
+                // {
+                //     path: '/oldplanform',
+                //     component: () => import('../components/page/OldPlanForm.vue'),
+                //     meta: { title: '旧项目录入' }
+                // },
+                // {
+                //     path: '/formalreg',
+                //     component: () => import('../components/page/FormalReg.vue'),
+                //     meta: { title: '正评登记' }
+                // },
                 {
                     path: '/projstat',
                     component: () => import('../components/page/ProjStateStat.vue'),
-                    meta: { title: '成员项目状态' }
+                    meta: { title: '成员项目状态' , permission: true }
                 },
                 {
                     path: '/workhandle',
                     component: () => import('../components/page/WorkHandle.vue'),
                     meta: { title: '项目工作管理' }
                 },
-                {
-                    path: '/subworkhandle',
-                    component: () => import('../components/page/SubWorkHandle.vue'),
-                    meta: { title: '子项目工作管理' }
-                },
+                // {
+                //     path: '/subworkhandle',
+                //     component: () => import('../components/page/SubWorkHandle.vue'),
+                //     meta: { title: '子项目工作管理' }
+                // },
                 {
                     path: '/stat',
                     component: () => import('../components/page/Stat.vue'),
-                    meta: { title: '统计管理' }
+                    meta: { title: '统计管理' , permission: true }
                 },
                 {
                     path: '/stat4Common',
@@ -83,45 +82,45 @@ export default new Router({
                 {
                     path: '/contract',
                     component: () => import('../components/page/ContractManage.vue'),
-                    meta: { title: '合同管理' }
+                    meta: { title: '合同管理' , permission: true }
                 },
                 // {
                 //     path: '/casesearchdock',
                 //     component: () => import('../components/page/CaseSearchDock.vue'),
                 //     meta: { title: '案例查询（Demo）' }
                 // },
-                {
-                    path: '/client',
-                    component: () => import('../components/page/Client.vue'),
-                    meta: { title: '维护' }
-                },
+                // {
+                //     path: '/client',
+                //     component: () => import('../components/page/Client.vue'),
+                //     meta: { title: '维护' }
+                // },
                 {
                     path: '/usermanage',
                     component: () => import('../components/page/UserManage.vue'),
-                    meta: { title: '用户管理' }
+                    meta: { title: '用户管理' , permission: true }
                 },
-                {
-                    path: '/oprecord',
-                    component: () => import('../components/page/OpRecord.vue'),
-                    meta: { title: '操作记录' }
-                },
-                {
-                    path: '/icon',
-                    component: () => import('../components/page/Icon.vue'),
-                    meta: { title: '图标' }
-                },
+                // {
+                //     path: '/oprecord',
+                //     component: () => import('../components/page/OpRecord.vue'),
+                //     meta: { title: '操作记录' }
+                // },
+                // {
+                //     path: '/icon',
+                //     component: () => import('../components/page/Icon.vue'),
+                //     meta: { title: '图标' }
+                // },
                 // {
                 //     // 富文本编辑器组件
                 //     path: '/editor',
                 //     component: () => import(/* webpackChunkName: "editor" */ '../components/page/VueEditor.vue'),
                 //     meta: { title: '富文本编辑器' }
                 // },
-                {
-                    // vue-schart组件
-                    path: '/charts',
-                    component: () => import(/* webpackChunkName: "chart" */ '../components/page/BaseCharts.vue'),
-                    meta: { title: 'schart图表' }
-                },
+                // {
+                //     // vue-schart组件
+                //     path: '/charts',
+                //     component: () => import(/* webpackChunkName: "chart" */ '../components/page/BaseCharts.vue'),
+                //     meta: { title: 'schart图表' }
+                // },
                 {
                     // 权限页面
                     path: '/permission',

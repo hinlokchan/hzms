@@ -43,6 +43,7 @@ service.interceptors.response.use(
         } else if (response.data.statusCode === '4003') {
             localStorage.removeItem('staffName')
             localStorage.removeItem('staffId')
+            localStorage.removeItem('role')
             MessageBox.confirm(
                 '登录过期，请重新登录',
                 '确定登出', {
