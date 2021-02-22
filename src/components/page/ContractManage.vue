@@ -112,36 +112,39 @@
                 </el-form>
               </template>
             </el-table-column>
+            <el-table-column label="操作" width="100">
+              <template slot-scope="scope">
+                <el-button
+                    size="mini"
+                    @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                <!--                <el-button-->
+                <!--                    size="mini"-->
+                <!--                    type="danger"-->
+                <!--                    @click="handleDelete(scope.$index, scope.row)">删除</el-button>-->
+              </template>
+            </el-table-column>
             <el-table-column
                 prop="contractNum"
                 label="合同号"
-                width="150">
+                align="center"
+                width="100">
             </el-table-column>
             <el-table-column
                 prop="projNum"
                 label="计划编号"
-                width="150">
+                align="center"
+                width="100">
             </el-table-column>
             <el-table-column
                 prop="takenDate"
                 label="取号日期"
+                align="center"
                 width="150">
             </el-table-column>
             <el-table-column
                 prop="projName"
                 label="项目名称"
-                width="800">
-            </el-table-column>
-            <el-table-column label="操作">
-              <template slot-scope="scope">
-                <el-button
-                    size="mini"
-                    @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-<!--                <el-button-->
-<!--                    size="mini"-->
-<!--                    type="danger"-->
-<!--                    @click="handleDelete(scope.$index, scope.row)">删除</el-button>-->
-              </template>
+                width="">
             </el-table-column>
           </el-table>
 
