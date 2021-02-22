@@ -568,23 +568,27 @@
             icon="el-icon-edit"
             size="medium"
             @click="handleEdit()"
+            :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
           >编辑</el-button>
           <el-button
             icon="el-icon-set-up"
             size="medium"
             v-if="this.queryData.projType == 1010 || this.queryData.projType == 1020 || this.queryData.projType == 1030 || this.queryData.projType == 1041 || this.queryData.projType == 1042 || this.queryData.projType == 1043 || this.queryData.projType == 1061 || this.queryData.projType == 1062 || this.queryData.projType == 1063"
             @click="handleChangeType()"
+            :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
           >更改项目类型</el-button>
           <el-button
             v-if="this.projDetail.projType == 1010 || this.projDetail.projType == 1030 || this.projDetail.projType == 1041 || this.projDetail.projType == 1042"
             icon="el-icon-lx-qrcode"
             size="medium"
             @click="setQRCode()"
+            :disabled="projDetail.projState == 2 ? true : false"
           >生成二维码</el-button>
           <el-button
             icon="el-icon-printer"
             size="medium"
             @click="handlePrintProj(queryData.projId)"
+            :disabled="projDetail.projState == 2 ? true : false"
           >打印计划信息表</el-button>
         </span>
       </div>
@@ -696,16 +700,19 @@
                   type="primary"
                   icon="el-icon-circle-plus-outline"
                   @click="handleGetNum"
+                  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
                 >取号</el-button>
                 <el-button
                   type="primary"
                   icon="el-icon-circle-plus-outline"
                   @click="handleGetOldNum"
+                  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
                 >取往月报告号</el-button>
                 <el-button
                   type="danger"
                   icon="el-icon-circle-close"
                   @click="handleDelNum()"
+                  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
                 >取消报告号</el-button>
               </span>
             </div>
@@ -837,6 +844,7 @@
                   plain
                   size="medium"
                   @click="handleCreateContractNum()"
+                  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
                 >获取</el-button>
                 <el-button
                   icon="el-icon-suitcase"
@@ -844,6 +852,7 @@
                   plain
                   size="medium"
                   @click="handleDeleteContractNum()"
+                  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
                 >删除</el-button>
               </span>
             </div>
@@ -933,12 +942,14 @@
           size="medium"
           type="primary"
           @click="isWorkArrgDialog()"
+          :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
         >安排</el-button>
         <el-button
           v-if="workArrgEdit == true"
           icon="el-icon-refresh-right"
           size="medium"
           @click="resetArrg()"
+          :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
         >清空安排</el-button>
       </span>
     </div>
@@ -1016,11 +1027,13 @@
           icon="el-icon-circle-plus-outline"
           size="medium"
           @click="handleAddSubProj(reportNum.cph)"
+          :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
         >新增子项目(初评)</el-button>
         <el-button
           icon="el-icon-circle-plus-outline"
           size="medium"
           @click="handleAddSubProj(reportNum.zph)"
+          :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
         >新增子项目(正评)</el-button>
       </span>
     </div>
