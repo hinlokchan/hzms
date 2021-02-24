@@ -147,17 +147,17 @@
                   ></el-autocomplete>
                   <i
                     class="el-icon-lx-roundclose"
-                    style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5"
+                    style="margin: 6px 0 0 0;font-size: 20px;color:#b5b5b5"
                     @click.prevent="removeDomain(index, 5)"
                   ></i>
                 </div>
               </el-form-item>
               <el-form-item>
-                <i
-                  class="el-icon-lx-roundadd"
-                  style="font-size: 26px;color:#b5b5b5"
-                  @click="addDomain(5)"
-                ></i>
+                <el-button type="primary" icon="el-icon-plus" circle
+                           @click="addDomain(5)"
+                >
+                </el-button>
+                添加
               </el-form-item>
             </el-col>
           </el-row>
@@ -446,7 +446,7 @@
             </el-col>
           </el-row>
           <el-row :gutter="20"
-                  v-if="this.form.projType === '1010' || this.form.projType === '1041' "
+                  v-if="this.form.projType === '1010' "
           >
             <el-col>
               <div class="form-item-title">
@@ -461,7 +461,7 @@
                 >
                   <div class="flexBox">
                     <el-input
-                        v-model="item[index]"
+                        v-model="item.evalObjName"
                         placeholder=""
                     ></el-input>
                     <i
@@ -472,11 +472,11 @@
                   </div>
                 </el-form-item>
               <el-form-item>
-                <el-button type="primary" icon="el-icon-edit" circle
+                <el-button type="primary" icon="el-icon-plus" circle
                            @click="addDomain(6)"
                 >
                 </el-button>
-                添加估价对象
+                添加
               </el-form-item>
             </el-col>
           </el-row>
@@ -552,12 +552,19 @@
                   ></i>
                 </div>
               </el-form-item>
+<!--              <el-form-item>-->
+<!--                <i-->
+<!--                  class="el-icon-lx-roundadd"-->
+<!--                  style="font-size: 26px;color:#b5b5b5"-->
+<!--                  @click="addDomain(1)"-->
+<!--                ></i>-->
+<!--              </el-form-item>-->
               <el-form-item>
-                <i
-                  class="el-icon-lx-roundadd"
-                  style="font-size: 26px;color:#b5b5b5"
-                  @click="addDomain(1)"
-                ></i>
+                <el-button type="primary" icon="el-icon-plus" circle
+                           @click="addDomain(1)"
+                >
+                </el-button>
+                添加
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -582,12 +589,19 @@
                   ></i>
                 </div>
               </el-form-item>
+<!--              <el-form-item>-->
+<!--                <i-->
+<!--                  class="el-icon-lx-roundadd"-->
+<!--                  style="font-size: 26px;color:#b5b5b5"-->
+<!--                  @click="addDomain(2)"-->
+<!--                ></i>-->
+<!--              </el-form-item>-->
               <el-form-item>
-                <i
-                  class="el-icon-lx-roundadd"
-                  style="font-size: 26px;color:#b5b5b5"
-                  @click="addDomain(2)"
-                ></i>
+                <el-button type="primary" icon="el-icon-plus" circle
+                           @click="addDomain(2)"
+                >
+                </el-button>
+                添加
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -612,12 +626,19 @@
                   ></i>
                 </div>
               </el-form-item>
+<!--              <el-form-item>-->
+<!--                <i-->
+<!--                  class="el-icon-lx-roundadd"-->
+<!--                  style="font-size: 26px;color:#b5b5b5"-->
+<!--                  @click="addDomain(3)"-->
+<!--                ></i>-->
+<!--              </el-form-item>-->
               <el-form-item>
-                <i
-                  class="el-icon-lx-roundadd"
-                  style="font-size: 26px;color:#b5b5b5"
-                  @click="addDomain(3)"
-                ></i>
+                <el-button type="primary" icon="el-icon-plus" circle
+                           @click="addDomain(3)"
+                >
+                </el-button>
+                添加
               </el-form-item>
             </el-col>
           </el-row>
@@ -639,17 +660,24 @@
                   ></el-autocomplete>
                   <i
                     class="el-icon-lx-roundclose"
-                    style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5"
+                    style="margin-top: 6px ;font-size: 20px;color:#b5b5b5"
                     @click.prevent="removeDomain(index, 4)"
                   ></i>
                 </div>
               </el-form-item>
+<!--              <el-form-item>-->
+<!--                <i-->
+<!--                  class="el-icon-lx-roundadd"-->
+<!--                  style="font-size: 26px;color:#b5b5b5"-->
+<!--                  @click="addDomain(4)"-->
+<!--                ></i>-->
+<!--              </el-form-item>-->
               <el-form-item>
-                <i
-                  class="el-icon-lx-roundadd"
-                  style="font-size: 26px;color:#b5b5b5"
-                  @click="addDomain(4)"
-                ></i>
+                <el-button type="primary" icon="el-icon-plus" circle
+                           @click="addDomain(4)"
+                >
+                </el-button>
+                添加
               </el-form-item>
             </el-col>
           </el-row>
@@ -668,7 +696,7 @@
 </template>
 
 <script>
-import { createNewProject, editProject } from '@/api/index'
+import { createNewProject, editProject,createEvalObj } from '@/api/index'
 import { getDetailProjInfo, getUserList, userQuery, getClientList, addClient } from '@/api/index'
 import clientOptions from '../../../public/clientName.json'
 import projTypeOption from '../../../public/projTypeOption.json'
@@ -727,6 +755,7 @@ export default {
         projTypeOption: [],
         evalObjArray:[]
       },
+      backupForm: {},
       rules: {
         projType: [
           { required: true, message: '请选择项目类型', trigger: 'blur' }
@@ -1051,7 +1080,9 @@ export default {
           value: ''
         });
       } else if (type === 6) {
-        this.form.evalObjArray.push('');
+        this.form.evalObjArray.push({
+          evalObjName : ''
+        });
       }
     },
     removeDomain(index, type) {
@@ -1076,7 +1107,7 @@ export default {
           this.form.projContact.splice(index, 1)
         }
       } else if (type === 6) {
-        if (this.form.evalObjArray.length !== 1 && this.form.evalObjArray.length !== 0) {
+        if (this.form.evalObjArray.length !== 0) {
           this.form.evalObjArray.splice(index, 1)
         }
       }
@@ -1093,12 +1124,9 @@ export default {
       this.form.clientName = ''
     },
     onSubmit() {
-      console.log(">>>>>>>>>>submit button")
-      console.log(this.form.evalObjArray)
-      for (let i = 0; i < this.form.evalObjArray.length; i++) {
-        console.log(this.form.evalObjArray[i])
-      }
-      return ;
+      //备份已填表格（数组未处理）
+      this.backupForm = this.form
+
       if (this.form.clientName == '' && this.form.clientId == '') {
         this.$message.warning('请填写委托人！')
         return 0
@@ -1125,65 +1153,77 @@ export default {
               console.log(clientIdMid)
               this.form.clientId = clientIdMid
             }
-            this.transformPeop().then(res => {
-              console.log('this.form', this.form)
-              if (this.isEdit) {
-                editProject(this.form)
-                  .then(res => {
-                    console.log('add>>>res', res)
-                    this.$message.success('提交成功！')
-                    this.goBack()
-                  })
-                  .catch(err => {
-                    this.$message.warning('提交失败！')
-                    console.log('add>>>err', err)
-                  })
-              } else {
-                createNewProject(this.form).then(res => {
-                  console.log('add>>>res', res)
-                  this.$message.success('提交成功！')
-                  let riskProfile = ''
-                  if (this.form.riskProfile == '1001') {
-                    riskProfile == '低'
-                  } else if (this.form.riskProfile == '1002') {
-                    riskProfile = '中等'
-                  } else if (this.form.riskProfile == '1003') {
-                    riskProfile = '较高'
+            this.transformPeop().then(this.handleEvalObj).then(
+                res => {
+                  console.log('this.form', this.form);
+                  if (this.isEdit) {
+                    editProject(this.form)
+                        .then(res => {
+                          console.log('add>>>res', res);
+                          this.$message.success('提交成功！');
+                          this.goBack();
+                        })
+                        .catch(err => {
+                          this.$message.warning('提交失败！');
+                          console.log('add>>>err', err);
+                        });
                   } else {
-                    riskProfile = '高'
+                    createNewProject(this.form).then(res => {
+                      console.log('add>>>res', res);
+                      this.$message.success('提交成功！');
+                      //短信
+                      this.messageAfterSubmit(res)
+                    }).catch(err => {
+                      console.log('add>>>err', err);
+                      this.$message("未知错误")
+                      this.form = this.backupForm
+                    });
                   }
-                  let newOldType = ''
-                  if (this.form.newOldType == '1001') {
-                    riskProfile = '新项目'
-                  } else if (this.form.newOldType == '1002') {
-                    riskProfile = '重评项目'
-                  }
-                  //处理value转为label展示
-                  for (var i = 0; i < this.projTypeOption.length; i++) {
-                    if (this.form.projType == this.projTypeOption[i].value) {
-                      this.transedData.projType = this.projTypeOption[i].label
-                    }
-                  }
-                  // ZP项目类型：资；委托 人：(其他):惠州市水务投资集团；项目名称：惠州大道大湖溪段667平方米租金；评估对象及其坐落：同上;；评估目的：物业出租价格；引荐人及其电话：惠州市水务投资集团王总135 0229 7502；现联系单位、人及电话：同上；现勘时间：现勘同事约；报告时间要求：5天；项目风险预测：；评估收费报价：待定；是否曾评估的项目：（若是，原项目组成员：）；项目接洽人""[52]-缨(注师：莎缨;助理：健;专业复核人:远。以下由项目负责人安排 现勘：;资料核查验证：;市场询价调查：;技术报告:；报告编制:; 归档：;对外沟通:
-                  if (this.form.clientName != '') {
-                    var clientName = this.form.clientName
-                  } else if (this.form.clientId == '0') {
-                    var clientName = '委托人待定'
-                  } else {
-                    var clientName = this.$refs['cascaderAddr'].getCheckedNodes()[0].label
-                  }
-                  this.newInfoData = `项目编号:${res.data.projNum};项目类型:${this.transedData.projType};委托人:${clientName};项目名称:${this.form.projName};评估对象及其坐落:${this.form.projScope};评估目的:${this.form.assemGoal};引荐人及其电话:${this.form.projReferer}${this.form.projRefererInfo};现勘联系单位人及电话：${this.form.fldSrvyContact}${this.form.fldSrvyContactInfo};现勘时间:${this.form.fldSrvySchedule};报告时间要求:${this.form.compSchedule}天;项目风险预测:${riskProfile};评估收费报价:${this.form.assemFeeQuote};是否曾评估项目:${newOldType};项目接洽人:${this.form.projContact} ${this.form.projContactType}(注师：；助理：；专业复核人:)。以下由项目负责人安排,现勘:${this.form.fieldSrvy};资料核查验证: ;市场询价调查: ;技术报告: ;报告编制: ;归档: ;对外沟通: 。`
-                  this.newInfo = true
-                }).catch(err => {
-                  console.log('add>>>err', err)
-                })
-              }
-            })
+                }
+            ).catch(
+                err => {
+                  this.$message("未知错误")
+                }
+            );
           } else {
             this.$message('请填写必填信息');
           }
         })
       }
+    },
+    messageAfterSubmit(res) {
+      let riskProfile = '';
+      if (this.form.riskProfile == '1001') {
+        riskProfile == '低';
+      } else if (this.form.riskProfile == '1002') {
+        riskProfile = '中等';
+      } else if (this.form.riskProfile == '1003') {
+        riskProfile = '较高';
+      } else {
+        riskProfile = '高';
+      }
+      let newOldType = '';
+      if (this.form.newOldType == '1001') {
+        riskProfile = '新项目';
+      } else if (this.form.newOldType == '1002') {
+        riskProfile = '重评项目';
+      }
+      //处理value转为label展示
+      for (var i = 0; i < this.projTypeOption.length; i++) {
+        if (this.form.projType == this.projTypeOption[i].value) {
+          this.transedData.projType = this.projTypeOption[i].label;
+        }
+      }
+      // ZP项目类型：资；委托 人：(其他):惠州市水务投资集团；项目名称：惠州大道大湖溪段667平方米租金；评估对象及其坐落：同上;；评估目的：物业出租价格；引荐人及其电话：惠州市水务投资集团王总135 0229 7502；现联系单位、人及电话：同上；现勘时间：现勘同事约；报告时间要求：5天；项目风险预测：；评估收费报价：待定；是否曾评估的项目：（若是，原项目组成员：）；项目接洽人""[52]-缨(注师：莎缨;助理：健;专业复核人:远。以下由项目负责人安排 现勘：;资料核查验证：;市场询价调查：;技术报告:；报告编制:; 归档：;对外沟通:
+      if (this.form.clientName != '') {
+        var clientName = this.form.clientName;
+      } else if (this.form.clientId == '0') {
+        var clientName = '委托人待定';
+      } else {
+        var clientName = this.$refs['cascaderAddr'].getCheckedNodes()[0].label;
+      }
+      this.newInfoData = `项目编号:${res.data.projNum};项目类型:${this.transedData.projType};委托人:${clientName};项目名称:${this.form.projName};评估对象及其坐落:${this.form.projScope};评估目的:${this.form.assemGoal};引荐人及其电话:${this.form.projReferer}${this.form.projRefererInfo};现勘联系单位人及电话：${this.form.fldSrvyContact}${this.form.fldSrvyContactInfo};现勘时间:${this.form.fldSrvySchedule};报告时间要求:${this.form.compSchedule}天;项目风险预测:${riskProfile};评估收费报价:${this.form.assemFeeQuote};是否曾评估项目:${newOldType};项目接洽人:${this.form.projContact} ${this.form.projContactType}(注师：；助理：；专业复核人:)。以下由项目负责人安排,现勘:${this.form.fieldSrvy};资料核查验证: ;市场询价调查: ;技术报告: ;报告编制: ;归档: ;对外沟通: 。`;
+      this.newInfo = true;
     },
     //测试用的，无关
     // info() {
@@ -1192,6 +1232,21 @@ export default {
     //   this.newInfoData = `项目编号:;项目类型:${this.transedData.projType};委托人:${this.form.clientName};项目名称:${this.form.projName};评估对象及其坐落:同上;评估目的:${this.form.assemGoal};引荐人及其电话:${this.form.projReferer}${this.form.projRefererInfo};现勘联系单位人及电话：${this.form.fldSrvyContact}${this.form.fldSrvyContactInfo};现勘时间:${this.form.fldSrvySchedule};报告时间要求:${this.form.compSchedule}天;项目风险预测:;评估收费报价:${this.form.assemFeeQuote};是否曾评估项目:;项目接洽人:${this.form.projContact} ${this.form.projContactType}(注师：；助理：；专业复核人:)。以下由项目负责人安排,现勘:${this.form.fieldSrvy};资料核查验证: ;市场询价调查: ;技术报告: ;报告编制: ;归档: ;对外沟通: 。`
     //   this.newInfo = true
     // },
+    handleEvalObj() {
+      let arr = this.form.evalObjArray
+      // let str = JSON.stringify(arr)
+      // console.log(str);
+      // return
+      // for (let i = 0; i < arr.length; i++) {
+      //   if (arr[i].evalObjName) {
+      //     str += arr[i].evalObjName + '||';
+      //   }
+      // }
+      // if (str !== '') {
+      //   str = str.substring(0, str.length - 2);
+      // }
+      this.form.evalObjArray = JSON.stringify(arr);
+    },
     transformPeop() {
       var that = this
       return new Promise(function (resolve, reject) {
@@ -1258,8 +1313,8 @@ export default {
       })
     },
     checkClientName(str) {
-      var patrn = /[`~!@#$%^&*()_\-+=<>?:"{}|,.\/;'\\[\]·~！@#￥%……&*（）——\-+={}|《》？：“”【】、；‘'，。、]/im
-      if (patrn.test(str)) {
+      var pattern = /[`~!@#$%^&*()_\-+=<>?:"{}|,.\/;'\\[\]·~！@#￥%……&*（）——\-+={}|《》？：“”【】、；‘'，。、]/im
+      if (pattern.test(str)) {
         this.$message.warning('请勿输入特殊符号')
         this.$refs['clientName'].focus()
       }
