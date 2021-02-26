@@ -88,6 +88,7 @@
                 <el-select
                   v-model="form.projType"
                   @change="arrgTypeToEnable"
+                  v-if="!this.isEdit"
                 >
                   <el-option
                     v-for="item in projTypeOption"
@@ -97,6 +98,11 @@
                   >
                   </el-option>
                 </el-select>
+                <el-input disabled type="text"
+                          style="width: 50%"
+                          v-if="this.isEdit"
+                          v-model="projTypes[form.projType]"
+                ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -446,7 +452,7 @@
             </el-col>
           </el-row>
           <el-row :gutter="20"
-                  v-if="this.form.projType === '1010' "
+                  v-if="this.form.projType === '1010' && !this.isEdit "
           >
             <el-col>
               <div class="form-item-title">
@@ -782,6 +788,22 @@ export default {
       assemGoalList: ['抵押', '交易', '资产处置（司法鉴定）', '出让', '挂牌出让', '补出让', '转让', '盘整收回', '征收补偿', '活立木拍卖', '出租', '置换', '股权转让', '作价入股', '增资扩股', '入账', '征收、完税', '企业改制', '清算', '复审', '评价', '咨询'],
       contactTypeOption: ['正常接洽', '摇珠', '中行通知书', '定点采购', '中介超市摇珠', '河源分公司', '政府采购', '招标委托'],
       userList: [],
+      projTypes: {
+        1010: '房地产',
+        1020: '资产',
+        1030: '土地',
+        1041: '房地产咨询',
+        1042: '资产咨询',
+        1043: '地产咨询',
+        1050: 'PPP',
+        1061: '房地产复审',
+        1062: '资产复审',
+        1063: '土地复审',
+        1070: '外协',
+        1080: '政策修订',
+        1090: '绩效',
+        1100: '其他'
+      },
       clientTypeOptions: [
         {
           value: '1',

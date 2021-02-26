@@ -186,6 +186,11 @@
           :filters="this.projTypeFilters"
           :filter-method="filterProjType"
         >
+          <template slot-scope="scope">
+<!--            <span>{{scope.row.projType}}</span>-->
+            <span>{{projTypes[scope.row.projType]}}</span>
+            <el-button type="text" icon="el-icon-refresh" size="mini" @click="handleProjType(scope.row)"></el-button>
+          </template>
         </el-table-column>
         <!-- <el-table-column
           prop="projState"
@@ -254,7 +259,7 @@
         </el-table-column> -->
         <el-table-column
           label="操作"
-          width="310"
+          width="300"
           align="center"
           fixed="right"
         >
@@ -271,12 +276,20 @@
               size="medium"
               @click="handleEdit(scope.row)"
             >编辑</el-button>
+<!--            <el-button-->
+<!--              type="text"-->
+<!--              icon="el-icon-edit"-->
+<!--              size="medium"-->
+<!--              @click="handleProjType(scope.row)"-->
+<!--            >更改项目类型</el-button>-->
             <el-button
-              type="text"
-              icon="el-icon-edit"
-              size="medium"
-              @click="handleProjType(scope.row)"
-            >更改项目类型</el-button>
+                slot="reference"
+                type="text"
+                icon="el-icon-s-home"
+                size="medium"
+                :disabled="scope.row.projType !== 1010"
+                @click="evalObjDialogOpen(scope.row)"
+            >估价对象</el-button>
             <el-button
               type="text"
               icon="el-icon-delete"
@@ -296,13 +309,66 @@
         />
       </div>
     </div>
+    <el-dialog
+        :title="'【'+evalObjDrawerData.projInfo.projNum+'】估价对象列表'"
+        style=""
+        :visible.sync="evalObjDrawerVisible">
+      <el-input
+          placeholder="请输入新估价对象名"
+          prefix-icon="el-icon-s-home"
+          style="width: 50%; margin-left: 10%"
+          :clearable="true"
+          v-model.trim="evalObjDrawerData.newEvalObj">
+      </el-input>
+      <el-button type="primary" icon="el-icon-check" style="margin-left: 5px"
+      :disabled="evalObjDrawerData.newEvalObj === ''"
+                 @click="createEvalObj"
+                 :loading="evalObjSubmitBtnLoading"
+      >添加</el-button>
+      <div >
+        <el-table
+            :data="evalObjDrawerData.evalObjList"
+            style="width: 80%;margin-left: 10%;margin-top: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)">
+          <el-table-column
+              prop="evalObjId"
+              label="估价对象ID"
+              align="center"
+              width="100px">
+          </el-table-column>
+          <el-table-column
+              prop="evalObjName"
+              label="估价对象名称"
+              align="center"
+              width="300px">
+          </el-table-column>
+          <el-table-column
+              label="操作"
+              align="center"
+              >
+            <template slot-scope="scope">
+              <el-button type="text" @click="confirmDelEvalObj(scope.row)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getAllAbstractProject, searchProject, delProject, alterProjType } from '@/api/index';
+import {
+  getAllAbstractProject,
+  searchProject,
+  delProject,
+  alterProjType,
+  getEvalObjListByProjId,
+  createSingleEvalObj,
+  deleteEvalObjById
+} from '@/api/index';
 import { checkFaRegister } from '@/api/formalreg'
 import projTypeOption from '../../../public/projTypeOption.json'
+
 export default {
   name: 'plan',
   inject: ['reload'],
@@ -377,11 +443,36 @@ export default {
         { text: '绩效', value: 1090 },
         { text: '其他', value: 1100 }
       ],
+      projTypes: {
+        1010: '房',
+        1020: '资',
+        1030: '地',
+        1041: '房咨',
+        1042: '资咨',
+        1043: '地咨',
+        1050: 'PPP',
+        1061: '房复审',
+        1062: '资复审',
+        1063: '地复审',
+        1070: '外协',
+        1080: '政策',
+        1090: '绩效',
+        1100: '其他'
+      },
       projTypeOption: [],
       changeType: {
         projId: '',
         toType: ''
       },
+      evalObjDrawerVisible: false,
+      evalObjSubmitBtnLoading: false,
+      evalObjDrawerData: {
+        evalObjList: [],
+        projInfo : {},
+        newEvalObj : ''
+      },
+      newEvalObj: {
+      }
     }
   },
   created() {
@@ -563,6 +654,78 @@ export default {
     },
     filterProjType(value, row) {
       return row.projType === value
+    },
+    beforeEvalObjDialogClose() {
+      // this.evalObjDrawerData.evalObjList = []
+      // this.evalObjDrawerData.projInfo = {}
+      // this.evalObjDrawerData.newEvalObj = ''
+      // this.evalObjDrawerVisible = false
+    },
+    evalObjDialogClose() {
+      // this.evalObjDrawerData.evalObjList = []
+      // this.evalObjDrawerData.projInfo = {}
+      // this.evalObjDrawerData.newEvalObj = ''
+      this.evalObjDrawerVisible = false
+    },
+    evalObjDialogOpen(projInfo) {
+      this.evalObjDrawerData.evalObjList = []
+      this.evalObjDrawerData.projInfo = {}
+      this.evalObjDrawerData.newEvalObj = ''
+      getEvalObjListByProjId(projInfo.projId).then(
+          res => {
+            this.evalObjDrawerData.projInfo = projInfo;
+            this.evalObjDrawerData.evalObjList = res.data;
+          }
+      ).catch(
+          err => {
+            this.$message.error('加载错误')
+          }
+      );
+      this.evalObjDrawerVisible = true
+    },
+    delEvalObj(row) {
+      deleteEvalObjById('?evalObjId=' + row.evalObjId).then(
+          res => {
+            this.$message.success('删除成功')
+            getEvalObjListByProjId(this.evalObjDrawerData.projInfo.projId).then(
+                res => {
+                  this.evalObjDrawerData.evalObjList = res.data;
+                }
+            );
+          }
+      ).catch(
+          err => {
+            this.$message.error('删除失败')
+          }
+      );
+    },
+    createEvalObj() {
+
+      this.evalObjSubmitBtnLoading = true
+      this.newEvalObj.projId = this.evalObjDrawerData.projInfo.projId
+      this.newEvalObj.evalObjName = this.evalObjDrawerData.newEvalObj
+
+      createSingleEvalObj(this.newEvalObj).then(
+          res => {
+            console.log(res.data)
+            this.evalObjSubmitBtnLoading = false
+            this.evalObjDrawerData.evalObjList.push(res.data)
+            this.newEvalObj = {}
+            this.evalObjDrawerData.newEvalObj = ''
+            this.$message.success('添加成功')
+          }
+      );
+    },
+    confirmDelEvalObj(row) {
+      this.$confirm('确认删除估价对象', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'error'
+      }).then(() => {
+        this.delEvalObj(row)
+      }).catch(() => {
+
+      });
     }
   }
 };

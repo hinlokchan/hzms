@@ -363,5 +363,30 @@ export function createEvalObj(data) {
   })
 }
 
+export function createSingleEvalObj(data) {
+  return request({
+    url: `${ProManageAPIServer}evalObj/createSingleEvalObj`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
+
+export function deleteEvalObjById(data) {
+  return request({
+    url: `${ProManageAPIServer}evalObj/deleteEvalObjById` + data,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    method: 'post'
+  })
+}
+
+export function getEvalObjListByProjId(data) {
+  return request({
+    url: `${ProManageAPIServer}evalObj/getEvalObjListByProjId?projId=`+data,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    method: 'post'
+  })
+}
+
 
 export var getProjInfoTable = 'statistics/getProjInfoTable';
