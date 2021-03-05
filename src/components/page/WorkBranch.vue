@@ -160,7 +160,9 @@
         <el-table-column
           prop="projLeader"
           label="项目负责人"
-          width="95"
+          width="110"
+          :filters="projLeaderFilter"
+          :filter-method="projLeaderFilterHandler"
         >
         </el-table-column>
         <!-- <el-table-column
@@ -252,14 +254,20 @@ export default {
       date1: '',
       getNumType: 0,
       getNumData: {},
-      getSubNum: ''
+      getSubNum: '',
+      projLeaderFilter: [{ text: '我负责的项目', value: '' }]
     };
   },
   created() {
     this.getData()
+    this.projLeaderFilter[0].value = localStorage.getItem('staffName')
   },
   mounted() {},
   methods: {
+    projLeaderFilterHandler(value, row, column) {
+      const property = column['property'];
+      return row[property] === value;
+    },
     // deleteReportNum(reportNum) {
     //   deleteReportNum({ reportNum: reportNum }).then(res => {
     //     this.$message.success('删除成功');
@@ -401,6 +409,9 @@ export default {
       } else {
         this.reset()
       }
+    },
+    showOnlyPl(){
+      var list = this.tableData
     },
     reset() {
       this.searchValProjName = '';
