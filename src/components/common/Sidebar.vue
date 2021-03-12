@@ -94,7 +94,7 @@ export default {
         {
           index: 'workbranch',
           icon: 'el-icon-receiving',
-          title: '工作台',
+          title: '工作台'
           // subs: [
           //   {
           //     index: 'workbranch',
@@ -138,7 +138,7 @@ export default {
         // },
         {
           icon: 'el-icon-data-analysis',
-          title: "统计管理",
+          title: '统计管理',
           subs: [
             {
               index: 'stat',
@@ -156,11 +156,11 @@ export default {
           icon: 'el-icon-user',
           title: '用户管理'
         },
-          {
-              index: 'contract',
-              icon: 'el-icon-data-analysis',
-              title: '合同管理'
-          },
+        {
+          index: 'contract',
+          icon: 'el-icon-data-analysis',
+          title: '合同管理'
+        }
         // {
         //   index: 'client',
         //   icon: 'el-icon-setting',
@@ -227,6 +227,11 @@ export default {
               title: '项目计划录入'
             }
           ]
+        },
+        {
+          index: 'workbranch',
+          icon: 'el-icon-receiving',
+          title: '工作台'
         },
         // {
         //   index: 'oldplanform',
