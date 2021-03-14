@@ -10,3 +10,11 @@ export function getProjList4CFS() {
         method: 'post'
     });
 }
+
+export function deliverProj(data) {
+    return request({
+        url: `${ProManageAPIServer}CFS/deliverProj`,
+        method: 'post',
+        data:qs.stringify(data)
+    });
+}

@@ -46,7 +46,30 @@
           label="项目范围"
           prop="projScope">
       </el-table-column>
+      <el-table-column
+              label="操作"
+              prop="">
+        <template slot-scope="scope">
+          <el-button type="text" @click="handleDelivery(scope.row)">派发计划</el-button>
+        </template>
+      </el-table-column>
     </el-table>
+    <el-dialog
+            :visible.sync="dialogVisible"
+            :title="'派发计划：'+this.deliveryInfo.projNum"
+            width="30%">
+      <div>
+        <b>常用现勘人员</b>
+        <el-checkbox-group v-model="selectedFieldSurveyList">
+          <el-checkbox-button v-for="staff in fieldSurveyStaffList"
+                              :label="staff.staffName" :key="staff.staffId">{{staff.staffId}}#{{staff.staffName}}</el-checkbox-button>
+        </el-checkbox-group>
+      </div>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="submitDelivery">确 定</el-button>
+  </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -69,8 +92,8 @@
 </style>
 
 <script>
-import {getEvalObjListByProjId} from '@/api';
-import {getProjList4CFS} from '@/api/cfs';
+  import { getEvalObjListByProjId, getUserList } from '@/api';
+  import { getProjList4CFS, deliverProj } from '@/api/cfs';
 
 export default {
   data() {
@@ -81,7 +104,16 @@ export default {
       loading : false,
       tableData: [],
       expands: [],
-      evalObj: []
+      evalObj: [],
+      staffList: [],
+      fieldSurveyStaffList:[],
+      dialogVisible: false,
+      selectedFieldSurveyList:[],
+      deliveryInfo: {
+        projId: '',
+        projNum: '',
+        fieldSrvy: ''
+      }
     };
   },
   created() {
@@ -90,8 +122,36 @@ export default {
           this.tableData = res.data
         }
     );
+    getUserList().then(
+            res => {
+              this.staffList = res.data
+              this.sortStaffList()
+            }
+    );
   },
   methods: {
+    sortStaffList() {
+      // for (let i = 0; i < list.length; i++) {
+      //   if (list[i].isFieldSurvey === 1) {
+      //     this.fieldSurveyStaffLis.push(list[i]);
+      //     this.staffList.remove()
+      //   }
+      // }
+
+      console.log('called')
+
+      let list = this.staffList
+      let fsList = []
+
+      list.forEach(function(item, index) {
+        if (item.isFieldSurvey === 1) {
+          fsList.push(item)
+        }
+      });
+
+      this.fieldSurveyStaffList = fsList
+
+    },
     expandChange(row,expandedRows) {
       console.log(row.projId)
       var that = this
@@ -121,6 +181,41 @@ export default {
           }
       );
 
+    },
+    submitDelivery() {
+      console.log(this.selectedFieldSurveyList)
+      let fsList = this.selectedFieldSurveyList
+      var fsStr = ''
+      console.log(fsList.length)
+      fsList.forEach(
+              item => {
+                fsStr += item;
+                console.log(fsList.indexOf(item))
+                if (fsList.indexOf(item) !== fsList.length - 1) {
+                  fsStr += ',';
+                }
+              }
+      );
+      this.deliveryInfo.fieldSrvy = fsStr
+
+      deliverProj(this.deliveryInfo).then(
+              res => {
+                console.log(res);
+                this.$message.success('派发成功');
+                this.dialogVisible = false;
+              }
+      ).catch(
+              err => {
+                console.log(err);
+                this.$message.error('派发失败');
+              }
+      );
+
+    },
+    handleDelivery(row) {
+      this.deliveryInfo.projId = row.projId
+      this.deliveryInfo.projNum = row.projNum
+      this.dialogVisible = true
     }
   }
 }
