@@ -160,6 +160,11 @@ export default {
           index: 'contract',
           icon: 'el-icon-data-analysis',
           title: '合同管理'
+        },
+        {
+          index: 'cloudfieldsurvey',
+          icon: 'el-icon-data-analysis',
+          title: '云现勘'
         }
         // {
         //   index: 'client',
