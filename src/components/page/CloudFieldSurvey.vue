@@ -12,6 +12,9 @@
         @expand-change="expandChange"
         :row-key="getRowKeys"
         :expand-row-keys="expands"
+        @row-click="rowClick"
+        :row-class-name="tableRowClassName"
+        ref="refTable"
         style="width: 100%;box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)">
       <el-table-column type="expand">
         <template slot-scope="props">
@@ -32,6 +35,7 @@
               </el-table-column>
             </el-table>
           </el-form>
+          <el-button type="primary" style="float: right" @click="handleDelivery(props.row)">派发计划</el-button>
         </template>
       </el-table-column>
       <el-table-column
@@ -46,28 +50,35 @@
           label="项目范围"
           prop="projScope">
       </el-table-column>
-      <el-table-column
-              label="操作"
-              prop="">
-        <template slot-scope="scope">
-          <el-button type="text" @click="handleDelivery(scope.row)">派发计划</el-button>
-        </template>
-      </el-table-column>
+<!--      <el-table-column-->
+<!--              label="操作"-->
+<!--              prop="">-->
+<!--        <template slot-scope="scope">-->
+<!--          <el-button type="text" @click="handleDelivery(scope.row)">派发计划</el-button>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
     </el-table>
     <el-dialog
             :visible.sync="dialogVisible"
-            :title="'派发计划：'+this.deliveryInfo.projNum"
+        @closed="closed"
+        :title="'派发计划：'+this.deliveryInfo.projNum"
             width="30%">
       <div>
-        <b>常用现勘人员</b>
-        <el-checkbox-group v-model="selectedFieldSurveyList">
-          <el-checkbox-button v-for="staff in fieldSurveyStaffList"
-                              :label="staff.staffName" :key="staff.staffId">{{staff.staffId}}#{{staff.staffName}}</el-checkbox-button>
+        <span><b>计划现勘人员：</b>{{this.planedFieldSrvy}}</span><br><br>
+        <b>选择现勘人员  </b><el-button type="text" @click="handleClear">清空</el-button>
+<!--        <el-checkbox-group v-model="selectedFieldSurveyList">-->
+<!--          <el-checkbox-button v-for="staff in fieldSurveyStaffList"-->
+<!--                              :label="staff.staffName" :key="staff.staffId">{{staff.staffId}}#{{staff.staffName}}</el-checkbox-button>-->
+<!--        </el-checkbox-group>-->
+        <el-checkbox-group
+            v-model="selectedFieldSurveyList">
+          <el-checkbox v-for="staff in fieldSurveyStaffList"
+                       :label="staff.staffName" :key="staff.staffId">{{staff.staffName}}</el-checkbox>
         </el-checkbox-group>
       </div>
       <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="submitDelivery">确 定</el-button>
+    <el-button type="primary" @click="submitDelivery" :disabled="selectedFieldSurveyList.length === 0">确 定</el-button>
   </span>
     </el-dialog>
   </div>
@@ -87,13 +98,13 @@
   width: 50%;
 }
 .el-table .success-row {
-  background: #f0f9eb;
+  background: #ecffe0;
 }
 </style>
 
 <script>
   import { getEvalObjListByProjId, getUserList } from '@/api';
-  import { getProjList4CFS, deliverProj } from '@/api/cfs';
+  import { getProjList4CFS, deliverProj, getSurveyList } from '@/api/cfs';
 
 export default {
   data() {
@@ -107,8 +118,10 @@ export default {
       evalObj: [],
       staffList: [],
       fieldSurveyStaffList:[],
+      planedFieldSrvy:'',
       dialogVisible: false,
       selectedFieldSurveyList:[],
+      surveyList:[],
       deliveryInfo: {
         projId: '',
         projNum: '',
@@ -128,8 +141,25 @@ export default {
               this.sortStaffList()
             }
     );
+    getSurveyList().then(
+        res => {
+          console.log(res.data)
+          this.surveyList = res.data;
+        }
+    ).catch(err => {
+      console.log(err)
+      this.$message.error("获取已派发列表失败")
+    });
   },
   methods: {
+    tableRowClassName({row, rowIndex}) {
+      let list = this.surveyList
+      for (let i = 0; i < list.length; i++) {
+        if (row.projId == list[i].projid) {
+          return 'success-row';
+        }
+      }
+    },
     sortStaffList() {
       // for (let i = 0; i < list.length; i++) {
       //   if (list[i].isFieldSurvey === 1) {
@@ -182,6 +212,10 @@ export default {
       );
 
     },
+    rowClick(row,index) {
+      this.$refs.refTable.toggleRowExpansion(row)
+      console.log(row.index)
+    },
     submitDelivery() {
       console.log(this.selectedFieldSurveyList)
       let fsList = this.selectedFieldSurveyList
@@ -190,7 +224,6 @@ export default {
       fsList.forEach(
               item => {
                 fsStr += item;
-                console.log(fsList.indexOf(item))
                 if (fsList.indexOf(item) !== fsList.length - 1) {
                   fsStr += ',';
                 }
@@ -215,7 +248,14 @@ export default {
     handleDelivery(row) {
       this.deliveryInfo.projId = row.projId
       this.deliveryInfo.projNum = row.projNum
+      this.planedFieldSrvy = row.fieldSrvy
       this.dialogVisible = true
+    },
+    closed() {
+      this.handleClear()
+    },
+    handleClear(){
+      this.selectedFieldSurveyList = []
     }
   }
 }

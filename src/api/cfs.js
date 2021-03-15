@@ -18,3 +18,10 @@ export function deliverProj(data) {
         data:qs.stringify(data)
     });
 }
+
+export function getSurveyList() {
+    return request({
+        url: `${ProManageAPIServer}CFS/getSurveyList`,
+        method: 'post'
+    });
+}
