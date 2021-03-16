@@ -44,11 +44,93 @@
         </div>
       </div>
     </el-drawer>
+    <el-drawer
+        title="编辑用户"
+        :visible.sync="showEditDrawer"
+        direction="rtl"
+        size="35%"
+    >
+      <div style="margin: 0 100px 0 10px">
+        <el-form :model="editForm">
+          <el-form-item label="工号" label-width="40px">
+            <el-input type="number" disabled v-model.number="editForm.staffId"></el-input>
+          </el-form-item>
+          <el-form-item label="姓名" label-width="40px">
+            <el-input v-model="editForm.staffName"></el-input>
+          </el-form-item>
+          <el-form-item label="权限">
+            <el-select v-model="editForm.role">
+              <el-option
+                  v-for="item in roleName"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            项目负责人
+            <el-switch
+                v-model="editForm.isProjLeader"
+                active-color="#13ce66"
+                :active-value="1"
+                :inactive-value="0">
+            </el-switch>
+            项目助理
+            <el-switch
+                v-model="editForm.isProjAsst"
+                active-color="#13ce66"
+                :active-value="1"
+                :inactive-value="0">
+            </el-switch>
+            现勘人员
+            <el-switch
+                v-model="editForm.isFieldSurvey"
+                active-color="#13ce66"
+                :active-value="1"
+                :inactive-value="0">
+            </el-switch>
+          </el-form-item>
+          <el-form-item>
+            注册会计师
+            <el-switch
+                v-model="editForm.isCpa"
+                active-color="#13ce66"
+                :active-value="1"
+                :inactive-value="0">
+            </el-switch>
+            资产评估师
+            <el-switch
+                v-model="editForm.isCpv"
+                active-color="#13ce66"
+                :active-value="1"
+                :inactive-value="0">
+            </el-switch>
+            土地估价师
+            <el-switch
+                v-model="editForm.isCrev"
+                active-color="#13ce66"
+                :active-value="1"
+                :inactive-value="0">
+            </el-switch>
+            房地产估价师
+            <el-switch
+                v-model="editForm.isCrea"
+                active-color="#13ce66"
+                :active-value="1"
+                :inactive-value="0">
+            </el-switch>
+          </el-form-item>
+        </el-form>
+        <div>
+          <el-button @click="closeDrawer()">取 消</el-button>
+          <el-button  type="primary" @click="submitEditForm()">提 交</el-button>
+        </div>
+      </div>
+    </el-drawer>
     <div class="main">
       <el-table
         :data="tableData"
-        style="100%"
-        max-height="420"
         border
       >
         <el-table-column
@@ -83,20 +165,26 @@
           align="center"
         >
           <template slot-scope="scope">
-            <el-select
-              v-model="scope.row.role"
-              placeholder="请选择"
-              style="margin-right:20px"
-              @change="handleChangeRole(scope.row.staffId, scope.row.role)"
+<!--            <el-select-->
+<!--              v-model="scope.row.role"-->
+<!--              placeholder="请选择"-->
+<!--              style="margin-right:20px"-->
+<!--              @change="handleChangeRole(scope.row.staffId, scope.row.role)"-->
+<!--            >-->
+<!--              <el-option-->
+<!--                v-for="item in roleName"-->
+<!--                :key="item.value"-->
+<!--                :label="item.label"-->
+<!--                :value="item.value"-->
+<!--              >-->
+<!--              </el-option>-->
+<!--            </el-select>-->
+            <el-button
+                type="text"
+                @click="handleEdit(scope.row)"
             >
-              <el-option
-                v-for="item in roleName"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
-              </el-option>
-            </el-select>
+            编辑
+            </el-button>
             <el-button
               type="text"
               icon="el-icon-delete"
@@ -117,6 +205,7 @@ export default {
   name: 'usermanage',
   data() {
     return {
+      showEditDrawer: false,
       tableData: [],
       roleName: [
         { value: 0, label: '超级管理员' },
@@ -124,10 +213,22 @@ export default {
         { value: 2, label: '计划部门' },
         { value: 3, label: '业务部门' }
       ],
+      proRoles:[
+        {label:'项目负责人', key: 'isProjLeader'},
+        {label:'项目助理', key: 'isProjAsst'},
+        {label:'现勘人员', key: 'isFieldSurvey'},
+        {label:'注册会计师', key: 'isCpa'},
+        {label:'资产评估师', key: 'isCpv'},
+        {label:'土地估价师', key: 'isCrev'},
+        {label:'房地产估价师', key: 'isCrea'}
+      ],
       form: {
         staffId: '',
         staffName: '',
         role: ''
+      },
+      editForm:{
+
       },
       rules: {
         staffId: [
@@ -141,7 +242,7 @@ export default {
         ]
       },
       showDrawer: false
-    }
+    };
   },
   created() {
     this.getData()
@@ -164,6 +265,7 @@ export default {
         .then(res => {
           console.log(res);
           this.tableData = res.data
+          this.editForm = res.data[0]
         })
         .catch(err => {
           console.log('failed to get user list');
@@ -202,8 +304,25 @@ export default {
         .catch(() => {})
     },
     closeDrawer() {
-    this.showDrawer = false
-  }
+      this.showDrawer = false;
+    },
+    submitEditForm() {
+      console.log(this.editForm)
+
+      alterUserInfo(this.editForm).then(res => {
+        this.$message.success('修改成功')
+        this.showEditDrawer = false
+        this.editForm = {}
+      }).catch(err => {
+        this.$message.warning ('修改失败')
+      })
+
+    },
+    handleEdit(row) {
+      this.showEditDrawer = true
+      this.editForm = row
+    }
+
   }
 }
 </script>
