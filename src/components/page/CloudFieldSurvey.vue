@@ -12,7 +12,7 @@
         @expand-change="expandChange"
         :row-key="getRowKeys"
         :expand-row-keys="expands"
-        @row-click="rowClick"
+        @row-dblclick="rowClick"
         :row-class-name="tableRowClassName"
         ref="refTable"
         style="width: 100%;box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)">

@@ -269,6 +269,11 @@ export default {
           icon: 'el-icon-data-analysis',
           title: '合同管理'
         },
+        {
+          index: 'cloudfieldsurvey',
+          icon: 'el-icon-data-analysis',
+          title: '云现勘'
+        }
         // {
         //   index: 'casesearchdock',
         //   icon: 'el-icon-folder',
@@ -322,6 +327,15 @@ export default {
       this.roleItem = this.items0
     } else if (sf == 2) {
       this.roleItem = this.items2
+      // if (localStorage.getItem('staffId') == 33) {
+      //   this.roleItem.push(
+      //       {
+      //         index: 'cloudfieldsurvey',
+      //         icon: 'el-icon-data-analysis',
+      //         title: '云现勘'
+      //       }
+      //   )
+      // }
     } else if (sf == 3) {
       this.roleItem = this.items3
     }
