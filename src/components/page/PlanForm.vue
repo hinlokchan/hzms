@@ -110,6 +110,7 @@
                 <el-select
                   v-model="form.arrgType"
                   placeholder="请选择"
+                  :disabled="userRole>2"
                 >
                   <el-option
                     label="轮序"
@@ -124,7 +125,7 @@
             </el-col>
             <el-col :span="6">
               <el-form-item label="接洽类型">
-                <el-select v-model="form.projContactType">
+                <el-select v-model="form.projContactType" :disabled="userRole>2">
                   <el-option
                     v-for="item in contactTypeOption"
                     :key="item"
@@ -150,15 +151,17 @@
                   <el-autocomplete
                     v-model="item.value"
                     :fetch-suggestions="querySearch"
+                    :disabled="userRole>2"
                   ></el-autocomplete>
                   <i
                     class="el-icon-lx-roundclose"
                     style="margin: 6px 0 0 0;font-size: 20px;color:#b5b5b5"
                     @click.prevent="removeDomain(index, 5)"
+                    v-if="userRole<3"
                   ></i>
                 </div>
               </el-form-item>
-              <el-form-item>
+              <el-form-item v-if="userRole<3">
                 <el-button type="primary" icon="el-icon-plus" circle
                            @click="addDomain(5)"
                 >
@@ -175,7 +178,7 @@
                 class="red-item"
               >
                 <el-cascader
-                  v-if="clientInputTypeChange == false"
+                  v-if="!clientInputTypeChange && userRole<3"
                   ref="cascaderAddr"
                   :show-all-levels="false"
                   v-model="form.clientId"
@@ -186,7 +189,7 @@
                 >
                 </el-cascader>
                 <el-input
-                  v-if="clientInputTypeChange == true"
+                  v-if="clientInputTypeChange || userRole>2"
                   :disabled="true"
                   style="width: 90%"
                   v-model="form.clientName"
@@ -195,15 +198,18 @@
                   type="text"
                   icon="el-icon-refresh-right"
                   style="width: 10%"
+                  v-if="userRole<3"
                   @click="resetClientName()"
                 ></el-button>
                 <el-button
                   type="text"
                   @click="showAddClientDialog"
+                  v-if="userRole<3"
                 >新增</el-button>
                 <el-button
                   type="text"
                   @click="setUnconfirmClient()"
+                  v-if="userRole<3"
                 >待定</el-button>
               </el-form-item>
               <!-- <el-form-item
@@ -325,6 +331,7 @@
                   v-model="form.compSchedule"
                   :min="1"
                   label="完成天数"
+                  :disabled="userRole>2"
                   oninput="value=value.replace(/[^\d.]/g,'')"
                 ></el-input>
               </el-form-item>
@@ -341,6 +348,7 @@
                   v-model="form.baseDate"
                   value-format="yyyy-MM-dd"
                   style="width: 100%;"
+                  :disabled="userRole>2"
                 ></el-date-picker>
               </el-form-item>
             </el-col>
@@ -355,6 +363,7 @@
                   placeholder="选择日期"
                   v-model="form.fldSrvySchedule"
                   value-format="yyyy-MM-dd"
+                  :disabled="userRole>2"
                   style="width: 100%;"
                 ></el-date-picker>
               </el-form-item>
@@ -382,6 +391,7 @@
                 <el-select
                   v-model="form.newOldType"
                   placeholder="请选择"
+                  :disabled="userRole>2"
                 >
                   <el-option
                     label="新项目"
@@ -399,6 +409,7 @@
                 <el-select
                   v-model="form.projDegree"
                   placeholder="请选择"
+                  :disabled="userRole>2"
                 >
                   <el-option
                     label="正常"
@@ -413,7 +424,7 @@
             </el-col>
             <el-col :span="6">
               <el-form-item label="风险预测">
-                <el-select v-model="form.riskProfile">
+                <el-select v-model="form.riskProfile" :disabled="userRole>2">
                   <el-option
                     label="低"
                     value="1001"
@@ -438,6 +449,7 @@
                 <el-input
                   v-model="form.assemFeeQuote"
                   oninput="value=value.replace(/[^\d.]/g,'')"
+                  :disabled="userRole>2"
                 ></el-input>
               </el-form-item>
             </el-col>
@@ -497,6 +509,7 @@
                 <el-autocomplete
                   v-model="form.projLeader"
                   :fetch-suggestions="querySearch"
+                  :disabled="userRole>2"
                 ></el-autocomplete>
               </el-form-item>
             </el-col>
@@ -505,7 +518,7 @@
               v-if="this.form.projType == 1090"
             >
               <el-form-item label="总审">
-                <el-input v-model="form.finalReview"></el-input>
+                <el-input v-model="form.finalReview" :disabled="userRole>2"></el-input>
               </el-form-item>
             </el-col>
             <!-- </el-row>
@@ -550,11 +563,13 @@
                   <el-autocomplete
                     v-model="item.value"
                     :fetch-suggestions="querySearch"
+                    :disabled="userRole>2"
                   ></el-autocomplete>
                   <i
                     class="el-icon-lx-roundclose"
                     style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5"
                     @click.prevent="removeDomain(index, 1)"
+                    v-if="userRole<3"
                   ></i>
                 </div>
               </el-form-item>
@@ -565,7 +580,7 @@
 <!--                  @click="addDomain(1)"-->
 <!--                ></i>-->
 <!--              </el-form-item>-->
-              <el-form-item>
+              <el-form-item v-if="userRole<3">
                 <el-button type="primary" icon="el-icon-plus" circle
                            @click="addDomain(1)"
                 >
@@ -587,11 +602,13 @@
                   <el-autocomplete
                     v-model="item.value"
                     :fetch-suggestions="querySearch"
+                    :disabled="userRole>2"
                   ></el-autocomplete>
                   <i
                     class="el-icon-lx-roundclose"
                     style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5"
                     @click.prevent="removeDomain(index, 2)"
+                    v-if="userRole<3"
                   ></i>
                 </div>
               </el-form-item>
@@ -602,7 +619,7 @@
 <!--                  @click="addDomain(2)"-->
 <!--                ></i>-->
 <!--              </el-form-item>-->
-              <el-form-item>
+              <el-form-item v-if="userRole<3">
                 <el-button type="primary" icon="el-icon-plus" circle
                            @click="addDomain(2)"
                 >
@@ -624,11 +641,13 @@
                   <el-autocomplete
                     v-model="item.value"
                     :fetch-suggestions="querySearch"
+                    :disabled="userRole>2"
                   ></el-autocomplete>
                   <i
                     class="el-icon-lx-roundclose"
                     style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5"
                     @click.prevent="removeDomain(index, 3)"
+                    v-if="userRole<3"
                   ></i>
                 </div>
               </el-form-item>
@@ -639,7 +658,7 @@
 <!--                  @click="addDomain(3)"-->
 <!--                ></i>-->
 <!--              </el-form-item>-->
-              <el-form-item>
+              <el-form-item v-if="userRole<3">
                 <el-button type="primary" icon="el-icon-plus" circle
                            @click="addDomain(3)"
                 >
@@ -663,11 +682,13 @@
                   <el-autocomplete
                     v-model="item.value"
                     :fetch-suggestions="querySearch"
+                    :disabled="userRole>2"
                   ></el-autocomplete>
                   <i
                     class="el-icon-lx-roundclose"
                     style="margin-top: 6px ;font-size: 20px;color:#b5b5b5"
                     @click.prevent="removeDomain(index, 4)"
+                    v-if="userRole<3"
                   ></i>
                 </div>
               </el-form-item>
@@ -678,7 +699,7 @@
 <!--                  @click="addDomain(4)"-->
 <!--                ></i>-->
 <!--              </el-form-item>-->
-              <el-form-item>
+              <el-form-item v-if="userRole<3">
                 <el-button type="primary" icon="el-icon-plus" circle
                            @click="addDomain(4)"
                 >
@@ -712,6 +733,7 @@ export default {
   inject: ['reload'],            //注入App里的reload方法
   data() {
     return {
+      userRole:null,
       isEdit: false,
       newInfo: false,
       newInfoData: '',
@@ -851,7 +873,8 @@ export default {
     };
   },
   created() {
-    this.getClientList()
+    this.userRole = localStorage.getItem('role') - 0
+    this.getClientList();
     if (this.$route.query.data == undefined) {
       this.isEdit = false
       this.form.projDate = this.getToday()
