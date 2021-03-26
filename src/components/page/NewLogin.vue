@@ -2,10 +2,10 @@
   <div class="login-wrap">
     <div class="ms-login">
       <div class="ms-title">
-        惠正评估管理系统</div>
+        <h3>惠正评估管理系统</h3></div>
       <el-form :model="param" :rules="rules" ref="login" label-width="0px" class="ms-content">
         <el-form-item prop="username">
-          <el-input v-model="param.username" placeholder="工号/Staff Number">
+          <el-input v-model="param.username" placeholder="工号/Staff Number" size="large">
             <el-button slot="prepend" icon="el-icon-lx-people"></el-button>
           </el-input>
         </el-form-item>
@@ -14,6 +14,7 @@
               type="password"
               placeholder="密码/Password"
               v-model="param.password"
+              size="large"
               @keyup.enter.native="submitForm()"
           >
             <el-button slot="prepend" icon="el-icon-lx-lock"></el-button>
@@ -72,7 +73,7 @@ export default {
   position: relative;
   width: 100%;
   height: 100%;
-  background-image: url(../../assets/img/login-bg.jpg);
+  /*background-image: url(../../assets/img/login-bg.jpg);*/
   background-size: 100%;
 }
 .ms-title {
@@ -87,8 +88,9 @@ export default {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 350px;
-  margin: -190px 0 0 -175px;
+  width: 450px;
+  /*margin: -190px 0 0 -175px;*/
+  transform: translate(-50%, -70%);
   border-radius: 5px;
   background: rgba(150, 143, 143, 0.5);
   overflow: hidden;
