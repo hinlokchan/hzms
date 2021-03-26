@@ -205,6 +205,7 @@
             >{{ props.row.projState }}</el-tag>
           </template>
         </el-table-column> -->
+
         <el-table-column
           prop="projDate"
           :formatter="this.$formatDate"
@@ -603,43 +604,10 @@ export default {
     },
     // 删除操作
     handleDelete(row) {
-      if (row.projType == 1010) {
-        // 二次确认删除
-        checkFaRegister({ projId: row.projId, subReportNum: '-' })
-          .then(res => {
-            let status1 = res.data.registerState
-            let status2 = res.data.evalObjState
-            console.log(status1, status2)
-            if (status1 == true || status2 == true) {
-              this.$message.error('该项目已填写估价对象详情或已登记正评，请联系管理员删除')
-              return 0
-            } else {
-              this.$confirm('删除后将不可恢复，确定要删除吗？', '提示: 即将删除[' + row.projNum + ']', {
-                type: 'warning'
-              })
-                .then(() => {
-                  //接口会判断是否有报告号并对应删除
-                  // if (status1 == true || status2 == true) {
-                  //   this.message.error('该项目已填写估价对象详情或已登记正评，请联系管理员删除')
-                  //   return 0
-                  // }
-                  delProject({ projId: row.projId }).then(res => {
-                    this.$message.success('删除成功');
-                    this.getData()
-                  }).catch(err => {
-                    this.$message.warning('删除失败,请稍后重试');
-                  })
-                })
-                .catch(() => { })
-            }
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      } else {
-        this.$confirm('删除后将不可恢复，确定要删除吗？', '提示: 即将删除[' + row.projNum + ']', {
-          type: 'warning'
-        })
+
+      this.$confirm('删除后将不可恢复，确定要删除吗？', '提示: 即将删除[' + row.projNum + ']', {
+        type: 'warning'
+      })
           .then(() => {
             //接口会判断是否有报告号并对应删除
             delProject({ projId: row.projId }).then(res => {
@@ -650,7 +618,55 @@ export default {
             })
           })
           .catch(() => { })
-      }
+
+      // if (row.projType == 1010) {
+      //   // 二次确认删除
+      //   checkFaRegister({ projId: row.projId, subReportNum: '-' })
+      //     .then(res => {
+      //       let status1 = res.data.registerState
+      //       let status2 = res.data.evalObjState
+      //       console.log(status1, status2)
+      //       if (status1 == true || status2 == true) {
+      //         this.$message.error('该项目已填写估价对象详情或已登记正评，请联系管理员删除')
+      //         return 0
+      //       } else {
+      //         this.$confirm('删除后将不可恢复，确定要删除吗？', '提示: 即将删除[' + row.projNum + ']', {
+      //           type: 'warning'
+      //         })
+      //           .then(() => {
+      //             //接口会判断是否有报告号并对应删除
+      //             // if (status1 == true || status2 == true) {
+      //             //   this.message.error('该项目已填写估价对象详情或已登记正评，请联系管理员删除')
+      //             //   return 0
+      //             // }
+      //             delProject({ projId: row.projId }).then(res => {
+      //               this.$message.success('删除成功');
+      //               this.getData()
+      //             }).catch(err => {
+      //               this.$message.warning('删除失败,请稍后重试');
+      //             })
+      //           })
+      //           .catch(() => { })
+      //       }
+      //     })
+      //     .catch(err => {
+      //       console.log(err)
+      //     })
+      // } else {
+      //   this.$confirm('删除后将不可恢复，确定要删除吗？', '提示: 即将删除[' + row.projNum + ']', {
+      //     type: 'warning'
+      //   })
+      //     .then(() => {
+      //       //接口会判断是否有报告号并对应删除
+      //       delProject({ projId: row.projId }).then(res => {
+      //         this.$message.success('删除成功');
+      //         this.getData()
+      //       }).catch(err => {
+      //         this.$message.warning('删除失败,请稍后重试');
+      //       })
+      //     })
+      //     .catch(() => { })
+      // }
     },
     filterProjType(value, row) {
       return row.projType === value
