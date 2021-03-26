@@ -12,7 +12,7 @@
         @expand-change="expandChange"
         :row-key="getRowKeys"
         :expand-row-keys="expands"
-        @row-dblclick="rowClick"
+        @row-click="rowClick"
         :row-class-name="tableRowClassName"
         ref="refTable"
         style="width: 100%;box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)">
@@ -26,8 +26,20 @@
                       style=" width: 50%; box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)"
             >
               <el-table-column
+                  label="状态"
+                  prop="">
+                <template slot-scope="scope">
+                  <el-tag type="" v-if="evalObjIsDelivered(scope.row)">已派发</el-tag>
+                  <el-tag type="info" v-else>未派发</el-tag>
+                </template>
+              </el-table-column>
+              <el-table-column
                   label="估价对象ID"
                   prop="evalObjId">
+                <template slot-scope="scope">
+                  <el-tag type="info" >{{scope.row.evalObjId}}</el-tag>
+
+                </template>
               </el-table-column>
               <el-table-column
                   label="估价对象名称"
@@ -73,7 +85,9 @@
         <el-checkbox-group
             v-model="selectedFieldSurveyList">
           <el-checkbox v-for="staff in fieldSurveyStaffList"
-                       :label="staff.staffName" :key="staff.staffId">{{staff.staffName}}</el-checkbox>
+                       :label="staff.staffName" :key="staff.staffId"
+                       :disabled="fsDisable(staff.name)"
+          >{{staff.staffName}}</el-checkbox>
         </el-checkbox-group>
       </div>
       <span slot="footer" class="dialog-footer">
@@ -121,7 +135,7 @@ export default {
       planedFieldSrvy:'',
       dialogVisible: false,
       selectedFieldSurveyList:[],
-      surveyList:[],
+      surveyDataMap:{},
       deliveryInfo: {
         projId: '',
         projNum: '',
@@ -144,7 +158,7 @@ export default {
     getSurveyList().then(
         res => {
           console.log(res.data)
-          this.surveyList = res.data;
+          this.surveyDataMap = res.data;
         }
     ).catch(err => {
       console.log(err)
@@ -153,11 +167,8 @@ export default {
   },
   methods: {
     tableRowClassName({row, rowIndex}) {
-      let list = this.surveyList
-      for (let i = 0; i < list.length; i++) {
-        if (row.projId == list[i].projid) {
-          return 'success-row';
-        }
+      if (this.surveyDataMap[row.projId] !== undefined) {
+        return 'success-row';
       }
     },
     sortStaffList() {
@@ -167,8 +178,6 @@ export default {
       //     this.staffList.remove()
       //   }
       // }
-
-      console.log('called')
 
       let list = this.staffList
       let fsList = []
@@ -256,6 +265,31 @@ export default {
     },
     handleClear(){
       this.selectedFieldSurveyList = []
+    },
+    evalObjIsDelivered(row){
+      let survey = this.surveyDataMap[row.projId]
+      if (survey === undefined) {
+        return false
+      }
+      let evalObjArr = survey.subid.split(',')
+
+      return evalObjArr.indexOf(row.evalObjId) >= -1;
+
+    },
+    fsDisable(staffName) {
+      console.log(this.surveyDataMap[this.deliveryInfo.projId])
+      let survey = this.surveyDataMap[this.deliveryInfo.projId]
+      if (survey === undefined || survey.surveySurveyors === '') {
+        return false;
+      }
+      console.log(survey.surveySurveyors)
+      let surveyorArray = survey.surveySurveyors.split(',');
+      console.log(surveyorArray)
+      console.log(staffName)
+      console.log(surveyorArray.indexOf('李家乐'))
+
+      return surveyorArray.indexOf(staffName) > -1;
+
     }
   }
 }
