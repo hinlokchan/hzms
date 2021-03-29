@@ -1,0 +1,1114 @@
+{
+  "RECORDS": [
+    {
+      "client_id": "10101",
+      "client_type": "101",
+      "client_name": "个人金融部"
+    },
+    {
+      "client_id": "10102",
+      "client_type": "101",
+      "client_name": "营业部"
+    },
+    {
+      "client_id": "10103",
+      "client_type": "101",
+      "client_name": "信用卡中心"
+    },
+    {
+      "client_id": "10104",
+      "client_type": "101",
+      "client_name": "公司部"
+    },
+    {
+      "client_id": "10105",
+      "client_type": "101",
+      "client_name": "惠州分行"
+    },
+    {
+      "client_id": "10106",
+      "client_type": "101",
+      "client_name": "惠城支行"
+    },
+    {
+      "client_id": "10107",
+      "client_type": "101",
+      "client_name": "东湖支行"
+    },
+    {
+      "client_id": "10108",
+      "client_type": "101",
+      "client_name": "金山湖支行"
+    },
+    {
+      "client_id": "10109",
+      "client_type": "101",
+      "client_name": "河南岸支行"
+    },
+    {
+      "client_id": "10110",
+      "client_type": "101",
+      "client_name": "江北支行"
+    },
+    {
+      "client_id": "10111",
+      "client_type": "101",
+      "client_name": "演达路支行"
+    },
+    {
+      "client_id": "10112",
+      "client_type": "101",
+      "client_name": "惠台工业园支行"
+    },
+    {
+      "client_id": "10113",
+      "client_type": "101",
+      "client_name": "陈江支行"
+    },
+    {
+      "client_id": "10114",
+      "client_type": "101",
+      "client_name": "长寿路支行"
+    },
+    {
+      "client_id": "10115",
+      "client_type": "101",
+      "client_name": "三环北路支行"
+    },
+    {
+      "client_id": "10116",
+      "client_type": "101",
+      "client_name": "仲恺高新区支行"
+    },
+    {
+      "client_id": "10117",
+      "client_type": "101",
+      "client_name": "博罗支行"
+    },
+    {
+      "client_id": "10118",
+      "client_type": "101",
+      "client_name": "石湾支行"
+    },
+    {
+      "client_id": "10119",
+      "client_type": "101",
+      "client_name": "园洲支行"
+    },
+    {
+      "client_id": "10120",
+      "client_type": "101",
+      "client_name": "大亚湾支行"
+    },
+    {
+      "client_id": "10121",
+      "client_type": "101",
+      "client_name": "新圩支行"
+    },
+    {
+      "client_id": "10122",
+      "client_type": "101",
+      "client_name": "惠阳支行"
+    },
+    {
+      "client_id": "10123",
+      "client_type": "101",
+      "client_name": "惠东支行"
+    },
+    {
+      "client_id": "10124",
+      "client_type": "101",
+      "client_name": "吉隆支行"
+    },
+    {
+      "client_id": "10125",
+      "client_type": "101",
+      "client_name": "荷兰水乡支行"
+    },
+    {
+      "client_id": "10201",
+      "client_type": "102",
+      "client_name": "营业部"
+    },
+    {
+      "client_id": "10202",
+      "client_type": "102",
+      "client_name": "中小企业中心"
+    },
+    {
+      "client_id": "10203",
+      "client_type": "102",
+      "client_name": "惠州分行"
+    },
+    {
+      "client_id": "10204",
+      "client_type": "102",
+      "client_name": "国际业务部"
+    },
+    {
+      "client_id": "10205",
+      "client_type": "102",
+      "client_name": "小企业部"
+    },
+    {
+      "client_id": "10206",
+      "client_type": "102",
+      "client_name": "江北支行"
+    },
+    {
+      "client_id": "10207",
+      "client_type": "102",
+      "client_name": "惠城支行"
+    },
+    {
+      "client_id": "10208",
+      "client_type": "102",
+      "client_name": "下角支行"
+    },
+    {
+      "client_id": "10209",
+      "client_type": "102",
+      "client_name": "水门支行"
+    },
+    {
+      "client_id": "10210",
+      "client_type": "102",
+      "client_name": "南坛支行"
+    },
+    {
+      "client_id": "10211",
+      "client_type": "102",
+      "client_name": "下埔支行"
+    },
+    {
+      "client_id": "10212",
+      "client_type": "102",
+      "client_name": "麦兴路支行"
+    },
+    {
+      "client_id": "10213",
+      "client_type": "102",
+      "client_name": "上排支行"
+    },
+    {
+      "client_id": "10214",
+      "client_type": "102",
+      "client_name": "碧水湾支行"
+    },
+    {
+      "client_id": "10215",
+      "client_type": "102",
+      "client_name": "金湖支行"
+    },
+    {
+      "client_id": "10216",
+      "client_type": "102",
+      "client_name": "三新支行"
+    },
+    {
+      "client_id": "10217",
+      "client_type": "102",
+      "client_name": "博罗支行"
+    },
+    {
+      "client_id": "10218",
+      "client_type": "102",
+      "client_name": "横江三路支行"
+    },
+    {
+      "client_id": "10219",
+      "client_type": "102",
+      "client_name": "东江管理部"
+    },
+    {
+      "client_id": "10220",
+      "client_type": "102",
+      "client_name": "龙门支行"
+    },
+    {
+      "client_id": "10221",
+      "client_type": "102",
+      "client_name": "惠阳支行"
+    },
+    {
+      "client_id": "10222",
+      "client_type": "102",
+      "client_name": "大湖溪支行"
+    },
+    {
+      "client_id": "10223",
+      "client_type": "102",
+      "client_name": "水口支行"
+    },
+    {
+      "client_id": "10224",
+      "client_type": "102",
+      "client_name": "仲恺支行"
+    },
+    {
+      "client_id": "10225",
+      "client_type": "102",
+      "client_name": "大亚湾支行"
+    },
+    {
+      "client_id": "10226",
+      "client_type": "102",
+      "client_name": "惠东支行"
+    },
+    {
+      "client_id": "10227",
+      "client_type": "102",
+      "client_name": "泛华公司"
+    },
+    {
+      "client_id": "10301",
+      "client_type": "103",
+      "client_name": "公司部"
+    },
+    {
+      "client_id": "10302",
+      "client_type": "103",
+      "client_name": "三农部"
+    },
+    {
+      "client_id": "10303",
+      "client_type": "103",
+      "client_name": "个金部"
+    },
+    {
+      "client_id": "10304",
+      "client_type": "103",
+      "client_name": "惠城支行"
+    },
+    {
+      "client_id": "10305",
+      "client_type": "103",
+      "client_name": "江北支行"
+    },
+    {
+      "client_id": "10306",
+      "client_type": "103",
+      "client_name": "碧水湾支行"
+    },
+    {
+      "client_id": "10307",
+      "client_type": "103",
+      "client_name": "仲恺支行"
+    },
+    {
+      "client_id": "10308",
+      "client_type": "103",
+      "client_name": "惠东支行"
+    },
+    {
+      "client_id": "10309",
+      "client_type": "103",
+      "client_name": "博罗支行"
+    },
+    {
+      "client_id": "10310",
+      "client_type": "103",
+      "client_name": "惠阳支行"
+    },
+    {
+      "client_id": "10311",
+      "client_type": "103",
+      "client_name": "大亚湾支行"
+    },
+    {
+      "client_id": "10312",
+      "client_type": "103",
+      "client_name": "汕尾分行"
+    },
+    {
+      "client_id": "10313",
+      "client_type": "103",
+      "client_name": "龙门支行"
+    },
+    {
+      "client_id": "10401",
+      "client_type": "104",
+      "client_name": "营业部"
+    },
+    {
+      "client_id": "10402",
+      "client_type": "104",
+      "client_name": "富力支行"
+    },
+    {
+      "client_id": "10403",
+      "client_type": "104",
+      "client_name": "麦地南支行"
+    },
+    {
+      "client_id": "10404",
+      "client_type": "104",
+      "client_name": "江南支行"
+    },
+    {
+      "client_id": "10405",
+      "client_type": "104",
+      "client_name": "仲恺支行"
+    },
+    {
+      "client_id": "10406",
+      "client_type": "104",
+      "client_name": "陈江支行"
+    },
+    {
+      "client_id": "10407",
+      "client_type": "104",
+      "client_name": "下角支行"
+    },
+    {
+      "client_id": "10408",
+      "client_type": "104",
+      "client_name": "小金支行"
+    },
+    {
+      "client_id": "10409",
+      "client_type": "104",
+      "client_name": "惠城支行"
+    },
+    {
+      "client_id": "10410",
+      "client_type": "104",
+      "client_name": "大亚湾支行"
+    },
+    {
+      "client_id": "10411",
+      "client_type": "104",
+      "client_name": "惠南支行"
+    },
+    {
+      "client_id": "10412",
+      "client_type": "104",
+      "client_name": "惠阳支行"
+    },
+    {
+      "client_id": "10413",
+      "client_type": "104",
+      "client_name": "惠东支行"
+    },
+    {
+      "client_id": "10414",
+      "client_type": "104",
+      "client_name": "博罗支行"
+    },
+    {
+      "client_id": "10415",
+      "client_type": "104",
+      "client_name": "石湾支行"
+    },
+    {
+      "client_id": "10416",
+      "client_type": "104",
+      "client_name": "汕尾支行"
+    },
+    {
+      "client_id": "10501",
+      "client_type": "105",
+      "client_name": "个贷中心"
+    },
+    {
+      "client_id": "10502",
+      "client_type": "105",
+      "client_name": "惠州分行小微企业部"
+    },
+    {
+      "client_id": "10503",
+      "client_type": "105",
+      "client_name": "惠州支行"
+    },
+    {
+      "client_id": "10504",
+      "client_type": "105",
+      "client_name": "惠城支行"
+    },
+    {
+      "client_id": "10505",
+      "client_type": "105",
+      "client_name": "麦地支行"
+    },
+    {
+      "client_id": "10506",
+      "client_type": "105",
+      "client_name": "演达支行"
+    },
+    {
+      "client_id": "10507",
+      "client_type": "105",
+      "client_name": "惠阳支行"
+    },
+    {
+      "client_id": "10508",
+      "client_type": "105",
+      "client_name": "江北营业部"
+    },
+    {
+      "client_id": "10509",
+      "client_type": "105",
+      "client_name": "下铺支行"
+    },
+    {
+      "client_id": "10510",
+      "client_type": "105",
+      "client_name": "曼哈顿支行"
+    },
+    {
+      "client_id": "10511",
+      "client_type": "105",
+      "client_name": "仲恺支行"
+    },
+    {
+      "client_id": "10512",
+      "client_type": "105",
+      "client_name": "河源支行"
+    },
+    {
+      "client_id": "10513",
+      "client_type": "105",
+      "client_name": "大亚湾支行"
+    },
+    {
+      "client_id": "10601",
+      "client_type": "106",
+      "client_name": "公司部"
+    },
+    {
+      "client_id": "10602",
+      "client_type": "106",
+      "client_name": "个贷中心"
+    },
+    {
+      "client_id": "10603",
+      "client_type": "106",
+      "client_name": "惠城支行"
+    },
+    {
+      "client_id": "10604",
+      "client_type": "106",
+      "client_name": "南坛支行"
+    },
+    {
+      "client_id": "10605",
+      "client_type": "106",
+      "client_name": "江北支行"
+    },
+    {
+      "client_id": "10606",
+      "client_type": "106",
+      "client_name": "麦地支行"
+    },
+    {
+      "client_id": "10607",
+      "client_type": "106",
+      "client_name": "麦地南支行"
+    },
+    {
+      "client_id": "10608",
+      "client_type": "106",
+      "client_name": "金叶支行"
+    },
+    {
+      "client_id": "10609",
+      "client_type": "106",
+      "client_name": "仲恺支行"
+    },
+    {
+      "client_id": "10610",
+      "client_type": "106",
+      "client_name": "惠阳支行"
+    },
+    {
+      "client_id": "10611",
+      "client_type": "106",
+      "client_name": "大亚湾支行"
+    },
+    {
+      "client_id": "10612",
+      "client_type": "106",
+      "client_name": "博罗支行"
+    },
+    {
+      "client_id": "10613",
+      "client_type": "106",
+      "client_name": "惠东支行"
+    },
+    {
+      "client_id": "10614",
+      "client_type": "106",
+      "client_name": "龙门支行"
+    },
+    {
+      "client_id": "10615",
+      "client_type": "106",
+      "client_name": "银基支行"
+    },
+    {
+      "client_id": "10616",
+      "client_type": "106",
+      "client_name": "演达录支行"
+    },
+    {
+      "client_id": "10617",
+      "client_type": "106",
+      "client_name": "陈江支行"
+    },
+    {
+      "client_id": "10618",
+      "client_type": "106",
+      "client_name": "文化支行"
+    },
+    {
+      "client_id": "10619",
+      "client_type": "106",
+      "client_name": "环城西支行"
+    },
+    {
+      "client_id": "10620",
+      "client_type": "106",
+      "client_name": "三和支行"
+    },
+    {
+      "client_id": "10701",
+      "client_type": "107",
+      "client_name": "惠州分行"
+    },
+    {
+      "client_id": "10702",
+      "client_type": "107",
+      "client_name": "惠阳支行"
+    },
+    {
+      "client_id": "10801",
+      "client_type": "108",
+      "client_name": "惠州分行"
+    },
+    {
+      "client_id": "10901",
+      "client_type": "109",
+      "client_name": "公司部"
+    },
+    {
+      "client_id": "10902",
+      "client_type": "109",
+      "client_name": "个贷部"
+    },
+    {
+      "client_id": "10903",
+      "client_type": "109",
+      "client_name": "惠州分行"
+    },
+    {
+      "client_id": "10904",
+      "client_type": "109",
+      "client_name": "惠阳支行"
+    },
+    {
+      "client_id": "11001",
+      "client_type": "110",
+      "client_name": "公司部"
+    },
+    {
+      "client_id": "11002",
+      "client_type": "110",
+      "client_name": "惠州分行"
+    },
+    {
+      "client_id": "11003",
+      "client_type": "110",
+      "client_name": "惠城支行"
+    },
+    {
+      "client_id": "11004",
+      "client_type": "110",
+      "client_name": "仲恺支行"
+    },
+    {
+      "client_id": "11005",
+      "client_type": "110",
+      "client_name": "惠阳支行"
+    },
+    {
+      "client_id": "11101",
+      "client_type": "111",
+      "client_name": "公司部"
+    },
+    {
+      "client_id": "11102",
+      "client_type": "111",
+      "client_name": "个贷部"
+    },
+    {
+      "client_id": "11103",
+      "client_type": "111",
+      "client_name": "惠州分行"
+    },
+    {
+      "client_id": "11104",
+      "client_type": "111",
+      "client_name": "惠阳支行"
+    },
+    {
+      "client_id": "11105",
+      "client_type": "111",
+      "client_name": "惠东支行"
+    },
+    {
+      "client_id": "11106",
+      "client_type": "111",
+      "client_name": "仲恺支行"
+    },
+    {
+      "client_id": "11201",
+      "client_type": "112",
+      "client_name": "快贷部"
+    },
+    {
+      "client_id": "11202",
+      "client_type": "112",
+      "client_name": "惠州分行"
+    },
+    {
+      "client_id": "11203",
+      "client_type": "112",
+      "client_name": "江北支行"
+    },
+    {
+      "client_id": "11204",
+      "client_type": "112",
+      "client_name": "惠阳支行"
+    },
+    {
+      "client_id": "11301",
+      "client_type": "113",
+      "client_name": "惠州分行"
+    },
+    {
+      "client_id": "11302",
+      "client_type": "113",
+      "client_name": "麦地支行"
+    },
+    {
+      "client_id": "11303",
+      "client_type": "113",
+      "client_name": "惠东支行"
+    },
+    {
+      "client_id": "11304",
+      "client_type": "113",
+      "client_name": "惠阳支行"
+    },
+    {
+      "client_id": "11305",
+      "client_type": "113",
+      "client_name": "陈江支行"
+    },
+    {
+      "client_id": "11306",
+      "client_type": "113",
+      "client_name": "大亚湾支行"
+    },
+    {
+      "client_id": "11307",
+      "client_type": "113",
+      "client_name": "龙门支行"
+    },
+    {
+      "client_id": "11308",
+      "client_type": "113",
+      "client_name": "博罗支行"
+    },
+    {
+      "client_id": "11309",
+      "client_type": "113",
+      "client_name": "江北支行"
+    },
+    {
+      "client_id": "11310",
+      "client_type": "113",
+      "client_name": "仲恺支行"
+    },
+    {
+      "client_id": "11401",
+      "client_type": "114",
+      "client_name": "惠州分行"
+    },
+    {
+      "client_id": "11402",
+      "client_type": "114",
+      "client_name": "惠阳支行"
+    },
+    {
+      "client_id": "11403",
+      "client_type": "114",
+      "client_name": "仲恺支行"
+    },
+    {
+      "client_id": "11404",
+      "client_type": "114",
+      "client_name": "博罗支行"
+    },
+    {
+      "client_id": "11501",
+      "client_type": "115",
+      "client_name": "惠州分行"
+    },
+    {
+      "client_id": "11502",
+      "client_type": "115",
+      "client_name": "个贷部"
+    },
+    {
+      "client_id": "11503",
+      "client_type": "115",
+      "client_name": "惠州分行一部"
+    },
+    {
+      "client_id": "11504",
+      "client_type": "115",
+      "client_name": "惠州分行二部"
+    },
+    {
+      "client_id": "11505",
+      "client_type": "115",
+      "client_name": "惠州分行散步"
+    },
+    {
+      "client_id": "11506",
+      "client_type": "115",
+      "client_name": "惠州分行四部"
+    },
+    {
+      "client_id": "11507",
+      "client_type": "115",
+      "client_name": "惠州分行五部"
+    },
+    {
+      "client_id": "11508",
+      "client_type": "115",
+      "client_name": "惠州分行六部"
+    },
+    {
+      "client_id": "11509",
+      "client_type": "115",
+      "client_name": "惠阳支行"
+    },
+    {
+      "client_id": "11510",
+      "client_type": "115",
+      "client_name": "博罗支行"
+    },
+    {
+      "client_id": "11601",
+      "client_type": "116",
+      "client_name": "公司部"
+    },
+    {
+      "client_id": "11602",
+      "client_type": "116",
+      "client_name": "个贷部"
+    },
+    {
+      "client_id": "11603",
+      "client_type": "116",
+      "client_name": "惠州分行小微零售部"
+    },
+    {
+      "client_id": "11604",
+      "client_type": "116",
+      "client_name": "惠州分行"
+    },
+    {
+      "client_id": "11605",
+      "client_type": "116",
+      "client_name": "惠阳支行"
+    },
+    {
+      "client_id": "11606",
+      "client_type": "116",
+      "client_name": "大亚湾支行"
+    },
+    {
+      "client_id": "11701",
+      "client_type": "117",
+      "client_name": "惠州分行"
+    },
+    {
+      "client_id": "11801",
+      "client_type": "118",
+      "client_name": "公司部"
+    },
+    {
+      "client_id": "11802",
+      "client_type": "118",
+      "client_name": "三农部"
+    },
+    {
+      "client_id": "11803",
+      "client_type": "118",
+      "client_name": "业务发展一部"
+    },
+    {
+      "client_id": "11804",
+      "client_type": "118",
+      "client_name": "业务发展二部"
+    },
+    {
+      "client_id": "11805",
+      "client_type": "118",
+      "client_name": "仲恺分行"
+    },
+    {
+      "client_id": "11806",
+      "client_type": "118",
+      "client_name": "三新支行"
+    },
+    {
+      "client_id": "11807",
+      "client_type": "118",
+      "client_name": "水口支行"
+    },
+    {
+      "client_id": "11808",
+      "client_type": "118",
+      "client_name": "金山湖支行"
+    },
+    {
+      "client_id": "11901",
+      "client_type": "119",
+      "client_name": "惠东支行"
+    },
+    {
+      "client_id": "12001",
+      "client_type": "120",
+      "client_name": "惠州分行"
+    },
+    {
+      "client_id": "12101",
+      "client_type": "121",
+      "client_name": "惠城农商银行"
+    },
+    {
+      "client_id": "12102",
+      "client_type": "121",
+      "client_name": "博罗农商银行"
+    },
+    {
+      "client_id": "12103",
+      "client_type": "121",
+      "client_name": "惠东农商银行"
+    },
+    {
+      "client_id": "12104",
+      "client_type": "121",
+      "client_name": "龙门农商银行"
+    },
+    {
+      "client_id": "12105",
+      "client_type": "121",
+      "client_name": "惠阳农商银行"
+    },
+    {
+      "client_id": "12106",
+      "client_type": "121",
+      "client_name": "汕尾农商银行"
+    },
+    {
+      "client_id": "100001",
+      "client_type": "1001",
+      "client_name": "惠州市自然资源局"
+    },
+    {
+      "client_id": "100002",
+      "client_type": "1001",
+      "client_name": "惠州市惠城区自然资源局"
+    },
+    {
+      "client_id": "100003",
+      "client_type": "1001",
+      "client_name": "惠州市惠阳区自然资源局"
+    },
+    {
+      "client_id": "100004",
+      "client_type": "1001",
+      "client_name": "惠州市博罗县自然资源局"
+    },
+    {
+      "client_id": "100005",
+      "client_type": "1001",
+      "client_name": "惠州市惠东县自然资源局"
+    },
+    {
+      "client_id": "100006",
+      "client_type": "1001",
+      "client_name": "惠州市国土资源局仲恺高新技术产业开发区分局"
+    },
+    {
+      "client_id": "100007",
+      "client_type": "1001",
+      "client_name": "惠州市龙门县自然资源局"
+    },
+    {
+      "client_id": "100008",
+      "client_type": "1002",
+      "client_name": "惠州市中级人民法院"
+    },
+    {
+      "client_id": "100009",
+      "client_type": "1002",
+      "client_name": "惠城区人民法院"
+    },
+    {
+      "client_id": "100010",
+      "client_type": "1002",
+      "client_name": "惠州市惠阳区人民法院"
+    },
+    {
+      "client_id": "100011",
+      "client_type": "1002",
+      "client_name": "惠州市博罗县人民法院"
+    },
+    {
+      "client_id": "100012",
+      "client_type": "1002",
+      "client_name": "惠州市惠东县人民法院"
+    },
+    {
+      "client_id": "100013",
+      "client_type": "1002",
+      "client_name": "惠州市龙门县人民法院"
+    },
+    {
+      "client_id": "100014",
+      "client_type": "1002",
+      "client_name": "惠州市大亚湾经济技术开发区人民法院"
+    },
+    {
+      "client_id": "100015",
+      "client_type": "1003",
+      "client_name": "惠州市国资委"
+    },
+    {
+      "client_id": "100016",
+      "client_type": "1003",
+      "client_name": "惠阳市国资办"
+    },
+    {
+      "client_id": "100017",
+      "client_type": "1003",
+      "client_name": "博罗县国资办"
+    },
+    {
+      "client_id": "100018",
+      "client_type": "1003",
+      "client_name": "惠东县国资办"
+    },
+    {
+      "client_id": "100019",
+      "client_type": "1003",
+      "client_name": "龙门县国资办"
+    },
+    {
+      "client_id": "100020",
+      "client_type": "1003",
+      "client_name": "大亚湾国资办"
+    },
+    {
+      "client_id": "100021",
+      "client_type": "1004",
+      "client_name": "惠州市财政局"
+    },
+    {
+      "client_id": "100022",
+      "client_type": "1004",
+      "client_name": "惠州市惠城区财政局"
+    },
+    {
+      "client_id": "100023",
+      "client_type": "1004",
+      "client_name": "惠州市惠阳区财政局"
+    },
+    {
+      "client_id": "100024",
+      "client_type": "1004",
+      "client_name": "惠州市博罗县财政局"
+    },
+    {
+      "client_id": "100025",
+      "client_type": "1004",
+      "client_name": "惠州市惠东县财政局"
+    },
+    {
+      "client_id": "100026",
+      "client_type": "1004",
+      "client_name": "惠州市龙门县财政局"
+    },
+    {
+      "client_id": "100027",
+      "client_type": "1004",
+      "client_name": "惠州市仲恺高新技术产业开发区财政局"
+    },
+    {
+      "client_id": "100028",
+      "client_type": "1004",
+      "client_name": "惠州市大亚湾经济技术开发区财政局"
+    },
+    {
+      "client_id": "100029",
+      "client_type": "1005",
+      "client_name": "惠城区企业局"
+    },
+    {
+      "client_id": "100030",
+      "client_type": "1005",
+      "client_name": "惠城区体改办"
+    },
+    {
+      "client_id": "100031",
+      "client_type": "1005",
+      "client_name": "惠州市林业局"
+    },
+    {
+      "client_id": "100032",
+      "client_type": "1005",
+      "client_name": "惠州市公共资源中心"
+    },
+    {
+      "client_id": "100033",
+      "client_type": "1005",
+      "client_name": "惠州市机关事务管理局"
+    },
+    {
+      "client_id": "100034",
+      "client_type": "1005",
+      "client_name": "惠州市仲裁委"
+    },
+    {
+      "client_id": "100035",
+      "client_type": "1006",
+      "client_name": "惠州市融资担保公司"
+    },
+    {
+      "client_id": "100036",
+      "client_type": "1006",
+      "client_name": "创源担保"
+    },
+    {
+      "client_id": "100037",
+      "client_type": "1006",
+      "client_name": "展源担保"
+    },
+    {
+      "client_id": "100038",
+      "client_type": "1006",
+      "client_name": "兆达担保"
+    },
+    {
+      "client_id": "100039",
+      "client_type": "1006",
+      "client_name": "广州信达财险"
+    }
+  ]
+}
