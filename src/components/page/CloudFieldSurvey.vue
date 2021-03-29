@@ -24,6 +24,8 @@
             <el-table :data="evalObj"
                       v-loading="loading"
                       style=" width: 50%; box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)"
+                      :span-method="arraySpan"
+                      id="no-hover"
             >
               <el-table-column
                   label="状态"
@@ -38,12 +40,18 @@
                   prop="evalObjId">
                 <template slot-scope="scope">
                   <el-tag type="info" >{{scope.row.evalObjId}}</el-tag>
-
                 </template>
               </el-table-column>
               <el-table-column
                   label="估价对象名称"
-                  prop="evalObjName">
+                  prop="evalObjName"
+                  width="400px"
+              >
+              </el-table-column>
+              <el-table-column
+                  label="已派发人员"
+              >
+              {{deliveredFieldSurvey}}
               </el-table-column>
             </el-table>
           </el-form>
@@ -77,6 +85,7 @@
             width="30%">
       <div>
         <span><b>计划现勘人员：</b>{{this.planedFieldSrvy}}</span><br><br>
+        <span><b>已派发现勘人员：</b>{{this.deliveredFieldSurvey}}</span><br><br>
         <b>选择现勘人员  </b><el-button type="text" @click="handleClear">清空</el-button>
 <!--        <el-checkbox-group v-model="selectedFieldSurveyList">-->
 <!--          <el-checkbox-button v-for="staff in fieldSurveyStaffList"-->
@@ -114,6 +123,15 @@
 .el-table .success-row {
   background: #ecffe0;
 }
+#no-hover .el-table__row:hover > td {
+  background-color: #ffffff !important;
+
+}
+
+#no-hover .el-table__row--striped:hover > td {
+  background-color: #ffffff !important;
+
+}
 </style>
 
 <script>
@@ -130,6 +148,7 @@ export default {
       tableData: [],
       expands: [],
       evalObj: [],
+      deliveredFieldSurvey: '无',
       staffList: [],
       fieldSurveyStaffList:[],
       planedFieldSrvy:'',
@@ -192,6 +211,7 @@ export default {
 
     },
     expandChange(row,expandedRows) {
+      this.deliveredFieldSurvey = ''
       console.log(row.projId)
       var that = this
       if (expandedRows.length) {
@@ -219,7 +239,7 @@ export default {
             this.$alert("获取估价对象失败")
           }
       );
-
+      this.deliveredFieldSurvey = this.surveyDataMap[row.projId].surveySurveyors
     },
     rowClick(row,index) {
       this.$refs.refTable.toggleRowExpansion(row)
@@ -290,6 +310,21 @@ export default {
 
       return surveyorArray.indexOf(staffName) > -1;
 
+    },
+    arraySpan({ row, column, rowIndex, columnIndex }){
+      if (columnIndex === 3) {
+        if (rowIndex % 2 === 0) {
+          return {
+            rowspan: 2,
+            colspan: 1
+          };
+        } else {
+          return {
+            rowspan: 0,
+            colspan: 0
+          };
+        }
+      }
     }
   }
 }
