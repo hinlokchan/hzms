@@ -37,7 +37,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
     response => {
         console.log('response.data.statusCode', response.data)
-        if (response.data.statusCode === '200') {
+        if (response.data.statusCode == '200') {
             endLoading()
             return Promise.resolve(response.data)
         } else if (response.data.statusCode === '4003') {
