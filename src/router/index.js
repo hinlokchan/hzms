@@ -84,11 +84,11 @@ export default new Router({
                     component: () => import('../components/page/ContractManage.vue'),
                     meta: { title: '合同管理' , permission: true }
                 },
-                // {
-                //     path: '/casesearchdock',
-                //     component: () => import('../components/page/CaseSearchDock.vue'),
-                //     meta: { title: '案例查询（Demo）' }
-                // },
+                {
+                    path: '/casesearchdock',
+                    component: () => import('../components/page/CaseSearchDock.vue'),
+                    meta: { title: '案例查询' }
+                },
                 // {
                 //     path: '/client',
                 //     component: () => import('../components/page/Client.vue'),

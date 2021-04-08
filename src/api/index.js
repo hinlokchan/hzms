@@ -321,7 +321,7 @@ export function setProjState(data) {
 
 export function caseSearch(data) {
   return request({
-    url: `${ProManageAPIServer}es/matchQuery`,
+    url: `${ProManageAPIServer}hzirdb/search/all`,
     headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
     method: 'post',
     data: qs.stringify(data)

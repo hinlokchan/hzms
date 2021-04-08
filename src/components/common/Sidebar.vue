@@ -106,11 +106,11 @@ export default {
           //   // },
           // ]
         },
-        // {
-        //   index: 'casesearchdock',
-        //   icon: 'el-icon-folder',
-        //   title: '案例数据库'
-        // },
+        {
+          index: 'casesearchdock',
+          icon: 'el-icon-folder',
+          title: '案例数据库'
+        },
         {
           index: 'projstat',
           icon: 'el-icon-date',
@@ -273,12 +273,12 @@ export default {
           index: 'cloudfieldsurvey',
           icon: 'el-icon-data-analysis',
           title: '云现勘'
+        },
+        {
+          index: 'casesearchdock',
+          icon: 'el-icon-folder',
+          title: '案例数据库'
         }
-        // {
-        //   index: 'casesearchdock',
-        //   icon: 'el-icon-folder',
-        //   title: '案例查询（Demo）'
-        // }
       ],
       //业务部门
       items3: [
@@ -302,11 +302,11 @@ export default {
           icon: "el-icon-data-analysis",
           title: "统计管理"
         },
-        // {
-        //   index: 'casesearchdock',
-        //   icon: 'el-icon-folder',
-        //   title: '案例查询（Demo）'
-        // }
+        {
+          index: 'casesearchdock',
+          icon: 'el-icon-folder',
+          title: '案例数据库'
+        }
         // {
         //   index: 'oldplanform',
         //   icon: 'el-icon-document-add',
