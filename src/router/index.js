@@ -27,7 +27,7 @@ export default new Router({
                 {
                     path: '/plan',
                     component: () => import('../components/page/Plan.vue'),
-                    meta: { title: '项目管理' , permission: true }
+                    meta: { title: '项目管理' , permission: true , keepAlive: true}
                 },
                 {
                     path: '/planform',
@@ -42,7 +42,7 @@ export default new Router({
                 {
                     path: '/workbranch',
                     component: () => import('../components/page/WorkBranch.vue'),
-                    meta: { title: '工作台' }
+                    meta: { title: '工作台' , keepAlive: true}
                 },
                 // {
                 //     path: '/oldplanform',
@@ -87,7 +87,7 @@ export default new Router({
                 {
                     path: '/casesearchdock',
                     component: () => import('../components/page/CaseSearchDock.vue'),
-                    meta: { title: '案例查询' }
+                    meta: { title: '案例查询' , keepAlive: true}
                 },
                 // {
                 //     path: '/client',
