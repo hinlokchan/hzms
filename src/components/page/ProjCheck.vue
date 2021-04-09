@@ -346,8 +346,12 @@ export default {
     },
     getDetail() {
       getDetailProjInfo({ projId: this.projId }).then(res => {
-        console.log('res.data', res.data)
-        this.detailData = res.data
+        if (JSON.stringify(res.data) === '{}') {
+          this.goBack();
+          this.$message.error('计划系统内无该项目数据');
+          return;
+        }
+        this.detailData = res.data;
         //处理value转为label展示
         for (var i = 0; i < this.projTypeOption.length; i++) {
           if (this.detailData.projType == this.projTypeOption[i].value) {
@@ -355,22 +359,6 @@ export default {
           }
         }
         this.reportNum = res.data.reportNumList
-        console.log('reportNum', this.reportNum)
-        //委托人（原银行）转译
-        // let clientOptions = this.clientOptions
-        // let bankAfter = []
-        // for (let i = 0; i < clientOptions.length; i++) {
-        //   if (clientOptions[i].children) {
-        //     bankAfter = bankAfter.concat(clientOptions[i].children)
-        //   }
-        // }
-        // let index = bankAfter.findIndex((val) => {
-        //   return val.value == this.detailData.lendingBank
-        // })
-        // let indexBefore = clientOptions.findIndex((val) => {
-        //   return val.value == this.detailData.lendingBank.substring(0, 3)
-        // })
-        // this.detailData.lendingBankLable = clientOptions[indexBefore].label + ' - ' + bankAfter[index].label
       })
     },
     goBack() {

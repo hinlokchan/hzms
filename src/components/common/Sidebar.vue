@@ -54,7 +54,9 @@
               :class="item.icon"
               style="color: #000"
             ></i>
-            <span slot="title">{{ item.title }}</span>
+            <span slot="title">
+              {{ item.title }}<el-badge value="new" class="item" v-if="item.isNew"></el-badge>
+            </span>
           </el-menu-item>
         </template>
       </template>
@@ -108,7 +110,7 @@ export default {
         },
         {
           index: 'casesearchdock',
-          icon: 'el-icon-folder',
+          icon: 'el-icon-discover',
           title: '案例数据库'
         },
         {
@@ -276,7 +278,7 @@ export default {
         },
         {
           index: 'casesearchdock',
-          icon: 'el-icon-folder',
+          icon: 'el-icon-discover',
           title: '案例数据库'
         }
       ],
@@ -299,13 +301,14 @@ export default {
         },
         {
           index: 'stat4Common',
-          icon: "el-icon-data-analysis",
-          title: "统计管理"
+          icon: 'el-icon-data-analysis',
+          title: '统计管理'
         },
         {
           index: 'casesearchdock',
-          icon: 'el-icon-folder',
-          title: '案例数据库'
+          icon: 'el-icon-discover',
+          title: '案例数据库',
+          isNew: true
         }
         // {
         //   index: 'oldplanform',

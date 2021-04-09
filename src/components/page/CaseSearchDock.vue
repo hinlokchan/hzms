@@ -5,7 +5,11 @@
       <div class="crumbs">
         <el-breadcrumb separator="/">
           <el-breadcrumb-item>
-            案例搜索
+            <i class="el-icon-discover"></i>
+            案例数据库
+          </el-breadcrumb-item>
+          <el-breadcrumb-item>
+            搜索
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
@@ -14,7 +18,7 @@
           <el-button slot="append" type="primary" icon="el-icon-search" @click="doSearch" ></el-button>
         </el-input>
 
-        <el-card shadow="never" style="margin-top: 20px">
+        <el-card shadow="never" style="margin-top: 20px" v-if="tableData.list.length > 0">
           <el-table
               :data="tableData.list"
               style="width: 100%"
@@ -165,7 +169,6 @@ export default {
       }
       caseSearch({ keyword: this.keyword}).then(res => {
         this.tableData.list = res.data;
-        localStorage.setItem('resultData', JSON.stringify(res.data));
       }).catch(error => {
         console.log(error);
       });
@@ -193,9 +196,6 @@ export default {
     }).catch(error => {
       console.log(error)
     });
-    if (localStorage.getItem('resultData') !== undefined) {
-      this.tableData.list = JSON.parse(localStorage.getItem('resultData'));
-    }
   }
 }
 </script>
