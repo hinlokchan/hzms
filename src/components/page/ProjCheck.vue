@@ -347,8 +347,14 @@ export default {
     getDetail() {
       getDetailProjInfo({ projId: this.projId }).then(res => {
         if (JSON.stringify(res.data) === '{}') {
-          this.goBack();
           this.$message.error('计划系统内无该项目数据');
+
+          let that = this
+          setTimeout(
+              function() {
+                that.goBack()
+              }
+              , 1000);
           return;
         }
         this.detailData = res.data;
