@@ -844,7 +844,7 @@
                   plain
                   size="medium"
                   @click="handleCreateContractNum()"
-                  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
+                  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 || this.contractNum != '')"
                 >获取</el-button>
                 <el-button
                   icon="el-icon-suitcase"
@@ -852,14 +852,22 @@
                   plain
                   size="medium"
                   @click="handleDeleteContractNum()"
-                  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
+                  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 || this.contractNum == '' )"
                 >删除</el-button>
               </span>
             </div>
             <div class="text item">
               <div class="item">
-                <span v-if="this.contractNum == ''">未取合同号</span>
-                <span v-else>合同号：</span>{{this.contractNum}}
+                <span v-if="this.contractNum == ''">未取号</span>
+                <div v-else>
+                  <span>公司合同号：</span>{{this.contractNum}}<br>
+                  <span>外部合同号（定点采购、中介超市）：</span>{{this.projDetail.contractNum.externalContractNum}}
+                  <el-button
+                      type="text"
+                      size="medium"
+                      @click="openContractNumDialog"
+                  ><i class="el-icon-edit"></i></el-button>
+                </div>
               </div>
             </div>
           </el-card>
@@ -1085,6 +1093,35 @@
     <OpRecord
       :projId="projDetail.projId"
     ></OpRecord>
+    <el-dialog
+          title="外部合同号"
+          :visible.sync="contractNumDialogVisible"
+          width="30%"
+          >
+          <el-input
+              type="text"
+              placeholder="请输入外部合同号"
+              v-model="preExternalContractNum"
+          ></el-input>
+          <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取消</el-button>
+    <el-button type="primary" @click="setExternalContractNum">保存</el-button>
+            </span>
+    </el-dialog>
+    <el-dialog
+          title="外部合同号"
+          :visible.sync="preContractNumDialogVisible"
+          width="30%"
+      >
+          <el-input
+              type="text"
+              placeholder="请输入外部合同号"
+              v-model="preExternalContractNum"
+          ></el-input>
+          <span slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="createContractNumWithExternal" :disabled="this.preExternalContractNum === ''">确定</el-button>
+          </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -1167,6 +1204,8 @@ export default {
       subFatherReport: '',
       subTableData: [],
       contractNum: '',
+      externalContractNum: '',
+      preExternalContractNum: '',
       contractNumType: '',
       changeType: {
         projId: '',
@@ -1331,7 +1370,9 @@ export default {
           }
           return time.getMonth() >= date.getMonth() && time.getFullYear() >= date.getFullYear();
         }
-      }
+      },
+      contractNumDialogVisible: false,
+      preContractNumDialogVisible: false
     }
   },
   created() {
@@ -1368,14 +1409,11 @@ export default {
         .then(res => {
           if (res.statusCode == 200) {
             this.projDetail = res.data
-            console.log('项目详情信息，projDetail', this.projDetail)
             if (res.data.reportNumList != '') {
               this.reportNum = res.data.reportNumList
-              console.log('报告号信息，reportNum', this.reportNum)
             }
             if (res.data.contractNum != null) {
               this.contractNum = res.data.contractNum.contractNum
-              console.log('contractNum', this.contractNum)
             }
             //提取项目组成员
             const leader = this.projDetail.projLeader.split(',')
@@ -1386,7 +1424,6 @@ export default {
             this.midMember.push(...leader, ...reviewer, ...projReviewer, ...asst, ...srvy)
             const mid2 = Array.from(new Set(this.midMember))
             this.projMember = mid2.filter(item => item)
-            console.log('项目组成员，projMember', this.projMember)
           }
           this.$nextTick(() => {
             //禁用同类型的“更改项目类型”
@@ -1407,20 +1444,17 @@ export default {
             }
             getSubProjectInfoList({ projId: this.projDetail.projId })
               .then(res => {
-                console.log('子项目信息list', res)
                 this.subTableData = res.data
                 // this.subTableData = res.data.cph
                 // this.subTableData = this.subTableData.concat(res.data.zph)
               })
               .catch(err => {
-                console.log('获取子项目信息失败err', err)
               })
             //this.check()
           })
         })
         .catch(err => {
           this.$message.error('获取项目详细信息失败')
-          console.log('获取项目详情信息失败', err)
         })
     },
     check() {
@@ -1447,8 +1481,6 @@ export default {
         .catch(err => {
           console.log(err)
         })
-      console.log('对象详情、登记状态，statusInfo', this.statusInfo)
-      console.log('regInfo', this.regInfo)
     },
     //文字转换前置判断
     changNumShowType() {
@@ -1777,57 +1809,39 @@ export default {
       this.qrCodeSrc = ''
     },
     handleCreateContractNum() {
-      // if (queryData.projType == 1010)let const
-      this.$confirm('即将获取合同号', '提示', { type: 'info' })
-        .then(() => {
-          if (this.contractNum) {
-            this.$message.warning('已存在合同号！')
-          } else {
-            // switch (this.queryData.projType) {
-            //   case 1010:
-            //     this.contractNumType = '101'
-            //     break
-            //   case 1020:
-            //     this.contractNumType = '201'
-            //     break
-            //   case 1030:
-            //     this.contractNumType = '301'
-            //     break
-            //   case 1041:
-            //     this.contractNumType = '102'
-            //     break
-            //   case 1042:
-            //     this.contractNumType = '202'
-            //     break
-            //   case 1043:
-            //     this.contractNumType = '302'
-            //     break
-            //   case 1050:
-            //     this.contractNumType = '202'
-            //     break
-            //   case 1070:
-            //     this.contractNumType = '202'
-            //     break
-            //   case 1090:
-            //     this.contractNumType = '202'
-            //     break
-            //   case 1100:
-            //     this.contractNumType = '401'
-            //     break
-            // }
-            // console.log(this.contractNumType)
-            createContractNum({ projId: this.queryData.projId })
-              .then(res => {
-                console.log('createContractNum.res', res)
-                this.reload()
-              })
-              .catch(err => {
-                this.$message.warning('服务器忙，请稍后重试！')
-              })
-          }
-        })
-        .catch(() => { })
 
+        if (this.projDetail.projContactType === '定点采购' || this.projDetail.projContactType === '中介超市摇珠') {
+            this.preContractNumDialogVisible = true;
+        } else {
+            this.createContractNumBasic()
+        }
+
+    },
+    createContractNumBasic(){
+        this.$confirm('即将获取合同号', '提示', { type: 'info' })
+            .then(() => {
+                if (this.contractNum) {
+                    this.$message.warning('已存在合同号！');
+                    return;
+                }
+                createContractNum({ projId: this.queryData.projId , externalContractNum : this.preExternalContractNum})
+                    .then(res => {
+                        this.reload();
+                    })
+                    .catch(err => {
+                        this.$message.warning('服务器忙，请稍后重试！');
+                    });
+            })
+            .catch(() => {
+            });
+    },
+    createContractNumWithExternal() {
+        if (this.preExternalContractNum === '') {
+            this.$message.error('请输入外部合同号')
+            return
+        }
+
+        this.createContractNumBasic()
 
     },
     handleDeleteContractNum() {
@@ -2167,6 +2181,14 @@ export default {
     },
     goBack() {
       this.$router.back()
+    },
+    openContractNumDialog(){
+        if (this.externalContractNum === '' || this.externalContractNum === undefined) {
+            this.preContractNumDialogVisible = true;
+        } else {
+            this.preExternalContractNum = this.externalContractNum
+            this.contractNumDialogVisible = true;
+        }
     }
   },
 }
