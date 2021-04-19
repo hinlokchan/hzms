@@ -1104,7 +1104,7 @@
               v-model.trim="preExternalContractNum"
           ></el-input>
           <span slot="footer" class="dialog-footer">
-    <el-button @click="dialogVisible = false">取消</el-button>
+    <el-button @click="contractNumDialogVisible = false">取消</el-button>
     <el-button type="primary" @click="setExternalContractNum">保存</el-button>
             </span>
     </el-dialog>
@@ -2191,11 +2191,11 @@ export default {
       this.$router.back()
     },
     openContractNumDialog(){
-        if (this.externalContractNum === '' || this.externalContractNum === undefined) {
-            this.preContractNumDialogVisible = true;
-        } else {
+        if (this.contractNum != '') {
             this.preExternalContractNum = this.externalContractNum
             this.contractNumDialogVisible = true;
+        } else {
+            this.preContractNumDialogVisible = true;
         }
     },
     setExternalContractNum() {
