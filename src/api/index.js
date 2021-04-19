@@ -256,6 +256,15 @@ export function createContractNum(data) {
   });
 }
 
+export function updateExternalContractNum(data) {
+  return request({
+    url: `${ProManageAPIServer}contract/updateExternalContractNum`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
 export function deleteContractNum(data) {
   return request({
     url: `${ProManageAPIServer}contract/deleteContractNum`,
