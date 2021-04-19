@@ -8,83 +8,15 @@
                     </el-breadcrumb-item>
                 </el-breadcrumb>
             </div>
-<!--            <el-table-->
-<!--                :data="tableData"-->
-<!--                style="width: 100%"-->
-<!--                max-height="500">-->
-<!--                <el-table-column-->
-<!--                    fixed-->
-<!--                    prop="contractNum"-->
-<!--                    label="合同号"-->
-<!--                    width="100">-->
-<!--                </el-table-column>-->
-<!--                <el-table-column-->
-<!--                    fixed-->
-<!--                    prop="projNum"-->
-<!--                    label="计划编号"-->
-<!--                    width="100">-->
-<!--                </el-table-column>-->
-<!--                <el-table-column-->
-<!--                    prop="takenDate"-->
-<!--                    label="取号日期"-->
-<!--                    width="100">-->
-<!--                </el-table-column>-->
-<!--                <el-table-column-->
-<!--                    prop="projName"-->
-<!--                    label="项目名称"-->
-<!--                    width="300">-->
-<!--                </el-table-column>-->
-<!--                <el-table-column-->
-<!--                    prop="clientName"-->
-<!--                    label="委托人"-->
-<!--                    width="120">-->
-<!--                </el-table-column>-->
-<!--                <el-table-column-->
-<!--                    prop="assemGoal"-->
-<!--                    label="评估目的"-->
-<!--                    width="100">-->
-<!--                </el-table-column>-->
-<!--                <el-table-column-->
-<!--                    prop="projLeader"-->
-<!--                    label="项目负责人"-->
-<!--                    width="100">-->
-<!--                </el-table-column>-->
-<!--                <el-table-column-->
-<!--                    prop="signingPic"-->
-<!--                    label="签约负责人"-->
-<!--                    width="100">-->
-<!--                </el-table-column>-->
-<!--                <el-table-column-->
-<!--                    prop="zip"-->
-<!--                    label="已签份数"-->
-<!--                    width="100">-->
-<!--                </el-table-column>-->
-<!--                <el-table-column-->
-<!--                    prop="recoverDate"-->
-<!--                    label="回收日期"-->
-<!--                    width="100">-->
-<!--                </el-table-column>-->
-<!--                <el-table-column-->
-<!--                    prop="archivePic"-->
-<!--                    label="归档负责人"-->
-<!--                    width="100">-->
-<!--                </el-table-column>-->
-<!--                <el-table-column-->
-<!--                    prop="notes"-->
-<!--                    label="备注"-->
-<!--                    width="120">-->
-<!--                </el-table-column>-->
-<!--            </el-table>-->
           <el-table
               :data="tableData"
               :row-class-name="tableRowClassName"
+              ref="table"
+              @row-click="rowClick"
               style="width: 100%">
             <el-table-column type="expand">
               <template slot-scope="props">
                 <el-form label-position="left" inline class="demo-table-expand">
-                  <el-form-item label=委托人>
-                    <span>{{ props.row.clientName }}</span>
-                  </el-form-item>
                   <el-form-item label="评估目的">
                     <span>{{ props.row.assemGoal }}</span>
                   </el-form-item>
@@ -145,6 +77,16 @@
                 prop="projName"
                 label="项目名称"
                 width="">
+            </el-table-column>
+            <el-table-column
+                prop="clientName"
+                label="委托人"
+                width="300">
+            </el-table-column>
+            <el-table-column
+                prop="externalContractNum"
+                label="外部合同号"
+                width="200">
             </el-table-column>
           </el-table>
 
@@ -241,11 +183,12 @@ export default {
             res => {
               this.$message.success('编辑成功');
               this.dialogFormVisible = false;
-              this.getData()
+              this.getData();
             }
-        ).catch(err => {
-          this.$message.error('编辑失败')
-        })
+        ).catch(
+            err => {
+              this.$message.error('编辑失败');
+            })
         ;
       },
       getData() {
@@ -259,7 +202,10 @@ export default {
               console.log(res.data)
             }
         );
-      }
+      },
+      rowClick(row,index) {
+        this.$refs.table.toggleRowExpansion(row)
+      },
     },
   created() {
     this.getData();
@@ -286,6 +232,6 @@ export default {
 }
 
 .el-table .success-row {
-  background: #f0f9eb;
+  background: #ecffe0;
 }
 </style>
