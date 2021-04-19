@@ -26,17 +26,24 @@
                   <el-form-item label="项目助理">
                     <span>{{ props.row.projAsst }}</span>
                   </el-form-item>
+                  <el-divider></el-divider>
                   <el-form-item label="签约负责人">
                     <span>{{ props.row.signingPic }}</span>
                   </el-form-item>
-                  <el-form-item label="已签份数">
-                    <span>{{ props.row.signedCopiesCount }}</span>
+                  <el-form-item label="归档经办人">
+                    <span>{{ props.row.archiveOperator }}</span>
+                  </el-form-item>
+                  <el-form-item label="取号日期">
+                    <span>{{ props.row.takenDate }}</span>
                   </el-form-item>
                   <el-form-item label="回收日期">
                     <span>{{ props.row.recoverDate }}</span>
                   </el-form-item>
-                  <el-form-item label="归档经办人">
-                    <span>{{ props.row.archiveOperator }}</span>
+                  <el-form-item label="签约日期">
+                    <span>{{ props.row.signingDate }}</span>
+                  </el-form-item>
+                  <el-form-item label="已签份数">
+                    <span>{{ props.row.signedCopiesCount }}</span>
                   </el-form-item>
                   <el-form-item label="备注">
                     <span>{{ props.row.notes }}</span>
@@ -48,7 +55,7 @@
               <template slot-scope="scope">
                 <el-button
                     size="mini"
-                    @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                    @click.stop="handleEdit(scope.$index, scope.row)">编辑</el-button>
                 <!--                <el-button-->
                 <!--                    size="mini"-->
                 <!--                    type="danger"-->
@@ -57,7 +64,7 @@
             </el-table-column>
             <el-table-column
                 prop="contractNum"
-                label="合同号"
+                label="公司合同号"
                 align="center"
                 width="100">
             </el-table-column>
@@ -68,12 +75,6 @@
                 width="100">
             </el-table-column>
             <el-table-column
-                prop="takenDate"
-                label="取号日期"
-                align="center"
-                width="150">
-            </el-table-column>
-            <el-table-column
                 prop="projName"
                 label="项目名称"
                 width="">
@@ -81,12 +82,12 @@
             <el-table-column
                 prop="clientName"
                 label="委托人"
-                width="300">
+                width="150">
             </el-table-column>
             <el-table-column
                 prop="externalContractNum"
                 label="外部合同号"
-                width="200">
+                width="150">
             </el-table-column>
           </el-table>
 
