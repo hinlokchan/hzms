@@ -55,7 +55,7 @@
               style="color: #000"
             ></i>
             <span slot="title">
-              {{ item.title }}<el-badge value="new" class="item" v-if="item.isNew"></el-badge>
+              {{ item.title }}
             </span>
           </el-menu-item>
         </template>
