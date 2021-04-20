@@ -8,12 +8,15 @@
                     </el-breadcrumb-item>
                 </el-breadcrumb>
             </div>
+          <el-input placeholder="合同号搜索" v-model="searchContent" @change="getData" size="small" style="margin-bottom: 20px ; width: 30% ;box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)">
+            <el-button slot="append" type="primary" icon="el-icon-search" @click="getData" ></el-button>
+          </el-input>
           <el-table
               :data="tableData"
               :row-class-name="tableRowClassName"
               ref="table"
               @row-click="rowClick"
-              style="width: 100%">
+              style="width: 100%;box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)">
             <el-table-column type="expand">
               <template slot-scope="props">
                 <el-form label-position="left" inline class="demo-table-expand">
@@ -51,7 +54,7 @@
                 </el-form>
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="100">
+            <el-table-column label="操作" width="80" align="center">
               <template slot-scope="scope">
                 <el-button
                     size="mini"
@@ -66,13 +69,19 @@
                 prop="contractNum"
                 label="公司合同号"
                 align="center"
-                width="100">
+                width="90">
             </el-table-column>
             <el-table-column
                 prop="projNum"
                 label="计划编号"
                 align="center"
                 width="100">
+            </el-table-column>
+            <el-table-column
+                prop="reportNum"
+                label="报告号"
+                align="center"
+                width="110">
             </el-table-column>
             <el-table-column
                 prop="projName"
@@ -136,28 +145,28 @@ import {getContractList,updateContractInfo} from '@/api';
 
 export default {
     data() {
-        return {
-            tableData:[],
-            dialogFormVisible:false,
-            editForm:{
-              contractNum: '',
-              signingPic: '',
-              signedCopiesCount: '',
-              recoverDate: '',
-              archiveOperator: '',
-              notes: '',
-              signingDate: ''
-            },
-            filterRecover:true
-        };
+      return {
+        tableData: [],
+        dialogFormVisible: false,
+        editForm: {
+          contractNum: '',
+          signingPic: '',
+          signedCopiesCount: '',
+          recoverDate: '',
+          archiveOperator: '',
+          notes: '',
+          signingDate: ''
+        },
+        searchContent: '',
+        filterRecover: true
+      };
     },
     methods:{
       tableRowClassName({row, rowIndex}) {
-        console.log(row.recoverDate)
         if (row.recoverDate != '' && row.recoverDate != null) {
           return 'success-row';
         }
-        return '';
+        return 'normal-row';
       },
       handleEdit(index, row) {
         this.dialogFormVisible = true;
@@ -193,14 +202,12 @@ export default {
         ;
       },
       getData() {
-        getContractList().then(
+        getContractList({ contractNum: this.searchContent}).then(
             res => {
               for (let i = 0; i < res.data.length; i++) {
                 res.data[i].clientName = res.data[i].clientTypeName + '-' + res.data[i].clientName
               }
               this.tableData = res.data
-              console.log("what the fuck")
-              console.log(res.data)
             }
         );
       },
@@ -232,7 +239,12 @@ export default {
   width: 500px;
 }
 
+.el-table .normal-row {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
+}
+
 .el-table .success-row {
   background: #ecffe0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)
 }
 </style>

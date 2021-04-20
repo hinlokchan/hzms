@@ -346,11 +346,12 @@ export function createReportQrCode(data) {
   });
 }
 
-export function getContractList() {
+export function getContractList(data) {
   return request({
     url: `${ProManageAPIServer}contract/getContractList`,
     headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
-    method: 'post'
+    method: 'post',
+    data: qs.stringify(data)
   });
 }
 
