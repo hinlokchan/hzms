@@ -59,10 +59,6 @@
                 <el-button
                     size="mini"
                     @click.stop="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                <!--                <el-button-->
-                <!--                    size="mini"-->
-                <!--                    type="danger"-->
-                <!--                    @click="handleDelete(scope.$index, scope.row)">删除</el-button>-->
               </template>
             </el-table-column>
             <el-table-column
@@ -96,7 +92,16 @@
             <el-table-column
                 prop="externalContractNum"
                 label="外部合同号"
+                align="center"
                 width="150">
+              <template slot-scope="scope">
+                <el-button
+                    type="text"
+                    size="mini"
+                    @click.stop="openContractNumDialog(scope.row)">
+                  {{ scope.row.externalContractNum}}<i class="el-icon-edit"></i>
+                </el-button>
+              </template>
             </el-table-column>
           </el-table>
 
@@ -136,90 +141,148 @@
               <el-button type="primary" @click="submitEdit">修改</el-button>
             </div>
           </el-dialog>
+          <el-dialog
+              title="修改外部合同号"
+              :visible.sync="contractNumDialogVisible"
+              width="30%"
+          >
+            <el-input
+                type="text"
+                placeholder="请输入外部合同号（定点采购、中介超市摇珠等）"
+                v-model.trim="preExternalContractNum"
+            ></el-input>
+            <span slot="footer" class="dialog-footer">
+              <el-button @click="contractNumDialogVisible = false">取消</el-button>
+              <el-button type="primary" @click="setExternalContractNum">保存</el-button>
+            </span>
+          </el-dialog>
         </div>
     </div>
 </template>
 
 <script>
-import {getContractList,updateContractInfo} from '@/api';
+import { getContractList, updateContractInfo, updateExternalContractNum } from '@/api';
 
 export default {
-    data() {
-      return {
-        tableData: [],
-        dialogFormVisible: false,
-        editForm: {
-          contractNum: '',
-          signingPic: '',
-          signedCopiesCount: '',
-          recoverDate: '',
-          archiveOperator: '',
-          notes: '',
-          signingDate: ''
-        },
-        searchContent: '',
-        filterRecover: true
-      };
+  inject: ['reload'],            //注入App里的reload方法
+  data() {
+    return {
+      tableData: [],
+      dialogFormVisible: false,
+      editForm: {
+        contractNum: '',
+        signingPic: '',
+        signedCopiesCount: '',
+        recoverDate: '',
+        archiveOperator: '',
+        notes: '',
+        signingDate: ''
+      },
+      searchContent: '',
+      filterRecover: true,
+      preExternalContractNum: '',
+      contractNumDialogVisible: false,
+      activeRowData: undefined
+    };
+  },
+  methods: {
+    tableRowClassName({ row, rowIndex }) {
+      if (row.recoverDate != '' && row.recoverDate != null) {
+        return 'success-row';
+      }
+      return 'normal-row';
     },
-    methods:{
-      tableRowClassName({row, rowIndex}) {
-        if (row.recoverDate != '' && row.recoverDate != null) {
-          return 'success-row';
-        }
-        return 'normal-row';
-      },
-      handleEdit(index, row) {
-        this.dialogFormVisible = true;
-        this.editForm.contractNum = row.contractNum;
-        this.editForm.signingPic = row.signingPic;
-        this.editForm.signedCopiesCount = row.signedCopiesCount;
-        this.editForm.recoverDate = this.formatDate(row.recoverDate);
-        this.editForm.archiveOperator = row.archiveOperator;
-        this.editForm.notes = row.notes;
-        this.editForm.signingDate = this.formatDate(row.signingDate);
-        console.log(this.editForm);
-      },
-      formatDate(date){
-        if (date == null || date === '') {
-          return '';
-        }
-        return this.$moment(date).format('YYYY-MM-DD')
-      },
-      handleDelete(index, row) {
-        console.log(index, row);
-      },
-      submitEdit(){
-        updateContractInfo(this.editForm).then(
-            res => {
-              this.$message.success('编辑成功');
-              this.dialogFormVisible = false;
-              this.getData();
-            }
-        ).catch(
-            err => {
-              this.$message.error('编辑失败');
-            })
-        ;
-      },
-      getData() {
-        getContractList({ contractNum: this.searchContent}).then(
-            res => {
-              for (let i = 0; i < res.data.length; i++) {
-                res.data[i].clientName = res.data[i].clientTypeName + '-' + res.data[i].clientName
-              }
-              this.tableData = res.data
-            }
-        );
-      },
-      rowClick(row,index) {
-        this.$refs.table.toggleRowExpansion(row)
-      },
+    handleEdit(index, row) {
+      this.dialogFormVisible = true;
+      this.editForm.contractNum = row.contractNum;
+      this.editForm.signingPic = row.signingPic;
+      this.editForm.signedCopiesCount = row.signedCopiesCount;
+      this.editForm.recoverDate = this.formatDate(row.recoverDate);
+      this.editForm.archiveOperator = row.archiveOperator;
+      this.editForm.notes = row.notes;
+      this.editForm.signingDate = this.formatDate(row.signingDate);
+      console.log(this.editForm);
     },
+    formatDate(date) {
+      if (date == null || date === '') {
+        return '';
+      }
+      return this.$moment(date).format('YYYY-MM-DD');
+    },
+    handleDelete(index, row) {
+      console.log(index, row);
+    },
+    submitEdit() {
+      updateContractInfo(this.editForm).then(
+          res => {
+            this.$message.success('编辑成功');
+            this.dialogFormVisible = false;
+            this.getData();
+          }
+      ).catch(
+          err => {
+            this.$message.error('编辑失败');
+          })
+      ;
+    },
+    getData() {
+      getContractList({ contractNum: this.searchContent }).then(
+          res => {
+            for (let i = 0; i < res.data.length; i++) {
+              res.data[i].clientName = res.data[i].clientTypeName + '-' + res.data[i].clientName;
+            }
+            this.tableData = res.data;
+          }
+      );
+    },
+    rowClick(row) {
+      this.$refs.table.toggleRowExpansion(row);
+    },
+
+    setExternalContractNum() {
+
+      if (this.preExternalContractNum === '') {
+        this.$message.error('外部合同号不能为空');
+        return;
+      } else if (this.externalContractNumValidator(this.preExternalContractNum)) {
+        this.$message.error('不能包含中文');
+        return;
+      } else if (this.preExternalContractNum === this.externalContractNum) {
+        this.$message.warning('请修改后再提交');
+        return;
+      }
+
+      updateExternalContractNum({
+        projId: this.activeRowData.projId,
+        externalContractNum: this.preExternalContractNum
+      }).then(
+          res => {
+            this.$message.success('修改成功');
+            this.reload();
+          }
+      ).catch(err => {
+        console.log(err);
+        this.$message.error('修改失败');
+        this.preExternalContractNum = '';
+      });
+
+    },
+
+    openContractNumDialog(row) {
+      this.activeRowData = row;
+      this.preExternalContractNum = row.externalContractNum;
+      this.contractNumDialogVisible = true;
+    },
+    externalContractNumValidator(str) {
+      var reg = /^[\u4e00-\u9fa5]+$/;
+      return str.match(reg);
+    }
+  },
   created() {
     this.getData();
   }
 
-}
+};
 </script>
 
 <style>
