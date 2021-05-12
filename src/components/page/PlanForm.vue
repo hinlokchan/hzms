@@ -363,7 +363,6 @@
                   placeholder="选择日期"
                   v-model="form.fldSrvySchedule"
                   value-format="yyyy-MM-dd"
-                  :disabled="userRole>2"
                   style="width: 100%;"
                 ></el-date-picker>
               </el-form-item>
@@ -682,13 +681,11 @@
                   <el-autocomplete
                     v-model="item.value"
                     :fetch-suggestions="querySearch"
-                    :disabled="userRole>2"
                   ></el-autocomplete>
                   <i
                     class="el-icon-lx-roundclose"
                     style="margin-top: 6px ;font-size: 20px;color:#b5b5b5"
                     @click.prevent="removeDomain(index, 4)"
-                    v-if="userRole<3"
                   ></i>
                 </div>
               </el-form-item>
@@ -699,7 +696,7 @@
 <!--                  @click="addDomain(4)"-->
 <!--                ></i>-->
 <!--              </el-form-item>-->
-              <el-form-item v-if="userRole<3">
+              <el-form-item>
                 <el-button type="primary" icon="el-icon-plus" circle
                            @click="addDomain(4)"
                 >
