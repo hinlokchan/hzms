@@ -104,6 +104,11 @@ export default new Router({
                     component: () => import('../components/page/CloudFieldSurvey.vue'),
                     meta: { title: '云现勘' , permission: true }
                 },
+                {
+                    path: '/clientmanagement',
+                    component: () => import('../components/page/ClientManagement.vue'),
+                    meta: { title: '云现勘' , permission: true }
+                },
                 // {
                 //     path: '/oprecord',
                 //     component: () => import('../components/page/OpRecord.vue'),

@@ -292,9 +292,62 @@ export function getClientList(data) {
   });
 }
 
+export function getRawClientList(data) {
+  return request({
+    url: `${ProManageAPIServer}client/getRawClientList`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
+export function getClientTypeList() {
+  return request({
+    url: `${ProManageAPIServer}client/getClientTypeList`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    method: 'get'
+  });
+}
+
 export function addClient(data) {
   return request({
     url: `${ProManageAPIServer}client/addClient`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
+export function deleteClient(data) {
+  return request({
+    url: `${ProManageAPIServer}client/deleteClient`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
+export function changeClientType(data) {
+  return request({
+    url: `${ProManageAPIServer}client/changeClientType`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
+export function editClientName(data) {
+  return request({
+    url: `${ProManageAPIServer}client/editClientName`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
+export function transferProj(data) {
+  return request({
+    url: `${ProManageAPIServer}client/transferProj`,
     headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
     method: 'post',
     data: qs.stringify(data)
