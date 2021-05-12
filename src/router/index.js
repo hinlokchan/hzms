@@ -82,7 +82,7 @@ export default new Router({
                 {
                     path: '/contract',
                     component: () => import('../components/page/ContractManage.vue'),
-                    meta: { title: '合同管理' , permission: true }
+                    meta: { title: '合同管理' , permission: true , keepAlive: true}
                 },
                 {
                     path: '/casesearchdock',

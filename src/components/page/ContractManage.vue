@@ -8,13 +8,14 @@
                     </el-breadcrumb-item>
                 </el-breadcrumb>
             </div>
-          <el-input placeholder="合同号搜索" v-model="searchContent" @change="getData" size="small" style="margin-bottom: 20px ; width: 30% ;box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)">
-            <el-button slot="append" type="primary" icon="el-icon-search" @click="getData" ></el-button>
-          </el-input>
+          <el-input placeholder="合同号" v-model="searchContent.contractNum" @change="getData" size="small" style="margin-bottom: 20px ; width: 10% ;box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)"></el-input>
+          <el-input placeholder="项目名称" v-model="searchContent.projName" @change="getData" size="small" style="margin-left: 1px;margin-bottom: 20px ; width: 30% ;box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)"></el-input>
+          <el-button type="primary" icon="el-icon-search" @click="getData" style="margin-left: 5px" >查找</el-button>
           <el-table
-              :data="tableData"
+              :data="tableData.slice((currentPage - 1) * pageSize, currentPage * pageSize)"
               :row-class-name="tableRowClassName"
               ref="table"
+              :height="windowHeight"
               @row-click="rowClick"
               style="width: 100%;box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)">
             <el-table-column type="expand">
@@ -57,8 +58,14 @@
             <el-table-column label="操作" width="80" align="center">
               <template slot-scope="scope">
                 <el-button
+                    type="text"
                     size="mini"
-                    @click.stop="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                    @click.stop="handleEdit(scope.$index, scope.row)"><i class="el-icon-edit-outline"></i>编辑</el-button>
+                <br>
+                <el-button
+                    type="text"
+                    size="mini"
+                    @click.stop="checkDetail(scope.row)"><i class="el-icon-document"></i>查看</el-button>
               </template>
             </el-table-column>
             <el-table-column
@@ -104,6 +111,17 @@
               </template>
             </el-table-column>
           </el-table>
+          <el-pagination
+              hide-on-single-page
+              background
+              @current-change="handleCurrentChange"
+              :current-page.sync="currentPage"
+              :page-size="pageSize"
+              layout="total, prev, pager, next"
+              :total="totalCount"
+              style="margin: 10px"
+          >
+          </el-pagination>
 
           <el-dialog :title="'合同'+editForm.contractNum+'信息编辑'" :visible.sync="dialogFormVisible">
             <el-form :model="editForm" label-width="100px">
@@ -167,6 +185,7 @@ export default {
   inject: ['reload'],            //注入App里的reload方法
   data() {
     return {
+      windowHeight: document.documentElement.clientHeight*3/5,
       tableData: [],
       dialogFormVisible: false,
       editForm: {
@@ -178,14 +197,23 @@ export default {
         notes: '',
         signingDate: ''
       },
-      searchContent: '',
+      searchContent: {
+        contractNum: '',
+        projName: ''
+      },
       filterRecover: true,
       preExternalContractNum: '',
       contractNumDialogVisible: false,
-      activeRowData: undefined
+      activeRowData: undefined,
+      currentPage: 1,
+      totalCount: 0,
+      pageSize: 20
     };
   },
   methods: {
+    handleCurrentChange(val) {
+      this.currentPage = val
+    },
     tableRowClassName({ row, rowIndex }) {
       if (row.recoverDate != '' && row.recoverDate != null) {
         return 'success-row';
@@ -226,12 +254,13 @@ export default {
       ;
     },
     getData() {
-      getContractList({ contractNum: this.searchContent }).then(
+      getContractList(this.searchContent).then(
           res => {
             for (let i = 0; i < res.data.length; i++) {
               res.data[i].clientName = res.data[i].clientTypeName + '-' + res.data[i].clientName;
             }
             this.tableData = res.data;
+            this.totalCount = res.data.length;
           }
       );
     },
@@ -276,6 +305,9 @@ export default {
     externalContractNumValidator(str) {
       var reg = /^[\u4e00-\u9fa5]+$/;
       return str.match(reg);
+    },
+    checkDetail(row) {
+      this.$router.push({ path: '/projcheck', query: { data: row.projId } })
     }
   },
   created() {
