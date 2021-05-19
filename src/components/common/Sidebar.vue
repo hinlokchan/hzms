@@ -160,13 +160,18 @@ export default {
         },
         {
           index: 'contract',
-          icon: 'el-icon-data-analysis',
+          icon: 'el-icon-document-copy',
           title: '合同管理'
         },
         {
           index: 'cloudfieldsurvey',
-          icon: 'el-icon-data-analysis',
+          icon: 'el-icon-s-claim',
           title: '云现勘'
+        },
+        {
+          index: 'clientmanagement',
+          icon: 'el-icon-s-custom',
+          title: '委托人管理'
         }
         // {
         //   index: 'client',
@@ -268,13 +273,18 @@ export default {
         },
         {
           index: 'contract',
-          icon: 'el-icon-data-analysis',
+          icon: 'el-icon-document-copy',
           title: '合同管理'
         },
         {
           index: 'cloudfieldsurvey',
-          icon: 'el-icon-data-analysis',
+          icon: 'el-icon-s-claim',
           title: '云现勘'
+        },
+        {
+          index: 'clientmanagement',
+          icon: 'el-icon-s-custom',
+          title: '委托人管理'
         },
         {
           index: 'casesearchdock',

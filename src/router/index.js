@@ -107,7 +107,7 @@ export default new Router({
                 {
                     path: '/clientmanagement',
                     component: () => import('../components/page/ClientManagement.vue'),
-                    meta: { title: '云现勘' , permission: true }
+                    meta: { title: '委托人管理' , permission: true }
                 },
                 // {
                 //     path: '/oprecord',
