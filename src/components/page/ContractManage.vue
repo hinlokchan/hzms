@@ -9,8 +9,10 @@
                 </el-breadcrumb>
             </div>
           <el-input placeholder="合同号" v-model="searchContent.contractNum" @change="getData" size="small" style="margin-bottom: 20px ; width: 10% ;box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)"></el-input>
-          <el-input placeholder="项目名称" v-model="searchContent.projName" @change="getData" size="small" style="margin-left: 1px;margin-bottom: 20px ; width: 30% ;box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)"></el-input>
+          <el-input placeholder="项目名称" v-model="searchContent.projName" @change="getData" size="small" style="margin-left: 1px;margin-bottom: 20px ; width: 20% ;box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)"></el-input>
+          <el-input placeholder="外部合同号" v-model="searchContent.externalContractNum" @change="getData" size="small" style="margin-left: 1px;margin-bottom: 20px ; width: 20% ;box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)"></el-input>
           <el-button type="primary" icon="el-icon-search" @click="getData" style="margin-left: 5px" >查找</el-button>
+          <el-button type="primary" icon="el-icon-refresh" @click="resetSearch" style="margin-left: 5px" >重置</el-button>
           <el-table
               :data="tableData.slice((currentPage - 1) * pageSize, currentPage * pageSize)"
               :row-class-name="tableRowClassName"
@@ -199,7 +201,8 @@ export default {
       },
       searchContent: {
         contractNum: '',
-        projName: ''
+        projName: '',
+        externalContractNum: ''
       },
       filterRecover: true,
       preExternalContractNum: '',
@@ -308,6 +311,13 @@ export default {
     },
     checkDetail(row) {
       this.$router.push({ path: '/projcheck', query: { data: row.projId } })
+    },
+    resetSearch() {
+      this.searchContent.projName = ''
+      this.searchContent.externalContractNum = ''
+      this.searchContent.contractNum = ''
+
+      this.getData()
     }
   },
   created() {
