@@ -44,11 +44,11 @@ export default new Router({
                     component: () => import('../components/page/WorkBranch.vue'),
                     meta: { title: '工作台' , keepAlive: true}
                 },
-                // {
-                //     path: '/oldplanform',
-                //     component: () => import('../components/page/OldPlanForm.vue'),
-                //     meta: { title: '旧项目录入' }
-                // },
+                {
+                    path: '/oldplanform',
+                    component: () => import('../components/page/OldPlanForm.vue'),
+                    meta: { title: '旧项目录入' }
+                },
                 // {
                 //     path: '/formalreg',
                 //     component: () => import('../components/page/FormalReg.vue'),
