@@ -348,7 +348,6 @@
                   v-model="form.baseDate"
                   value-format="yyyy-MM-dd"
                   style="width: 100%;"
-                  :disabled="userRole>2"
                 ></el-date-picker>
               </el-form-item>
             </el-col>
