@@ -565,6 +565,12 @@
             @click="handleDetail()"
           >查看详情</el-button>
           <el-button
+              icon="el-icon-info"
+              size="medium"
+              @click="checkCFSDetail"
+              v-if="projDetail.projType == 1010"
+          >现勘记录</el-button>
+          <el-button
             icon="el-icon-edit"
             size="medium"
             @click="handleEdit()"
@@ -583,7 +589,7 @@
             size="medium"
             @click="setQRCode()"
             :disabled="projDetail.projState == 2 ? true : false"
-          >生成二维码</el-button>
+          >生成二维码</el-button> 
           <el-button
             icon="el-icon-printer"
             size="medium"
@@ -1144,6 +1150,7 @@ import FcObjDetailDialog from './AssemObjDetailDialog/FcObjDetailDialog'
 import ZcObjDetailDialog from './AssemObjDetailDialog/ZcObjDetailDialog'
 import WorkArrgDialog from './WorkArrg/WorkArrgDialog'
 import OpRecord from './OpRecord'
+import { getToken } from '../../api/cfs';
 var ProManageAPIServer = `${host.baseUrl}/${host.ProManageAPIServer}`
 
 export default {
@@ -2230,8 +2237,24 @@ export default {
     externalContractNumValidator(str) {
       var reg = /^[\u4e00-\u9fa5]+$/;
       return str.match(reg)
-    }
+    },
 
+    checkCFSDetail() {
+
+      let baseUrl = 'https://www.gdhzpg.cn/web/#/login?redirect=/survey/survey_infolist' + '&key=' + this.projDetail.projId
+
+      getToken().then(
+          res => {
+            baseUrl += '&token=' + res.data;
+            console.log(baseUrl);
+            window.open(baseUrl);
+          })
+          .catch(err => {
+            this.$message.error('获取token错误')
+            console.log(err);
+          });
+
+    },
   },
 }
 </script>

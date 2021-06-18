@@ -25,3 +25,10 @@ export function getSurveyList() {
         method: 'post'
     });
 }
+
+export function getToken() {
+    return request({
+        url: `${ProManageAPIServer}CFS/getToken`,
+        method: 'post'
+    });
+}
