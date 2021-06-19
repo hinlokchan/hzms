@@ -4,11 +4,11 @@
     <el-card style="width:50%; margin-top: 20px">
       <div slot="header"
            class="clearfix">
-        <span><b>负责人周报表</b></span>
+        <span><b>项目周报表</b></span>
         <el-button
             style="float:right"
             type="button"
-            @click="exportProjLeaderReport"
+            @click="dialogVisible = true"
         >导出</el-button>
       </div>
       <div>
@@ -18,6 +18,24 @@
         下载后请手动设置自动换行及自动行高。
       </div>
     </el-card>
+    <el-dialog
+        title="选择报表类型"
+        :visible.sync="dialogVisible"
+        width="30%"
+    >
+      <el-select v-model="selected" placeholder="请选择">
+        <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+        </el-option>
+      </el-select>
+      <span slot="footer" class="dialog-footer">
+      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button type="primary" :disabled="selected === '' " @click="exportProjLeaderReport">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -26,14 +44,37 @@ import {isAuthenticated} from '@/api';
 
 var ProManageAPIServer = `${host.baseUrl}/${host.ProManageAPIServer}`
   export default {
+    data(){
+      return {
+        dialogVisible : false,
+        selected: '',
+        options: [{
+          value: '0',
+          label: '负责人'
+        }, {
+          value: '1',
+          label: '助理人员'
+        }]
+      }
+    },
     created() {
       isAuthenticated();
     },
     methods : {
       exportProjLeaderReport() {
+
         var oReq = new XMLHttpRequest();
         // url参数为拿后台数据的接口
-        let pathUrl = ProManageAPIServer + 'statistics/export/exportProjLeaderReport';
+        let pathUrl = ProManageAPIServer + 'statistics/export/';
+
+        if (this.selected == 0) {
+          pathUrl += 'exportProjLeaderReport';
+        }else if (this.selected == '1') {
+          pathUrl += 'exportProjAsstReport';
+        } else {
+          return;
+        }
+
         oReq.open('POST', pathUrl, true);
         oReq.responseType = 'blob';
         oReq.onload = function(oEvent) {
@@ -60,6 +101,7 @@ var ProManageAPIServer = `${host.baseUrl}/${host.ProManageAPIServer}`
           background: 'rgba(0, 0, 0, 0.7)'
         });
         setTimeout(() => {
+          this.dialogVisible = false
           loading.close();
         }, 3000);
 
