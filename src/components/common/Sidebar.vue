@@ -267,9 +267,18 @@ export default {
         //   ]
         // },
         {
-          index: 'stat',
-          icon: "el-icon-data-analysis",
-          title: "统计管理"
+          icon: 'el-icon-data-analysis',
+          title: '统计管理',
+          subs: [
+            {
+              index: 'stat',
+              title: '计划统计'
+            },
+            {
+              index: 'stat4Common',
+              title: '业务统计'
+            }
+          ]
         },
         {
           index: 'contract',
