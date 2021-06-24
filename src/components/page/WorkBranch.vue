@@ -122,12 +122,12 @@
         >
           <template slot-scope="props">
             <el-tag
-              :type="tagType(props.row.projState)"
-              disable-transitions
-            >
-              <span v-if="props.row.projState == 0">进行中</span>
-              <span v-if="props.row.projState == 1">已完成</span>
-              <span v-if="props.row.projState == 2">中止</span>
+                  :type="tagType(props.row.projState)"
+                  disable-transitions
+              >
+                <span v-if="props.row.projState == 0">进行中</span>
+                <span v-if="props.row.projState == 1">已完成</span>
+                <span v-if="props.row.projState == 2">中止</span>
             </el-tag>
           </template>
         </el-table-column>
@@ -150,6 +150,10 @@
           label="项目名称"
           :show-overflow-tooltip="true"
         >
+          <template slot-scope="scope">
+            <el-badge value="new" class="item" style="margin-top: 5px" v-if="scope.row.projDate > timestamp"></el-badge>
+            {{scope.row.projName}}
+          </template>
         </el-table-column>
         <el-table-column
           prop="projScope"
@@ -255,14 +259,17 @@ export default {
       getNumType: 0,
       getNumData: {},
       getSubNum: '',
-      projLeaderFilter: [{ text: '我负责的项目', value: '' }]
+      projLeaderFilter: [{ text: '我负责的项目', value: '' }],
+      timestamp: 0
     };
   },
   created() {
     this.getData()
+    let date = new Date()
+    this.timestamp = date.getTime() - date.getHours()*60*60*1000
+    console.log(this.timestamp)
     this.projLeaderFilter[0].value = localStorage.getItem('staffName')
   },
-  mounted() {},
   methods: {
     projLeaderFilterHandler(value, row, column) {
       const property = column['property'];
@@ -371,8 +378,8 @@ export default {
         projScope: this.searchValProjScope
       })
         .then(res => {
-          console.log(res.data);
           this.tableData = res.data;
+          console.log(this.tableData)
           this.pageTotal = res.data.length;
         })
         .catch(err => {
@@ -386,7 +393,6 @@ export default {
           .catch(err => {
             console.log('error', err)
           })
-    
     },
     getOnGoingProj() {
       if (this.onGoing == true) {
