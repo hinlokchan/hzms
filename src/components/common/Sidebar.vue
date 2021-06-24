@@ -321,7 +321,7 @@ export default {
         {
           index: 'stat4Common',
           icon: 'el-icon-data-analysis',
-          title: '统计管理'
+          title: '业务统计'
         },
         {
           index: 'casesearchdock',
