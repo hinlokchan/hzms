@@ -109,6 +109,11 @@ export default new Router({
                     component: () => import('../components/page/ClientManagement.vue'),
                     meta: { title: '委托人管理' , permission: true }
                 },
+                {
+                    path: '/casecheck',
+                    component: () => import('../components/page/CaseCheck'),
+                    meta: { title: '查看案例详情' , permission: true }
+                },
                 // {
                 //     path: '/oprecord',
                 //     component: () => import('../components/page/OpRecord.vue'),

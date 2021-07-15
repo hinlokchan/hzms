@@ -17,137 +17,60 @@
         <el-input placeholder="请输入搜索关键字" v-model="keyword" @change="doSearch" class="input-with-select" size="large">
           <el-button slot="append" type="primary" icon="el-icon-search" @click="doSearch" ></el-button>
         </el-input>
-
-        <el-card shadow="never" style="margin-top: 20px" v-if="tableData.list.length > 0">
-          <el-table
-              :data="tableData.list"
-              style="width: 100%"
-              v-if="tableData.list.length>0"
-              :row-style="{height:'100px'}"
-              ref="refTable"
-              @row-click="rowClick"
-              cell-style="font-weight:500"
-          >
-            <el-table-column type="expand">
-              <template slot-scope="props">
-                <el-form
-                    label-position="left"
-                    inline class="demo-table-expand"
-                    label-suffix="："
-                    label-width="auto"
-                >
-                  <el-form-item label="装修程度">
-                    <el-tag v-if="props.row.decoDegree !== '其他' && props.row.decoDegree !== '' " type="primary">{{ props.row.decoDegree }}</el-tag>
-                    <el-tag v-else type="info">其他</el-tag>
-                  </el-form-item>
-                  <el-form-item label="朝向">
-                    <el-tag v-if="props.row.towards !== '其他' && props.row.towards !== '' " type="primary">{{ props.row.towards }}</el-tag>
-                    <el-tag v-else type="info">其他</el-tag>
-                  </el-form-item>
-                  <el-form-item label="户型结构">
-                    <el-tag v-if="props.row.houseTypeStructure !== '其他' && props.row.houseTypeStructure !== '' " type="primary">{{ props.row.houseTypeStructure }}</el-tag>
-                    <el-tag v-else type="info">其他</el-tag>
-                  </el-form-item>
-                  <el-form-item label="房屋用途">
-                    <el-tag v-if="props.row.unitUsage !== '其他' && props.row.unitUsage !== '' " type="primary">{{ props.row.unitUsage }}</el-tag>
-                    <el-tag v-else type="info">其他</el-tag>
-                  </el-form-item>
-                  <el-form-item label="房屋类型">
-                    <el-tag v-if="props.row.unitType !== '其他' && props.row.unitType !== '' " type="primary">{{ props.row.unitType }}</el-tag>
-                    <el-tag v-else type="info">其他</el-tag>
-                  </el-form-item>
-                  <el-form-item label="房屋属性">
-                    <el-tag v-if="props.row.unitType !== '其他' && props.row.unitType !== '' " type="primary">{{ props.row.unitType }}</el-tag>
-                    <el-tag v-else type="info">其他</el-tag>
-                  </el-form-item>
-                  <el-form-item label="所在楼栋">
-                    <el-tag v-if="props.row.buildingNum !== '其他' && props.row.buildingNum !== '' " type="primary">#{{ props.row.buildingNum }}</el-tag>
-                    <el-tag v-else type="info">其他</el-tag>
-                  </el-form-item>
-                  <br>
-                  <el-form-item label="价值类型">
-                    <el-tag v-if="props.row.valueType !== '其他' && props.row.valueType !== '' " type="warning">{{ props.row.valueType}}</el-tag>
-                    <el-tag v-else type="info">其他</el-tag>
-                  </el-form-item>
-                  <br>
-                  <el-form-item label="评估方法">
-                    <el-tag v-if="props.row.evalMethod !== '其他' && props.row.evalMethod !== '' " type="warning">{{ props.row.evalMethod }}</el-tag>
-                    <el-tag v-else type="info">其他</el-tag>
-                  </el-form-item>
-                </el-form>
-              </template>
-            </el-table-column>
-            <el-table-column
-                label="小区名称"
-                prop="evalObjCommunity"
-                width="200px"
-            >
-            </el-table-column>
-            <el-table-column
-                label="所在市"
-                prop="evalObjCity"
-                width="100px"
-            >
-            </el-table-column>
-            <el-table-column
-                label="所在行政区/县"
-                prop="evalObjAdminRegion"
-                width="100px"
-            >
-            </el-table-column>
-            <el-table-column
-                label="户型"
-                prop="houseType"
-                width="150px"
-            >
-            </el-table-column>
-            <el-table-column
-                label="建筑面积（平方米）"
-                prop="evalObjAcreage"
-                width="150px"
-            >
-            </el-table-column>
-            <el-table-column
-                label="单价（元/平方米）"
-                prop="unitPrice"
-                width="150px"
-            >
-              <template slot-scope="scope">
-                {{getUnitPrice(scope.row)}}
-              </template>
-            </el-table-column>
-            <el-table-column
-                label="总价（万元）"
-                prop="evalObjTotalAssemValue"
-                width="150px"
-            >
-            </el-table-column>
-            <el-table-column
-                label="基准日"
-                :formatter="formatDate"
-                prop="baseDate"
-                width="150px"
-            >
-            </el-table-column>
-            <el-table-column
-                label="操作"
-                align="center"
-            >
-              <template slot-scope="scope">
-                <el-button type="primary" @click.stop="detailCheck(scope.row)">详情</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-
-        </el-card>
-
+        <el-table
+            class="main-table"
+            :data="tableData.list"
+            style="width: 100%"
+            v-if="tableData.list.length>0"
+            :row-style="{height:'100px'}"
+            @row-click="rowClick"
+            cell-style="font-weight:500"
+            :show-header="false"
+        >
+          <el-table-column>
+            <template slot-scope="scope">
+              <el-card
+                  style="min-height: 150px ; cursor: pointer"
+                  shadow="hover"
+              >
+                <el-header>
+                  <el-row :gutter="0">
+                    <el-col :span="22">
+                      <h2><span v-html="scope.row.projName"></span></h2>
+                      <br>
+                      <span v-html="scope.row.projScope"></span>
+                    </el-col>
+                    <el-col :span="2">
+                      <el-tag v-if="scope.row.hitScore < 10" type="success">匹配度：{{scope.row.hitScore}}%</el-tag>
+                      <el-tag v-else type="warning">匹配度：{{scope.row.hitScore}}%</el-tag>
+                    </el-col>
+                  </el-row>
+                </el-header>
+                <el-main>
+                  <!--                  <el-tag type="info" style="margin-right: 5px">测试类型</el-tag>-->
+                  <!--                  <el-tag type="success" style="margin-right: 5px" v-if="scope.row.evalObjCommunity != null">-->
+                  <!--                    {{scope.row.evalObjCommunity-->
+                  <!--                      .replace(/<(style|script|iframe)[^>]*?>[\s\S]+?<\/\1\s*>/gi,'')-->
+                  <!--                      .replace(/<[^>]+?>/g,'').replace(/\s+/g,' ')-->
+                  <!--                      .replace(/ /g,' ').replace(/>/g,' ')}}-->
+                  <!--                  </el-tag>-->
+                </el-main>
+                <el-footer height="20px">
+                  <el-tag type="info">基准日：{{scope.row.baseDate}}</el-tag>
+                  <el-tag type="info" style="margin-left: 5px">案例ID：{{scope.row.caseId}}</el-tag>
+                </el-footer>
+              </el-card>
+            </template>
+          </el-table-column>
+        </el-table>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { caseSearch,isAuthenticated } from '@/api/index'
+import { isAuthenticated } from '@/api/index'
+import { caseSearch } from '@/api/hzirdb'
 export default {
   data: function() {
     return {
@@ -155,7 +78,9 @@ export default {
       lastKeyword: '',
       tableData: {
         dataSource:null,
-        list:[]
+        list:[
+
+        ]
       },
     }
   },
@@ -168,6 +93,10 @@ export default {
         return;
       }
       caseSearch({ keyword: this.keyword}).then(res => {
+        if (res.data.length === 0) {
+          this.$message.warning('未查询到数据')
+          return
+        }
         this.tableData.list = res.data;
       }).catch(error => {
         console.log(error);
@@ -186,7 +115,7 @@ export default {
     },
 
     rowClick(row){
-      this.$refs.refTable.toggleRowExpansion(row)
+      this.$router.push({ path: '/casecheck', query: { data: row.caseId } });
     }
 
   },
@@ -222,6 +151,15 @@ export default {
   margin-right: 0;
   margin-bottom: 0;
   width: 50%;
+}
+
+/* 去掉中间数据的分割线 */
+.main-table >>> .el-table__row>td{
+  border: none;
+}
+
+.el-footer span {
+  color: #989898;
 }
 
 </style>

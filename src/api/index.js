@@ -381,15 +381,6 @@ export function setProjState(data) {
   });
 }
 
-export function caseSearch(data) {
-  return request({
-    url: `${ProManageAPIServer}hzirdb/search/all`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
-    method: 'post',
-    data: qs.stringify(data)
-  });
-}
-
 export function createReportQrCode(data) {
   return request({
     url: `${ProManageAPIServer}qrCode/createReportQrCode`,
