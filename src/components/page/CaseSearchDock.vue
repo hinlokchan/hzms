@@ -34,15 +34,17 @@
                   shadow="hover"
               >
                 <el-header>
-                  <el-row :gutter="0">
+                  <el-row :gutter="20">
                     <el-col :span="22">
                       <h2><span v-html="scope.row.projName"></span></h2>
                       <br>
                       <span v-html="scope.row.projScope"></span>
                     </el-col>
                     <el-col :span="2">
-                      <el-tag v-if="scope.row.hitScore < 10" type="success">匹配度：{{scope.row.hitScore}}%</el-tag>
-                      <el-tag v-else type="warning">匹配度：{{scope.row.hitScore}}%</el-tag>
+                      <el-tag v-if="scope.row.hitScore >= 30 && scope.row.hitScore < 50" type="success">匹配度：{{scope.row.hitScore}}</el-tag>
+                      <el-tag v-else-if="scope.row.hitScore >= 50 && scope.row.hitScore < 90" type="warning">匹配度：{{scope.row.hitScore}}</el-tag>
+                      <el-tag v-else-if="scope.row.hitScore >= 80 " type="danger">匹配度：{{scope.row.hitScore}}</el-tag>
+                      <el-tag v-else type="info">匹配度：{{scope.row.hitScore}}</el-tag>
                     </el-col>
                   </el-row>
                 </el-header>
@@ -90,17 +92,20 @@ export default {
     },
     doSearch() {
       if (this.keyword.length === 0) {
+        this.$message.warning('关键词不能为空')
         return;
       }
-      caseSearch({ keyword: this.keyword}).then(res => {
+      caseSearch({ keyword: this.keyword }).then(res => {
         if (res.data.length === 0) {
-          this.$message.warning('未查询到数据')
-          return
+          this.$message.warning('未查询到数据');
+          return;
+        } else {
+          this.tableData.list = res.data;
+          this.$message.success('搜索到 ' + res.data.length + ' 条数据');
         }
-        this.tableData.list = res.data;
       }).catch(error => {
-        console.log(error);
-      });
+            console.log(error);
+          });
     },
 
     getUnitPrice(row) {

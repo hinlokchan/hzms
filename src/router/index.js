@@ -112,7 +112,7 @@ export default new Router({
                 {
                     path: '/casecheck',
                     component: () => import('../components/page/CaseCheck'),
-                    meta: { title: '查看案例详情' , permission: true }
+                    meta: { title: '查看案例详情' }
                 },
                 // {
                 //     path: '/oprecord',
