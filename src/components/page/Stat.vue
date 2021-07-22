@@ -18,6 +18,7 @@
           v-model="dateStr"
           type="date"
           placeholder="请选择日期"
+          :editable="false"
           :picker-options="pickerOptions"
           value-format="yyyy-MM-dd"
         >
@@ -41,6 +42,7 @@
           v-model="week"
           type="week"
           placeholder="请选择日期"
+          :editable="false"
           format="yyyy 第 WW 周"
         >
         </el-date-picker>
@@ -59,10 +61,21 @@
       <div style="margin-bottom: 20px">
         <span class="demonstration">编制日期&nbsp;&nbsp;</span>
         <el-date-picker
-            v-model="multiConProjDate"
-            type="daterange"
-            placeholder="请选择日期"
+            v-model="multiConProjDateStart"
+            type="date"
+            :editable="false"
+            placeholder="请选择开始日期"
             value-format="yyyy-MM-dd"
+            :picker-options="pickerOptions"
+        >
+        </el-date-picker>&nbsp;
+        <el-date-picker
+            v-model="multiConProjDateEnd"
+            type="date"
+            :editable="false"
+            placeholder="请选择结束日期"
+            value-format="yyyy-MM-dd"
+            :picker-options="pickerOptions"
         >
         </el-date-picker>
       </div>
@@ -78,8 +91,25 @@
         </el-select>
       </div>
       <div style="margin-bottom: 20px">
-        <span class="demonstration">委托人&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <span class="demonstration">委托人类型&nbsp;&nbsp;</span>
+        <el-select
+            v-model="multiConClientType"
+            clearable
+            :disabled="multiConClientId.length !== 0"
+        >
+          <el-option
+              v-for="item in clientTypeList"
+              :key="item.clientType"
+              :label="item.clientTypeName"
+              :value="item.clientType"
+          >
+          </el-option>
+        </el-select>
+      </div>
+      <div style="margin-bottom: 20px">
+        <span class="demonstration">委托人&nbsp;&nbsp;</span>
         <el-cascader
+            :disabled="multiConClientType !== ''"
             ref="cascaderAddr"
             :show-all-levels="false"
             v-model="multiConClientId"
@@ -107,7 +137,7 @@
 </template>
 
 <script>
-import { getUserList,getClientList } from '@/api/index'
+import { getUserList,getClientList,getClientTypeList } from '@/api/index'
 import { getDayReport } from '@/api/statistics'
 import { Base64 } from 'js-base64'
 import { host } from '@/config'
@@ -122,21 +152,42 @@ export default {
         disabledDate(time) {
           return time.getTime() > Date.now()
         },
-        shortcuts: [{
-          text: '今天',
-          onClick(picker) {
-            picker.$emit('pick', new Date())
+        shortcuts: [
+          {
+            text: '今天',
+            onClick(picker) {
+              picker.$emit('pick', new Date());
+            }
+          },
+          {
+            text: '昨天',
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() - 3600 * 1000 * 24);
+              picker.$emit('pick', date);
+            }
+          },
+          {
+            text: '一周前',
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', date);
+            }
+          },
+          {
+            text: '一个月前',
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', date);
+            }
           }
-        }, {
-          text: '昨天',
-          onClick(picker) {
-            const date = new Date()
-            date.setTime(date.getTime() - 3600 * 1000 * 24)
-            picker.$emit('pick', date)
-          }
-        }]
+        ]
       },
       multiConProjDate: '',
+      multiConProjDateStart: '',
+      multiConProjDateEnd: '',
       multiConProjType: '',
       multiConProjTypeOps:[
         {
@@ -195,8 +246,10 @@ export default {
       ],
       clientList:[],
       staffList:[],
+      clientTypeList: [],
       multiConClientName: '',
       multiConClientId:[],
+      multiConClientType:'',
       multiConStaffName: ''
     }
   },
@@ -204,6 +257,11 @@ export default {
     getClientList().then(
         res => {
           this.clientList = res.data
+        }
+    );
+    getClientTypeList().then(
+        res => {
+          this.clientTypeList = res.data
         }
     );
     getUserList().then(
@@ -309,11 +367,27 @@ export default {
       this.$router.go(-1)
     },
     exportPlan() {
-      console.log(this.multiConStaffName)
-      if (this.multiConProjDate === '' || this.multiConProjDate == null) {
-        this.$message.error('请至少选择编制日期范围作为筛选条件');
-        return
+
+      var startDate = Date.parse(this.multiConProjDateStart)
+      var endDate = Date.parse(this.multiConProjDateEnd)
+      console.log(this.multiConProjDateStart)
+      console.log(this.multiConProjDateEnd)
+      if (startDate > endDate) {
+        this.$message.error('开始日期不能大于结束日期');
+        return;
       }
+
+      if (this.multiConProjDateStart === ''
+          || this.multiConProjDateEnd === ''
+          || this.multiConProjDateStart === null
+          || this.multiConProjDateEnd === null
+      ) {
+        this.$message.error('请至少选择编制日期范围作为筛选条件');
+        return;
+      }
+
+      //处理日期区间
+      var dateRange = this.multiConProjDateStart + ',' + this.multiConProjDateEnd
 
       var oReq = new XMLHttpRequest()
       // url参数为拿后台数据的接口
@@ -339,9 +413,11 @@ export default {
       if (this.multiConClientId.length > 0) {
         fdata.append('clientIdStr', this.multiConClientId[this.multiConClientId.length-1])
       }
-      fdata.append('projDateArrStr', this.parseArray(this.multiConProjDate))
+      fdata.append('projDateStart', this.multiConProjDateStart)
+      fdata.append('projDateEnd', this.multiConProjDateEnd)
       fdata.append('projTypeArrStr', this.parseArray(this.multiConProjType))
       fdata.append('projMemberStr', this.multiConStaffName)
+      fdata.append('clientTypeStr', this.multiConClientType)
       oReq.send(fdata)
 
       const loading = this.$loading({
