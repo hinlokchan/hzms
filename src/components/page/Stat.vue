@@ -279,10 +279,22 @@ export default {
         this.$message.warning('请选择时间')
         return 0
       }
+      let path = 'statistics/dayReport'
+      const formData = new FormData()
+      formData.append('dateStr', val)
+      this.download(formData,path)
+    },
+
+    download(formData,path) {
+      const loading = this.$loading({
+        lock: true,
+        text: '下载中',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
       var oReq = new XMLHttpRequest()
       // url参数为拿后台数据的接口
-      let pathUrl = ProManageAPIServer + 'statistics/dayReport'
-      oReq.open('POST', pathUrl, true)
+      oReq.open('POST', ProManageAPIServer + path, true)
       oReq.responseType = 'blob'
       oReq.onload = function (oEvent) {
         var content = oReq.response
@@ -298,20 +310,16 @@ export default {
         elink.click()
         document.body.removeChild(elink)
       }
-      const fdata = new FormData()
-      fdata.append('dateStr', val)
-      oReq.send(fdata)
-      //伪加载中，防止重复提交请求
-      const loading = this.$loading({
-        lock: true,
-        text: '加载中',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      })
-      // setTimeout(() => {
-      //   loading.close()
-      // }, 3500)
+      oReq.send(formData)
+      oReq.onloadend = e => {
+        console.log(e)
+        setTimeout(() => {
+          loading.close()
+          this.$message.success('下载成功')
+        }, 300)
+      };
     },
+
     printWeekReport(val) {
       if (val == '') {
         this.$message.warning('请选择时间')
@@ -319,41 +327,13 @@ export default {
       }
       const week = this.$moment(val).format('WW')
       const year = this.$moment(val).format('YYYY')
-      //console.log(val, week, year)
-      var oReq = new XMLHttpRequest()
-      // url参数为拿后台数据的接口
-      let pathUrl = ProManageAPIServer + 'statistics/getWeekReport'
-      oReq.open('POST', pathUrl, true)
-      oReq.responseType = 'blob'
-      oReq.onload = function (oEvent) {
-        var content = oReq.response
-        var elink = document.createElement('a')
-        // name为后台返给前端的文件名，根据下载文件格式加后缀名，后缀名必须加，不然下载在本地不方便打开。
-        var headers = oReq.getResponseHeader('content-disposition')
-        console.log(headers)
-        const headers2 = headers.split(';')[1].split('=')[1].substr(10)
-        elink.download = headers2
-        elink.style.display = 'none'
-        var blob = new Blob([content])
-        elink.href = URL.createObjectURL(blob)
-        document.body.appendChild(elink)
-        elink.click()
-        document.body.removeChild(elink)
-      }
-      const fdata = new FormData()
-      fdata.append('week', week)
-      fdata.append('year', year)
-      oReq.send(fdata)
-      //伪加载中，防止重复提交请求
-      const loading = this.$loading({
-        lock: true,
-        text: '加载中',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      })
-      setTimeout(() => {
-        loading.close()
-      }, 5000)
+
+      let path = 'statistics/getWeekReport'
+
+      const formData = new FormData()
+      formData.append('week', week)
+      formData.append('year', year)
+      this.download(formData, path)
     },
     formatDate(now) {
       const time = new Date(now)
@@ -386,49 +366,19 @@ export default {
         return;
       }
 
-      //处理日期区间
-      var dateRange = this.multiConProjDateStart + ',' + this.multiConProjDateEnd
+      let path = 'statistics/export/exportPlan'
 
-      var oReq = new XMLHttpRequest()
-      // url参数为拿后台数据的接口
-      let pathUrl = ProManageAPIServer + 'statistics/export/exportPlan'
-      oReq.open('POST', pathUrl, true)
-      oReq.responseType = 'blob'
-      oReq.onload = function (oEvent) {
-        var content = oReq.response
-        var elink = document.createElement('a')
-        // name为后台返给前端的文件名，根据下载文件格式加后缀名，后缀名必须加，不然下载在本地不方便打开。
-        var headers = oReq.getResponseHeader('content-disposition')
-        console.log(headers)
-        const headers2 = headers.split(';')[1].split('=')[1].substr(10)
-        elink.download = headers2
-        elink.style.display = 'none'
-        var blob = new Blob([content])
-        elink.href = URL.createObjectURL(blob)
-        document.body.appendChild(elink)
-        elink.click()
-        document.body.removeChild(elink)
-      }
-      const fdata = new FormData()
+      const formData = new FormData()
       if (this.multiConClientId.length > 0) {
-        fdata.append('clientIdStr', this.multiConClientId[this.multiConClientId.length-1])
+        formData.append('clientIdStr', this.multiConClientId[this.multiConClientId.length-1])
       }
-      fdata.append('projDateStart', this.multiConProjDateStart)
-      fdata.append('projDateEnd', this.multiConProjDateEnd)
-      fdata.append('projTypeArrStr', this.parseArray(this.multiConProjType))
-      fdata.append('projMemberStr', this.multiConStaffName)
-      fdata.append('clientTypeStr', this.multiConClientType)
-      oReq.send(fdata)
+      formData.append('projDateStart', this.multiConProjDateStart)
+      formData.append('projDateEnd', this.multiConProjDateEnd)
+      formData.append('projTypeArrStr', this.parseArray(this.multiConProjType))
+      formData.append('projMemberStr', this.multiConStaffName)
+      formData.append('clientTypeStr', this.multiConClientType)
 
-      const loading = this.$loading({
-        lock: true,
-        text: '加载中',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      })
-      setTimeout(() => {
-        loading.close()
-      }, 3000)
+      this.download(formData, path)
 
     },
     parseArray(array) {
