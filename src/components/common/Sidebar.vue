@@ -172,6 +172,11 @@ export default {
           index: 'clientmanagement',
           icon: 'el-icon-s-custom',
           title: '委托人管理'
+        },
+        {
+          index: 'systeminterface',
+          icon: 'el-icon-attract',
+          title: '其他系统入口'
         }
         // {
         //   index: 'client',
@@ -299,6 +304,11 @@ export default {
           index: 'casesearchdock',
           icon: 'el-icon-discover',
           title: '案例数据库'
+        },
+        {
+          index: 'systeminterface',
+          icon: 'el-icon-attract',
+          title: '其他系统入口'
         }
       ],
       //业务部门
@@ -328,12 +338,12 @@ export default {
           icon: 'el-icon-discover',
           title: '案例数据库',
           isNew: true
+        },
+        {
+          index: 'systeminterface',
+          icon: 'el-icon-attract',
+          title: '其他系统入口'
         }
-        // {
-        //   index: 'oldplanform',
-        //   icon: 'el-icon-document-add',
-        //   title: '旧项目录入'
-        // }
       ]
     };
   },

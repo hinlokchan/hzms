@@ -111,8 +111,13 @@ export default new Router({
                 },
                 {
                     path: '/casecheck',
-                    component: () => import('../components/page/CaseCheck'),
+                    component: () => import('../components/page/CaseCheck.vue'),
                     meta: { title: '查看案例详情' }
+                },
+                {
+                    path: '/systeminterface',
+                    component: () => import('../components/page/SystemInterface.vue'),
+                    meta: { title: '其他系统入口' }
                 },
                 // {
                 //     path: '/oprecord',
