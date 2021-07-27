@@ -141,6 +141,8 @@ import { getUserList,getClientList,getClientTypeList } from '@/api/index'
 import { getDayReport } from '@/api/statistics'
 import { Base64 } from 'js-base64'
 import { host } from '@/config'
+import {downloadExcel} from '../../utils/download';
+
 var ProManageAPIServer = `${host.baseUrl}/${host.ProManageAPIServer}`
 export default {
   name: 'stat',
@@ -282,7 +284,7 @@ export default {
       let path = 'statistics/dayReport'
       const formData = new FormData()
       formData.append('dateStr', val)
-      this.download(formData,path)
+      downloadExcel(formData, path)
     },
 
     download(formData,path) {
@@ -333,7 +335,7 @@ export default {
       const formData = new FormData()
       formData.append('week', week)
       formData.append('year', year)
-      this.download(formData, path)
+      downloadExcel(formData, path)
     },
     formatDate(now) {
       const time = new Date(now)
@@ -378,7 +380,7 @@ export default {
       formData.append('projMemberStr', this.multiConStaffName)
       formData.append('clientTypeStr', this.multiConClientType)
 
-      this.download(formData, path)
+      downloadExcel(formData, path)
 
     },
     parseArray(array) {

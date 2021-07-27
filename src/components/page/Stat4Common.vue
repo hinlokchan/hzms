@@ -41,6 +41,7 @@
 <script>
 import { host } from '@/config';
 import {isAuthenticated} from '@/api';
+import { downloadExcel } from '../../utils/download';
 
 var ProManageAPIServer = `${host.baseUrl}/${host.ProManageAPIServer}`
   export default {
@@ -65,45 +66,17 @@ var ProManageAPIServer = `${host.baseUrl}/${host.ProManageAPIServer}`
 
         var oReq = new XMLHttpRequest();
         // url参数为拿后台数据的接口
-        let pathUrl = ProManageAPIServer + 'statistics/export/';
+        let path = 'statistics/export/';
 
         if (this.selected == 0) {
-          pathUrl += 'exportProjLeaderReport';
+          path += 'exportProjLeaderReport';
         }else if (this.selected == '1') {
-          pathUrl += 'exportProjAsstReport';
+          path += 'exportProjAsstReport';
         } else {
           return;
         }
 
-        oReq.open('POST', pathUrl, true);
-        oReq.responseType = 'blob';
-        oReq.onload = function(oEvent) {
-          var content = oReq.response;
-          var elink = document.createElement('a');
-          // name为后台返给前端的文件名，根据下载文件格式加后缀名，后缀名必须加，不然下载在本地不方便打开。
-          var headers = oReq.getResponseHeader('content-disposition');
-          console.log(headers);
-          const headers2 = headers.split(';')[1].split('=')[1].substr(10);
-          elink.download = headers2;
-          elink.style.display = 'none';
-          var blob = new Blob([content]);
-          elink.href = URL.createObjectURL(blob);
-          document.body.appendChild(elink);
-          elink.click();
-          document.body.removeChild(elink);
-        };
-        oReq.send()
-
-        const loading = this.$loading({
-          lock: true,
-          text: '加载中',
-          spinner: 'el-icon-loading',
-          background: 'rgba(0, 0, 0, 0.7)'
-        });
-        setTimeout(() => {
-          this.dialogVisible = false
-          loading.close();
-        }, 3000);
+        downloadExcel(null, path)
 
       }
     }
