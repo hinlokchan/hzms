@@ -413,6 +413,9 @@ export default {
           label: '外协',
           value: '1070'
         }, {
+          label: '协外',
+          value: '1071'
+        }, {
           label: '政策修订',
           value: '1080'
         }, {
@@ -440,6 +443,7 @@ export default {
         { text: '资产复审', value: 1062 },
         { text: '土地复审', value: 1063 },
         { text: '外协', value: 1070 },
+        { text: '协外', value: 1071 },
         { text: '政策修订', value: 1080 },
         { text: '绩效', value: 1090 },
         { text: '其他', value: 1100 }
@@ -456,6 +460,7 @@ export default {
         1062: '资复审',
         1063: '地复审',
         1070: '外协',
+        1071: '协外',
         1080: '政策',
         1090: '绩效',
         1100: '其他'

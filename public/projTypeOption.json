@@ -67,6 +67,12 @@
     "disable": false
   },
   {
+    "label": "协外",
+    "value": "1071",
+    "type": "XW",
+    "disable": false
+  },
+  {
     "label": "政策修订",
     "value": "1080",
     "type": "ZC",
