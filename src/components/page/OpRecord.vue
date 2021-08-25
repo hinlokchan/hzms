@@ -7,7 +7,7 @@
     >
       <el-table-column
         prop="id"
-        label="id"
+        label="序号"
         width="100"
         sortable
       ></el-table-column>
@@ -20,7 +20,6 @@
         prop="timestamp"
         label="操作时间"
         width="200"
-        
       ></el-table-column>
       <el-table-column
         prop="detail"

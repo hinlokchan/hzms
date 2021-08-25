@@ -234,6 +234,10 @@ export default {
           label: '外协'
         },
         {
+          value: '1071',
+          label: '协外'
+        },
+        {
           value: '1080',
           label: '政策修订'
         },

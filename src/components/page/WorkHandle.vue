@@ -575,14 +575,12 @@
             size="medium"
             @click="handleEdit()"
             :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
-          >编辑</el-button>
+          >修改项目信息</el-button>
           <el-button
-            icon="el-icon-set-up"
-            size="medium"
-            v-if="this.queryData.projType == 1010 || this.queryData.projType == 1020 || this.queryData.projType == 1030 || this.queryData.projType == 1041 || this.queryData.projType == 1042 || this.queryData.projType == 1043 || this.queryData.projType == 1061 || this.queryData.projType == 1062 || this.queryData.projType == 1063"
-            @click="handleChangeType()"
-            :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
-          >更改项目类型</el-button>
+              icon="el-icon-set-up"
+              size="medium"
+              :disabled="true"
+          >更改项目类型（已停用）</el-button>
           <el-button
             v-if="this.projDetail.projType == 1010 || this.projDetail.projType == 1030 || this.projDetail.projType == 1041 || this.projDetail.projType == 1042"
             icon="el-icon-lx-qrcode"
@@ -1096,9 +1094,11 @@
       <span class="work-title-name">操作记录</span>
     </div>
     <el-divider></el-divider>
-    <OpRecord
-      :projId="projDetail.projId"
-    ></OpRecord>
+    <el-card style="width: 50%">
+      <OpRecord
+          :projId="projDetail.projId"
+      ></OpRecord>
+    </el-card>
     <el-dialog
           title="修改外部合同号"
           :visible.sync="contractNumDialogVisible"
@@ -1840,7 +1840,7 @@ export default {
                   this.reload();
                 })
                 .catch(err => {
-                  this.$message.warning('服务器忙，请稍后重试！');
+                  this.$message.error(err.errorMsg);
                 });
           })
           .catch(() => {
