@@ -163,28 +163,31 @@ export default {
     };
   },
   created() {
-    getProjList4CFS().then(
-        res => {
-          this.tableData = res.data
-        }
-    );
     getUserList().then(
-            res => {
-              this.staffList = res.data
-              this.sortStaffList()
-            }
-    );
-    getSurveyList().then(
         res => {
-          console.log(res.data)
-          this.surveyDataMap = res.data;
+          this.staffList = res.data
+          this.sortStaffList()
         }
-    ).catch(err => {
-      console.log(err)
-      this.$message.error("获取已派发列表失败")
-    });
+    );
+    this.getListData()
   },
   methods: {
+    getListData() {
+      getProjList4CFS().then(
+          res => {
+            this.tableData = res.data
+          }
+      );
+      getSurveyList().then(
+          res => {
+            console.log(res.data)
+            this.surveyDataMap = res.data;
+          }
+      ).catch(err => {
+        console.log(err)
+        this.$message.error("获取已派发列表失败")
+      });
+    },
     tableRowClassName({row, rowIndex}) {
       if (this.surveyDataMap[row.projId] !== undefined) {
         return 'success-row';
@@ -264,12 +267,13 @@ export default {
               res => {
                 console.log(res);
                 this.$message.success('派发成功');
+                this.getListData();
                 this.dialogVisible = false;
               }
       ).catch(
               err => {
                 console.log(err);
-                this.$message.error('派发失败');
+                this.$message.error('派发失败：'+ err.errorMsg);
               }
       );
 
@@ -304,9 +308,6 @@ export default {
       }
       console.log(survey.surveySurveyors)
       let surveyorArray = survey.surveySurveyors.split(',');
-      console.log(surveyorArray)
-      console.log(staffName)
-      console.log(surveyorArray.indexOf('李家乐'))
 
       return surveyorArray.indexOf(staffName) > -1;
 
