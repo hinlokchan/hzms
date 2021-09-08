@@ -706,12 +706,12 @@
                   @click="handleGetNum"
                   :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
                 >取号</el-button>
-                <el-button
-                  type="primary"
-                  icon="el-icon-circle-plus-outline"
-                  @click="handleGetOldNum"
-                  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
-                >取往月报告号</el-button>
+<!--                <el-button-->
+<!--                  type="primary"-->
+<!--                  icon="el-icon-circle-plus-outline"-->
+<!--                  @click="handleGetOldNum"-->
+<!--                  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"-->
+<!--                >取往月报告号</el-button>-->
                 <el-button
                   type="danger"
                   icon="el-icon-circle-close"
@@ -1128,6 +1128,10 @@
             <el-button type="primary" @click="createContractNumWithExternal" :disabled="this.preExternalContractNum === ''">确定</el-button>
           </span>
     </el-dialog>
+    <createReportNumDialog
+    :show.sync="createReportNumDialogVisible" :projType="projDetail.projType" :projId="projDetail.projId" @response="createReportNumResponse"
+    :reportNumList="projDetail.reportNumList" v-if="createReportNumDialogVisible"
+    ></createReportNumDialog>
   </div>
 </template>
 
@@ -1148,6 +1152,7 @@ import projTypeOption from '../../../public/projTypeOption.json'
 //components
 import FcObjDetailDialog from './AssemObjDetailDialog/FcObjDetailDialog'
 import ZcObjDetailDialog from './AssemObjDetailDialog/ZcObjDetailDialog'
+import createReportNumDialog from '../business/reportNum/createReportNumDialog';
 import WorkArrgDialog from './WorkArrg/WorkArrgDialog'
 import OpRecord from './OpRecord'
 import { getToken } from '../../api/cfs';
@@ -1160,10 +1165,12 @@ export default {
     WorkArrgDialog,
     FcObjDetailDialog,
     ZcObjDetailDialog,
-    OpRecord
+    OpRecord,
+    createReportNumDialog
   },
   data() {
     return {
+      createReportNumDialogVisible: false,
       queryData: '',
       arrgData: {},
       projDetail: {},
@@ -1178,9 +1185,9 @@ export default {
       setQRCodeVisible: false,
       qrcodeForm: {
         assessedValue: '',
-        projId:''
+        projId: ''
       },
-      qrCodeSrc:'',
+      qrCodeSrc: '',
       //
       projTypeOption: [],
       transedProjType: {},
@@ -1243,12 +1250,12 @@ export default {
         subProjReviewer: [],
         subProjProReviewer: [],
         subProjAsst: [],
-        subFieldSrvy: [],
+        subFieldSrvy: []
 
       },
       subFormRules: {
         subReportNum: [
-          { required: true, message: '请输入子项目报告号', trigger: 'blur' },
+          { required: true, message: '请输入子项目报告号', trigger: 'blur' }
         ],
         subProjName: [{ required: true, message: '请输入子项目名称', trigger: 'blur' }],
         subProjScope: [{ required: true, message: '请输入子项目范围', trigger: 'blur' }],
@@ -1256,7 +1263,7 @@ export default {
         subProjLeader: [{ required: true, message: '请选择子项目负责人', trigger: 'change' }],
         subProjReviewer: [{ required: true, message: '请选择子项目复核人', trigger: 'change' }],
         subProjProReviewer: [{ required: true, message: '请选择子项目专业复核人', trigger: 'change' }],
-        subProjAsst: [{ required: true, message: '请选择子项目项目助理', trigger: 'change' }],
+        subProjAsst: [{ required: true, message: '请选择子项目项目助理', trigger: 'change' }]
         //subProj: [{ required: true, message: '请输入子项目范围', trigger: 'change' }],
       },
       midMember: [],
@@ -1286,7 +1293,7 @@ export default {
         { value: '1001', label: '轮序项目' }, { value: '1002', label: '安排项目' }
       ],
       newOldType: [
-        { value: '1001', label: '新项目', tag: 'success' }, { value: '1002', label: '重评项目' , tag: 'warning'}
+        { value: '1001', label: '新项目', tag: 'success' }, { value: '1002', label: '重评项目', tag: 'warning' }
       ],
       arrgFormRules: {
         assemMethod: [
@@ -1328,7 +1335,7 @@ export default {
         towards: '',
         buildingNum: '',
         decoDegree: '',
-        remainTerm: '',
+        remainTerm: ''
         // //人员信息
         // infoVerification: [],
         // marketEnquiry: [],
@@ -1351,7 +1358,7 @@ export default {
         feeFollowUp: [],
         signedAppraiser: [],
         projAsst: [],
-        fieldSrvy: [],
+        fieldSrvy: []
       },
       regRules: {
         projCompTime: [{ required: true, message: '不能为空!', trigger: 'blur' }],
@@ -1363,7 +1370,7 @@ export default {
         feeFollowUp: [{ required: true, message: '不能为空!', trigger: 'change' }],
         signedAppraiser: [{ required: true, message: '不能为空!', trigger: 'change' }],
         projAsst: [{ required: true, message: '不能为空!', trigger: 'change' }],
-        fieldSrvy: [{ required: true, message: '不能为空!', trigger: 'change' }],
+        fieldSrvy: [{ required: true, message: '不能为空!', trigger: 'change' }]
       },
       assemObjForm: {},
       assemObjIsEdit: false,
@@ -1376,14 +1383,14 @@ export default {
         disabledDate(time) {
           var date = new Date();
           if (time.getMonth() === date.getMonth() && time.getFullYear() === date.getFullYear()) {
-            return true
+            return true;
           }
           return time.getMonth() >= date.getMonth() && time.getFullYear() >= date.getFullYear();
         }
       },
       contractNumDialogVisible: false,
       preContractNumDialogVisible: false
-    }
+    };
   },
   created() {
     //处理从工作台获取的val -> queryData
@@ -1908,7 +1915,7 @@ export default {
     },
     //取号流程
     handleGetNum() {
-      this.getNumVisible = true
+      this.createReportNumDialogVisible = true
     },
     getNewNum(val) {
       if (val == 1) { //初评号
@@ -1961,6 +1968,9 @@ export default {
           }
         })
       //end of getNewNum()
+    },
+    createReportNumResponse() {
+      this.getDetail()
     },
     handleGetOldNum() {
       this.getOldNumVisible = true
