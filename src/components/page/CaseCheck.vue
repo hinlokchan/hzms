@@ -115,6 +115,7 @@
                 class="card-header"
             >价值信息</div>
             <div class="text item">
+              <div class="item" v-if="this.unitPrice !== undefined"><span>单价（自动计算）：</span>{{ this.unitPrice }}&nbsp;元/㎡</div>
               <div class="item" v-if="this.caseDetail.evalObjAcreage !== undefined"><span>估价对象土地面积：</span>{{ this.caseDetail.evalObjAcreage }}&nbsp;㎡</div>
               <div class="item" v-if="this.caseDetail.evalObjArea !== undefined"><span>估价对象建筑面积：</span>{{ this.caseDetail.evalObjArea }}&nbsp;㎡</div>
               <div class="item" v-if="this.caseDetail.projTotalAcreage !== undefined"><span>项目总土地面积：</span>{{ this.caseDetail.projTotalAcreage }}&nbsp;㎡</div>
@@ -150,7 +151,8 @@ export default {
   data() {
     return {
       caseId: '',
-      caseDetail: {}
+      caseDetail: {},
+      unitPrice: undefined
     }
   },
   created() {
@@ -173,6 +175,10 @@ export default {
             this.caseDetail = res.data
             if (this.caseDetail.client2 !== undefined) {
               this.caseDetail.client1 += ' - ' + this.caseDetail.client2
+            }
+            if (this.caseDetail.evalObjArea != '0' && this.caseDetail.buildingTotalValue != '0') {
+              let unitPrice = this.caseDetail.buildingTotalValue / this.caseDetail.evalObjArea * 10000
+              this.unitPrice = unitPrice.toFixed(2)
             }
           }
       );
