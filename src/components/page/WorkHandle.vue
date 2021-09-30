@@ -706,12 +706,12 @@
                   @click="handleGetNum"
                   :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
                 >取号</el-button>
-<!--                <el-button-->
-<!--                  type="primary"-->
-<!--                  icon="el-icon-circle-plus-outline"-->
-<!--                  @click="handleGetOldNum"-->
-<!--                  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"-->
-<!--                >取往月报告号</el-button>-->
+                <el-button
+                  type="primary"
+                  icon="el-icon-circle-plus-outline"
+                  @click="handleGetOldNum"
+                  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
+                >取往月报告号</el-button>
                 <el-button
                   type="danger"
                   icon="el-icon-circle-close"

@@ -174,7 +174,7 @@ export default {
         1070: [1070, 1012, 1022, 1032, 1013, 1023, 1033, 1100],
         1071: [1071, 1100],
         1080: [1080, 1013, 1023, 1033, 1100],
-        1090: [1090],
+        1090: [1090, 1100],
         1100: [1100]
       }
     };
@@ -225,7 +225,6 @@ export default {
       }
     },
     handleCreateReportNum() {
-
       let nodeValue = this.selectedNode[this.selectedNode.length - 1]
       console.log(typeof nodeValue !== 'number')
       if (typeof nodeValue !== 'number' || nodeValue < 1000) {
