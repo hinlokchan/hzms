@@ -1106,7 +1106,7 @@
           >
           <el-input
               type="text"
-              placeholder="请输入外部合同号（定点采购、中介超市摇珠等）"
+              placeholder="请输入外部合同号（定点采购、中介超市等）"
               v-model.trim="preExternalContractNum"
           ></el-input>
           <span slot="footer" class="dialog-footer">
@@ -1121,7 +1121,7 @@
       >
           <el-input
               type="text"
-              placeholder="请输入外部合同号（定点采购、中介超市摇珠等）"
+              placeholder="请输入外部合同号（定点采购、中介超市等）"
               v-model.trim="preExternalContractNum"
           ></el-input>
           <span slot="footer" class="dialog-footer">
@@ -1828,7 +1828,7 @@ export default {
     },
     handleCreateContractNum() {
 
-        if (this.projDetail.projContactType === '定点采购' || this.projDetail.projContactType === '中介超市摇珠') {
+        if (this.projDetail.projContactType === '定点采购' || this.projDetail.projContactType === '中介超市') {
             this.preContractNumDialogVisible = true;
         } else {
             this.createContractNumBasic()

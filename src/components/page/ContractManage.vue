@@ -168,7 +168,7 @@
           >
             <el-input
                 type="text"
-                placeholder="请输入外部合同号（定点采购、中介超市摇珠等）"
+                placeholder="请输入外部合同号（定点采购、中介超市等）"
                 v-model.trim="preExternalContractNum"
             ></el-input>
             <span slot="footer" class="dialog-footer">
