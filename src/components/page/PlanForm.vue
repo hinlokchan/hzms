@@ -11,7 +11,18 @@
             <i class="el-icon-lx-calendar"></i> 项目管理
           </el-breadcrumb-item>
           <el-breadcrumb-item v-if="this.isEdit == false">新增项目计划</el-breadcrumb-item>
-          <el-breadcrumb-item v-else>编辑项目计划</el-breadcrumb-item>
+          
+		  <!-- 211026变动 新增: 克隆功能 功能按钮-->
+		  <el-breadcrumb-item v-else>
+			  编辑项目计划
+			  <el-button
+			    type="primary"
+			    icon="el-icon-plus"
+			    style="height:auto;padding: 0px 8px 7px 8px;margin-left:15px"
+			    @click="handleAdd"
+			  ><span style="font-size:14px;color:#fff;">克隆为新项目计划</span></el-button>
+		  </el-breadcrumb-item>
+		  
         </el-breadcrumb>
       </div>
       <el-dialog
@@ -77,7 +88,7 @@
           label-width="125px"
           :rules="rules"
         >
-          <el-row>
+          <el-row :gutter="20">
             <el-col :span="6">
               <el-form-item
                 :span="6"
@@ -86,6 +97,7 @@
                 class="red-item"
               >
                 <el-select
+				  class="select-width-100"
                   v-model="form.projType"
                   @change="arrgTypeToEnable"
                   v-if="!this.isEdit"
@@ -108,6 +120,7 @@
             <el-col :span="6">
               <el-form-item label="轮序/安排">
                 <el-select
+				  class="select-width-100"
                   v-model="form.arrgType"
                   placeholder="请选择"
                   :disabled="userRole>2"
@@ -125,7 +138,9 @@
             </el-col>
             <el-col :span="6">
               <el-form-item label="接洽类型">
-                <el-select v-model="form.projContactType" :disabled="userRole>2">
+                <el-select 
+				  class="select-width-100"
+				  v-model="form.projContactType" :disabled="userRole>2">
                   <el-option
                     v-for="item in contactTypeOption"
                     :key="item"
@@ -277,7 +292,7 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row>
+          <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item
                 label="评估范围"
@@ -303,7 +318,7 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row>
+          <el-row :gutter="20">
             <el-col :span="6">
               <el-form-item
                 label="评估目的"
@@ -311,6 +326,7 @@
                 class="red-item"
               >
                 <el-select
+				  class="select-width-100"
                   v-model="form.assemGoal"
                   placeholder="请选择"
                   filterable
@@ -387,6 +403,7 @@
             <el-col :span="6">
               <el-form-item label="新/重评">
                 <el-select
+				  class="select-width-100"
                   v-model="form.newOldType"
                   placeholder="请选择"
                   :disabled="userRole>2"
@@ -405,6 +422,7 @@
             <el-col :span="6">
               <el-form-item label="紧急程度">
                 <el-select
+				  class="select-width-100"
                   v-model="form.projDegree"
                   placeholder="请选择"
                   :disabled="userRole>2"
@@ -422,7 +440,9 @@
             </el-col>
             <el-col :span="6">
               <el-form-item label="风险预测">
-                <el-select v-model="form.riskProfile" :disabled="userRole>2">
+                <el-select 
+				  class="select-width-100"
+				  v-model="form.riskProfile" :disabled="userRole>2">
                   <el-option
                     label="低"
                     value="1001"
@@ -704,11 +724,14 @@
               </el-form-item>
             </el-col>
           </el-row>
+		  
+		  <!-- 211026变动 新增: 克隆功能 调整提交按钮样色文字 -->
           <el-form-item>
             <el-button
-              type="primary"
+              :type="newButtonType(isEdit)"
+			  :icon="newButtonIcon(isEdit)"
               @click="onSubmit"
-            >表单提交</el-button>
+            >{{newButtonText(isEdit)}}</el-button>
             <el-button @click="goBack">取消</el-button>
             <!-- <el-button @click="test">test</el-button> -->
           </el-form-item>
@@ -894,6 +917,38 @@ export default {
       .catch(err => { })
     // this.getClientList()
   },
+  
+  //211026变动 新增: 克隆功能 计算属性调整提交按钮样色文字
+  computed:{
+    newButtonText(){
+    	return (data)=>{
+    		if(data){
+    			return "更新项目";
+    		}else{
+				return "新增项目";
+			}
+    	}
+    },
+	newButtonType(){
+    	return (data)=>{
+    		if(data){
+    			return "success";
+    		}else{
+				return "primary";
+			}
+    	}
+    },
+	newButtonIcon(){
+    	return (data)=>{
+    		if(data){
+    			return "el-icon-edit";
+    		}else{
+				return "el-icon-plus";
+			}
+    	}
+    },
+  },
+  
   watch: {
     'clientForm.clientName': {
       handler(val) {
@@ -1397,7 +1452,19 @@ export default {
     // },
     goBack() {
       this.$router.go(-1)
-    }
+    },
+	
+	//211026变动 新增:克隆功能 功能函数
+	handleAdd() {
+		this.$confirm('是否确定克隆为新的项目计划', '提示', {
+		}).then(() => {
+		  this.$message.warning('克隆为新项目计划');
+		  this.isEdit = false;
+		}).catch(() => {
+		
+		});
+	},
+	
   }
 };
 </script>
@@ -1439,4 +1506,9 @@ export default {
 .red-item .el-form-item__label {
   color: #ed1941;
 }
+
+.select-width-100{
+	width: 100%;
+}
+
 </style>
