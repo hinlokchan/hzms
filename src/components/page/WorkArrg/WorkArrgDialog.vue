@@ -15,7 +15,9 @@
     >
       <el-button @click="defaultArrg">默认安排</el-button>
       <el-form-item label="评估方法" prop="assemMethod">
+		<!-- 211027 调整: 多选框宽度 -->
         <el-select
+		  class="select-width-50"
           v-if="projType == 1010 || projType == 1041"
           v-model="arrgForm.assemMethod"
           multiple
@@ -612,6 +614,16 @@ export default {
       });
     },
     defaultArrg() {
+	  //211027 修复: 重复点击"默认安排"按钮, 日期为空的bug
+	  this.arrgForm.prePreparationSche = [];
+	  this.arrgForm.fldSrvySche = [];
+	  this.arrgForm.mktSrvySche = [];
+	  this.arrgForm.assemEstSche = [];
+	  this.arrgForm.issueValSche = [];
+	  this.arrgForm.internalAuditSche = [];
+	  this.arrgForm.commuClientSche = [];
+	  this.arrgForm.amendFinalSche = [];
+		
       let day = this.baseDate;
       let day1 = this.$moment(day).format('MM/DD');
       let day2 = this.$moment(day + 86400000).format('MM/DD');
@@ -699,4 +711,7 @@ export default {
 </script>
 
 <style>
+.select-width-50{
+	min-width: 50%;
+}
 </style>
