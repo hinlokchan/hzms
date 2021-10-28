@@ -27,7 +27,8 @@ a {
     right: 0;
     top: 70px;
     bottom: 0;
-    padding-bottom: 30px;
+    /* 211019变动 修复: 所有界面滚动条右下角空隙30px的bug 
+    	padding-bottom: 30px; */
     -webkit-transition: left .3s ease-in-out;
     transition: left .3s ease-in-out;
     background: #F7F8FD;
