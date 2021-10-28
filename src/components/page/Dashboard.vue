@@ -69,10 +69,25 @@
       <el-col :span="15">
         <el-card
           shadow="hover"
-          style="height:100%;"
+          style="height:50%;"
         >
-          <el-calendar id="calendar">
-          </el-calendar>
+          <div slot="header" class="clearfix">
+            <span>公告</span>
+          </div>
+          <el-collapse v-model="activeName" accordion>
+            <el-collapse-item title="2021/10/28更新" name="1">
+              <template slot="title">
+                <span>2021/10/28更新<el-badge is-dot></el-badge></span>
+              </template>
+              <b>获取往月报告号入口变更为【取号】</b>
+              <div>点击【取号】后，在对话框中将滑块拨至【往月报告号】，选择日期及报告号类型后，点击确认按钮即可取号。</div>
+              <div></div>
+            </el-collapse-item>
+          </el-collapse>
+<!--          <el-calendar id="calendar"></el-calendar>-->
+        </el-card>
+        <el-card shadow="hover" style="margin-top: 10px">
+          <el-calendar></el-calendar>
         </el-card>
       </el-col>
     </el-row>
@@ -110,6 +125,7 @@ export default {
   name: 'dashboard',
   data() {
     return {
+      activeName: '1',
       missionData: {},
       sfList: [
         {
@@ -237,7 +253,7 @@ export default {
     this.getCurrent()
   },
   components: {
-    Schart
+
   },
   computed: {
     role() {
