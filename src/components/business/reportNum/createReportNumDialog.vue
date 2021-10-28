@@ -13,7 +13,7 @@
 <!--        </b>-->
 <!--      </span>-->
 <!--    </span>-->
-    <div style="width: 40%">
+    <div style="width: 60%">
       <el-switch
           @change="switchChange"
           style="display: block"
@@ -158,11 +158,11 @@ export default {
               label: '协外/XW',
               disabled: true
             },
-            {
-              value: 1080,
-              label: '政策修订/ZC',
-              disabled: true
-            },
+            // {
+            //   value: 1080,
+            //   label: '政策修订/ZC',
+            //   disabled: true
+            // },
             {
               value: 1090,
               label: '绩效/JX',
@@ -196,7 +196,7 @@ export default {
         1063: [1063, 1100],
         1070: [1070, 1012, 1022, 1032, 1013, 1023, 1033, 1100],
         1071: [1071, 1100],
-        1080: [1080, 1013, 1023, 1033, 1100],
+        1080: [1013, 1023, 1033, 1100],
         1090: [1090, 1100],
         1100: [1100]
       },
