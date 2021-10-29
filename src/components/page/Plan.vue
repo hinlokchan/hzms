@@ -31,7 +31,7 @@
             placeholder="请选择"
           >
             <el-option
-              v-for="item in projTypeOption"
+              v-for="item in projTypeOption[companyTabsId]"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -52,6 +52,13 @@
         >确认更改</el-button>
       </div>
     </el-dialog>
+
+	<!-- 211028变动 新增: 多个公司切换 -->
+	<el-tabs v-model="companyId" type="card" @tab-click="handleTabsClick">
+	  <el-tab-pane label="惠正公司" name="huizheng"></el-tab-pane>
+	  <el-tab-pane label="智明公司" name="zhiming"></el-tab-pane>
+	  <el-tab-pane label="会计所" name="kuaiji"></el-tab-pane>
+	</el-tabs>
 
       <div class="handle-box">
         <el-row :gutter="20">
@@ -183,12 +190,12 @@
           label="项目类型"
           width="90"
           align="center"
-          :filters="this.projTypeFilters"
-          :filter-method="filterProjType"
+          :filters="projTypeFilters[companyTabsId]"
+          :filter-method="filterProjType[companyTabsId]"
         >
           <template slot-scope="scope">
 <!--            <span>{{scope.row.projType}}</span>-->
-            <span>{{projTypes[scope.row.projType]}}</span>
+            <span>{{projTypes[companyTabsId][scope.row.projType]}}</span>
             <el-button type="text" icon="el-icon-refresh" size="mini" @click="handleProjType(scope.row)"></el-button>
           </template>
         </el-table-column>
@@ -378,6 +385,7 @@ export default {
       currentPage: 1, // 当前页码
       pageSize: 20, // 每页的数据条数
       pageTotal: 0,
+	  /* 
       projTypeList: [
         {
           label: '房地产',
@@ -426,45 +434,70 @@ export default {
           value: '1100'
         }
       ],
+	  */
       searchData: { projNum: '', reportNum: '', projName: '', projScope: '', clientName: '', projMember: '' },
       tableData: [],
       editVisible: false,
       changeTypeVisible: false,
       form: {},
+	  
+	  //211028变动 新增: 多个公司切换, 通过companyTabsId切换过滤选项
       projTypeFilters: [
-        { text: '房地产', value: 1010 },
-        { text: '资产', value: 1020 },
-        { text: '土地', value: 1030 },
-        { text: '房地产咨询', value: 1041 },
-        { text: '资产咨询', value: 1042 },
-        { text: '土地咨询', value: 1043 },
-        { text: 'PPP', value: 1050 },
-        { text: '房地产复审', value: 1061 },
-        { text: '资产复审', value: 1062 },
-        { text: '土地复审', value: 1063 },
-        { text: '外协', value: 1070 },
-        { text: '协外', value: 1071 },
-        { text: '政策修订', value: 1080 },
-        { text: '绩效', value: 1090 },
-        { text: '其他', value: 1100 }
+		[
+			{ text: '房地产', value: 1010 },
+			{ text: '资产', value: 1020 },
+			{ text: '土地', value: 1030 },
+			{ text: '房地产咨询', value: 1041 },
+			{ text: '资产咨询', value: 1042 },
+			{ text: '土地咨询', value: 1043 },
+			{ text: 'PPP', value: 1050 },
+			{ text: '房地产复审', value: 1061 },
+			{ text: '资产复审', value: 1062 },
+			{ text: '土地复审', value: 1063 },
+			{ text: '外协', value: 1070 },
+			{ text: '协外', value: 1071 },
+			{ text: '政策修订', value: 1080 },
+			{ text: '绩效', value: 1090 },
+			{ text: '其他', value: 1100 },
+		],
+		[
+			{ text: 'zm类型1', value: 2010 },
+			{ text: 'zm类型2', value: 2020 },
+			{ text: 'zm类型3', value: 2030 },
+		],
+		[
+			{ text: 'kj类型1', value: 3010 },
+			{ text: 'kj类型2', value: 3020 },
+		],
       ],
-      projTypes: {
-        1010: '房',
-        1020: '资',
-        1030: '地',
-        1041: '房咨',
-        1042: '资咨',
-        1043: '地咨',
-        1050: 'PPP',
-        1061: '房复审',
-        1062: '资复审',
-        1063: '地复审',
-        1070: '外协',
-        1071: '协外',
-        1080: '政策',
-        1090: '绩效',
-        1100: '其他'
-      },
+      projTypes: [
+		  {
+			1010: '房',
+			1020: '资',
+			1030: '地',
+			1041: '房咨',
+			1042: '资咨',
+			1043: '地咨',
+			1050: 'PPP',
+			1061: '房复审',
+			1062: '资复审',
+			1063: '地复审',
+			1070: '外协',
+			1071: '协外',
+			1080: '政策',
+			1090: '绩效',
+			1100: '其他'
+		  },
+		  {
+			2010: 'zm类型1',
+			2020: 'zm类型2',
+			2030: 'zm类型3',
+		  },
+		  {
+			3010: 'kj类型1',
+			3020: 'kj类型2',
+		  },
+	  ],
       projTypeOption: [],
       changeType: {
         projId: '',
@@ -478,11 +511,29 @@ export default {
         newEvalObj : ''
       },
       newEvalObj: {
-      }
+      },
+	  
+	  
+	  //211028变动 新增: 多个公司切换
+	  companyRange:['huizheng', 'zhiming','kuaiji'],
+	  companyId:'',
+	  companyTabsId: 0,
+	  
     }
   },
   created() {
-    this.getData()
+	//211028变动 新增: 多个公司切换  
+	const value = localStorage.getItem('companyId');
+	if(value){
+		this.companyId = value;
+		this.companyTabsId = this.companyRange.indexOf(this.companyId);
+	}else{
+		this.companyId = this.companyRange[0];
+		this.companyTabsId = 0;
+	}
+	console.log('初始化公司id', this.companyId);
+	  
+    this.getData(this.companyId);
     this.projTypeOption = projTypeOption
   },
   mounted() {
@@ -493,7 +544,13 @@ export default {
         this.changePage(parseInt(sessionStorage.getItem('page')))
         sessionStorage.removeItem('page')
       }
-      getAllAbstractProject()
+	  
+	  //211029变动 新增: 多个公司切换
+	  const allData = {
+	  	companyId: this.companyId,
+	  } 
+	  
+      getAllAbstractProject(allData)
         .then(res => {
           console.log(res.data)
           this.tableData = res.data
@@ -510,6 +567,9 @@ export default {
           newArr[j] = this.searchData[j]
         }
       }
+	  //211029变动 新增: 多个公司切换
+	  newArr['companyId'] = this.companyId;
+	  
       searchProject(newArr).then(res => {
         console.log(res)
         this.tableData = res.data
@@ -572,16 +632,21 @@ export default {
       this.$router.push({ path: '/planform', query: { data: val.projId } })
     },
     handleProjType(val) {
-      for (let i of this.projTypeOption) {
+		
+	  //211029变动 新增: 多个公司切换, 通过数组id区分
+	  for (let i of this.projTypeOption[this.companyTabsId]) {
         if (val.projType == i.value) {
           i.disable = true
         }
       }
+	 
+	  
       this.changeTypeVisible = true
       this.changeType.projId = val.projId
     },
     closeChangeProjType() {
-      for (let i of this.projTypeOption) {
+	  //211029变动 新增: 多个公司切换, 通过数组id区分
+      for (let i of this.projTypeOption[this.companyTabsId]) {
         i.disable = false
       }
     },
@@ -589,11 +654,20 @@ export default {
       if (this.changeType.toType == '') {
         this.$message.info('请选择修改类型');
       } else {
-        alterProjType(this.changeType)
+		  
+		//211029变动 新增: 多个公司切换
+		const changeData = {
+			companyId: this.companyId,
+			projId: this.changeType.projId,
+			toType: this.changeType.toType,
+		} 
+		  
+        alterProjType(changeData)
           .then(res => {
             this.$message.success('修改成功');
-            this.changeTypeVisible = false
-            this.reload()
+            this.changeTypeVisible = false;
+			//211028变动 修复:解决增加缓存后, 修改项目需刷新页面但无效的bug
+			this.getData();
           })
           .catch(err => {
             this.$message.error('修改失败');
@@ -614,8 +688,14 @@ export default {
         type: 'warning'
       })
           .then(() => {
+			  
+			//211028变动 新增: 多个公司删除项目
+			const delData = {
+				companyId: this.companyId,
+				projId: row.projId,
+			}
             //接口会判断是否有报告号并对应删除
-            delProject({ projId: row.projId }).then(res => {
+            delProject(delData).then(res => {
               this.$message.success('删除成功');
               this.getData()
             }).catch(err => {
@@ -692,7 +772,13 @@ export default {
       this.evalObjDrawerData.evalObjList = []
       this.evalObjDrawerData.projInfo = {}
       this.evalObjDrawerData.newEvalObj = ''
-      getEvalObjListByProjId(projInfo.projId).then(
+	  
+	  //211029变动 新增: 多个公司切换
+	  //index.js 写法 url: `${ProManageAPIServer}evalObj/getEvalObjListByProjId?projId=`+data,
+	  //projInfo.projId
+	  const getObjData=projInfo.projId + "&companyId='" + this.companyId +"'"; 
+	  
+      getEvalObjListByProjId(getObjData).then(
           res => {
             this.evalObjDrawerData.projInfo = projInfo;
             this.evalObjDrawerData.evalObjList = res.data;
@@ -705,7 +791,11 @@ export default {
       this.evalObjDrawerVisible = true
     },
     delEvalObj(row) {
-      deleteEvalObjById('?evalObjId=' + row.evalObjId).then(
+	  //211029变动 新增: 多个公司切换
+	  //'?evalObjId=' + row.evalObjId
+	  const delObjData ="?evalObjId=" + row.evalObjId + "&companyId='" + this.companyId + "'";
+	  	
+      deleteEvalObjById(delObjData).then(
           res => {
             this.$message.success('删除成功')
             getEvalObjListByProjId(this.evalObjDrawerData.projInfo.projId).then(
@@ -725,6 +815,9 @@ export default {
       this.evalObjSubmitBtnLoading = true
       this.newEvalObj.projId = this.evalObjDrawerData.projInfo.projId
       this.newEvalObj.evalObjName = this.evalObjDrawerData.newEvalObj
+	  
+	  //211029变动 新增: 多个公司切换
+	  this.newEvalObj.companyId = this.companyId;
 
       createSingleEvalObj(this.newEvalObj).then(
           res => {
@@ -747,7 +840,24 @@ export default {
       }).catch(() => {
 
       });
-    }
+    },
+	
+	//211028变动 新增: 多个公司切换
+	handleTabsClick(tab, event) {
+	  //console.log("切换到: ", tab.label, tab.name);
+	  this.$message.success('切换到: ' + tab.label);
+	  
+	  //1.companyTabsId, 修改公司数组序号id
+	  this.companyTabsId = this.companyRange.indexOf(this.companyId);
+	  
+	  //2. localStorage 将该公司id存储起来, 其他页面也是显示该公司信息
+	  localStorage.setItem('companyId', tab.name);
+	  console.log('公司id', localStorage.getItem('companyId'));
+	  
+	  //3. this.getData 重新读取该公司项目数据
+	  this.getData(tab.name); //根据公司id获取对应项目数据
+	 
+	}
   }
 };
 </script>
@@ -793,5 +903,9 @@ export default {
   margin-right: 0;
   margin-bottom: 0;
   width: 50%;
+}
+
+.select-display-none{
+	display: none;
 }
 </style>
