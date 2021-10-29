@@ -13,7 +13,28 @@
 <!--        </b>-->
 <!--      </span>-->
 <!--    </span>-->
-    <span>请选择报告号类型</span>
+    <div style="width: 60%">
+      <el-switch
+          @change="switchChange"
+          style="display: block"
+          v-model="isPostMonth"
+          active-color="#ff4949"
+          inactive-color="#13ce66"
+          active-text="往月报告号"
+          inactive-text="当月报告号">
+      </el-switch>
+    </div>
+    <div v-if="this.isPostMonth === true">
+      <div style="margin-top: 20px">选择报告号日期</div>
+      <el-date-picker
+          v-model="takenDate"
+          type="month"
+          placeholder="选择报告号月份"
+          :picker-options="postMonthPickerOps"
+      ></el-date-picker>
+    </div>
+    <br>
+    <span style="margin-top: 20px">选择报告号类型</span>
     <el-cascader-panel
         :options="options"
         ref="selector"
@@ -27,7 +48,7 @@
 </template>
 
 <script>
-import { createReportNum } from '../../../api';
+import { createReportNum,getOldReportNum } from '../../../api';
 export default {
   name: 'createReportNumDialog',
   inject: ['reload'],
@@ -45,6 +66,8 @@ export default {
         projId: undefined,
         reportNumList: {}
       },
+      isPostMonth: false,
+      takenDate: '',
       dialogVisible: false,
       selectedNode: undefined,
       options: [
@@ -135,11 +158,11 @@ export default {
               label: '协外/XW',
               disabled: true
             },
-            {
-              value: 1080,
-              label: '政策修订/ZC',
-              disabled: true
-            },
+            // {
+            //   value: 1080,
+            //   label: '政策修订/ZC',
+            //   disabled: true
+            // },
             {
               value: 1090,
               label: '绩效/JX',
@@ -173,10 +196,23 @@ export default {
         1063: [1063, 1100],
         1070: [1070, 1012, 1022, 1032, 1013, 1023, 1033, 1100],
         1071: [1071, 1100],
-        1080: [1080, 1013, 1023, 1033, 1100],
+        1080: [1013, 1023, 1033, 1100],
         1090: [1090, 1100],
         1100: [1100]
-      }
+      },
+      postMonthPickerOps: {
+        disabledDate(time) {
+          var date = new Date();
+          if (time.getMonth() >= date.getMonth() && time.getFullYear() >= date.getFullYear()) {
+            return true;
+          }else if (time.getFullYear() < 2020 || time.getFullYear() > date.getFullYear()) {
+            return true;
+          } else {
+            return false;
+          }
+
+        }
+      },
     };
   },
   watch: {
@@ -224,14 +260,60 @@ export default {
         }
       }
     },
+    switchChange() {
+      this.takenDate = ''
+      this.selectedNode = undefined
+      if (this.isPostMonth === true) {
+        this.options[0].disabled = true
+        this.options[2].disabled = true
+      }
+    },
     handleCreateReportNum() {
-      let nodeValue = this.selectedNode[this.selectedNode.length - 1]
+
+      if (this.isPostMonth === true && this.takenDate === '') {
+        this.$message.error('请选择报告号日期！')
+        return;
+      }
+
+      let nodeValue = this.selectedNode[this.selectedNode.length - 1];
       console.log(typeof nodeValue !== 'number')
       if (typeof nodeValue !== 'number' || nodeValue < 1000) {
         this.message.error('类型错误  ' + nodeValue);
         return
       }
 
+      if (this.isPostMonth) {
+        this.createPostMonthReportNum(nodeValue);
+      } else {
+        this.createCommonReportNum(nodeValue)
+      }
+
+
+
+
+    },
+
+    createPostMonthReportNum(nodeValue) {
+      let formattedTakenDate = this.$moment(this.takenDate).format('YYYY-MM-DD')
+      getOldReportNum({ projId: this.info.projId , takenDate: formattedTakenDate , reportNumType: nodeValue }).then(
+          res => {
+            console.log(res);
+            this.$message.success('获取成功');
+            this.onClose()
+            this.$emit('response')
+          }
+      ).catch(
+          err => {
+            if (err.statusCode == '5001') {
+              this.$message.warning('获取失败：该类型报告号已存在');
+            } else {
+              this.$message.error('获取失败')
+            }
+          }
+      );
+    },
+
+    createCommonReportNum(nodeValue) {
       createReportNum({ projId: this.info.projId, reportNumType: nodeValue }).then(
           res => {
             console.log(res);
@@ -248,9 +330,7 @@ export default {
             }
           }
       );
-
-
-    },
+    }
 
 
   }

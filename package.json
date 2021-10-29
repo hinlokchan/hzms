@@ -9,10 +9,10 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.24.0",
     "babel-polyfill": "^6.26.0",
     "clipboard": "^2.0.6",
-    "element-ui": "^2.11.0",
+    "element-ui": "^2.15.6",
     "js-base64": "^2.5.1",
     "js-cookie": "^2.2.1",
     "less": "^3.11.3",
@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.9.0",
-    "@vue/cli-service": "^3.9.0",
+    "@vue/cli-service": "^4.5.14",
     "vue-template-compiler": "^2.6.10"
   }
 }
