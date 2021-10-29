@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div class="container">
     <div class="crumbs">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
@@ -7,8 +8,15 @@
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
+	
+	<!-- 211029变动 新增: 云查勘本地搜索功能 -->
+	<el-input placeholder="计划编号" v-model.trim="searchContent.projNum" clearable @change="getData" size="small" style="margin-bottom: 20px ; width: 10% ;box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)"></el-input>
+	<el-input placeholder="项目名称" v-model.trim="searchContent.projName" clearable @change="getData" size="small" style="margin-left: 1px;margin-bottom: 20px ; width: 20% ;box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)"></el-input>
+	<el-input placeholder="项目范围" v-model.trim="searchContent.projScope" clearable @change="getData" size="small" style="margin-left: 1px;margin-bottom: 20px ; width: 20% ;box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)"></el-input>
+	<el-button type="primary" icon="el-icon-refresh" @click="resetSearch" style="margin-left: 5px" >重置</el-button>
+	
     <el-table
-        :data="tableData"
+        :data="getData()"
         @expand-change="expandChange"
         :row-key="getRowKeys"
         :expand-row-keys="expands"
@@ -23,7 +31,7 @@
           >
             <el-table :data="evalObj"
                       v-loading="loading"
-                      style=" width: 50%; box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)"
+                      style=" width: 80%; margin-left: 20px; box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)"
                       :span-method="arraySpan"
                       id="no-hover"
             >
@@ -45,17 +53,19 @@
               <el-table-column
                   label="估价对象名称"
                   prop="evalObjName"
-                  width="400px"
+                  min-width="400px"
               >
               </el-table-column>
               <el-table-column
                   label="已派发人员"
               >
-              {{deliveredFieldSurvey}}
+				<template slot-scope="scope">
+					{{deliveredFieldSurvey}}
+                </template>
               </el-table-column>
             </el-table>
           </el-form>
-          <el-button type="primary" style="float: right" @click="handleDelivery(props.row)">派发计划</el-button>
+          <el-button type="primary" style="float: right;  margin-right: 20px;" @click="handleDelivery(props.row)">派发计划</el-button>
         </template>
       </el-table-column>
       <el-table-column
@@ -78,6 +88,7 @@
 <!--        </template>-->
 <!--      </el-table-column>-->
     </el-table>
+	</div>
     <el-dialog
             :visible.sync="dialogVisible"
         @closed="closed"
@@ -159,7 +170,14 @@ export default {
         projId: '',
         projNum: '',
         fieldSrvy: ''
-      }
+      },
+	  
+	  //211029变动 新增: 云查勘本地搜索功能
+	  searchContent:{
+		projNum:'',
+		projName:'',
+		projScope:'',
+	  },
     };
   },
   created() {
@@ -242,7 +260,8 @@ export default {
             this.$alert("获取估价对象失败")
           }
       );
-      this.deliveredFieldSurvey = this.surveyDataMap[row.projId].surveySurveyors
+	  //211029变动, 修复: surveySurveyors未定义的bug
+      this.deliveredFieldSurvey = this.surveyDataMap[row.projId]?this.surveyDataMap[row.projId].surveySurveyors:'';
     },
     rowClick(row,index) {
       this.$refs.refTable.toggleRowExpansion(row)
@@ -313,10 +332,10 @@ export default {
 
     },
     arraySpan({ row, column, rowIndex, columnIndex }){
-      if (columnIndex === 3) {
+	  if (columnIndex === 3) {
         if (rowIndex % 2 === 0) {
           return {
-            rowspan: 2,
+            rowspan: row.length+1,
             colspan: 1
           };
         } else {
@@ -326,7 +345,26 @@ export default {
           };
         }
       }
-    }
+    },
+	
+	//211029变动 新增: 云查勘本地搜索功能
+	getData(){
+		return this.tableData.filter(item => {
+			if (item.projNum.includes(this.searchContent.projNum) 
+			&&item.projName.includes(this.searchContent.projName) 
+			&&item.projScope.includes(this.searchContent.projScope) ) {
+				return item
+			}
+		})
+	},
+	resetSearch(){
+		this.searchContent = {
+			projNum:'',
+			projName:'',
+			projScope:'',
+		};
+	}
+	
   }
 }
 </script>
