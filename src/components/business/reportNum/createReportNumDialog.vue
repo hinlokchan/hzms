@@ -263,10 +263,8 @@ export default {
     switchChange() {
       this.takenDate = ''
       this.selectedNode = undefined
-      if (this.isPostMonth === true) {
-        this.options[0].disabled = true
-        this.options[2].disabled = true
-      }
+      this.options[0].disabled = this.isPostMonth
+      this.options[2].disabled = this.isPostMonth
     },
     handleCreateReportNum() {
 
