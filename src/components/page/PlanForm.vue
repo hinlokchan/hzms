@@ -1132,7 +1132,11 @@ export default {
       data.projDate = this.formatDate(data.projDate)
       data.baseDate = this.formatDate(data.baseDate)
       data.fldSrvySchedule = this.formatDate(data.fldSrvySchedule)
-      this.form = data
+      
+	  //211103变动 修复:克隆功能 新增估价对象bug
+	  data.evalObjArray = [];	  
+	  this.form = data;
+	  
       //转化委托人
       let value = data.clientId
       if (value == '0') {
