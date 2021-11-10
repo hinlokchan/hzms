@@ -57,7 +57,7 @@
 	<el-tabs v-model="companyId" type="card" @tab-click="handleTabsClick">
 	  <el-tab-pane label="惠正公司" name="huizheng"></el-tab-pane>
 	  <el-tab-pane label="智明公司" name="zhiming"></el-tab-pane>
-	  <el-tab-pane label="会计所" name="kuaiji"></el-tab-pane>
+	  <el-tab-pane label="汇正公司" name="kuaiji"></el-tab-pane>
 	</el-tabs>
 
       <div class="handle-box">
@@ -128,6 +128,10 @@
           </el-col>
         </el-row>
       </div>
+	  
+	  <!-- 211109变动 新增: 多个公司切换 -->
+<!-- =========================惠正========================= -->
+	  
       <!-- table -->
       <el-table
         :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)"
@@ -137,6 +141,7 @@
         class="table"
         ref="multipleTable"
         header-cell-class-name="table-header"
+		v-if="companyTabsId == 0"
       >
         <!-- <el-table-column type="expand">
           <template slot-scope="props">
@@ -308,6 +313,185 @@
           </template>
         </el-table-column>
       </el-table>
+	  
+
+<!-- =========================智明========================= -->
+	  
+      <!-- table -->
+      <el-table
+        :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+        height="550"
+        stripe
+        border
+        class="table"
+        ref="multipleTable"
+        header-cell-class-name="table-header"
+		v-if="companyTabsId == 1"
+      >
+        <!-- <el-table-column type="expand">
+          <template slot-scope="props">
+            <el-form
+              label-position="left"
+              inline
+              class="demo-table-expand"
+            >
+              <el-form-item label="项目类型">
+                <div
+                  v-for="item in projTypeList"
+                  :key="item.value"
+                >
+                  <span v-if="item.value == props.row.projType">{{ item.label }}</span>
+                </div>
+              </el-form-item>
+              <el-form-item label="项目负责人">
+                <span>{{ props.row.projLeader }}</span>
+              </el-form-item>
+              <el-form-item label="项目复核人">
+                <span>{{ props.row.projReviewer }}</span>
+              </el-form-item>
+              <el-form-item label="专业复核人">
+                <span>{{ props.row.projProReviewer }}</span>
+              </el-form-item>
+              <el-form-item label="项目助理">
+                <span>{{ props.row.projAsst }}</span>
+              </el-form-item>
+            </el-form>
+          </template>
+        </el-table-column> -->
+
+        <!-- <el-table-column
+          prop="projDegree"
+          label="紧急程度"
+          width="80"
+          align="center"
+        >
+          <template slot-scope="props">
+            <el-tag
+              :type="props.row.projDegree == 1001 ? 'success' : 'danger'"
+              effect="dark"
+            >
+              <span v-if="props.row.projDegree == 1001">正常</span>
+              <span v-else>紧急</span>
+            </el-tag>
+          </template>
+        </el-table-column> -->
+        <el-table-column
+          prop="projType"
+          label="项目类型"
+          width="90"
+          align="center"
+          :filters="projTypeFilters[companyTabsId]"
+          :filter-method="filterProjType[companyTabsId]"
+        >
+          <template slot-scope="scope">
+<!--            <span>{{scope.row.projType}}</span>-->
+            <span>{{projTypes[companyTabsId][scope.row.projType]}}</span>
+            <el-button type="text" icon="el-icon-refresh" size="mini" @click="handleProjType(scope.row)"></el-button>
+          </template>
+        </el-table-column>
+        <!-- <el-table-column
+          prop="projState"
+          label="项目状态"
+          width="80"
+          align="center"
+        >
+          <template slot-scope="props">
+            <el-tag
+              :type="props.row.projState == '正常' ? 'primary' : 'warning'"
+              effect="dark"
+            >{{ props.row.projState }}</el-tag>
+          </template>
+        </el-table-column> -->
+
+        <el-table-column
+          prop="projDate"
+          :formatter="this.$formatDate"
+          label="编制日期"
+          sortable
+          width="105"
+        ></el-table-column>
+        <el-table-column
+          prop="projNum"
+          label="计划编号"
+          width="115"
+        ></el-table-column>
+        <el-table-column
+          prop="projName"
+          label="项目名称"
+          width="250"
+          :show-overflow-tooltip="true"
+        ></el-table-column>
+        <el-table-column
+          prop="projScope"
+          label="项目范围"
+          width="250"
+          :show-overflow-tooltip="true"
+        ></el-table-column>
+        <el-table-column
+          prop="clientName"
+          label="委托人名称"
+          width="180"
+        ></el-table-column>
+        <el-table-column
+          prop="projLeader"
+          label="项目负责人"
+          width="95"
+        ></el-table-column>
+        <el-table-column
+          prop="projReviewer"
+          label="项目复核人"
+          width="95"
+        ></el-table-column>
+        <el-table-column
+          prop="projAsst"
+          label="项目助理"
+          width="80"
+        ></el-table-column>
+        <!-- <el-table-column
+          prop="projRate"
+          label="项目进度"
+          width="90"
+          align="center"
+        >
+          <el-tag effect="dark">编写报告</el-tag>
+        </el-table-column> -->
+        <el-table-column
+          label="操作"
+          width="250"
+          align="center"
+          fixed="right"
+        >
+          <template slot-scope="scope">
+            <el-button
+              type="text"
+              icon="el-icon-info"
+              size="meduim"
+              @click="handleCheck(scope.row)"
+            >详情</el-button>
+            <el-button
+              type="text"
+              icon="el-icon-edit"
+              size="medium"
+              @click="handleEdit(scope.row)"
+            >编辑</el-button>
+<!--            <el-button-->
+<!--              type="text"-->
+<!--              icon="el-icon-edit"-->
+<!--              size="medium"-->
+<!--              @click="handleProjType(scope.row)"-->
+<!--            >更改项目类型</el-button>-->
+            <el-button
+              type="text"
+              icon="el-icon-delete"
+              class="red"
+              size="medium"
+              @click="handleDelete(scope.row)"
+            >删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+	  
+	  
       <div class="pagination">
         <el-pagination
           :total="pageTotal"
@@ -461,13 +645,24 @@ export default {
 			{ text: '其他', value: 1100 },
 		],
 		[
-			{ text: 'zm类型1', value: 2010 },
-			{ text: 'zm类型2', value: 2020 },
-			{ text: 'zm类型3', value: 2030 },
+			{ text: '测绘-测绘航空摄影', value: 2100 },
+			{ text: '测绘-工程测量', value: 2101 },
+			{ text: '测绘-界线与不动产测绘', value: 2102 },
+			{ text: '测绘-地理信息系统工程', value: 2103 },
+			{ text: '测绘-其他', value: 2104 },
+			{ text: '咨询-税收预测报告', value: 2200 },
+			{ text: '咨询-PPP全过程咨询', value: 2201 },
+			{ text: '咨询-可行性研究报告', value: 2202 },
+			{ text: '咨询-社会稳定风险评估', value: 2203 },
+			{ text: '咨询-项目建议书', value: 2204 },
+			{ text: '咨询-经济评价报告', value: 2205 },
+			{ text: '咨询-方案咨询', value: 2206 },
+			{ text: '咨询-其他', value: 2207 },
 		],
 		[
-			{ text: 'kj类型1', value: 3010 },
-			{ text: 'kj类型2', value: 3020 },
+			{ text: '类型1', value: 3010 },
+			{ text: '类型2', value: 3020 },
+			{ text: '其他', value: 3030 },
 		],
       ],
       projTypes: [
@@ -489,14 +684,25 @@ export default {
 			1100: '其他'
 		  },
 		  {
-			2010: 'zm类型1',
-			2020: 'zm类型2',
-			2030: 'zm类型3',
+			2100: '测绘-测绘航空摄影',
+			2101: '测绘-工程测量',
+			2102: '测绘-界线与不动产测绘',
+			2103: '测绘-地理信息系统工程',
+			2104: '测绘-其他',
+			2200: '咨询-税收预测报告',
+			2201: '咨询-PPP全过程咨询',
+			2202: '咨询-可行性研究报告',
+			2203: '咨询-社会稳定风险评估',
+			2204: '咨询-项目建议书',
+			2205: '咨询-经济评价报告',
+			2206: '咨询-方案咨询',
+			2207: '咨询-其他',
 		  },
 		  {
-			3010: 'kj类型1',
-			3020: 'kj类型2',
-		  },
+			3010: '类型1',
+			3020: '类型2',
+			3030: '其他',
+		  }
 	  ],
       projTypeOption: [],
       changeType: {
@@ -514,7 +720,7 @@ export default {
       },
 	  
 	  
-	  //211028变动 新增: 多个公司切换
+	  //211028变动 新增: 多个公司切换	  
 	  companyRange:['huizheng', 'zhiming','kuaiji'],
 	  companyId:'',
 	  companyTabsId: 0,
@@ -552,7 +758,7 @@ export default {
 	  
       getAllAbstractProject(allData)
         .then(res => {
-          console.log(res.data)
+          console.log(res.data)		  
           this.tableData = res.data
           this.pageTotal = res.data.length
         })
@@ -854,7 +1060,8 @@ export default {
 	  localStorage.setItem('companyId', tab.name);
 	  console.log('公司id', localStorage.getItem('companyId'));
 	  
-	  //3. this.getData 重新读取该公司项目数据
+	  //3. this.getData 重新读取该公司项目数据, 重置分页	  
+	  this.currentPage = 1;
 	  this.getData(tab.name); //根据公司id获取对应项目数据
 	 
 	}
