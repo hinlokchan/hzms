@@ -35,6 +35,8 @@ export default {
   name: 'oprecord',
   props: {
     projId: Number,
+	
+	//211110变动 新增: 多个公司切换 增加参数companyId
     companyId: String
   },
   watch: {
@@ -42,17 +44,11 @@ export default {
       this.pId = val
       this.getRecord()
     },
-	//211110变动 新增: 多个公司切换 增加参数companyId
-	companyId(val) {
-	  this.companyId = val
-	}
   },
   data() {
     return {
       pId: '',
       tableData: [],
-	  
-      companyId: '',
     }
   },
   created() {
