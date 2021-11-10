@@ -94,35 +94,101 @@
   ],
   [
     {
-      "label": "zm类型1",
-      "value": "2010",
-      "type": "zm1",
+      "label": "测绘-测绘航空摄影",
+      "value": "2100",
+      "type": "SY",
       "disable": false
     },
     {
-      "label": "zm类型2",
-      "value": "2020",
-      "type": "zm2",
+      "label": "测绘-工程测量",
+      "value": "2101",
+      "type": "CL",
       "disable": false
     },
     {
-      "label": "zm类型3",
-      "value": "2030",
-      "type": "zm3",
+      "label": "测绘-界线与不动产测绘",
+      "value": "2102",
+      "type": "CH",
       "disable": false
-    }
-  ],
-  [ 
+    },
+    {
+      "label": "测绘-地理信息系统工程",
+      "value": "2103",
+      "type": "DX",
+      "disable": false
+    },
+    {
+      "label": "测绘-其他",
+      "value": "2104",
+      "type": "QT",
+      "disable": false
+    },	
 	{
-	  "label": "kj类型1",
-	  "value": "3010",
-	  "type": "kj1",
+	  "label": "咨询-税收预测报告",
+	  "value": "2200",
+	  "type": "zx1",
 	  "disable": false
 	},
 	{
-	  "label": "kj类型2",
+	  "label": "咨询-PPP全过程咨询",
+	  "value": "2201",
+	  "type": "zx2",
+	  "disable": false
+	},
+	{
+	  "label": "咨询-可行性研究报告",
+	  "value": "2202",
+	  "type": "zx3",
+	  "disable": false
+	},
+	{
+	  "label": "咨询-社会稳定风险评估",
+	  "value": "2203",
+	  "type": "zx4",
+	  "disable": false
+	},
+	{
+	  "label": "咨询-项目建议书",
+	  "value": "2204",
+	  "type": "zx5",
+	  "disable": false
+	},
+	{
+	  "label": "咨询-经济评价报告",
+	  "value": "2205",
+	  "type": "zx6",
+	  "disable": false
+	},
+	{
+	  "label": "咨询-方案咨询",
+	  "value": "2206",
+	  "type": "zx7",
+	  "disable": false
+	},
+	{
+	  "label": "咨询-其他",
+	  "value": "2207",
+	  "type": "zx8",
+	  "disable": false
+	}
+  ],
+  [ 
+	{
+	  "label": "类型1",
+	  "value": "3010",
+	  "type": "hz1",
+	  "disable": false
+	},
+	{
+	  "label": "类型2",
 	  "value": "3020",
-	  "type": "kj2",
+	  "type": "hz2",
+	  "disable": false
+	},
+	{
+	  "label": "其他",
+	  "value": "3030",
+	  "type": "hz3",
 	  "disable": false
 	}
   ]
