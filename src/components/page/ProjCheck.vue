@@ -10,7 +10,10 @@
           <el-breadcrumb-item>查看项目详情</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
-      <div>
+	  
+<!-- =========================惠正========================= -->	  
+      <div
+	  v-if="companyTabsId == 0">
         <el-card>
           <div slot="header">
             <!-- <span style="color: #009AD6; font-size: 18px;">项目名称</span> -->
@@ -63,15 +66,6 @@
                 >{{item.label}}</el-tag>
               </span>
             </span>
-			
-			<!-- 211115 新增, 查看项目计划消息 -->
-			<el-button
-			  type="primary"
-			  size="small"
-			  style="margin-left: 20px;"
-			  @click="showInfo"
-			>查看计划消息</el-button>
-			
             <span style="float: right; font-size: 14px;">计划录入:{{detailData.operator}}，编制日期:{{this.formatDate(detailData.projDate)}}</span>
           </div>
           <div style="font-size: 20px">{{detailData.projName}}</div>
@@ -272,37 +266,296 @@
             </el-row>
           </div>
         </el-form>
+		<!-- 211110变动 修改: 多个公司切换, 操作记录需要增加公司companyId参数 -->
         <div class="title">操作记录</div>
         <OpRecord
+          :companyId="companyId"
           :projId="detailData.projId"
         ></OpRecord>
-		
-		<!-- 211115变动 新增: 项目计划消息查看 -->
-		<el-dialog
-		  title="项目计划"
-		  :visible.sync="newInfo"
-		  width="40%"
-		>
-		  <el-input
-		    :rows="6"
-		    type="textarea"
-		    v-model="newInfoData"
-		    size="medium"
-		  ></el-input>
-		    <!-- 211116变动， 新增不同项目类型，使用不用项目消息模板，增加复制按钮 -->
-		    <span slot="footer" class="dialog-footer">
-		      <el-button @click="newInfo = false">取消</el-button>
-		      <el-button
-		        style="right: 0px;"
-		        type="primary"
-		        icon="el-icon-copy-document"
-		        v-clipboard:copy="newInfoData"
-		        v-clipboard:success="copy"
-		      >复制</el-button>
-		    </span>
-		  
-		</el-dialog>
       </div>
+	  
+<!-- =========================智明========================= -->	  
+      <div
+	  v-if="companyTabsId == 1">
+        <el-card>
+          <div slot="header">
+            <!-- <span style="color: #009AD6; font-size: 18px;">项目名称</span> -->
+            <span v-if="detailData.projDegree == 1002">
+              <el-tag
+                type="danger"
+                size="medium"
+              >紧急项目</el-tag>
+            </span>
+            <span
+              v-for="item in risk"
+              :key="'info1'+item.value"
+            >
+              <span
+                v-if="detailData.riskProfile == item.value"
+                style="margin-left: 10px;"
+              >
+                <el-tag
+                  :type="item.tag"
+                  size="medium"
+                >{{item.label}}风险</el-tag>
+              </span>
+            </span>
+			<!-- 无轮序
+            <span
+              v-for="item in arrgType"
+              :key="'info2'+item.value"
+            >
+              <span
+                v-if="detailData.arrgType == item.value"
+                style="margin-left: 10px;"
+              >
+                <el-tag
+                  type="primary"
+                  size="medium"
+                >{{item.label}}</el-tag>
+              </span>
+            </span>
+			 -->
+            <span
+              v-for="item in newOldType"
+              :key="'info3'+item.value"
+            >
+              <span
+                v-if="detailData.newOldType == item.value"
+                style="margin-left: 10px;"
+              >
+                <el-tag
+                  :type="item.tag"
+                  size="medium"
+                  effect="dark"
+                >{{item.label}}</el-tag>
+              </span>
+            </span>
+            <span style="float: right; font-size: 14px;">计划录入:{{detailData.operator}}，编制日期:{{this.formatDate(detailData.projDate)}}</span>
+          </div>
+          <div style="font-size: 20px">{{detailData.projName}}</div>
+        </el-card>
+        <el-form
+          label-position="right"
+          label-width="110px"
+        >
+
+          <div class="detail">
+            <div class="title">基本信息</div>
+
+            <el-row>
+              <el-col :span="8">
+                <el-form-item
+                  label="计划编号"
+                  class="label"
+                >
+                  <span class="detail-content">{{detailData.projNum}}</span>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item
+                  label="项目类型"
+                  class="label"
+                >
+                  <span class="detail-content">{{transedData.projType}}</span>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item
+                  label="项目目的"
+                  class="label"
+                >
+                  <span class="detail-content">{{detailData.assemGoal}}</span>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item
+                  label="初评号"
+                  class="label"
+                >
+                  <span class="detail-content">{{reportNum.cph}}</span>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item
+                  label="正评号"
+                  class="label"
+                >
+                  <span class="detail-content">{{reportNum.zph}}</span>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item
+                  label="回函号"
+                  class="label"
+                >
+                  <span class="detail-content">{{reportNum.hhh}}</span>
+                </el-form-item>
+              </el-col>
+            </el-row>
+			<!-- 无基准日
+            <el-row>
+              <el-col :span="8">
+                <el-form-item
+                  label="基准日"
+                  class="label"
+                >
+                  <span class="detail-content">{{this.formatDate(detailData.baseDate)}}</span>
+                </el-form-item>
+              </el-col>
+            </el-row>
+			 -->
+            <el-row
+			v-if="onProjTypeChangeVisable()">
+              <el-col :span="12">
+                <el-form-item
+                  label="项目范围"
+                  class="label"
+                >
+                  <span class="detail-content">{{detailData.projScope}}</span>
+                </el-form-item>
+              </el-col>
+			  <el-col :span="12">
+			    <el-form-item
+			      label="项目位置"
+			      class="label"
+			    >
+			      <span class="detail-content">{{detailData.projLocation}}</span>
+			    </el-form-item>
+			  </el-col>
+            </el-row>
+			<el-row>
+              <el-col :span="24">
+                <el-form-item
+                  label="补充说明"
+                  class="label"
+                >
+                  <span class="detail-content">{{detailData.supInstruction}}</span>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <div class="title">委托信息</div>
+            <el-row>
+              <el-col :span="8">
+                <el-form-item
+                  label="接洽人"
+                  class="label"
+                >
+                  <span class="detail-content">{{detailData.projContactType}} {{detailData.projContact}}</span>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item
+                  label="委托人"
+                  class="label"
+                >
+                  <span class="detail-content">{{detailData.clientName}}</span>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item
+                  label="委托人联系人"
+                  class="label"
+                >
+                  <span class="detail-content">{{detailData.clientContact}} {{detailData.clientContactInfo}}</span>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+			  <!-- 无产权持有人
+              <el-col :span="8">
+                <el-form-item
+                  label="产权持有人"
+                  class="label"
+                >
+                  <span class="detail-content">{{detailData.incumbrancer}}</span>
+                </el-form-item>
+              </el-col>
+			  -->
+              <el-col :span="8">
+                <el-form-item
+                  label="计划现勘日"
+                  class="label"
+                >
+                  <span class="detail-content">{{this.formatDate(detailData.fldSrvySchedule)}}</span>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item
+                  label="现勘联系人"
+                  class="label"
+                >
+                  <span class="detail-content">{{detailData.fldSrvyContact}} {{detailData.fldSrvyContactInfo}}</span>
+                </el-form-item>
+              </el-col>
+            </el-row>
+			<!-- 无推荐人
+            <el-row>
+              <el-col :span="8">
+                <el-form-item
+                  label="引荐人"
+                  class="label"
+                >
+                  <span class="detail-content">{{detailData.projReferer}} {{detailData.projRefererInfo}}</span>
+                </el-form-item>
+              </el-col>
+            </el-row>
+			 -->
+            <div class="title">项目组成员</div>
+            <el-row>
+              <el-col :span="8">
+                <el-form-item
+                  label="项目负责人"
+                  class="label"
+                >
+                  <span class="detail-content">{{detailData.projLeader}}</span>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item
+                  label="项目复核人"
+                  class="label"
+                >
+                  <span class="detail-content">{{detailData.projReviewer}}</span>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item
+                  label="专业复核人"
+                  class="label"
+                >
+                  <span class="detail-content">{{detailData.projProReviewer}}</span>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="8">
+                <el-form-item
+                  label="项目助理"
+                  class="label"
+                >
+                  <span>{{detailData.projAsst}}</span>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item
+                  label="现场勘查"
+                  class="label"
+                >
+                  <span class="detail-content">{{detailData.fieldSrvy}}</span>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </div>
+        </el-form>
+		<!-- 211110变动 修改: 多个公司切换, 操作记录需要增加公司companyId参数 -->
+        <div class="title">操作记录</div>
+        <OpRecord
+          :companyId="companyId"
+          :projId="detailData.projId"
+        ></OpRecord>
+      </div>	  
+	  
     </div>
   </div>
 </template>
@@ -311,7 +564,7 @@
 import { getDetailProjInfo, getReportNum, getProjInfoTable } from '@/api/index'
 import OpRecord from './OpRecord'
 import projTypeOption from '../../../public/projTypeOption.json'
-import clientOptions from '../../../public/clientName.json'
+//import clientOptions from '../../../public/clientName.json'
 import { host } from '@/config'
 var ProManageAPIServer = `${host.baseUrl}/`
 export default {
@@ -327,7 +580,7 @@ export default {
       hhh: '',
       detailData: {},
       reportNum: {},
-      clientOptions: [],
+      //clientOptions: [],
       projTypeOption: [],
       projTypeZH: '',
       transedData: {},
@@ -360,16 +613,29 @@ export default {
         { value: '1001', label: '新项目' ,tag: 'success'}, { value: '1002', label: '重评项目',tag: 'warning' }
       ],
 	  
-	  //211116变动， 新增不同项目类型，使用不用项目消息模板
-	  newInfo:false,
-	  newInfoData:'',  
+	  //211101变动 新增: 多个公司切换
+	  companyRange:['huizheng', 'zhiming','kuaiji'],
+	  companyId:'',
+	  companyTabsId: 0,
     }
   },
   created() {
+	//211028变动 新增: 多个公司切换
+	const value = localStorage.getItem('companyId');
+	if(value){
+		this.companyId = value;
+		this.companyTabsId = this.companyRange.indexOf(this.companyId);
+	}else{
+		this.companyId = this.companyRange[0];
+		this.companyTabsId = 0;
+	}
+	console.log('初始化公司id', this.companyId);    
+	  
+	  
     this.projId = this.$route.query.data
     this.getDetail()
     this.projTypeOption = projTypeOption
-    this.clientOptions = clientOptions
+    //this.clientOptions = clientOptions
   },
   mounted() {
 
@@ -384,7 +650,13 @@ export default {
       return year + "-" + month + "-" + date
     },
     getDetail() {
-      getDetailProjInfo({ projId: this.projId }).then(res => {
+	  //21110变动 新增: 多个公司切换
+	  const detailData = {
+	  	companyId: this.companyId,
+		projId: this.projId
+	  } 	
+		
+      getDetailProjInfo(detailData).then(res => {
         if (JSON.stringify(res.data) === '{}') {
           this.$message.error('计划系统内无该项目数据');
 
@@ -398,9 +670,9 @@ export default {
         }
         this.detailData = res.data;
         //处理value转为label展示
-        for (var i = 0; i < this.projTypeOption.length; i++) {
-          if (this.detailData.projType == this.projTypeOption[i].value) {
-            this.transedData.projType = this.projTypeOption[i].label
+        for (var i = 0; i < this.projTypeOption[this.companyTabsId].length; i++) {
+          if (this.detailData.projType == this.projTypeOption[this.companyTabsId][i].value) {
+            this.transedData.projType = this.projTypeOption[this.companyTabsId][i].label
           }
         }
         this.reportNum = res.data.reportNumList
@@ -410,75 +682,25 @@ export default {
       this.$router.back()
     },
 	
-	//211116变动， 新增不同项目类型，使用不用项目消息模板
-	copy(e) {
-	  this.$message.success('内容已复制到剪贴板')
-	},
-	showInfo(){
-	  var tempType=1;
+	onProjTypeChangeVisable(){
+	  if(this.companyTabsId == 0){
+		//处理惠正
 		
-	  let riskProfile = '';
-	  if (this.detailData.riskProfile == '1001') {
-	    riskProfile == '低';
-	  } else if (this.detailData.riskProfile == '1002') {
-	    riskProfile = '中等';
-	  } else if (this.detailData.riskProfile == '1003') {
-	    riskProfile = '较高';
-	  } else {
-	    riskProfile = '高';
+	  }else if(this.companyTabsId == 1){
+		//处理智明业务输入框是否显示
+		if(this.transedData.projType>=2100 && this.transedData.projType <2200){
+			//测绘
+			return true;
+		}else{
+			//咨询
+			return false;  
+		}  
+	  }else if(this.companyTabsId == 1){
+		//处理汇正
+		
 	  }
-	  let newOldType = '';
-	  if (this.detailData.newOldType == '1001') {
-	    newOldType = '新项目';
-	  } else if (this.detailData.newOldType == '1002') {
-	    newOldType = '重评项目';
-	  }
-	  //处理value转为label展示
-	  let projLabel = '';
-	  let projType = '';
-	  for (var i = 0; i < this.projTypeOption.length; i++) {
-	    if (this.detailData.projType == this.projTypeOption[i].value) {
-	      projLabel = this.projTypeOption[i].label;
-	      projType = this.projTypeOption[i].type;
-		  
-		  //判断模板， 默认1， 绩效2， 复审3
-		  if(projType == 'JX'){
-			tempType = 2;  
-		  }else if(projType == 'FSF' || projType == 'FSZ' || projType == 'FST'){
-			tempType = 3;    
-		  }
-	    }
-	  }
-	  // ZP项目类型：资；委托 人：(其他):惠州市水务投资集团；项目名称：惠州大道大湖溪段667平方米租金；评估对象及其坐落：同上;；评估目的：物业出租价格；引荐人及其电话：惠州市水务投资集团王总135 0229 7502；现联系单位、人及电话：同上；现勘时间：现勘同事约；报告时间要求：5天；项目风险预测：；评估收费报价：待定；是否曾评估的项目：（若是，原项目组成员：）；项目接洽人""[52]-缨(注师：莎缨;助理：健;专业复核人:远。以下由项目负责人安排 现勘：;资料核查验证：;市场询价调查：;技术报告:；报告编制:; 归档：;对外沟通:
-	  if (this.detailData.clientName != '') {
-	    var clientName = this.detailData.clientName;
-	  } else if (this.detailData.clientId == '0') {
-	    var clientName = '委托人待定';
-	  } else {
-	    var clientName = this.$refs['cascaderAddr'].getCheckedNodes()[0].label;
-	  }
-	  //格式化时间戳
-	  let fldSrvySchedule = '';
-	  if(this.detailData.fldSrvySchedule){
-		const date = new Date(this.detailData.fldSrvySchedule);
-		fldSrvySchedule = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
-	  }
+	 
 	  
-	  if(tempType == 1){
-		//默认模板 项目编号:${this.detailData.projNum}; 
-		this.newInfoData = `${projType}项目类型:${projLabel}; 委托人:${clientName}; 项目名称:${this.detailData.projName}; 评估对象及其坐落:${this.detailData.projScope}; 评估目的:${this.detailData.assemGoal}; 引荐人及其电话:${this.detailData.projReferer}${this.detailData.projRefererInfo}; 现勘联系人及电话：${this.detailData.fldSrvyContact}${this.detailData.fldSrvyContactInfo}; 现勘时间:${fldSrvySchedule}; 报告时间要求:${this.detailData.compSchedule}天; 项目风险预测:${riskProfile}; 评估收费报价:${this.detailData.assemFeeQuote?this.detailData.assemFeeQuote:''}; 是否曾评估项目:${newOldType}; 项目接洽人:${this.detailData.projContactType} ${this.detailData.projContact} (注师：；助理：；专业复核人:)。以下由项目负责人安排,现勘:${this.detailData.fieldSrvy}; 资料核查验证: ; 市场询价调查: ; 技术报告: ; 报告编制: ; 归档: ; 对外沟通: 。`;
-		  
-	  }else if(tempType == 2){
-		//绩效模板
-		//JX项目类型：绩效评价；委托人：；评价目的：；项目名称： ；引荐人、现勘及资料收集联系电话：；报告时间要求：；收费：。      项目接洽人：(项目组成员： ；总审：；现勘及资料收集和验证：；市场询价调查：；报告编制：；聘请专家：；归档：；对外沟通人：。)
-		this.newInfoData = `${projType}项目类型:${projLabel}; 委托人:${clientName}; 评价目的:${this.detailData.assemGoal}; 项目名称:${this.detailData.projName}; 引荐人及其电话:${this.detailData.projReferer} ${this.detailData.projRefererInfo}; 现勘联系人及电话：${this.detailData.fldSrvyContact} ${this.detailData.fldSrvyContactInfo}; 现勘时间:${fldSrvySchedule}; 报告时间要求:${this.detailData.compSchedule}天; 收费报价:${this.detailData.assemFeeQuote?this.detailData.assemFeeQuote:''}; 项目接洽人:${this.detailData.projContactType} ${this.detailData.projContact} (项目组成员：；总审：；); 现勘:${this.detailData.fieldSrvy}; 资料核查验证: ; 市场询价调查: ; 报告编制: ; 聘请专家: ; 归档: ; 对外沟通人: 。`;
-	  }else if(tempType == 3){
-		//复审模板
-		//FSZ项目类型：资产复审；委托方：；评估对象范围及其座落：；引荐人、现勘联系单位、人及电话：；现勘时间: ；报告时间要求：2天。评审要求：；  项目接洽人：；(评审师：现勘：助理：   ；对外沟通人：
-		this.newInfoData = `${projType}项目类型:${projLabel}; 委托方:${clientName}; 项目名称:${this.detailData.projName}; 引荐人及其电话:${this.detailData.projReferer}${this.detailData.projRefererInfo}; 现勘联系人及电话：${this.detailData.fldSrvyContact}${this.detailData.fldSrvyContactInfo}; 现勘时间:${fldSrvySchedule}; 报告时间要求:${this.detailData.compSchedule}天; 评审要求: ; 项目接洽人:${this.detailData.projContactType} ${this.detailData.projContact} (评审师：；助理：；); 现勘:${this.detailData.fieldSrvy}; 对外沟通人: 。`;
-	  }
-	  
-	  this.newInfo = true;
 	}
   }
 }
