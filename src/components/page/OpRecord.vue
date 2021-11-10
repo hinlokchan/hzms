@@ -34,27 +34,39 @@ import { opRecord } from '@/api/index'
 export default {
   name: 'oprecord',
   props: {
-    projId: Number
+    projId: Number,
+    companyId: String
   },
   watch: {
     projId(val) {
       this.pId = val
-      this.getRecord(val)
-    }
+      this.getRecord()
+    },
+	//211110变动 新增: 多个公司切换 增加参数companyId
+	companyId(val) {
+	  this.companyId = val
+	}
   },
   data() {
     return {
       pId: '',
-      tableData: []
+      tableData: [],
+	  
+      companyId: '',
     }
   },
   created() {
     //this.getRecord()
   },
   methods: {
-    getRecord(val) {
-      console.log(val)
-      opRecord({ projId: val })
+    getRecord() {
+      //console.log(val)
+	  //211110变动 新增: 多个公司切换
+	  const detailData = {
+	  	companyId: this.companyId,
+	  	projId: this.pId
+	  }
+      opRecord(detailData)
         .then(res => {
           this.tableData = res.data
         })
