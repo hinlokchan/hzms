@@ -9,6 +9,15 @@
           <el-breadcrumb-item>工作台</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
+	  
+	  
+	  <!-- 211028变动 新增: 多个公司切换 -->
+	  <el-tabs v-model="companyId" type="card" @tab-click="handleTabsClick">
+	    <el-tab-pane label="惠正公司" name="huizheng"></el-tab-pane>
+	    <el-tab-pane label="智明公司" name="zhiming"></el-tab-pane>
+	    <el-tab-pane label="汇正公司" name="kuaiji"></el-tab-pane>
+	  </el-tabs>
+	  
       <el-row :gutter="20">
         <el-col :span="8">
           <el-card :body-style="{ padding: '0px' }">
@@ -260,11 +269,28 @@ export default {
       getNumData: {},
       getSubNum: '',
       projLeaderFilter: [{ text: '我负责的项目', value: '' }],
-      timestamp: 0
+      timestamp: 0,
+	  
+	  	  
+	  //211028变动 新增: 多个公司切换	  
+	  companyRange:['huizheng', 'zhiming','kuaiji'],
+	  companyId:'',
+	  companyTabsId: 0,
     };
   },
   created() {
-    this.getData()
+	//211028变动 新增: 多个公司切换
+	const value = localStorage.getItem('companyId');
+	if(value){
+		this.companyId = value;
+		this.companyTabsId = this.companyRange.indexOf(this.companyId);
+	}else{
+		this.companyId = this.companyRange[0];
+		this.companyTabsId = 0;
+	}
+	console.log('初始化公司id', this.companyId);  
+		  
+    this.getData();
     let date = new Date()
     this.timestamp = date.getTime() - date.getHours()*60*60*1000
     console.log(this.timestamp)
@@ -284,6 +310,8 @@ export default {
     //     this.$message.error('删除失败');
     //   })
     // },
+	
+	/* 
     alterProjType() {
       console.log('this.changeType', this.changeType);
       if (this.changeType.toType == '') {
@@ -300,6 +328,8 @@ export default {
           });
       }
     },
+	 */
+	
     //完整号显示
     changeNum(num, type) {
       if (num) {
@@ -371,11 +401,14 @@ export default {
         this.changePage(parseInt(sessionStorage.getItem('page')));
         sessionStorage.removeItem('page');
       }
+	  
+	  //211029变动 新增: 多个公司切换
       searchMyProject({
         projName: this.searchValProjName,
         reportNum: this.searchValReportNum,
         projNum: this.searchValProjNum,
-        projScope: this.searchValProjScope
+        projScope: this.searchValProjScope,		
+		conpanyId: this.companyId
       })
         .then(res => {
           this.tableData = res.data;
@@ -385,7 +418,12 @@ export default {
         .catch(err => {
           console.log('field to search myproject');
         })
-        getCurrentMission()
+		
+		//211029变动 新增: 多个公司切换
+		const missionData = {
+			companyId: this.companyId,
+		} 
+        getCurrentMission(missionData)
           .then(res => {
             this.missionData = res.data
             console.log(this.missionData)
@@ -397,11 +435,12 @@ export default {
     getOnGoingProj() {
       if (this.onGoing == true) {
         searchMyProject({
-        projName: this.searchValProjName,
-        reportNum: this.searchValReportNum,
-        projNum: this.searchValProjNum,
-        projScope: this.searchValProjScope
-      })
+			projName: this.searchValProjName,
+			reportNum: this.searchValReportNum,
+			projNum: this.searchValProjNum,
+			projScope: this.searchValProjScope,		
+			conpanyId: this.companyId
+        })
         .then(res => {
           let arr = []
           for(let i of res.data) {
@@ -422,7 +461,11 @@ export default {
     reset() {
       this.searchValProjName = '';
       this.searchValProjNum = '';
-      searchMyProject()
+	  
+	  const resetData = {
+	  	companyId: this.companyId,
+	  } 
+      searchMyProject(resetData)
         .then(res => {
           console.log(res.data);
           this.tableData = res.data;
@@ -457,7 +500,25 @@ export default {
       } else if (val == 2) {
         return 'danger'
       }
-    }
+    },
+	
+	//211028变动 新增: 多个公司切换
+	handleTabsClick(tab, event) {
+	  //console.log("切换到: ", tab.label, tab.name);
+	  this.$message.success('切换到: ' + tab.label);
+	  
+	  //1.companyTabsId, 修改公司数组序号id
+	  this.companyTabsId = this.companyRange.indexOf(this.companyId);
+	  
+	  //2. localStorage 将该公司id存储起来, 其他页面也是显示该公司信息
+	  localStorage.setItem('companyId', tab.name);
+	  console.log('公司id', localStorage.getItem('companyId'));
+	  
+	  //3. this.getData 重新读取该公司项目数据, 重置分页	  
+	  this.currentPage = 1;
+	  this.getData(); //根据公司id获取对应项目数据
+	 
+	}
   }
 }
 </script>
