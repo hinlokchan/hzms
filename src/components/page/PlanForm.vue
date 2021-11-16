@@ -37,6 +37,18 @@
           v-model="newInfoData"
           size="medium"
         ></el-input>
+		<!-- 211116变动， 新增不同项目类型，使用不用项目消息模板，增加复制按钮 -->
+		<span slot="footer" class="dialog-footer">
+		  <el-button @click="newInfo = false">取消</el-button>
+		  <el-button
+		    style="right: 0px;"
+		    type="primary"
+		    icon="el-icon-copy-document"
+		    v-clipboard:copy="newInfoData"
+		    v-clipboard:success="copy"
+		  >复制</el-button>
+		</span>
+		
       </el-dialog>
       <el-dialog
         title="新增委托人"
@@ -1296,7 +1308,14 @@ export default {
         })
       }
     },
+	
+	//211116变动， 新增不同项目类型，使用不用项目消息模板
+	copy(e) {
+	  this.$message.success('内容已复制到剪贴板')
+	},
     messageAfterSubmit(res) {
+	  var tempType=1;
+	  
       let riskProfile = '';
       if (this.form.riskProfile == '1001') {
         riskProfile == '低';
@@ -1309,14 +1328,24 @@ export default {
       }
       let newOldType = '';
       if (this.form.newOldType == '1001') {
-        riskProfile = '新项目';
+        newOldType = '新项目';
       } else if (this.form.newOldType == '1002') {
-        riskProfile = '重评项目';
+        newOldType = '重评项目';
       }
       //处理value转为label展示
+	  let projLabel = '';
+	  let projType = '';
       for (var i = 0; i < this.projTypeOption.length; i++) {
         if (this.form.projType == this.projTypeOption[i].value) {
-          this.transedData.projType = this.projTypeOption[i].label;
+          projLabel = this.projTypeOption[i].label;
+		  projType = this.projTypeOption[i].type;
+		  
+		  //判断模板， 默认1， 绩效2， 复审3
+		  if(projType == 'JX'){
+			tempType = 2;  
+		  }else if(projType == 'FSF' || projType == 'FSZ' || projType == 'FST'){
+			tempType = 3;    
+		  }
         }
       }
       // ZP项目类型：资；委托 人：(其他):惠州市水务投资集团；项目名称：惠州大道大湖溪段667平方米租金；评估对象及其坐落：同上;；评估目的：物业出租价格；引荐人及其电话：惠州市水务投资集团王总135 0229 7502；现联系单位、人及电话：同上；现勘时间：现勘同事约；报告时间要求：5天；项目风险预测：；评估收费报价：待定；是否曾评估的项目：（若是，原项目组成员：）；项目接洽人""[52]-缨(注师：莎缨;助理：健;专业复核人:远。以下由项目负责人安排 现勘：;资料核查验证：;市场询价调查：;技术报告:；报告编制:; 归档：;对外沟通:
@@ -1327,7 +1356,18 @@ export default {
       } else {
         var clientName = this.$refs['cascaderAddr'].getCheckedNodes()[0].label;
       }
-      this.newInfoData = `项目编号:${res.data.projNum};项目类型:${this.transedData.projType};委托人:${clientName};项目名称:${this.form.projName};评估对象及其坐落:${this.form.projScope};评估目的:${this.form.assemGoal};引荐人及其电话:${this.form.projReferer}${this.form.projRefererInfo};现勘联系单位人及电话：${this.form.fldSrvyContact}${this.form.fldSrvyContactInfo};现勘时间:${this.form.fldSrvySchedule};报告时间要求:${this.form.compSchedule}天;项目风险预测:${riskProfile};评估收费报价:${this.form.assemFeeQuote};是否曾评估项目:${newOldType};项目接洽人:${this.form.projContact} ${this.form.projContactType}(注师：；助理：；专业复核人:)。以下由项目负责人安排,现勘:${this.form.fieldSrvy};资料核查验证: ;市场询价调查: ;技术报告: ;报告编制: ;归档: ;对外沟通: 。`;
+	  
+	  if(tempType == 1){
+		//默认模板 项目编号:${res.data.projNum}; 
+		this.newInfoData = `${projType}项目类型:${projLabel}; 委托人:${clientName}; 项目名称:${this.form.projName}; 评估对象及其坐落:${this.form.projScope}; 评估目的:${this.form.assemGoal}; 引荐人及其电话:${this.form.projReferer}${this.form.projRefererInfo}; 现勘联系人及电话：${this.form.fldSrvyContact}${this.form.fldSrvyContactInfo}; 现勘时间:${this.form.fldSrvySchedule}; 报告时间要求:${this.form.compSchedule}天; 项目风险预测:${riskProfile}; 评估收费报价:${this.form.assemFeeQuote?this.form.assemFeeQuote:''}; 是否曾评估项目:${newOldType}; 项目接洽人:${this.form.projContactType} ${this.form.projContact} (注师：；助理：；专业复核人:)。以下由项目负责人安排,现勘:${this.form.fieldSrvy}; 资料核查验证: ; 市场询价调查: ; 技术报告: ; 报告编制: ; 归档: ; 对外沟通: 。`;
+	  }else if(tempType == 2){
+		//绩效模板
+		this.newInfoData = `${projType}项目类型:${projLabel}; 委托人:${clientName}; 评价目的:${this.form.assemGoal}; 项目名称:${this.form.projName}; 引荐人及其电话:${this.form.projReferer} ${this.form.projRefererInfo}; 现勘联系人及电话：${this.form.fldSrvyContact} ${this.form.fldSrvyContactInfo}; 现勘时间:${this.form.fldSrvySchedule}; 报告时间要求:${this.form.compSchedule}天; 收费报价:${this.form.assemFeeQuote?this.form.assemFeeQuote:''}; 项目接洽人:${this.form.projContactType} ${this.form.projContact} (项目组成员：；总审：；); 现勘:${this.form.fieldSrvy}; 资料核查验证: ; 市场询价调查: ; 报告编制: ; 聘请专家: ; 归档: ; 对外沟通人: 。`;
+	  }else if(tempType == 3){
+		//复审模板
+		this.newInfoData = `${projType}项目类型:${projLabel}; 委托方:${clientName}; 项目名称:${this.form.projName}; 引荐人及其电话:${this.form.projReferer}${this.form.projRefererInfo}; 现勘联系人及电话：${this.form.fldSrvyContact}${this.form.fldSrvyContactInfo}; 现勘时间:${this.form.fldSrvySchedule}; 报告时间要求:${this.form.compSchedule}天; 评审要求: ; 项目接洽人:${this.form.projContactType} ${this.form.projContact} (评审师：；助理：；); 现勘:${this.form.fieldSrvy}; 对外沟通人: 。`;
+	  }
+      //this.newInfoData = `项目编号:${res.data.projNum};项目类型:${this.transedData.projType};委托人:${clientName};项目名称:${this.form.projName};评估对象及其坐落:${this.form.projScope};评估目的:${this.form.assemGoal};引荐人及其电话:${this.form.projReferer}${this.form.projRefererInfo};现勘联系单位人及电话：${this.form.fldSrvyContact}${this.form.fldSrvyContactInfo};现勘时间:${this.form.fldSrvySchedule};报告时间要求:${this.form.compSchedule}天;项目风险预测:${riskProfile};评估收费报价:${this.form.assemFeeQuote};是否曾评估项目:${newOldType};项目接洽人:${this.form.projContact} ${this.form.projContactType}(注师：；助理：；专业复核人:)。以下由项目负责人安排,现勘:${this.form.fieldSrvy};资料核查验证: ;市场询价调查: ;技术报告: ;报告编制: ;归档: ;对外沟通: 。`;
       this.newInfo = true;
     },
     //测试用的，无关
