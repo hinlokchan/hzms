@@ -63,6 +63,15 @@
                 >{{item.label}}</el-tag>
               </span>
             </span>
+			
+			<!-- 211115 新增, 查看项目计划消息 -->
+			<el-button
+			  type="primary"
+			  size="small"
+			  style="margin-left: 20px;"
+			  @click="showInfo"
+			>查看计划消息</el-button>
+			
             <span style="float: right; font-size: 14px;">计划录入:{{detailData.operator}}，编制日期:{{this.formatDate(detailData.projDate)}}</span>
           </div>
           <div style="font-size: 20px">{{detailData.projName}}</div>
@@ -267,6 +276,32 @@
         <OpRecord
           :projId="detailData.projId"
         ></OpRecord>
+		
+		<!-- 211115变动 新增: 项目计划消息查看 -->
+		<el-dialog
+		  title="项目计划"
+		  :visible.sync="newInfo"
+		  width="40%"
+		>
+		  <el-input
+		    :rows="6"
+		    type="textarea"
+		    v-model="newInfoData"
+		    size="medium"
+		  ></el-input>
+		    <!-- 211116变动， 新增不同项目类型，使用不用项目消息模板，增加复制按钮 -->
+		    <span slot="footer" class="dialog-footer">
+		      <el-button @click="newInfo = false">取消</el-button>
+		      <el-button
+		        style="right: 0px;"
+		        type="primary"
+		        icon="el-icon-copy-document"
+		        v-clipboard:copy="newInfoData"
+		        v-clipboard:success="copy"
+		      >复制</el-button>
+		    </span>
+		  
+		</el-dialog>
       </div>
     </div>
   </div>
@@ -323,7 +358,11 @@ export default {
       ],
       newOldType: [
         { value: '1001', label: '新项目' ,tag: 'success'}, { value: '1002', label: '重评项目',tag: 'warning' }
-      ]
+      ],
+	  
+	  //211116变动， 新增不同项目类型，使用不用项目消息模板
+	  newInfo:false,
+	  newInfoData:'',  
     }
   },
   created() {
@@ -369,7 +408,78 @@ export default {
     },
     goBack() {
       this.$router.back()
-    }
+    },
+	
+	//211116变动， 新增不同项目类型，使用不用项目消息模板
+	copy(e) {
+	  this.$message.success('内容已复制到剪贴板')
+	},
+	showInfo(){
+	  var tempType=1;
+		
+	  let riskProfile = '';
+	  if (this.detailData.riskProfile == '1001') {
+	    riskProfile == '低';
+	  } else if (this.detailData.riskProfile == '1002') {
+	    riskProfile = '中等';
+	  } else if (this.detailData.riskProfile == '1003') {
+	    riskProfile = '较高';
+	  } else {
+	    riskProfile = '高';
+	  }
+	  let newOldType = '';
+	  if (this.detailData.newOldType == '1001') {
+	    newOldType = '新项目';
+	  } else if (this.detailData.newOldType == '1002') {
+	    newOldType = '重评项目';
+	  }
+	  //处理value转为label展示
+	  let projLabel = '';
+	  let projType = '';
+	  for (var i = 0; i < this.projTypeOption.length; i++) {
+	    if (this.detailData.projType == this.projTypeOption[i].value) {
+	      projLabel = this.projTypeOption[i].label;
+	      projType = this.projTypeOption[i].type;
+		  
+		  //判断模板， 默认1， 绩效2， 复审3
+		  if(projType == 'JX'){
+			tempType = 2;  
+		  }else if(projType == 'FSF' || projType == 'FSZ' || projType == 'FST'){
+			tempType = 3;    
+		  }
+	    }
+	  }
+	  // ZP项目类型：资；委托 人：(其他):惠州市水务投资集团；项目名称：惠州大道大湖溪段667平方米租金；评估对象及其坐落：同上;；评估目的：物业出租价格；引荐人及其电话：惠州市水务投资集团王总135 0229 7502；现联系单位、人及电话：同上；现勘时间：现勘同事约；报告时间要求：5天；项目风险预测：；评估收费报价：待定；是否曾评估的项目：（若是，原项目组成员：）；项目接洽人""[52]-缨(注师：莎缨;助理：健;专业复核人:远。以下由项目负责人安排 现勘：;资料核查验证：;市场询价调查：;技术报告:；报告编制:; 归档：;对外沟通:
+	  if (this.detailData.clientName != '') {
+	    var clientName = this.detailData.clientName;
+	  } else if (this.detailData.clientId == '0') {
+	    var clientName = '委托人待定';
+	  } else {
+	    var clientName = this.$refs['cascaderAddr'].getCheckedNodes()[0].label;
+	  }
+	  //格式化时间戳
+	  let fldSrvySchedule = '';
+	  if(this.detailData.fldSrvySchedule){
+		const date = new Date(this.detailData.fldSrvySchedule);
+		fldSrvySchedule = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
+	  }
+	  
+	  if(tempType == 1){
+		//默认模板 项目编号:${this.detailData.projNum}; 
+		this.newInfoData = `${projType}项目类型:${projLabel}; 委托人:${clientName}; 项目名称:${this.detailData.projName}; 评估对象及其坐落:${this.detailData.projScope}; 评估目的:${this.detailData.assemGoal}; 引荐人及其电话:${this.detailData.projReferer}${this.detailData.projRefererInfo}; 现勘联系人及电话：${this.detailData.fldSrvyContact}${this.detailData.fldSrvyContactInfo}; 现勘时间:${fldSrvySchedule}; 报告时间要求:${this.detailData.compSchedule}天; 项目风险预测:${riskProfile}; 评估收费报价:${this.detailData.assemFeeQuote?this.detailData.assemFeeQuote:''}; 是否曾评估项目:${newOldType}; 项目接洽人:${this.detailData.projContactType} ${this.detailData.projContact} (注师：；助理：；专业复核人:)。以下由项目负责人安排,现勘:${this.detailData.fieldSrvy}; 资料核查验证: ; 市场询价调查: ; 技术报告: ; 报告编制: ; 归档: ; 对外沟通: 。`;
+		  
+	  }else if(tempType == 2){
+		//绩效模板
+		//JX项目类型：绩效评价；委托人：；评价目的：；项目名称： ；引荐人、现勘及资料收集联系电话：；报告时间要求：；收费：。      项目接洽人：(项目组成员： ；总审：；现勘及资料收集和验证：；市场询价调查：；报告编制：；聘请专家：；归档：；对外沟通人：。)
+		this.newInfoData = `${projType}项目类型:${projLabel}; 委托人:${clientName}; 评价目的:${this.detailData.assemGoal}; 项目名称:${this.detailData.projName}; 引荐人及其电话:${this.detailData.projReferer} ${this.detailData.projRefererInfo}; 现勘联系人及电话：${this.detailData.fldSrvyContact} ${this.detailData.fldSrvyContactInfo}; 现勘时间:${fldSrvySchedule}; 报告时间要求:${this.detailData.compSchedule}天; 收费报价:${this.detailData.assemFeeQuote?this.detailData.assemFeeQuote:''}; 项目接洽人:${this.detailData.projContactType} ${this.detailData.projContact} (项目组成员：；总审：；); 现勘:${this.detailData.fieldSrvy}; 资料核查验证: ; 市场询价调查: ; 报告编制: ; 聘请专家: ; 归档: ; 对外沟通人: 。`;
+	  }else if(tempType == 3){
+		//复审模板
+		//FSZ项目类型：资产复审；委托方：；评估对象范围及其座落：；引荐人、现勘联系单位、人及电话：；现勘时间: ；报告时间要求：2天。评审要求：；  项目接洽人：；(评审师：现勘：助理：   ；对外沟通人：
+		this.newInfoData = `${projType}项目类型:${projLabel}; 委托方:${clientName}; 项目名称:${this.detailData.projName}; 引荐人及其电话:${this.detailData.projReferer}${this.detailData.projRefererInfo}; 现勘联系人及电话：${this.detailData.fldSrvyContact}${this.detailData.fldSrvyContactInfo}; 现勘时间:${fldSrvySchedule}; 报告时间要求:${this.detailData.compSchedule}天; 评审要求: ; 项目接洽人:${this.detailData.projContactType} ${this.detailData.projContact} (评审师：；助理：；); 现勘:${this.detailData.fieldSrvy}; 对外沟通人: 。`;
+	  }
+	  
+	  this.newInfo = true;
+	}
   }
 }
 </script>
