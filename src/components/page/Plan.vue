@@ -593,7 +593,8 @@ export default {
           .then(res => {
             this.$message.success('修改成功');
             this.changeTypeVisible = false
-            this.reload()
+            //211028变动 修复:解决增加缓存后, 修改项目需刷新页面但无效的bug
+            this.getData();
           })
           .catch(err => {
             this.$message.error('修改失败');
