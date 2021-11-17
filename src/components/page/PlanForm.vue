@@ -20,7 +20,8 @@
 			    icon="el-icon-plus"
 			    style="height:auto;padding: 0px 8px 7px 8px;margin-left:15px"
 			    @click="handleAdd"
-			  ><span style="font-size:14px;color:#fff;">克隆为新项目计划</span></el-button>
+				v-if="userRole<=2"
+			  ><span style="font-size:14px;color:#fff;" >克隆为新项目计划</span></el-button>
 		  </el-breadcrumb-item>
 		  
         </el-breadcrumb>
