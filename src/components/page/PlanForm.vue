@@ -188,6 +188,7 @@
                     v-model="item.value"
                   ></el-input> -->
                   <el-autocomplete
+				    clearable
                     v-model="item.value"
                     :fetch-suggestions="querySearch"
                     :disabled="userRole>2"
@@ -273,6 +274,7 @@
             </el-col>
             <el-col :span="6">
               <el-form-item
+				clearable
                 label="产权持有人  "
                 prop="incumbrancer"
               >
@@ -368,11 +370,14 @@
             <el-col :span="6">
               <el-form-item label="计划完成天数">
                 <el-input
+				  type="number"
+				  clearable
                   v-model="form.compSchedule"
                   :min="1"
                   label="完成天数"
                   :disabled="userRole>2"
                   oninput="value=value.replace(/[^\d.]/g,'')"
+				  
                 ></el-input>
               </el-form-item>
             </el-col>
@@ -489,6 +494,7 @@
             <el-col :span="6">
               <el-form-item label="评估报价收费">
                 <el-input
+				  clearable
                   v-model="form.assemFeeQuote"
                   oninput="value=value.replace(/[^\d.]/g,'')"
                   :disabled="userRole>2"
@@ -549,6 +555,7 @@
             <el-col :span="6">
               <el-form-item label="项目负责人">
                 <el-autocomplete
+				  clearable
                   v-model="form.projLeader"
                   :fetch-suggestions="querySearch"
                   :disabled="userRole>2"
@@ -603,6 +610,7 @@
                     v-model="item.value"
                   ></el-input> -->
                   <el-autocomplete
+					clearable
                     v-model="item.value"
                     :fetch-suggestions="querySearch"
                     :disabled="userRole>2"
@@ -642,6 +650,7 @@
                     v-model="item.value"
                   ></el-input> -->
                   <el-autocomplete
+					clearable
                     v-model="item.value"
                     :fetch-suggestions="querySearch"
                     :disabled="userRole>2"
@@ -681,6 +690,7 @@
                     v-model="item.value"
                   ></el-input> -->
                   <el-autocomplete
+					clearable
                     v-model="item.value"
                     :fetch-suggestions="querySearch"
                     :disabled="userRole>2"
@@ -722,6 +732,7 @@
                     v-model="item.value"
                   ></el-input> -->
                   <el-autocomplete
+					clearable
                     v-model="item.value"
                     :fetch-suggestions="querySearch"
                   ></el-autocomplete>
@@ -857,6 +868,7 @@
                     v-model="item.value"
                   ></el-input> -->
                   <el-autocomplete
+				    clearable
                     v-model="item.value"
                     :fetch-suggestions="querySearch"
                     :disabled="userRole>2"
@@ -1061,6 +1073,8 @@
             <el-col :span="6">
               <el-form-item label="计划完成天数">
                 <el-input
+				  type="number"
+				  clearable
                   v-model="form.compSchedule"
                   :min="1"
                   label="完成天数"
@@ -1187,6 +1201,7 @@
             <el-col :span="6">
               <el-form-item label="项目报价收费">
                 <el-input
+				  clearable
                   v-model="form.assemFeeQuote"
                   oninput="value=value.replace(/[^\d.]/g,'')"
                   :disabled="userRole>2"
@@ -1249,6 +1264,7 @@
             <el-col :span="6">
               <el-form-item label="项目负责人">
                 <el-autocomplete
+				  clearable
                   v-model="form.projLeader"
                   :fetch-suggestions="querySearch"
                   :disabled="userRole>2"
@@ -1303,6 +1319,7 @@
                     v-model="item.value"
                   ></el-input> -->
                   <el-autocomplete
+					clearable
                     v-model="item.value"
                     :fetch-suggestions="querySearch"
                     :disabled="userRole>2"
@@ -1342,6 +1359,7 @@
                     v-model="item.value"
                   ></el-input> -->
                   <el-autocomplete
+					clearable
                     v-model="item.value"
                     :fetch-suggestions="querySearch"
                     :disabled="userRole>2"
@@ -1381,6 +1399,7 @@
                     v-model="item.value"
                   ></el-input> -->
                   <el-autocomplete
+					clearable
                     v-model="item.value"
                     :fetch-suggestions="querySearch"
                     :disabled="userRole>2"
@@ -1422,6 +1441,7 @@
                     v-model="item.value"
                   ></el-input> -->
                   <el-autocomplete
+					clearable
                     v-model="item.value"
                     :fetch-suggestions="querySearch"
                   ></el-autocomplete>
@@ -2171,10 +2191,10 @@ export default {
       //处理value转为label展示
       let projLabel = '';
       let projType = '';
-      for (var i = 0; i < this.projTypeOption.length; i++) {
-        if (this.form.projType == this.projTypeOption[i].value) {
-          projLabel = this.projTypeOption[i].label;
-    	  projType = this.projTypeOption[i].type;
+      for (var i = 0; i < this.projTypeOption[this.companyTabsId].length; i++) {
+        if (this.form.projType == this.projTypeOption[this.companyTabsId][i].value) {
+          projLabel = this.projTypeOption[this.companyTabsId][i].label;
+    	  projType = this.projTypeOption[this.companyTabsId][i].type;
     	  
     	  //判断模板， 默认1， 绩效2， 复审3
     	  if(projType == 'JX'){
@@ -2195,13 +2215,13 @@ export default {
       
       if(tempType == 1){
     	//默认模板 项目编号:${res.data.projNum}; 
-    	this.newInfoData = `${projType}项目类型:${projLabel}; 委托人:${clientName}; 项目名称:${this.form.projName}; 评估对象及其坐落:${this.form.projScope}; 评估目的:${this.form.assemGoal}; 引荐人及其电话:${this.form.projReferer}${this.form.projRefererInfo}; 现勘联系人及电话：${this.form.fldSrvyContact}${this.form.fldSrvyContactInfo}; 现勘时间:${this.form.fldSrvySchedule}; 报告时间要求:${this.form.compSchedule}天; 项目风险预测:${riskProfile}; 评估收费报价:${this.form.assemFeeQuote?this.form.assemFeeQuote:''}; 是否曾评估项目:${newOldType}; 项目接洽人:${this.form.projContactType} ${this.form.projContact} (注师：；助理：；专业复核人:)。以下由项目负责人安排,现勘:${this.form.fieldSrvy}; 资料核查验证: ; 市场询价调查: ; 技术报告: ; 报告编制: ; 归档: ; 对外沟通: 。`;
+    	this.newInfoData = `${projType}项目类型:${projLabel}; 委托人:${clientName}; 项目名称:${this.form.projName}; 评估对象及其坐落:${this.form.projScope}; 评估目的:${this.form.assemGoal}; 引荐人及其电话:${this.form.projReferer}${this.form.projRefererInfo}; 现勘联系人及电话：${this.form.fldSrvyContact}${this.form.fldSrvyContactInfo}; 现勘时间: ; 报告时间要求:${this.form.compSchedule}天; 项目风险预测:${riskProfile}; 评估收费报价:${this.form.assemFeeQuote?this.form.assemFeeQuote:''}; 是否曾评估项目:${newOldType}; 项目接洽人:${this.form.projContactType} ${this.form.projContact} (注师：；助理：；专业复核人:)。以下由项目负责人安排,现勘:${this.form.fieldSrvy}; 资料核查验证: ; 市场询价调查: ; 技术报告: ; 报告编制: ; 归档: ; 对外沟通: 。`;
       }else if(tempType == 2){
     	//绩效模板
-    	this.newInfoData = `${projType}项目类型:${projLabel}; 委托人:${clientName}; 评价目的:${this.form.assemGoal}; 项目名称:${this.form.projName}; 引荐人及其电话:${this.form.projReferer} ${this.form.projRefererInfo}; 现勘联系人及电话：${this.form.fldSrvyContact} ${this.form.fldSrvyContactInfo}; 现勘时间:${this.form.fldSrvySchedule}; 报告时间要求:${this.form.compSchedule}天; 收费报价:${this.form.assemFeeQuote?this.form.assemFeeQuote:''}; 项目接洽人:${this.form.projContactType} ${this.form.projContact} (项目组成员：；总审：；); 现勘:${this.form.fieldSrvy}; 资料核查验证: ; 市场询价调查: ; 报告编制: ; 聘请专家: ; 归档: ; 对外沟通人: 。`;
+    	this.newInfoData = `${projType}项目类型:${projLabel}; 委托人:${clientName}; 评价目的:${this.form.assemGoal}; 项目名称:${this.form.projName}; 引荐人及其电话:${this.form.projReferer} ${this.form.projRefererInfo}; 现勘联系人及电话：${this.form.fldSrvyContact} ${this.form.fldSrvyContactInfo}; 现勘时间: ; 报告时间要求:${this.form.compSchedule}天; 收费报价:${this.form.assemFeeQuote?this.form.assemFeeQuote:''}; 项目接洽人:${this.form.projContactType} ${this.form.projContact} (项目组成员：；总审：；); 现勘:${this.form.fieldSrvy}; 资料核查验证: ; 市场询价调查: ; 报告编制: ; 聘请专家: ; 归档: ; 对外沟通人: 。`;
       }else if(tempType == 3){
     	//复审模板
-    	this.newInfoData = `${projType}项目类型:${projLabel}; 委托方:${clientName}; 项目名称:${this.form.projName}; 引荐人及其电话:${this.form.projReferer}${this.form.projRefererInfo}; 现勘联系人及电话：${this.form.fldSrvyContact}${this.form.fldSrvyContactInfo}; 现勘时间:${this.form.fldSrvySchedule}; 报告时间要求:${this.form.compSchedule}天; 评审要求: ; 项目接洽人:${this.form.projContactType} ${this.form.projContact} (评审师：；助理：；); 现勘:${this.form.fieldSrvy}; 对外沟通人: 。`;
+    	this.newInfoData = `${projType}项目类型:${projLabel}; 委托方:${clientName}; 项目名称:${this.form.projName}; 引荐人及其电话:${this.form.projReferer}${this.form.projRefererInfo}; 现勘联系人及电话：${this.form.fldSrvyContact}${this.form.fldSrvyContactInfo}; 现勘时间: ; 报告时间要求:${this.form.compSchedule}天; 评审要求: ; 项目接洽人:${this.form.projContactType} ${this.form.projContact} (评审师：；助理：；); 现勘:${this.form.fieldSrvy}; 对外沟通人: 。`;
       }
       //this.newInfoData = `项目编号:${res.data.projNum};项目类型:${this.transedData.projType};委托人:${clientName};项目名称:${this.form.projName};评估对象及其坐落:${this.form.projScope};评估目的:${this.form.assemGoal};引荐人及其电话:${this.form.projReferer}${this.form.projRefererInfo};现勘联系单位人及电话：${this.form.fldSrvyContact}${this.form.fldSrvyContactInfo};现勘时间:${this.form.fldSrvySchedule};报告时间要求:${this.form.compSchedule}天;项目风险预测:${riskProfile};评估收费报价:${this.form.assemFeeQuote};是否曾评估项目:${newOldType};项目接洽人:${this.form.projContact} ${this.form.projContactType}(注师：；助理：；专业复核人:)。以下由项目负责人安排,现勘:${this.form.fieldSrvy};资料核查验证: ;市场询价调查: ;技术报告: ;报告编制: ;归档: ;对外沟通: 。`;
       this.newInfo = true;
