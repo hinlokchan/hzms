@@ -35,9 +35,6 @@ export default {
   name: 'oprecord',
   props: {
     projId: Number,
-	
-	//211110变动 新增: 多个公司切换 增加参数companyId
-    companyId: String
   },
   watch: {
     projId(val) {
@@ -49,14 +46,26 @@ export default {
     return {
       pId: '',
       tableData: [],
+	  
+	  //211101变动 新增: 多个公司切换
+	  companyRange:['huizheng', 'zhiming','kuaiji'],
+	  companyId:'',
+	  companyTabsId: 0,
     }
   },
   created() {
     //this.getRecord()
+	const value = localStorage.getItem('companyId');
+	if(value){
+		this.companyId = value;
+		this.companyTabsId = this.companyRange.indexOf(this.companyId);
+	}else{
+		this.companyId = this.companyRange[0];
+		this.companyTabsId = 0;
+	}
   },
   methods: {
     getRecord() {
-      //console.log(val)
 	  //211110变动 新增: 多个公司切换
 	  const detailData = {
 	  	companyId: this.companyId,
