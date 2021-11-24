@@ -530,6 +530,17 @@
                   \/____/                  \/____/                  \/____/                  \/____/         
                                                                                                               
     -->
+	
+	<el-tabs v-model="companyId" type="card" @tab-click="handleTabsClick" style="margin-top:0px; display: none;">
+	  <el-tab-pane label="惠正公司" name="huizheng" :disabled="tabsDisable"></el-tab-pane>
+	  <el-tab-pane label="智明公司" name="zhiming" :disabled="tabsDisable"></el-tab-pane>
+	  <el-tab-pane label="汇正公司" name="kuaiji" :disabled="tabsDisable"></el-tab-pane>
+	</el-tabs>
+	
+<!-- =========================惠正========================= -->
+	<div 
+	v-if="companyTabsId == 0">
+		
     <div class="work">
       <div style="margin-top:20px">
         <h1 v-if="projDetail.projState == 0" style="color: #009ad6">进行中</h1>
@@ -557,7 +568,7 @@
         >标记为中止</el-button>
       </div>
       <div class="work-title">
-        <span class="work-title-name">项目信息</span>
+        <span class="work-title-name">惠正项目信息</span>
         <span class="work-title-button">
           <el-button
             icon="el-icon-info"
@@ -985,7 +996,7 @@
       :gutter="20"
       style="margin-top: 15px"
     >
-      <el-col :span="23">
+      <el-col :span="24">
         <el-card>
           <div slot="header">综合进度安排</div>
           <div v-if="this.workArrgEdit == true">
@@ -1094,11 +1105,595 @@
       <span class="work-title-name">操作记录</span>
     </div>
     <el-divider></el-divider>
-    <el-card style="width: 50%">
+    <el-card style="width: 100%">
       <OpRecord
           :projId="projDetail.projId"
       ></OpRecord>
     </el-card>
+	
+	
+	</div>
+	
+<!-- =========================智明========================= -->
+	<div
+	v-if="companyTabsId == 1">
+		
+    <div class="work">
+      <div style="margin-top:20px">
+        <h1 v-if="projDetail.projState == 0" style="color: #009ad6">进行中</h1>
+        <h1 v-if="projDetail.projState == 1" style="color: #1d953f">已完成</h1>
+        <h1 v-if="projDetail.projState == 2" style="color: #d71345">项目中止</h1>
+      </div>
+      <div>
+        <el-button
+          type="success"
+          icon="el-icon-success"
+          @click="changeState(1)"
+          :disabled="projDetail.projState == 1 ? true : false"
+        >标记为完成</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-edit"
+          @click="changeState(0)"
+          :disabled="projDetail.projState == 0 ? true : false"
+        >标记为进行中</el-button>
+        <el-button
+          type="danger"
+          icon="el-icon-error"
+          @click="changeState(2)"
+          :disabled="projDetail.projState == 2 ? true : false"
+        >标记为中止</el-button>
+      </div>
+      <div class="work-title">
+        <span class="work-title-name">智明项目信息</span>
+        <span class="work-title-button">
+          <el-button
+            icon="el-icon-info"
+            size="medium"
+            @click="handleDetail()"
+          >查看详情</el-button>
+          <el-button
+              icon="el-icon-info"
+              size="medium"
+              @click="checkCFSDetail"
+              v-if="projDetail.projType == 1010"
+          >现勘记录</el-button>
+          <el-button
+            icon="el-icon-edit"
+            size="medium"
+            @click="handleEdit()"
+            :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
+          >修改项目信息</el-button>
+          <el-button
+              icon="el-icon-set-up"
+              size="medium"
+              :disabled="true"
+          >更改项目类型（已停用）</el-button>
+          <el-button
+            v-if="this.projDetail.projType == 1010 || this.projDetail.projType == 1030 || this.projDetail.projType == 1041 || this.projDetail.projType == 1042"
+            icon="el-icon-lx-qrcode"
+            size="medium"
+            @click="setQRCode()"
+            :disabled="projDetail.projState == 2 ? true : false"
+          >生成二维码</el-button> 
+          <el-button
+            icon="el-icon-printer"
+            size="medium"
+            @click="handlePrintProj(queryData.projId)"
+            :disabled="projDetail.projState == 2 ? true : false"
+          >打印计划信息表</el-button>
+        </span>
+      </div>
+      <el-divider></el-divider>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-card>
+            <div
+              slot="header"
+              class="card-header"
+            >
+              基本信息
+              <span v-if="projDetail.projDegree == 1002">
+                <el-tag
+                  type="danger"
+                  size="medium"
+                >紧急项目</el-tag>
+              </span>
+              <span
+                v-for="item in risk"
+                :key="'info1'+item.value"
+              >
+                <span
+                  v-if="projDetail.riskProfile == item.value"
+                  style="margin-left: 10px;"
+                >
+                  <el-tag
+                    :type="item.tag"
+                    size="medium"
+                  >{{item.label}}风险</el-tag>
+                </span>
+
+              </span>
+              <span
+                v-for="item in arrgType"
+                :key="'info2'+item.value"
+              >
+                <span
+                  v-if="projDetail.arrgType == item.value"
+                  style="margin-left: 10px;"
+                >
+                  <el-tag
+                    type="primary"
+                    size="medium"
+                  >{{item.label}}</el-tag>
+                </span>
+              </span>
+              <span
+                v-for="item in newOldType"
+                :key="'info3'+item.value"
+              >
+                <span
+                  v-if="projDetail.newOldType == item.value"
+                  style="margin-left: 10px;"
+                >
+                  <el-tag
+                    :type="item.tag"
+                    size="medium"
+                  >{{item.label}}</el-tag>
+                </span>
+              </span>
+            </div>
+            <div class="text">
+              <div class="item"><span>计划编号：</span>{{this.projDetail.projNum}}</div>
+              <div class="item"><span>项目类型：</span>{{this.transedProjType.projType}}</div>
+              <div class="item"><span>项目目的：</span>{{this.projDetail.assemGoal}}</div>
+              <div class="item"><span>基准日：</span>{{formatDate(this.projDetail.baseDate)}}</div>
+              <div class="item"><span>项目名称：</span>{{this.projDetail.projName}}</div>
+              <div class="item"><span>项目范围：</span>{{this.projDetail.projScope}}</div>
+              <div class="item"
+			  v-if="onProjTypeChangeVisable() == 1"
+			  ><span>项目位置：</span>{{this.projDetail.projLocation}}</div>
+            </div>
+          </el-card>
+        </el-col>
+        <el-col :span="12">
+          <el-card>
+            <div
+              slot="header"
+              class="card-header"
+            >项目组成员信息</div>
+            <div class="text item">
+              <div class="item"><span>项目负责人：</span>{{this.projDetail.projLeader}}</div>
+              <div class="item"><span>项目复核人：</span>{{this.projDetail.projReviewer}}</div>
+              <div class="item"><span>专业复核人：</span>{{this.projDetail.projProReviewer}}</div>
+              <div class="item"><span>项目助理：</span>{{this.projDetail.projAsst}}</div>
+              <div class="item"><span>现场勘查：</span>{{this.projDetail.fieldSrvy}}</div>
+            </div>
+          </el-card>
+        </el-col>
+        <el-col
+          :span="24"
+          style="margin-top: 10px;"
+        >
+          <el-card style="height: 180px">
+            <div
+              slot="header"
+              class="card-header"
+            >
+              <span>报告号信息</span>
+              <span style="margin-left: 30px">
+                <el-button
+                  type="text"
+                  icon="el-icon-info"
+                  size="medium"
+                  @click="changNumShowType"
+                >报告号文字转换</el-button>
+              </span>
+              <span style="float: right">
+                <el-button
+                  slot="reference"
+                  type="primary"
+                  icon="el-icon-circle-plus-outline"
+                  @click="handleGetNum"
+                  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
+                >取号</el-button>
+<!--                <el-button-->
+<!--                  type="primary"-->
+<!--                  icon="el-icon-circle-plus-outline"-->
+<!--                  @click="handleGetOldNum"-->
+<!--                  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"-->
+<!--                >取往月报告号</el-button>-->
+                <el-button
+                  type="danger"
+                  icon="el-icon-circle-close"
+                  @click="handleDelNum()"
+                  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
+                >取消报告号</el-button>
+              </span>
+            </div>
+            <div>
+              <div class="report-num">
+                <el-row>
+                  <el-col
+                    :span="2"
+                    class="report-title"
+                  >初评号
+                  </el-col>
+                  <el-col
+                    :span="5"
+                    class="report-content"
+                  >
+                    <span v-if="reportNum.cph == ''">未取号</span>
+                    <span v-else>
+                      <span v-if="reportNumShowType == false">{{reportNum.cph}}
+                        <el-button
+                          style="right: 0px;"
+                          type="text"
+                          icon="el-icon-copy-document"
+                          size="medium"
+                          v-clipboard:copy="reportNum.cph"
+                          v-clipboard:success="copy"
+                        >复制</el-button>
+                      </span>
+                      <span
+                        v-else
+                        style="font-size: 14px;"
+                      >{{cnReportNum.cph}}
+                        <el-button
+                          type="text"
+                          icon="el-icon-copy-document"
+                          size="medium"
+                          v-clipboard:copy="cnReportNum.cph"
+                          v-clipboard:success="copy"
+                        >复制</el-button>
+                      </span>
+                    </span>
+                  </el-col>
+                  <el-col
+                    :span="2"
+                    class="report-title"
+                  >正评号</el-col>
+                  <el-col
+                    :span="5"
+                    class="report-content"
+                  >
+                    <span v-if="this.reportNum.zph == ''">未取号</span>
+                    <span v-else>
+                      <span v-if="reportNumShowType == false">{{reportNum.zph}}
+                        <el-button
+                          style="right: 0px;"
+                          type="text"
+                          icon="el-icon-copy-document"
+                          size="medium"
+                          v-clipboard:copy="reportNum.zph"
+                          v-clipboard:success="copy"
+                        >复制</el-button>
+                      </span>
+                      <span
+                        v-else
+                        style="font-size: 14px;"
+                      >{{cnReportNum.zph}}
+                        <el-button
+                          type="text"
+                          icon="el-icon-copy-document"
+                          size="medium"
+                          v-clipboard:copy="cnReportNum.zph"
+                          v-clipboard:success="copy"
+                        >复制</el-button>
+                      </span>
+                    </span>
+                  </el-col>
+                  <el-col
+                    :span="4"
+                    class="report-title"
+                  >回函（其他）号</el-col>
+                  <el-col
+                    :span="6"
+                    class="report-content"
+                  >
+                    <span v-if="this.reportNum.hhh == ''">未取号</span>
+                    <span v-else>
+                      <span v-if="reportNumShowType == false">{{reportNum.hhh}}
+                        <el-button
+                          style="right: 0px;"
+                          type="text"
+                          icon="el-icon-copy-document"
+                          size="medium"
+                          v-clipboard:copy="reportNum.hhh"
+                          v-clipboard:success="copy"
+                        >复制</el-button>
+                      </span>
+                      <span
+                        v-else
+                        style="font-size: 14px;"
+                      >{{cnReportNum.hhh}}
+                        <el-button
+                          type="text"
+                          icon="el-icon-copy-document"
+                          size="medium"
+                          v-clipboard:copy="cnReportNum.hhh"
+                          v-clipboard:success="copy"
+                        >复制</el-button>
+                      </span>
+                    </span>
+                  </el-col>
+                </el-row>
+              </div>
+            </div>
+          </el-card>
+        </el-col>
+        <el-col
+          :span="12"
+          style="margin-top: 10px"
+        >
+          <el-card>
+            <div
+              slot="header"
+              class="card-header"
+            >
+              <span>合同号信息</span>
+              <span style="float: right">
+                <el-button
+                  icon="el-icon-suitcase"
+                  type="primary"
+                  plain
+                  size="medium"
+                  @click="handleCreateContractNum()"
+                  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 || this.contractNum != '')"
+                >获取</el-button>
+                <el-button
+                  icon="el-icon-suitcase"
+                  type="danger"
+                  plain
+                  size="medium"
+                  @click="handleDeleteContractNum()"
+                  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 || this.contractNum == '' )"
+                >删除</el-button>
+              </span>
+            </div>
+            <div class="text item">
+              <div class="item">
+                <span v-if="this.contractNum == ''">未取号</span>
+                <div v-else>
+                  <span>公司合同号：</span>{{this.contractNum}}<br>
+                  <span>外部合同号：</span>{{this.projDetail.contractNum.externalContractNum}}
+                  <el-button
+                      type="text"
+                      size="medium"
+                      @click="openContractNumDialog"
+                  ><i class="el-icon-edit"></i></el-button>
+                </div>
+              </div>
+            </div>
+          </el-card>
+
+        </el-col>
+        <!-- <el-col
+          :span="12"
+          style="margin-top: 10px"
+        >
+          <el-card v-if="this.projDetail.projType == 1010">
+            <div
+              slot="header"
+              class="card-header"
+            >
+              <span>报告登记信息</span>
+              <span style="float: right">
+                <el-button
+                  v-if="this.projDetail.projType == 1010"
+                  icon="el-icon-suitcase"
+                  type="success"
+                  plain
+                  size="medium"
+                  @click="handleFormalReg()"
+                >登记正评</el-button>
+                <el-button
+                  v-if="this.projDetail.projType == 1010 || this.projDetail.projType == 1030"
+                  icon="el-icon-lx-qrcode"
+                  size="medium"
+                  @click="handleQRCode()"
+                >生成二维码</el-button>
+                <el-button
+                  v-if="this.projDetail.projType == 1020"
+                  icon="el-icon-suitcase"
+                  type="success"
+                  plain
+                  size="medium"
+                >登记</el-button>
+              </span>
+            </div>
+            <h4>Tips:取二维码前请先进行登记</h4>
+            <div class="text item">
+              <div class="item">
+                <span v-if="this.statusInfo.registerState == false">正评登记：未登记</span>
+                <span v-else>正评登记：已登记</span>
+              </div>
+            </div>
+          </el-card>
+        </el-col> -->
+      </el-row>
+    </div>
+    <!-- <div
+      class="work-title"
+      v-if="this.projDetail.projType == 1010"
+    >
+      <span class="work-title-name">评估（估价）对象详情</span>
+      <span class="work-title-button">
+        <el-button
+          v-if="this.projDetail.projType == 1010"
+          icon="el-icon-info"
+          size="medium"
+          @click="isFcDialogVisible()"
+          type="text"
+        >展开详情</el-button>
+        <el-button
+          v-if="this.projDetail.projType == 1020"
+          icon="el-icon-info"
+          size="medium"
+          @click="isZcDialogVisible()"
+          type="text"
+        >展开详情</el-button>
+      </span>
+    </div> -->
+
+    <el-divider></el-divider>
+    <div class="work-title">
+      <span class="work-title-name">项目工作信息</span>
+      <span class="work-title-button">
+        <el-button
+          icon="el-icon-s-order"
+          size="medium"
+          type="primary"
+          @click="isWorkArrgDialog()"
+          :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
+        >安排</el-button>
+        <el-button
+          v-if="workArrgEdit == true"
+          icon="el-icon-refresh-right"
+          size="medium"
+          @click="resetArrg()"
+          :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
+        >清空安排</el-button>
+      </span>
+    </div>
+    <el-divider></el-divider>
+    <el-row :gutter="20"
+	v-if="onProjTypeChangeVisable() == 1">
+      <el-col :span="12">
+        <el-card>
+          <div v-if="workArrgEdit == false">
+            <h3>未安排工作信息，请先安排</h3>
+          </div>
+          <div v-else>
+            <div class="text">
+              <div class="item"><span>评估方法：</span>{{workAssemMethod}}</div>
+              <div class="item"><span>现场调查内容：</span>{{arrgData.fldSrvyContent}}</div>
+            </div>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
+    <el-row
+      :gutter="20"
+      style="margin-top: 15px"
+    >
+      <el-col :span="24">
+        <el-card>
+          <div slot="header">综合进度安排</div>
+          <div v-if="this.workArrgEdit == true">
+            <el-row :gutter="20">
+              <el-col :span="6">
+                <h4>综合进度</h4>
+              </el-col>
+              <el-col :span="10">
+                <h4>时间安排</h4>
+              </el-col>
+              <el-col :span="8">
+                <h4>责任人</h4>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="6">
+                <div
+                  class="workname-left"
+                  v-for="item in workName"
+                  :key="item"
+                >
+                  {{item}}
+                </div>
+              </el-col>
+              <el-col :span="10">
+                <div
+                  class="workname-left"
+                  v-for="(item, i) in workDate"
+                  :key="i"
+                >{{item}}</div>
+              </el-col>
+              <el-col :span="8">
+                <div
+                  class="workname-left"
+                  v-for="(item, i) in workPeople"
+                  :key="i"
+                >{{item}}</div>
+              </el-col>
+            </el-row>
+          </div>
+          <div v-else>
+            <h3>未安排工作信息，请先安排</h3>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
+    <div class="work-title">
+      <span class="work-title-name">子项目信息</span>
+      <span class="work-title-button">
+        <el-button
+          icon="el-icon-circle-plus-outline"
+          size="medium"
+          @click="handleAddSubProj(reportNum.cph)"
+          :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
+        >新增子项目(初评)</el-button>
+        <el-button
+          icon="el-icon-circle-plus-outline"
+          size="medium"
+          @click="handleAddSubProj(reportNum.zph)"
+          :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
+        >新增子项目(正评)</el-button>
+      </span>
+    </div>
+    <el-divider></el-divider>
+    <el-table
+      :data="subTableData"
+      border
+    >
+      <el-table-column
+        label="父报告号"
+        width="120"
+        prop="reportNum"
+      ></el-table-column>
+      <el-table-column
+        label="子项目报告号"
+        width="120"
+        prop="subReportNum"
+      ></el-table-column>
+      <el-table-column
+        label="子项目名称"
+        prop="subProjName"
+      ></el-table-column>
+      <el-table-column
+        label="子项目范围"
+        prop="subProjScope"
+      ></el-table-column>
+
+      <el-table-column
+        label="操作"
+        width="200"
+      >
+        <template slot-scope="scope">
+          <!-- <el-button type="text">查看</el-button> -->
+          <el-button
+            type="text"
+            @click="delSubProj(scope.row)"
+          >删除</el-button>
+          <el-button
+            type="text"
+            @click="handleSubProjDetail(scope.row)"
+          >详情</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <div class="work-title">
+      <span class="work-title-name">操作记录</span>
+    </div>
+    <el-divider></el-divider>
+    <el-card style="width: 100%">
+      <OpRecord
+          :projId="projDetail.projId"
+      ></OpRecord>
+    </el-card>
+	
+	</div>
+	
     <el-dialog
           title="修改外部合同号"
           :visible.sync="contractNumDialogVisible"
@@ -1205,7 +1800,7 @@ export default {
       assemValueEdit: false,
       isReg: false,
       formalRegVisible: false,
-      workName: ['前期准备', '现场勘查及收集资料', '市场调查询价记录', '评定估算', '编制出具评估（估价）报告', '内部三级审核', '与委托人沟通', '评估收费', '修正定稿及提交报告', '工作底稿归档'],
+      workName: [],
       workDate: [],
       workPeople: [],
       getNumVisible: false,
@@ -1389,12 +1984,33 @@ export default {
         }
       },
       contractNumDialogVisible: false,
-      preContractNumDialogVisible: false
+      preContractNumDialogVisible: false,
+	  
+	  
+	  //211101变动 新增: 多个公司切换
+	  companyRange:['huizheng', 'zhiming','kuaiji'],
+	  companyId:'',
+	  companyTabsId: 0,
+	  
+	  tabsDisable:true,	  
     };
   },
   created() {
+	//211028变动 新增: 多个公司切换
+	const value = localStorage.getItem('companyId');
+	if(value){
+		this.companyId = value;
+		this.companyTabsId = this.companyRange.indexOf(this.companyId);
+	}else{
+		this.companyId = this.companyRange[0];
+		this.companyTabsId = 0;
+	}
+	console.log('初始化公司id', this.companyId);    
+	  
+	  
     //处理从工作台获取的val -> queryData
     this.queryData = JSON.parse(this.$route.query.data)
+	//console.log('queryData', this.queryData);
     //this.workArrgForm.projId = this.queryData.projId
     this.projTypeOption = projTypeOption
     //处理项目类型value转为label展示
@@ -1422,7 +2038,12 @@ export default {
   // ╚═╝     ╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚══════╝                                                           
   methods: {
     getDetail() {
-      getDetailProjInfo({ projId: this.queryData.projId })
+	  //211101变动 新增: 多个公司切换
+	  const projData = {
+	  	companyId: this.companyId,
+		projId: this.queryData.projId
+	  } 
+      getDetailProjInfo(projData)
         .then(res => {
           if (res.statusCode == 200) {
             this.projDetail = res.data
@@ -1460,7 +2081,13 @@ export default {
             } else if (this.reportNum.zph == '' && this.reportNum.cph != '') {
               this.reportNumList = this.reportNum.cph
             }
-            getSubProjectInfoList({ projId: this.projDetail.projId })
+			
+			//211101变动 新增: 多个公司切换
+			const projData = {
+				companyId: this.companyId,
+				projId: this.projDetail.projId
+			}
+            getSubProjectInfoList(projData)
               .then(res => {
                 this.subTableData = res.data
                 // this.subTableData = res.data.cph
@@ -1476,7 +2103,13 @@ export default {
         })
     },
     check() {
-      checkFaRegister({ projId: this.projDetail.projId, subReportNum: '-' })
+	  //211101变动 新增: 多个公司切换
+	  const checkData = {
+	  	companyId: this.companyId,
+	  	projId: this.projDetail.projId, 
+		subReportNum: '-'
+	  } 
+      checkFaRegister(checkData)
         .then(res => {
           console.log(res)
           if (res.data.registerState == true && res.data.evalObjState == true) {
@@ -1502,84 +2135,99 @@ export default {
     },
     //文字转换前置判断
     changNumShowType() {
-
-      if (this.reportNum.cph != '') {
-        let cph = this.reportNum.cph
-        this.changeNumType(cph, 1)
-      }
-      if (this.reportNum.zph != '') {
-        let zph = this.reportNum.zph
-        this.changeNumType(zph, 2)
-      }
-      if (this.reportNum.hhh != '') {
-        let hhh = this.reportNum.hhh
-        this.changeNumType(hhh, 3)
-      }
+	  if (this.reportNum.cph != '') {
+	    let cph = this.reportNum.cph
+	    this.changeNumType(cph, 1)
+	  }
+	  if (this.reportNum.zph != '') {
+	    let zph = this.reportNum.zph
+	    this.changeNumType(zph, 2)
+	  }
+	  if (this.reportNum.hhh != '') {
+	    let hhh = this.reportNum.hhh
+	    this.changeNumType(hhh, 3)
+	  } 
       this.reportNumShowType = !this.reportNumShowType
     },
     changeNumType(val, type) {
       let num = ''
       let projType = ''
       let numType = ''
-
-      switch (type) {
-        case 1:
-          num = this.reportNum.cph
-          numType = '初评字'
-          if (this.projDetail.projType == 1010) {
-            projType = '房地'
-          } else if (this.projDetail.projType == 1020) {
-            projType = '资'
-          } else if (this.projDetail.projType == 1030) {
-            projType = '土地'
-          }
-          break
-        case 2:
-          num = this.reportNum.zph
-          if (this.projDetail.projType == 1010) {
-            projType = '房地估字'
-          } else if (this.projDetail.projType == 1020) {
-            projType = '资评报字'
-          } else if (this.projDetail.projType == 1030) {
-            projType = '土地估字'
-          } else if (this.projDetail.projType == 1041) {
-            projType = '房地咨字'
-          } else if (this.projDetail.projType == 1042) {
-            projType = '资咨报字'
-          } else if (this.projDetail.projType == 1043) {
-            projType = '土地咨字'
-          } else if (this.projDetail.projType == 1061 || this.projDetail.projType == 1062 || this.projDetail.projType == 1063) {
-            projType = '审报字'
-          } else if (this.projDetail.projType == 1050 || this.projDetail.projType == 1080) {
-            projType = '咨字'
-          } else if (this.projDetail.projType == 1070) {
-            projType = '外协'
-          } else if (this.projDetail.projType == 1090) {
-            projType = '绩效评字'
-          }
-          break
-        case 3:
-          num = this.reportNum.hhh
-          numType = '函'
-          break
-      }
-      const comp = '惠正'
-      const year = '[' + num.substr(0, 4) + ']'
-      const lastNum = '第' + num.substr(4) + '号'
-      const final = comp + projType + numType + year + lastNum
-      if (type == 1) {
-        this.cnReportNum.cph = final
-      } else if (type == 2) {
-        this.cnReportNum.zph = final
-      } else if (type == 3) {
-        this.cnReportNum.hhh = final
-      }
+	  
+	  //211101变动 新增: 多个公司切换	
+	  if(this.companyTabsId == 0){		
+		//惠正
+	    switch (type) {
+	      case 1:
+	        num = this.reportNum.cph
+	        numType = '初评字'
+	        if (this.projDetail.projType == 1010) {
+	          projType = '房地'
+	        } else if (this.projDetail.projType == 1020) {
+	          projType = '资'
+	        } else if (this.projDetail.projType == 1030) {
+	          projType = '土地'
+	        }
+	        break
+	      case 2:
+	        num = this.reportNum.zph
+	        if (this.projDetail.projType == 1010) {
+	          projType = '房地估字'
+	        } else if (this.projDetail.projType == 1020) {
+	          projType = '资评报字'
+	        } else if (this.projDetail.projType == 1030) {
+	          projType = '土地估字'
+	        } else if (this.projDetail.projType == 1041) {
+	          projType = '房地咨字'
+	        } else if (this.projDetail.projType == 1042) {
+	          projType = '资咨报字'
+	        } else if (this.projDetail.projType == 1043) {
+	          projType = '土地咨字'
+	        } else if (this.projDetail.projType == 1061 || this.projDetail.projType == 1062 || this.projDetail.projType == 1063) {
+	          projType = '审报字'
+	        } else if (this.projDetail.projType == 1050 || this.projDetail.projType == 1080) {
+	          projType = '咨字'
+	        } else if (this.projDetail.projType == 1070) {
+	          projType = '外协'
+	        } else if (this.projDetail.projType == 1090) {
+	          projType = '绩效评字'
+	        }
+	        break
+	      case 3:
+	        num = this.reportNum.hhh
+	        numType = '函'
+	        break
+	    }
+	    const comp = '惠正'
+	    const year = '[' + num.substr(0, 4) + ']'
+	    const lastNum = '第' + num.substr(4) + '号'
+	    const final = comp + projType + numType + year + lastNum
+	    if (type == 1) {
+	      this.cnReportNum.cph = final
+	    } else if (type == 2) {
+	      this.cnReportNum.zph = final
+	    } else if (type == 3) {
+	      this.cnReportNum.hhh = final
+	    }
+	  }else if(this.companyTabsId == 1){
+		//智明  
+		
+	  }else if(this.companyTabsId == 2){
+		//汇正  
+		
+	  }
+      
     },
     copy(e) {
       this.$message.success('内容已复制到剪贴板')
     },
     getWorkAssignmentData() {
-      getWorkAssignment({ projId: this.queryData.projId })
+	  //211101变动 新增: 多个公司切换
+	  const AssignmentData = {
+	  	companyId: this.companyId,
+	  	projId: this.queryData.projId
+	  } 
+      getWorkAssignment(AssignmentData)
         .then(res => {
           if (res.statusCode == 200) {
             if (res.data == null) {
@@ -1590,11 +2238,68 @@ export default {
             } else {
               this.workArrgEdit = true
               this.workAssemMethod = res.data.assemMethod
-              this.workPeople.push(res.data.prePreparationPic, res.data.fldSrvyPic, res.data.mktSrvyPic, res.data.assemEstPic, res.data.issueValPic, res.data.internalAuditPic, res.data.commuClientPic, res.data.assemChargePic, res.data.amendFinalPic, res.data.manuArchivePic)
-              this.workDate.push(res.data.prePreparationSche, res.data.fldSrvySche, res.data.mktSrvySche, res.data.assemEstSche, res.data.issueValSche, res.data.internalAuditSche, res.data.commuClientSche, res.data.assemChargeSche, res.data.amendFinalSche, res.data.manuArchiveSche)
-              this.arrgData = res.data
-              //
-              this.transData()
+			  
+			  //211101变动 新增: 多个公司切换
+			  var workName = [];
+			  workName['惠正'] = ['前期准备', '现场勘查及收集资料', '市场调查询价记录', '评定估算', '编制出具评估（估价）报告', '内部三级审核', '与委托人沟通', '评估收费', '修正定稿及提交报告', '工作底稿归档'];
+			  workName['智明测绘'] = ['收集及整理资料','制定测绘技术路线','外业','内业制图','编制测绘报告','内部审核','与委托方沟通','测绘收费','修正定稿及提交报告','工作底稿归档'];
+			  workName['智明咨询'] = ['前期准备、明确需求','制定工作方案','资料收集','现场调研','市场调查与询价','撰写报告','三级审核','与委托方沟通','报告收费','出具正式报告','整理归档'];
+			  workName['汇正'] = [];
+			  
+			  console.log('转类型前arrgData', res.data)
+			  
+			  //测试
+			  this.queryData.projType = 2100;
+			  
+			  if(this.companyTabsId == 0){
+				//惠正
+				this.workName = workName['惠正'];
+				this.workPeople.push(res.data.prePreparationPic, res.data.fldSrvyPic, res.data.mktSrvyPic, res.data.assemEstPic, res.data.issueValPic, res.data.internalAuditPic, res.data.commuClientPic, res.data.assemChargePic, res.data.amendFinalPic, res.data.manuArchivePic)
+				this.workDate.push(res.data.prePreparationSche, res.data.fldSrvySche, res.data.mktSrvySche, res.data.assemEstSche, res.data.issueValSche, res.data.internalAuditSche, res.data.commuClientSche, res.data.assemChargeSche, res.data.amendFinalSche, res.data.manuArchiveSche)
+				this.arrgData = res.data
+				//
+				this.transData(0)
+			  }else if(this.companyTabsId == 1 && (this.queryData.projType>=2100 && this.queryData.projType <2200)){
+				//智明测绘  
+				this.workName = workName['智明测绘'];
+				
+				//测试
+				res.data.workPlanPic = res.data.workPlanPic?res.data.workPlanPic:'';
+				res.data.workPlanSche = res.data.workPlanSche?res.data.workPlanSche:'';
+				res.data.drawingPic = res.data.drawingPic?res.data.drawingPic:'';
+				res.data.drawingSche = res.data.drawingSche?res.data.drawingSche:'';
+				
+				this.workPeople.push(res.data.prePreparationPic, res.data.workPlanPic, res.data.fldSrvyPic, res.data.drawingPic, res.data.issueValPic, res.data.internalAuditPic, res.data.commuClientPic, res.data.assemChargePic, res.data.amendFinalPic, res.data.manuArchivePic)
+				this.workDate.push(res.data.prePreparationSche, res.data.workPlanSche, res.data.fldSrvySche, res.data.drawingSche, res.data.issueValSche, res.data.internalAuditSche, res.data.commuClientSche, res.data.assemChargeSche, res.data.amendFinalSche, res.data.manuArchiveSche)
+				this.arrgData = res.data
+				//
+				this.transData(1)
+			  }else if(this.companyTabsId == 1 && (this.queryData.projType>=2200 && this.queryData.projType <2300)){
+				//智明咨询  
+				this.workName = workName['智明咨询'];
+								
+				//测试
+				res.data.workPlanPic = res.data.workPlanPic?res.data.workPlanPic:'';
+				res.data.workPlanSche = res.data.workPlanSche?res.data.workPlanSche:'';
+				res.data.dataCollectionPic = res.data.dataCollectionPic?res.data.dataCollectionPic:'';
+				res.data.dataCollectionSche = res.data.dataCollectionSche?res.data.dataCollectionSche:'';
+				
+				this.workPeople.push(res.data.prePreparationPic, res.data.workPlanPic, res.data.dataCollectionPic, res.data.fldSrvyPic, res.data.mktSrvyPic, res.data.issueValPic, res.data.internalAuditPic, res.data.commuClientPic, res.data.assemChargePic, res.data.amendFinalPic, res.data.manuArchivePic)
+				this.workDate.push(res.data.prePreparationSche, res.data.workPlanSche, res.data.dataCollectionSche, res.data.fldSrvySche, res.data.mktSrvySche, res.data.issueValSche, res.data.internalAuditSche, res.data.commuClientSche, res.data.assemChargeSche, res.data.amendFinalSche, res.data.manuArchiveSche)
+				this.arrgData = res.data
+				//
+				this.transData(2)
+			  }else if(this.companyTabsId == 2){
+				//汇正
+				this.workName = workName['汇正']; 
+				//this.workPeople.push(res.data.prePreparationPic, res.data.fldSrvyPic, res.data.mktSrvyPic, res.data.assemEstPic, res.data.issueValPic, res.data.internalAuditPic, res.data.commuClientPic, res.data.assemChargePic, res.data.amendFinalPic, res.data.manuArchivePic)
+				//this.workDate.push(res.data.prePreparationSche, res.data.fldSrvySche, res.data.mktSrvySche, res.data.assemEstSche, res.data.issueValSche, res.data.internalAuditSche, res.data.commuClientSche, res.data.assemChargeSche, res.data.amendFinalSche, res.data.manuArchiveSche)
+				this.arrgData = res.data
+				//
+				this.transData(3) 
+			  }
+			  //console.log('workName', this.workName);
+              
               //后期看看让后端分割出date和people
               // this.workPeople.push(res.data.prePreparationPic, res.data.fldSrvyPic, res.data.mktSrvyPic, res.data.assemEstPic, res.data.issueValPic, res.data.internalAuditPic, res.data.commuClientPic, res.data.assemChargePic, res.data.amendFinalPic, res.data.manuArchivePic)
               // this.workDate.push(res.data.prePreparationSche, res.data.fldSrvySche, res.data.mktSrvySche, res.data.assemEstSche, res.data.issueValSche, res.data.internalAuditSche, res.data.commuClientSche, res.data.assemChargeSche, res.data.amendFinalSche, res.data.manuArchiveSche)
@@ -1608,30 +2313,94 @@ export default {
           console.log('获取项目安排信息', err)
         })
     },
-    transData() {
-      this.arrgData.assemMethod = this.arrgData.assemMethod.split(',')
-      //
-      this.arrgData.prePreparationPic = this.arrgData.prePreparationPic.split(',')
-      this.arrgData.fldSrvyPic = this.arrgData.fldSrvyPic.split(',')
-      this.arrgData.mktSrvyPic = this.arrgData.mktSrvyPic.split(',')
-      this.arrgData.assemEstPic = this.arrgData.assemEstPic.split(',')
-      this.arrgData.issueValPic = this.arrgData.issueValPic.split(',')
-      this.arrgData.internalAuditPic = this.arrgData.internalAuditPic.split(',')
-      this.arrgData.commuClientPic = this.arrgData.commuClientPic.split(',')
-      this.arrgData.assemChargePic = this.arrgData.assemChargePic.split(',')
-      this.arrgData.amendFinalPic = this.arrgData.amendFinalPic.split(',')
-      this.arrgData.manuArchivePic = this.arrgData.manuArchivePic.split(',')
-      //
-      this.arrgData.prePreparationSche = this.arrgData.prePreparationSche.split('-')
-      this.arrgData.fldSrvySche = this.arrgData.fldSrvySche.split('-')
-      this.arrgData.mktSrvySche = this.arrgData.mktSrvySche.split('-')
-      this.arrgData.assemEstSche = this.arrgData.assemEstSche.split('-')
-      this.arrgData.issueValSche = this.arrgData.issueValSche.split('-')
-      this.arrgData.internalAuditSche = this.arrgData.internalAuditSche.split('-')
-      this.arrgData.commuClientSche = this.arrgData.commuClientSche.split('-')
-      //this.arrgData.assemChargeSche = this.arrgData.assemChargeSche.split('-')
-      this.arrgData.amendFinalSche = this.arrgData.amendFinalSche.split('-')
-      //this.arrgData.manuArchiveSche = this.arrgData.manuArchiveSche.split('-')
+    transData(type) {
+	  //日期按横线分隔, 其他按逗号分隔成数组
+		
+	  switch (type) {
+	    case 0:
+		  //惠正
+		  this.arrgData.assemMethod = this.arrgData.assemMethod.split(',')
+		  //
+		  this.arrgData.prePreparationPic = this.arrgData.prePreparationPic.split(',')
+		  this.arrgData.fldSrvyPic = this.arrgData.fldSrvyPic.split(',')
+		  this.arrgData.mktSrvyPic = this.arrgData.mktSrvyPic.split(',')
+		  this.arrgData.assemEstPic = this.arrgData.assemEstPic.split(',')
+		  this.arrgData.issueValPic = this.arrgData.issueValPic.split(',')
+		  this.arrgData.internalAuditPic = this.arrgData.internalAuditPic.split(',')
+		  this.arrgData.commuClientPic = this.arrgData.commuClientPic.split(',')
+		  this.arrgData.assemChargePic = this.arrgData.assemChargePic.split(',')
+		  this.arrgData.amendFinalPic = this.arrgData.amendFinalPic.split(',')
+		  this.arrgData.manuArchivePic = this.arrgData.manuArchivePic.split(',')
+		  //
+		  this.arrgData.prePreparationSche = this.arrgData.prePreparationSche.split('-')
+		  this.arrgData.fldSrvySche = this.arrgData.fldSrvySche.split('-')
+		  this.arrgData.mktSrvySche = this.arrgData.mktSrvySche.split('-')
+		  this.arrgData.assemEstSche = this.arrgData.assemEstSche.split('-')
+		  this.arrgData.issueValSche = this.arrgData.issueValSche.split('-')
+		  this.arrgData.internalAuditSche = this.arrgData.internalAuditSche.split('-')
+		  this.arrgData.commuClientSche = this.arrgData.commuClientSche.split('-')
+		  //this.arrgData.assemChargeSche = this.arrgData.assemChargeSche.split('-')
+		  this.arrgData.amendFinalSche = this.arrgData.amendFinalSche.split('-')
+		  //this.arrgData.manuArchiveSche = this.arrgData.manuArchiveSche.split('-')
+		  break
+		case 1:
+		  //智明测绘
+		  this.arrgData.assemMethod = this.arrgData.assemMethod.split(',')
+		  //
+		  this.arrgData.prePreparationPic = this.arrgData.prePreparationPic.split(',')
+		  this.arrgData.workPlanPic = this.arrgData.workPlanPic.split(',')//区别
+		  this.arrgData.fldSrvyPic = this.arrgData.fldSrvyPic.split(',')
+		  this.arrgData.drawingPic = this.arrgData.drawingPic.split(',') //区别
+		  this.arrgData.issueValPic = this.arrgData.issueValPic.split(',')
+		  this.arrgData.internalAuditPic = this.arrgData.internalAuditPic.split(',')
+		  this.arrgData.commuClientPic = this.arrgData.commuClientPic.split(',')
+		  this.arrgData.assemChargePic = this.arrgData.assemChargePic.split(',')
+		  this.arrgData.amendFinalPic = this.arrgData.amendFinalPic.split(',')
+		  this.arrgData.manuArchivePic = this.arrgData.manuArchivePic.split(',')
+		  //
+		  this.arrgData.prePreparationSche = this.arrgData.prePreparationSche.split('-')
+		  this.arrgData.workPlanSche = this.arrgData.workPlanSche.split('-')//区别
+		  this.arrgData.fldSrvySche = this.arrgData.fldSrvySche.split('-')
+		  this.arrgData.drawingSche = this.arrgData.drawingSche.split('-') //区别
+		  this.arrgData.issueValSche = this.arrgData.issueValSche.split('-')
+		  this.arrgData.internalAuditSche = this.arrgData.internalAuditSche.split('-')
+		  this.arrgData.commuClientSche = this.arrgData.commuClientSche.split('-')
+		  //this.arrgData.assemChargeSche = this.arrgData.assemChargeSche.split('-')
+		  this.arrgData.amendFinalSche = this.arrgData.amendFinalSche.split('-')
+		  //this.arrgData.manuArchiveSche = this.arrgData.manuArchiveSche.split('-')
+		  break
+		case 2:
+		  //智明咨询
+		  this.arrgData.assemMethod = this.arrgData.assemMethod.split(',')
+		  //
+		  this.arrgData.prePreparationPic = this.arrgData.prePreparationPic.split(',')
+		  this.arrgData.workPlanPic = this.arrgData.workPlanPic.split(',') //区别
+		  this.arrgData.dataCollectionPic = this.arrgData.dataCollectionPic.split(',') //区别
+		  this.arrgData.fldSrvyPic = this.arrgData.fldSrvyPic.split(',')
+		  this.arrgData.mktSrvyPic = this.arrgData.mktSrvyPic.split(',')
+		  this.arrgData.issueValPic = this.arrgData.issueValPic.split(',')
+		  this.arrgData.internalAuditPic = this.arrgData.internalAuditPic.split(',')
+		  this.arrgData.commuClientPic = this.arrgData.commuClientPic.split(',')
+		  this.arrgData.assemChargePic = this.arrgData.assemChargePic.split(',')
+		  this.arrgData.amendFinalPic = this.arrgData.amendFinalPic.split(',')
+		  this.arrgData.manuArchivePic = this.arrgData.manuArchivePic.split(',')
+		  //
+		  this.arrgData.prePreparationSche = this.arrgData.prePreparationSche.split('-')
+		  this.arrgData.workPlanSche = this.arrgData.workPlanSche.split('-') //区别
+		  this.arrgData.dataCollectionSche = this.arrgData.dataCollectionSche.split('-') //区别
+		  this.arrgData.fldSrvySche = this.arrgData.fldSrvySche.split('-')
+		  this.arrgData.mktSrvySche = this.arrgData.mktSrvySche.split('-')
+		  this.arrgData.issueValSche = this.arrgData.issueValSche.split('-')
+		  this.arrgData.internalAuditSche = this.arrgData.internalAuditSche.split('-')
+		  this.arrgData.commuClientSche = this.arrgData.commuClientSche.split('-')
+		  //this.arrgData.assemChargeSche = this.arrgData.assemChargeSche.split('-')
+		  this.arrgData.amendFinalSche = this.arrgData.amendFinalSche.split('-')
+		  //this.arrgData.manuArchiveSche = this.arrgData.manuArchiveSche.split('-')
+		  break
+		case 3:
+		  //汇正
+		  break
+	  }
     },
     // handleWorkArrg() {
     //   //this.$router.push({ path: '/workarrange', query: { data: this.queryData, projMember: this.projMember, isEdit: this.workArrgEdit } })
@@ -1662,7 +2431,12 @@ export default {
       if (this.changeType.toType == '') {
         this.$message.info('请选择修改类型');
       } else {
-        alterProjType(this.changeType)
+		//211101变动 新增: 多个公司切换
+		const changeData = {
+			companyId: this.companyId,
+			changeType: this.changeType
+		} 
+        alterProjType(changeData)
           .then(res => {
             console.log(res)
             this.$message.success('修改成功');
@@ -1680,7 +2454,13 @@ export default {
       if (this.statusInfo.evalObjState == false) {
         this.$message.warning('请先填写评估（估价）对象详情')
       } else {
-        getEvalObjDetail({ projId: this.projDetail.projId, subReportNum: '-' })
+		//211101变动 新增: 多个公司切换
+		const evalObjData = {
+			companyId: this.companyId,
+			projId: this.projDetail.projId, 
+			subReportNum: '-'
+		}
+        getEvalObjDetail(evalObjData)
           .then(res => {
             let i = res.data.projTotalValue
             if (i <= 100) {
@@ -1720,7 +2500,10 @@ export default {
             this.regForm.signedAppraiser = this.regForm.signedAppraiser.join(',')
             this.regForm.projAsst = this.regForm.projAsst.join(',')
             this.regForm.fieldSrvy = this.regForm.fieldSrvy.join(',')
-            console.log(this.regForm)
+            
+			//211101变动 新增: 多个公司切换
+			this.regForm.companyId = this.companyId
+			console.log(this.regForm)
             submitFaRegister(this.regForm)
               .then(res => {
                 this.$message.success('提交成功！')
@@ -1739,6 +2522,9 @@ export default {
             this.regForm.signedAppraiser = this.regForm.signedAppraiser.join(',')
             this.regForm.projAsst = this.regForm.projAsst.join(',')
             this.regForm.fieldSrvy = this.regForm.fieldSrvy.join(',')
+			
+			//211101变动 新增: 多个公司切换
+			this.regForm.companyId = this.companyId
             console.log('正评登记编辑Form', this.regForm)
             editFaRegister(this.regForm)
               .then(res => {
@@ -1798,6 +2584,9 @@ export default {
         return 0
       }
       this.qrcodeForm.projId = this.projDetail.projId
+	  
+	  //211101变动 新增: 多个公司切换
+	  this.qrcodeForm.companyId = this.companyId
 
       createReportQrCode(this.qrcodeForm)
           .then(res => {
@@ -1842,7 +2631,13 @@ export default {
               this.$message.warning('已存在合同号！');
               return;
             }
-            createContractNum({ projId: this.queryData.projId, externalContractNum: this.preExternalContractNum })
+			//211101变动 新增: 多个公司切换
+			const createData = {
+				companyId: this.companyId,
+				projId: this.queryData.projId, 
+				externalContractNum: this.preExternalContractNum
+			}
+            createContractNum(createData)
                 .then(res => {
                   this.reload();
                 })
@@ -1874,7 +2669,12 @@ export default {
       } else {
         this.$confirm('即将删除合同号，确定吗？', '提示：即将删除[' + this.contractNum + ']', { type: 'error' })
           .then(() => {
-            deleteContractNum({ contractNum: this.contractNum })
+			//211101变动 新增: 多个公司切换
+			const deleteData = {
+				companyId: this.companyId,
+				contractNum: this.contractNum
+			}  			  
+            deleteContractNum(deleteData)
               .then(res => {
                 this.$message.success('合同号已删除！')
                 this.reload()
@@ -1953,7 +2753,13 @@ export default {
         this.getNumType = 1033
       }
       //结束判断类型，调取号接口
-      createReportNum({ projId: this.queryData.projId, reportNumType: this.getNumType })
+	  //211101变动 新增: 多个公司切换
+	  const createData = {
+	  	companyId: this.companyId,
+		projId: this.queryData.projId, 
+		reportNumType: this.getNumType
+	  }
+      createReportNum(createData)
         .then(res => {
           this.$message.success('取号成功')
           //this.reload()
@@ -2004,7 +2810,15 @@ export default {
         } else {
           this.getNumType = this.queryData.projType
         }
-        getOldReportNum({ projId: this.queryData.projId, reportNumType: this.getNumType, takenDate: this.takenDate })
+		
+		//211101变动 新增: 多个公司切换
+		const oldReportData = {
+			companyId: this.companyId,
+			projId: this.queryData.projId, 
+			reportNumType: this.getNumType, 
+			takenDate: this.takenDate
+		} 
+        getOldReportNum(oldReportData)
           .then(res => {
             console.log('oldReportNum', res.data)
             this.$message.success('获取成功')
@@ -2043,7 +2857,13 @@ export default {
           } else if (val == 3) {
             this.needDelNum = this.reportNum.hhh
           }
-          deleteReportNum({ reportNum: this.needDelNum })
+		  
+		  //211101变动 新增: 多个公司切换
+		  const deleteData = {
+		  	companyId: this.companyId,
+			reportNum: this.needDelNum
+		  }
+          deleteReportNum(deleteData)
             .then(res => {
               this.$message.success('删除成功')
               //this.reload()
@@ -2082,6 +2902,9 @@ export default {
           this.subProjForm.subFieldSrvy = this.subProjForm.subFieldSrvy.join(',')
           console.log('新增子项目（正评）form', this.subProjForm)
           this.subProjForm.reportNum = val
+		  
+		  //211101变动 新增: 多个公司切换
+		  this.subProjForm.companyId = this.companyId
           addSubProject(this.subProjForm)
             .then(res => {
               this.$message.success('创建子项目成功')
@@ -2102,7 +2925,12 @@ export default {
     delSubProj(row) {
       this.$confirm('确定要删除吗？', '提示', { type: 'warning' })
         .then(() => {
-          delSubProject({ subProjId: row.subProjId })
+		  //211101变动 新增: 多个公司切换
+		  const delSubData = {
+		  	companyId: this.companyId,
+		  	subProjId: row.subProjId
+		  }
+          delSubProject(delSubData)
             .then(res => {
               this.$message.success('删除子项目成功')
               this.reload()
@@ -2138,7 +2966,13 @@ export default {
     // },
     //
     getObjDetail() {
-      getEvalObjDetail({ projId: this.projDetail.projId, subReportNum: '-' })
+	  //211101变动 新增: 多个公司切换
+	  const evalObjData = {
+	  	companyId: this.companyId,
+	  	projId: this.projDetail.projId, 
+		subReportNum: '-'
+	  }
+      getEvalObjDetail(evalObjData)
         .then(res => {
           console.log('估价对象详情res', res)
           if (res.data == null) {
@@ -2163,14 +2997,89 @@ export default {
       this.zcDialogVisible = true
     },
     isWorkArrgDialog() {
+	/* 
+	  //静态测试
+	  this.projDetail = {
+		  actualFee: null,
+		  arrgType: "1001",
+		  assemFeeQuote: null,
+		  assemGoal: "抵押2",
+		  assemNetValue: null,
+		  assemValue: null,
+		  assemValueQuote: null,
+		  baseDate: 1634745600000,
+		  clientContact: "",
+		  clientContactInfo: "",
+		  clientId: 10113,
+		  clientName: "中国银行-陈江支行",
+		  clientType: 101,
+		  compSchedule: 3,
+		  contractNum: {
+			  contractNum: "F21014",
+			  contractNumType: 1010,
+			  externalContractNum: "abc123",
+			  projId: 1010202110004,
+			  takenDate: 1634745600000,
+		  },
+		  externalExpert: "",
+		  fieldSrvy: "叶彬,江锡烽",
+		  finalReview: "",
+		  fldSrvyContact: "",
+		  fldSrvyContactInfo: "",
+		  fldSrvySchedule: 1634745600000,
+		  incumbrancer: "",
+		  infoVerification: "",
+		  instructor: "",
+		  marketEnquiry: "",
+		  newOldType: "1001",
+		  operator: "江锡烽",
+		  projAsst: "蒋巧玲",
+		  projContact: "蔡楚锋",
+		  projContactType: "摇珠",
+		  projDate: 1634777519000,
+		  projDegree: "1001",
+		  projId: 1010202110004,
+		  projLeader: "蔡楚锋",
+		  projName: "测试234",
+		  projNum: "房202110004",
+		  projProReviewer: "",
+		  projProgress: "计划",
+		  projReferer: "",
+		  projRefererInfo: "",
+		  projReviewer: "王伟平",
+		  projScope: "测试234567",
+		  projState: "0",
+		  projType: 2100,
+		  reportDrafter: "",
+		  reportNumList: {
+			  cph: "2021F10001",
+			  hhh: "",
+			  zph: "2021FG10001",
+		  },
+		  riskProfile: "1002",
+		  standardFee: null,
+		  supInstruction: "",
+		  tax: null,
+		  techExpDrafter: "",
+	  };
+	  
+	  console.log(this.projDetail);
+	 */	
+	  this.projDetail.projType = 2100;
+	
       this.workArrgDialogVisible = true
+	  
     },
     resetArrg() {
       this.$confirm('确定要清空工作安排吗？', '提示', {
         type: 'warning'
       })
         .then(() => {
-          delWorkAssignment({ projId: this.projDetail.projId })
+		  const workAssignmentData = {
+		  	companyId: this.companyId,
+		  	projId: this.projDetail.projId
+		  }
+          delWorkAssignment(workAssignmentData)
             .then(res => {
               console.log(res)
               this.reload()
@@ -2192,7 +3101,12 @@ export default {
       }
       this.$confirm('确定要设置为'+ state + '吗？', '提示', {type: 'warning'})
         .then(() => {
-          setProjState({projId: this.projDetail.projId, stateCode: val})
+		  const projStateData = {
+		  	companyId: this.companyId,
+		  	projId: this.projDetail.projId, 
+			stateCode: val
+		  }
+          setProjState(projStateData)
             .then(res => {
               console.log(res)
               this.reload()
@@ -2230,6 +3144,7 @@ export default {
       }
 
       updateExternalContractNum({
+		companyId: this.companyId,
         projId: this.projDetail.projId,
         externalContractNum: this.preExternalContractNum
       }).then(
@@ -2265,6 +3180,43 @@ export default {
           });
 
     },
+	
+	handleTabsClick(tab, event) {
+	  //console.log("切换到: ", tab.label, tab.name);
+	  this.$message.success('切换到: ' + tab.label);
+	  
+	  //1.companyTabsId, 修改公司数组序号id
+	  this.companyTabsId = this.companyRange.indexOf(this.companyId);
+	  
+	  //2. localStorage 将该公司id存储起来, 其他页面也是显示该公司信息
+	  localStorage.setItem('companyId', tab.name);
+	  console.log('公司id', localStorage.getItem('companyId'));
+	  
+	  //3. 
+	},
+	onProjTypeChangeVisable(){
+	  if(this.companyTabsId == 0){
+		//处理惠正
+		
+	  }else if(this.companyTabsId == 1){
+		//处理智明业务输入框是否显示
+		if(this.form.projType>=2100 && this.form.projType <2200){
+			//测绘
+			return 1;
+		}else if(this.form.projType>=2200 && this.form.projType <2300){
+			//咨询
+			//对象范围和位置输入框置空
+			this.form.projScope = '';
+			this.form.projLocation = '';
+			return 2;  
+		}  
+	  }else if(this.companyTabsId == 1){
+		//处理汇正
+		
+	  }
+	 
+	  
+	}
   },
 }
 </script>
