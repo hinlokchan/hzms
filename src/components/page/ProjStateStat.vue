@@ -88,14 +88,29 @@ export default {
       tableData: [],
       missionDetailData: [],
       detailVisible: false,
+	  
+	  //211028变动 新增: 多个公司切换
+	  companyId:'',
+	  companyRange:['HZ', 'ZM','HZKJ'],
     };
   },
   created() {
+	//211028变动 新增: 多个公司切换
+	const value = localStorage.getItem('companyId');
+	if(value){
+		this.companyId = value;
+		//this.companyTabsId = this.companyRange.indexOf(this.companyId);
+	}else{
+		this.companyId = this.companyRange[0];
+		//this.companyTabsId = 0;
+	}
+	//console.log('初始化公司id', this.companyId);      
+	  
     this.getAll()
   },
   methods: {
     getAll() {
-      getAllMission()
+      getAllMission({}, this.companyId)
         .then(res => {
           this.tableData = res.data;
           console.log(this.tableData);
@@ -105,7 +120,7 @@ export default {
         });
     },
     missionDetail(val) {
-      getUserDetailMission({staffId: val})
+      getUserDetailMission({staffId: val}, this.companyId)
         .then(res => {
           this.missionDetailData = res.data
           console.log(this.missionDetailData)
