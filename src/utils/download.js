@@ -27,6 +27,10 @@ export function downloadExcel(formData, path) {
     var oReq = new XMLHttpRequest()
     // url参数为拿后台数据的接口
     oReq.open('POST', ProManageAPIServer + path, true)
+	
+	//211101变动 新增: 多个公司切换
+	oReq.setRequestHeader('companyId',this.companyId)
+	
     oReq.responseType = 'blob'
     oReq.onload = function (oEvent) {
         var content = oReq.response
