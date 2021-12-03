@@ -58,6 +58,8 @@
               </el-table-column>
               <el-table-column
                   label="已派发人员"
+				  align="center"
+				  min-width="150px"
               >
 				<template slot-scope="scope">
 					{{deliveredFieldSurvey}}
@@ -178,9 +180,24 @@ export default {
 		projName:'',
 		projScope:'',
 	  },
+	  
+	  //211028变动 新增: 多个公司切换
+	  companyId:'',
+	  companyRange:['HZ', 'ZM','HZKJ'],
     };
   },
   created() {
+	//211028变动 新增: 多个公司切换
+	const value = localStorage.getItem('companyId');
+	if(value){
+		this.companyId = value;
+		//this.companyTabsId = this.companyRange.indexOf(this.companyId);
+	}else{
+		this.companyId = this.companyRange[0];
+		//this.companyTabsId = 0;
+	}
+	//console.log('初始化公司id', this.companyId);  
+	  
     getUserList().then(
         res => {
           this.staffList = res.data
@@ -248,7 +265,11 @@ export default {
 
       this.loading = true
 
-      getEvalObjListByProjId(row.projId).then(
+	  
+	  const getObjData = {
+	  	projId: row.projId
+	  }			
+	  getEvalObjListByProjId(getObjData, this.companyId).then(
           res => {
             console.log(res.data);
             this.evalObj = res.data
@@ -261,7 +282,7 @@ export default {
           }
       );
 	  //211029变动, 修复: surveySurveyors未定义的bug
-      this.deliveredFieldSurvey = this.surveyDataMap[row.projId]?this.surveyDataMap[row.projId].surveySurveyors:'';
+      this.deliveredFieldSurvey = this.surveyDataMap[row.projId]?this.surveyDataMap[row.projId].surveySurveyors:'未派发';
     },
     rowClick(row,index) {
       this.$refs.refTable.toggleRowExpansion(row)
@@ -332,20 +353,21 @@ export default {
 
     },
     arraySpan({ row, column, rowIndex, columnIndex }){
-	  if (columnIndex === 3) {
-        if (rowIndex % 2 === 0) {
-          return {
-            rowspan: row.length+1,
-            colspan: 1
-          };
-        } else {
-          return {
-            rowspan: 0,
-            colspan: 0
-          };
-        }
-      }
+    	if (columnIndex === 3) {
+    	  if (rowIndex === 0) {
+    	    return {
+    	      rowspan: 10,
+    	      colspan: 1
+    	    };
+    	  } else{
+    	    return {
+    	      rowspan: 0,
+    	      colspan: 0
+    	    };
+    	  }
+    	} 
     },
+	
 	
 	//211029变动 新增: 云查勘本地搜索功能
 	getData(){
