@@ -245,10 +245,25 @@ export default {
             data: [74, 118, 200, 235, 90]
           }
         ]
-      }
+      },
+	  
+	  //211028变动 新增: 多个公司切换
+	  companyId:'',
+	  companyRange:['HZ', 'ZM','HZKJ'],
     }
   },
   created() {
+	//211028变动 新增: 多个公司切换
+	const value = localStorage.getItem('companyId');
+	if(value){
+		this.companyId = value;
+		//this.companyTabsId = this.companyRange.indexOf(this.companyId);
+	}else{
+		this.companyId = this.companyRange[0];
+		//this.companyTabsId = 0;
+	}
+	//console.log('初始化公司id', this.companyId);    
+		  
     this.touchAPI()
     this.getCurrent()
   },
@@ -285,7 +300,7 @@ export default {
         .catch(err => { })
     },
     getCurrent() {
-      getCurrentMission()
+      getCurrentMission({}, this.companyId)
         .then(res => {
           this.missionData = res.data
           console.log(this.missionData)
