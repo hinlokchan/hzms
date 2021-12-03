@@ -70,7 +70,7 @@
             <el-input
               ref="clientName"
               v-model.trim="clientForm.clientName"
-              @blur="checkClientName(clientForm.clientName)"
+              @input="checkClientName(clientForm.clientName)"
             ></el-input>
             <h4 style="color: #ed1941">银行委托人添加格式:类别选择银行名称，名称填写分（支）行名字</h4>
             <h4>例:中国银行惠州分行 -> 类别选择中国银行，名称填写惠州分行</h4>
@@ -94,9 +94,9 @@
 	  
 	  <!-- 211029变动 新增: 多个公司切换 -->
 	  <el-tabs v-model="companyId" type="card" @tab-click="handleTabsClick">
-	    <el-tab-pane label="惠正公司" name="huizheng" :disabled="tabsDisable"></el-tab-pane>
-	    <el-tab-pane label="智明公司" name="zhiming" :disabled="tabsDisable"></el-tab-pane>
-	    <el-tab-pane label="汇正公司" name="kuaiji" :disabled="tabsDisable"></el-tab-pane>
+	    <el-tab-pane label="惠正公司" name="HZ" :disabled="tabsDisable"></el-tab-pane>
+	    <el-tab-pane label="智明公司" name="ZM" :disabled="tabsDisable"></el-tab-pane>
+	    <el-tab-pane label="汇正公司" name="HZKJ" :disabled="tabsDisable"></el-tab-pane>
 	  </el-tabs>
 	  
 	  
@@ -274,11 +274,10 @@
             </el-col>
             <el-col :span="6">
               <el-form-item
-				clearable
                 label="产权持有人  "
                 prop="incumbrancer"
               >
-                <el-input v-model="form.incumbrancer"></el-input>
+                <el-input v-model="form.incumbrancer" clearable></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -299,12 +298,25 @@
                 prop="projName"
                 class="red-item"
               >
+				<!-- 
                 <el-input
                   v-model="form.projName"
                   type="textarea"
                   autosize
                   maxlength="240"
                 ></el-input>
+				 -->
+				<el-autocomplete
+				  class="input-select"
+                  type="textarea"
+                  autosize
+				  v-model="form.projName"
+				  :fetch-suggestions="projNameQuerySearch"
+				  :trigger-on-focus="false"
+				  :popper-append-to-body="false"
+				  @select="projNameSelect"
+				  clearable 
+				></el-autocomplete>
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -325,12 +337,25 @@
                 prop="projScope"
                 class="red-item"
               >
+				<!-- 
                 <el-input
                   v-model="form.projScope"
                   type="textarea"
                   autosize
                   maxlength="240"
                 ></el-input>
+				 -->
+				<el-autocomplete
+				  class="input-select"
+                  type="textarea"
+                  autosize
+				  v-model="form.projScope"
+				  :fetch-suggestions="projScopeQuerySearch"
+				  :trigger-on-focus="false"
+				  :popper-append-to-body="false"
+				  @select="projScopeSelect"
+				  clearable 
+				></el-autocomplete>
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -773,7 +798,7 @@
         </el-form>
       </div>
 	  
-<!-- =========================智明测绘========================= -->
+<!-- =========================智明========================= -->
       <div class="form-box"
 	  v-if="companyTabsId == 1">
         <div class="form-item-title" style="width: 120px;">
@@ -815,7 +840,7 @@
               </el-form-item>
             </el-col>
 			
-			<!-- 
+			
             <el-col :span="6">
               <el-form-item label="轮序/安排"
                 class="purple-item">
@@ -836,7 +861,7 @@
                 </el-select>
               </el-form-item>
             </el-col>
-			 -->
+			
 			
 			<!-- 接洽为公司时, 委托人禁用 -->
             <el-col :span="6">
@@ -893,7 +918,7 @@
           <el-row :gutter="20">
             <el-col :span="6">
               <el-form-item
-                label="委托人"
+                label="委托方"
                 prop="clientName"
                 class="red-item"
               >
@@ -940,12 +965,12 @@
             </el-col>
 			
             <el-col :span="6">
-              <el-form-item label="委托人联系人">
+              <el-form-item label="委托方联系人">
                 <el-input v-model="form.clientContact" clearable></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="委托人联系人电话">
+              <el-form-item label="委托方联系人电话">
                 <el-input v-model="form.clientContactInfo" clearable></el-input>
               </el-form-item>
             </el-col>
@@ -957,12 +982,25 @@
                 prop="projName"
                 class="red-item"
               >
+			    <!-- 
                 <el-input
                   v-model="form.projName"
                   type="textarea"
                   autosize
                   maxlength="240"
                 ></el-input>
+				 -->
+				<el-autocomplete
+				  class="input-select"
+				  type="textarea"
+				  autosize
+				  v-model="form.projName"
+				  :fetch-suggestions="projNameQuerySearch"
+				  :trigger-on-focus="false"
+				  :popper-append-to-body="false"
+				  @select="projNameSelect"
+				  clearable 
+				></el-autocomplete>
               </el-form-item>
             </el-col>
 			
@@ -1005,40 +1043,57 @@
 			 -->
 			
 			<el-col :span="6">
-			  <el-form-item label="现勘联系人">
+			  <el-form-item 
+			  :label="onProjTypeChangeVisable() == 1?'测绘联系人':'咨询联系人'"
+			  >
 			    <el-input v-model="form.fldSrvyContact" clearable></el-input>
 			  </el-form-item>
 			</el-col>
 			<el-col :span="6">
-			  <el-form-item label="现勘联系人电话">
+			  <el-form-item 
+			  :label="onProjTypeChangeVisable() == 1?'测绘联系人电话':'咨询联系人电话'"
+			  >
 			    <el-input v-model="form.fldSrvyContactInfo" clearable></el-input>
 			  </el-form-item>
 			</el-col> 
           </el-row>
           <el-row :gutter="20"
-		  v-if="onProjTypeChangeVisable()"
+		  v-if="onProjTypeChangeVisable() == 1"
 		  >
 			<el-col :span="12">
 			  <el-form-item
 			    label="对象范围"
 			    prop="projScope"
 			  >
+			    <!-- 
 			    <el-input
 			      v-model="form.projScope"
 			      type="textarea"
 			      autosize
 			      maxlength="240"
 			    ></el-input>
+				 -->
+				<el-autocomplete
+				  class="input-select"
+				  type="textarea"
+				  autosize
+				  v-model="form.projScope"
+				  :fetch-suggestions="projScopeQuerySearch"
+				  :trigger-on-focus="false"
+				  :popper-append-to-body="false"
+				  @select="projScopeSelect"
+				  clearable 
+				></el-autocomplete>
 			  </el-form-item>
 			</el-col>  
             
             <el-col :span="12">
               <el-form-item
                 label="对象位置"
-                prop="projLocation"
+                prop="mappingObjLocation"
               >
                 <el-input
-                  v-model="form.projLocation"
+                  v-model="form.mappingObjLocation"
                   type="textarea"
                   autosize
                   maxlength="240"
@@ -1050,9 +1105,10 @@
           <el-row :gutter="20">
             <el-col :span="6">
               <el-form-item
-                label="项目目的"
+                label="测绘目的"
                 prop="assemGoal"
                 class="red-item"
+				v-if="onProjTypeChangeVisable() == 1"
               >
                 <el-select
 				  class="select-width-100"
@@ -1062,7 +1118,28 @@
                   allow-create
                 >
                   <el-option
-                    v-for="item in assemGoalList[companyTabsId]"
+                    v-for="item in assemGoalList[companyTabsId][0]"
+                    :key="item"
+                    :value="item"
+                    :label="item"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item
+                label="咨询目的"
+                prop="assemGoal"
+                class="red-item"
+				v-if="onProjTypeChangeVisable() == 2"
+              >
+                <el-select
+				  class="select-width-100"
+                  v-model="form.assemGoal"
+                  placeholder="请选择"
+                  filterable
+                  allow-create
+                >
+                  <el-option
+                    v-for="item in assemGoalList[companyTabsId][1]"
                     :key="item"
                     :value="item"
                     :label="item"
@@ -1083,7 +1160,7 @@
                 ></el-input>
               </el-form-item>
             </el-col>
-			<!-- 
+			
             <el-col :span="6">
               <el-form-item
                 label="基准日"
@@ -1099,11 +1176,11 @@
                 ></el-date-picker>
               </el-form-item>
             </el-col>
-			 -->
+			
 			
             <el-col :span="6">
               <el-form-item
-                label="计划现勘日期"
+                :label="onProjTypeChangeVisable() == 1?'计划测绘日期':'计划咨询日期'"
                 prop="fldSrvySchedule"
                 class="red-item"
               >
@@ -1199,7 +1276,9 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="项目报价收费">
+              <el-form-item 
+			  :label="onProjTypeChangeVisable() == 1?'测绘报价收费':'咨询报价收费'"
+			  >
                 <el-input
 				  clearable
                   v-model="form.assemFeeQuote"
@@ -1347,6 +1426,7 @@
                 添加
               </el-form-item>
             </el-col>
+			<!-- 
             <el-col :span="6">
               <el-form-item
                 v-for="(item, index) in form.projProReviewer"
@@ -1354,10 +1434,6 @@
                 :key="index"
               >
                 <div class="flexBox">
-                  <!-- <el-input
-                    style="width:90%"
-                    v-model="item.value"
-                  ></el-input> -->
                   <el-autocomplete
 					clearable
                     v-model="item.value"
@@ -1372,13 +1448,6 @@
                   ></i>
                 </div>
               </el-form-item>
-<!--              <el-form-item>-->
-<!--                <i-->
-<!--                  class="el-icon-lx-roundadd"-->
-<!--                  style="font-size: 26px;color:#b5b5b5"-->
-<!--                  @click="addDomain(2)"-->
-<!--                ></i>-->
-<!--              </el-form-item>-->
               <el-form-item v-if="userRole<3">
                 <el-button type="primary" icon="el-icon-plus" circle
                            @click="addDomain(2)"
@@ -1387,6 +1456,7 @@
                 添加
               </el-form-item>
             </el-col>
+			 -->
             <el-col :span="6">
               <el-form-item
                 v-for="(item, index) in form.projAsst"
@@ -1427,12 +1497,10 @@
                 添加
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-row :gutter="20">
             <el-col :span="6">
               <el-form-item
                 v-for="(item, index) in form.fieldSrvy"
-                :label="'现场勘查' + (index + 1)"
+			    :label="onProjTypeChangeVisable() == 1?'现场测绘' + (index + 1):'现场咨询' + (index + 1)"
                 :key="index"
               >
                 <div class="flexBox">
@@ -1482,14 +1550,706 @@
         </el-form>
       </div>	  
 	  
-	  
+<!-- =========================汇正========================= -->
+      <div class="form-box"
+	  v-if="companyTabsId == 2">
+        <div class="form-item-title" style="width: 120px;">
+          <h3>汇正项目信息</h3>
+        </div>
+        <el-form
+          ref="ruleForm"
+          :model="form"
+          label-width="125px"
+          :rules="rules[companyTabsId]"
+        >
+          <el-row :gutter="20">
+            <el-col :span="6">
+              <el-form-item
+                :span="6"
+                label="项目类型"
+                prop="projType"
+                class="red-item"
+              >
+                <el-select
+				  class="select-width-100"
+                  v-model="form.projType"
+                  @change="arrgTypeToEnable"
+                  v-if="!this.isEdit"
+                >
+                  <el-option
+                    v-for="item in projTypeOption[companyTabsId]"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  >
+                  </el-option>
+                </el-select>
+                <el-input disabled type="text"
+                          style="width: 50%"
+                          v-if="this.isEdit"
+                          v-model="projTypes[companyTabsId][form.projType]"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+			<!-- 
+            <el-col :span="6">
+              <el-form-item label="轮序/安排">
+                <el-select
+				  class="select-width-100"
+                  v-model="form.arrgType"
+                  placeholder="请选择"
+                  :disabled="userRole>2"
+                >
+                  <el-option
+                    label="轮序"
+                    value="1001"
+                  ></el-option>
+                  <el-option
+                    label="安排"
+                    value="1002"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+			 -->
+            <el-col :span="6">
+              <el-form-item label="接洽类型">
+                <el-select 
+				  class="select-width-100"
+				  v-model="form.projContactType" :disabled="userRole>2">
+                  <el-option
+                    v-for="item in contactTypeOption[companyTabsId]"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                  >
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item
+                v-for="(item, index) in form.projContact"
+                :label="'接洽人' + (index + 1)"
+                :key="index"
+                prop="projContact"
+              >
+                <div class="flexBox">
+                  <!-- <el-input
+                    style="width:90%"
+                    v-model="item.value"
+                  ></el-input> -->
+                  <el-autocomplete
+				    clearable
+                    v-model="item.value"
+                    :fetch-suggestions="querySearch"
+                    :disabled="userRole>2"
+                  ></el-autocomplete>
+                  <i
+                    class="el-icon-lx-roundclose"
+                    style="margin: 6px 0 0 0;font-size: 20px;color:#b5b5b5"
+                    @click.prevent="removeDomain(index, 5)"
+                    v-if="userRole<3"
+                  ></i>
+                </div>
+              </el-form-item>
+              <el-form-item v-if="userRole<3">
+                <el-button type="primary" icon="el-icon-plus" circle
+                           @click="addDomain(5)"
+                >
+                </el-button>
+                添加
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="6">
+              <el-form-item
+                label="委托方"
+                prop="clientName"
+                class="red-item"
+              >
+                <el-cascader
+                  v-if="!clientInputTypeChange && userRole<3"
+                  ref="cascaderAddr"
+                  :show-all-levels="false"
+                  v-model="form.clientId"
+                  :options="clientList"
+                  :props="{ expandTrigger: 'hover' }"
+                  style="width: 85%"
+                  filterable
+                >
+                </el-cascader>
+                <el-input
+                  v-if="clientInputTypeChange || userRole>2"
+                  :disabled="true"
+                  style="width: 90%"
+                  v-model="form.clientName"
+                ></el-input>
+                <el-button
+                  type="text"
+                  icon="el-icon-refresh-right"
+                  style="width: 10%"
+                  v-if="userRole<3"
+                  @click="resetClientName()"
+                ></el-button>
+                <el-button
+                  type="text"
+                  @click="showAddClientDialog"
+                  v-if="userRole<3"
+                >新增</el-button>
+                <el-button
+                  type="text"
+                  @click="setUnconfirmClient()"
+                  v-if="userRole<3"
+                >待定</el-button>
+              </el-form-item>
+              <!-- <el-form-item
+                label="委托人"
+                prop="clientName"
+                v-if="clientInputTypeChange == false"
+                class="red-item"
+              >
+                <el-input
+                  :disabled="true"
+                  style="width: 90%"
+                  placeholder="待定"
+                ></el-input>
+                <el-button
+                  type="text"
+                  icon="el-icon-refresh-right"
+                  style="width: 10%"
+                  @click="resetClientName()"
+                ></el-button>
+              </el-form-item> -->
+
+            </el-col>
+			<!-- 
+            <el-col :span="6">
+              <el-form-item
+				clearable
+                label="产权持有人  "
+                prop="incumbrancer"
+              >
+                <el-input v-model="form.incumbrancer"></el-input>
+              </el-form-item>
+            </el-col>
+			 -->
+            <el-col :span="6">
+              <el-form-item label="委托方联系人">
+                <el-input v-model="form.clientContact" clearable></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="委托方联系人电话">
+                <el-input v-model="form.clientContactInfo" clearable></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="12">
+              <el-form-item
+                label="项目名称"
+                prop="projName"
+                class="red-item"
+              >
+			    <!-- 
+                <el-input
+                  v-model="form.projName"
+                  type="textarea"
+                  autosize
+                  maxlength="240"
+                ></el-input>
+				 -->
+				<el-autocomplete
+				  class="input-select"
+				  type="textarea"
+				  autosize
+				  v-model="form.projName"
+				  :fetch-suggestions="projNameQuerySearch"
+				  :trigger-on-focus="false"
+				  :popper-append-to-body="false"
+				  @select="projNameSelect"
+				  clearable 
+				></el-autocomplete>
+              </el-form-item>
+            </el-col>
+			<!-- 
+            <el-col :span="6">
+              <el-form-item label="引荐人">
+                <el-input v-model="form.projReferer" clearable></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="引荐人电话">
+                <el-input v-model="form.projRefererInfo" clearable></el-input>
+              </el-form-item>
+            </el-col>
+			 -->
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="12">
+              <el-form-item
+                label="被审计单位"
+                prop="projScope"
+                class="red-item"
+              >
+			    <!-- 
+                <el-input
+                  v-model="form.projScope"
+                  type="textarea"
+                  autosize
+                  maxlength="240"
+                ></el-input>
+				 -->
+				<el-autocomplete
+				  class="input-select"
+				  type="textarea"
+				  autosize
+				  v-model="form.projScope"
+				  :fetch-suggestions="projScopeQuerySearch"
+				  :trigger-on-focus="false"
+				  :popper-append-to-body="false"
+				  @select="projScopeSelect"
+				  clearable 
+				></el-autocomplete>
+              </el-form-item>
+            </el-col>
+			<el-col :span="6">
+			  <el-form-item label="被审计联系人">
+			    <el-input v-model="form.fldSrvyContact" clearable></el-input>
+			  </el-form-item>
+			</el-col>
+			<el-col :span="6">
+			  <el-form-item label="被审计联系人电话">
+			    <el-input v-model="form.fldSrvyContactInfo" clearable></el-input>
+			  </el-form-item>
+			</el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="6">
+              <el-form-item
+                label="审计目的"
+                prop="assemGoal"
+                class="red-item"
+              >
+                <el-select
+				  class="select-width-100"
+                  v-model="form.assemGoal"
+                  placeholder="请选择"
+                  filterable
+                  allow-create
+                >
+                  <el-option
+                    v-for="item in assemGoalList[companyTabsId]"
+                    :key="item"
+                    :value="item"
+                    :label="item"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="计划完成天数">
+                <el-input
+				  type="number"
+				  clearable
+                  v-model="form.compSchedule"
+                  :min="1"
+                  label="完成天数"
+                  :disabled="userRole>2"
+                  oninput="value=value.replace(/[^\d.]/g,'')"
+				  
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item
+                label="基准日"
+                prop="baseDate"
+                class="red-item"
+              >
+                <el-date-picker
+                  type="date"
+                  placeholder="选择日期"
+                  v-model="form.baseDate"
+                  value-format="yyyy-MM-dd"
+                  style="width: 100%;"
+                ></el-date-picker>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item
+                label="计划审计日期"
+                prop="fldSrvySchedule"
+                class="red-item"
+              >
+                <el-date-picker
+                  type="date"
+                  placeholder="选择日期"
+                  v-model="form.fldSrvySchedule"
+                  value-format="yyyy-MM-dd"
+                  style="width: 100%;"
+                ></el-date-picker>
+              </el-form-item>
+            </el-col>
+            <!-- <el-col :span="6">
+              <el-form-item
+                label="编制日期"
+                prop="projDate"
+                class="red-item"
+              >
+                <el-date-picker
+                  type="date"
+                  placeholder="选择日期"
+                  v-model="form.projDate"
+                  value-format="yyyy-MM-dd"
+                  style="width: 100%;"
+                ></el-date-picker>
+              </el-form-item>
+            </el-col> -->
+          </el-row>
+          <el-row :gutter="20">
+            <el-divider></el-divider>
+            <el-col :span="6">
+              <el-form-item label="新/重评">
+                <el-select
+				  class="select-width-100"
+                  v-model="form.newOldType"
+                  placeholder="请选择"
+                  :disabled="userRole>2"
+                >
+                  <el-option
+                    label="新项目"
+                    value="1001"
+                  ></el-option>
+                  <el-option
+                    label="重评项目"
+                    value="1002"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="紧急程度">
+                <el-select
+				  class="select-width-100"
+                  v-model="form.projDegree"
+                  placeholder="请选择"
+                  :disabled="userRole>2"
+                >
+                  <el-option
+                    label="正常"
+                    value="1001"
+                  ></el-option>
+                  <el-option
+                    label="紧急"
+                    value="1002"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="风险预测">
+                <el-select 
+				  class="select-width-100"
+				  v-model="form.riskProfile" :disabled="userRole>2">
+                  <el-option
+                    label="低"
+                    value="1001"
+                  ></el-option>
+                  <el-option
+                    label="中等"
+                    value="1002"
+                  ></el-option>
+                  <el-option
+                    label="较高"
+                    value="1003"
+                  ></el-option>
+                  <el-option
+                    label="高"
+                    value="1004"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="审计报价收费">
+                <el-input
+				  clearable
+                  v-model="form.assemFeeQuote"
+                  oninput="value=value.replace(/[^\d.]/g,'')"
+                  :disabled="userRole>2"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="补充说明">
+                <el-input
+                  type="textarea"
+                  autosize
+                  v-model="form.supInstruction"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20"
+                  v-if="this.form.projType === '1010' && !this.isEdit "
+          >
+            <el-col>
+              <div class="form-item-title">
+                <h3>估价对象</h3>
+              </div>
+            </el-col>
+            <el-col :span="6">
+                <el-form-item
+                    v-for="(item, index) in form.evalObjArray"
+                    :label="'估价对象' + (index + 1)"
+                    :key="index"
+                >
+                  <div class="flexBox">
+                    <el-input
+                        v-model="item.evalObjName"
+                        placeholder=""
+                    ></el-input>
+                    <i
+                        class="el-icon-lx-roundclose"
+                        style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5"
+                        @click.prevent="removeDomain(index, 6)"
+                    ></i>
+                  </div>
+                </el-form-item>
+              <el-form-item>
+                <el-button type="primary" icon="el-icon-plus" circle
+                           @click="addDomain(6)"
+                >
+                </el-button>
+                添加
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col>
+              <div class="form-item-title">
+                <h3>项目组成员</h3>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="项目负责人">
+                <el-autocomplete
+				  clearable
+                  v-model="form.projLeader"
+                  :fetch-suggestions="querySearch"
+                  :disabled="userRole>2"
+                ></el-autocomplete>
+              </el-form-item>
+            </el-col>
+            <el-col
+              :span="6"
+              v-if="this.form.projType == 1090"
+            >
+              <el-form-item label="总审">
+                <el-input v-model="form.finalReview" :disabled="userRole>2"></el-input>
+              </el-form-item>
+            </el-col>
+            <!-- </el-row>
+          <el-row :gutter="20"> -->
+            <!-- <el-col :span="6">
+              <el-form-item
+                v-for="(item, index) in form.projContact"
+                :label="'接洽人' + (index + 1)"
+                :key="index"
+                prop="projContact"
+              >
+                <div class="flexBox">
+                  <el-input
+                    style="width:90%"
+                    v-model="item.value"
+                  ></el-input><i
+                    class="el-icon-lx-roundclose"
+                    style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5"
+                    @click.prevent="removeDomain(index, 5)"
+                  ></i>
+                </div>
+              </el-form-item>
+              <el-form-item>
+                <i
+                  class="el-icon-lx-roundadd"
+                  style="font-size: 26px;color:#b5b5b5"
+                  @click="addDomain(5)"
+                ></i>
+              </el-form-item>
+            </el-col> -->
+            <el-col :span="6">
+              <el-form-item
+                v-for="(item, index) in form.projReviewer"
+                :label="'项目复核人' + (index + 1)"
+                :key="index"
+              >
+                <div class="flexBox">
+                  <!-- <el-input
+                    style="width:90%"
+                    v-model="item.value"
+                  ></el-input> -->
+                  <el-autocomplete
+					clearable
+                    v-model="item.value"
+                    :fetch-suggestions="querySearch"
+                    :disabled="userRole>2"
+                  ></el-autocomplete>
+                  <i
+                    class="el-icon-lx-roundclose"
+                    style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5"
+                    @click.prevent="removeDomain(index, 1)"
+                    v-if="userRole<3"
+                  ></i>
+                </div>
+              </el-form-item>
+<!--              <el-form-item>-->
+<!--                <i-->
+<!--                  class="el-icon-lx-roundadd"-->
+<!--                  style="font-size: 26px;color:#b5b5b5"-->
+<!--                  @click="addDomain(1)"-->
+<!--                ></i>-->
+<!--              </el-form-item>-->
+              <el-form-item v-if="userRole<3">
+                <el-button type="primary" icon="el-icon-plus" circle
+                           @click="addDomain(1)"
+                >
+                </el-button>
+                添加
+              </el-form-item>
+            </el-col>
+			<!-- 
+            <el-col :span="6">
+              <el-form-item
+                v-for="(item, index) in form.projProReviewer"
+                :label="'专业复核人' + (index + 1)"
+                :key="index"
+              >
+                <div class="flexBox">
+                  <el-autocomplete
+					clearable
+                    v-model="item.value"
+                    :fetch-suggestions="querySearch"
+                    :disabled="userRole>2"
+                  ></el-autocomplete>
+                  <i
+                    class="el-icon-lx-roundclose"
+                    style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5"
+                    @click.prevent="removeDomain(index, 2)"
+                    v-if="userRole<3"
+                  ></i>
+                </div>
+              </el-form-item>
+              <el-form-item v-if="userRole<3">
+                <el-button type="primary" icon="el-icon-plus" circle
+                           @click="addDomain(2)"
+                >
+                </el-button>
+                添加
+              </el-form-item>
+            </el-col>
+			 -->
+            <el-col :span="6">
+              <el-form-item
+                v-for="(item, index) in form.projAsst"
+                :label="'项目助理' + (index + 1)"
+                :key="index"
+              >
+                <div class="flexBox">
+                  <!-- <el-input
+                    style="width:90%"
+                    v-model="item.value"
+                  ></el-input> -->
+                  <el-autocomplete
+					clearable
+                    v-model="item.value"
+                    :fetch-suggestions="querySearch"
+                    :disabled="userRole>2"
+                  ></el-autocomplete>
+                  <i
+                    class="el-icon-lx-roundclose"
+                    style="margin: 6px 0 0 5px;font-size: 20px;color:#b5b5b5"
+                    @click.prevent="removeDomain(index, 3)"
+                    v-if="userRole<3"
+                  ></i>
+                </div>
+              </el-form-item>
+<!--              <el-form-item>-->
+<!--                <i-->
+<!--                  class="el-icon-lx-roundadd"-->
+<!--                  style="font-size: 26px;color:#b5b5b5"-->
+<!--                  @click="addDomain(3)"-->
+<!--                ></i>-->
+<!--              </el-form-item>-->
+              <el-form-item v-if="userRole<3">
+                <el-button type="primary" icon="el-icon-plus" circle
+                           @click="addDomain(3)"
+                >
+                </el-button>
+                添加
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item
+                v-for="(item, index) in form.fieldSrvy"
+                :label="'现场审计' + (index + 1)"
+                :key="index"
+              >
+                <div class="flexBox">
+                  <!-- <el-input
+                    style="width:90%"
+                    v-model="item.value"
+                  ></el-input> -->
+                  <el-autocomplete
+					clearable
+                    v-model="item.value"
+                    :fetch-suggestions="querySearch"
+                  ></el-autocomplete>
+                  <i
+                    class="el-icon-lx-roundclose"
+                    style="margin-top: 6px ;font-size: 20px;color:#b5b5b5"
+                    @click.prevent="removeDomain(index, 4)"
+                  ></i>
+                </div>
+              </el-form-item>
+<!--              <el-form-item>-->
+<!--                <i-->
+<!--                  class="el-icon-lx-roundadd"-->
+<!--                  style="font-size: 26px;color:#b5b5b5"-->
+<!--                  @click="addDomain(4)"-->
+<!--                ></i>-->
+<!--              </el-form-item>-->
+              <el-form-item>
+                <el-button type="primary" icon="el-icon-plus" circle
+                           @click="addDomain(4)"
+                >
+                </el-button>
+                添加
+              </el-form-item>
+            </el-col>
+          </el-row>
+		  
+		  <!-- 211026变动 新增: 克隆功能 调整提交按钮样色文字 -->
+          <el-form-item>
+            <el-button
+              :type="newButtonType(isEdit)"
+			  :icon="newButtonIcon(isEdit)"
+              @click="onSubmit"
+            >{{newButtonText(isEdit)}}</el-button>
+            <el-button @click="goBack">取消</el-button>
+            <!-- <el-button @click="test">test</el-button> -->
+          </el-form-item>
+        </el-form>
+      </div>	  
 	  
     </div>
   </div>
 </template>
 
 <script>
-import { createNewProject, editProject,createEvalObj } from '@/api/index'
+import { createNewProject, editProject,createEvalObj, getAllAbstractProject } from '@/api/index'
 import { getDetailProjInfo, getUserList, userQuery, getClientList, addClient } from '@/api/index'
 import clientOptions from '../../../public/clientName.json'
 import projTypeOption from '../../../public/projTypeOption.json'
@@ -1550,7 +2310,7 @@ export default {
         evalObjArray:[],
 		
 		//智明
-		projLocation:'',
+		mappingObjLocation:'',
       },
       backupForm: {},
 	  
@@ -1592,8 +2352,8 @@ export default {
 	    projTypeOption: [],
 	    evalObjArray:[],
 	  		
-	  		//智明
-	  		projLocation:'',
+		//智明
+		mappingObjLocation:'',
 	  },
 	  
 	  
@@ -1640,11 +2400,16 @@ export default {
 	  ],
       assemGoalList: [
 		['抵押', '交易', '资产处置（司法鉴定）', '出让', '挂牌出让', '补出让', '转让', '盘整收回', '征收补偿', '活立木拍卖', '出租', '置换', '股权转让', '作价入股', '增资扩股', '入账', '征收、完税', '企业改制', '清算', '复审', '评价', '咨询'],
-		['采购服务','满意度调查','社会稳定风险评估','税收预测'],
+		[
+			['拆迁补偿测绘','办证测绘','资产入账测绘','资产出租测绘','行政执法测绘','规划设计前期测绘'],
+			['采购服务','满意度调查','社会稳定风险评估','税收预测','可行性研究','项目建议书','财务分析与尽职调查','绩效评价','投资咨询','经济信息咨询','项目论证与评价'],
+		],
+		['财务报表审计','清产核资专项审计','验资','企业所得税汇算清缴纳税调整','固定资产清查','财政资金专项审计','竣工结算专项审计','债券项目收益与融资自求平衡情况评价工作'],
 	  ],
       contactTypeOption: [
 		['正常接洽', '摇珠', '中行通知书', '定点采购', '中介超市', '河源分公司', '政府采购', '招标委托'],
 		['正常接洽', '摇珠', '中行通知书', '定点采购', '中介超市', '惠正公司', '汇正公司', '河源分公司', '政府采购', '招标委托'],
+		['正常接洽', '摇珠', '中行通知书', '定点采购', '中介超市', '惠正公司', '智明公司', '河源分公司', '政府采购', '招标委托'],
       ],
 	  userList: [],
 	  projTypes: [
@@ -1666,24 +2431,27 @@ export default {
 			1100: '其他'
 		  },
 		  {
-			2100: '测绘-测绘航空摄影',
-			2101: '测绘-工程测量',
-			2102: '测绘-界线与不动产测绘',
-			2103: '测绘-地理信息系统工程',
-			2104: '测绘-其他',
-			2200: '咨询-税收预测报告',
-			2201: '咨询-PPP全过程咨询',
-			2202: '咨询-可行性研究报告',
-			2203: '咨询-社会稳定风险评估',
-			2204: '咨询-项目建议书',
-			2205: '咨询-经济评价报告',
-			2206: '咨询-方案咨询',
-			2207: '咨询-其他',
+			2101: '测绘-测绘航空摄影',
+			2102: '测绘-工程测量',
+			2103: '测绘-界线与不动产测绘',
+			2104: '测绘-地理信息系统工程',
+			2105: '测绘-其他',
+			2201: '咨询-税收预测报告',
+			2202: '咨询-PPP全过程咨询',
+			2203: '咨询-可行性研究报告',
+			2204: '咨询-社会稳定风险评估',
+			2205: '咨询-项目建议书',
+			2206: '咨询-经济评价报告',
+			2207: '咨询-方案咨询',
+			2208: '咨询-其他',
 		  },
 		  {
-			3010: '类型1',
-			3020: '类型2',
-			3030: '其他',
+			3010: '会审',
+			3020: '专审',
+			3030: '验资',
+			3040: '咨询',
+			3050: '专评',
+			3060: '税审',
 		  }
 	  ],
       clientTypeOptions: [
@@ -1732,8 +2500,14 @@ export default {
         label: 'label'
       },
 	  
+	  //211130新增 项目名称和项目范围本地搜索
+	  tableData:[],
+	  projNameOptions:[],
+	  projScopeOptions:[],
+	  loading:false,
+	  
 	  //211101变动 新增: 多个公司切换
-	  companyRange:['huizheng', 'zhiming','kuaiji'],
+	  companyRange:['HZ', 'ZM','HZKJ'],
 	  companyId:'',
 	  companyTabsId: 0,
 	  
@@ -1750,8 +2524,10 @@ export default {
 		this.companyId = this.companyRange[0];
 		this.companyTabsId = 0;
 	}
-	console.log('初始化公司id', this.companyId);  
-	  
+	//console.log('初始化公司id', this.companyId);  
+	
+	//211202 处理页面跳转返回
+	this.pageInfoEdit();  
 	  
     this.userRole = localStorage.getItem('role') - 0
     this.getClientList();
@@ -1767,9 +2543,13 @@ export default {
 		this.form.compSchedule = 3;
 		this.initform.compSchedule = 3;
 	  }else if(this.companyTabsId == 1){
-		//智明计划完成天数默认3  
+		//智明计划完成天数默认5 
 		this.form.compSchedule = 5;
 		this.initform.compSchedule = 5;
+	  }else if(this.companyTabsId == 2){
+		//汇正计划完成天数默认15
+		this.form.compSchedule = 15;
+		this.initform.compSchedule = 15;
 	  }
 	  
     } else {
@@ -1791,6 +2571,9 @@ export default {
       })
       .catch(err => { })
     // this.getClientList()
+	
+	//211130新增 项目名称和项目范围本地搜索
+	this.getAllAbstractProjectData();
   },
   
   //211026变动 新增: 克隆功能 计算属性调整提交按钮样色文字
@@ -1825,12 +2608,42 @@ export default {
   },
   
   watch: {
+	/* //包含搜索
     'clientForm.clientName': {
       handler(val) {
         let type = this.searchClientType + val
+		console.log('clientName', type, this.searchClientType);
         this.$refs.tree.filter(type)
       }
     },
+	*/
+	'clientForm.clientName': {
+	  handler(val) {
+		var type = this.searchClientType + val;
+		
+		//211130变动 新增: 关键字模糊搜索
+		var str=type.replace(/[`~!@#$%^&*()_\-+=<>?:"{}|,.\/;'\\[\]·~！@#￥%……&*（）——\-+={}|《》？：“”【】、；‘'，。、]/g,'');
+		var res=[];
+		var key = "";		
+		for(var i=0 ; i<=str.length ;i++){
+		  const newvalue = str.slice(i,i+1); 
+		  if(newvalue.length != 0){
+			if(res.indexOf(newvalue)==-1){
+			  res.push(newvalue);
+			  key+="(?=.*"+newvalue+")";
+			}                
+		  }
+		}
+		if(key){
+			type = eval("/"+key+"^.*/g");
+			// key=eval("/(?=.*关)(?=.*键)(?=.*字)^.*/g")
+		}else{
+			type = '';
+		}
+		
+		this.$refs.tree.filter(type)
+	  }
+	},
     'clientForm.clientType': {
       handler(val) {
         if (val == '') {
@@ -1845,23 +2658,34 @@ export default {
           this.searchClientType = ''
         }
         //this.searchClientType = label
-        console.log(label)
+        console.log('clientType', label)
         this.$refs.tree.filter(label)
       }
     }
   },
   methods: {
+	/* //包含搜索
     filterNode(value, data) {
       if (!value) return true
       return data.label.indexOf(value) !== -1
-    },
+    }, */
+	
+	//模糊搜索
+	filterNode(value, data) {
+	  if(value){
+		return data.label.match(value);
+	  }else{
+		return false
+	  }
+	},
+	
     getClientList() {
 	  //21102变动 新增: 多个公司切换
 	  const clientData = {
-	  	companyId: this.companyId,
+	  	//companyId: this.companyId,
 	  } 	
 		
-      getClientList(clientData)
+      getClientList(clientData, this.companyId)
         .then(res => {
           this.clientList = res.data
         })
@@ -1890,16 +2714,22 @@ export default {
       }
     },
     arrgTypeToEnable(val) {
-      if (val == 1010 || val == 1030) {
-        this.form.arrgType = '1001'
-      } else {
-        this.form.arrgType = '1002'
-      }
+	  if(this.companyTabsId == 0){
+		  if (val == 1010 || val == 1030) {
+			this.form.arrgType = '1001'
+		  } else {
+			this.form.arrgType = '1002'
+		  }
+	  }else if(this.companyTabsId == 1){
+		this.form.assemGoal = '';
+	  }else if(this.companyTabsId == 2){
+	  }
+	  
     },
     closeNewInfo() {
       this.newInfo = false
-      //this.goBack()
-      this.reload()
+      this.goBack()
+      //this.reload()
     },
     formatDate(now) {
       const time = new Date(now)
@@ -1925,7 +2755,7 @@ export default {
       return currentdate;
     },
     getDetail() {
-      getDetailProjInfo({ projId: this.projId }).then(res => {
+      getDetailProjInfo({ projId: this.projId }, this.companyId).then(res => {
         console.log(res.data)
         this.dealEditData(res.data)
         // this.form = res.data
@@ -2109,7 +2939,7 @@ export default {
     },
     onSubmit() {
 	  //211109变动 新增: 多个公司切换
-	  this.form.companyId = this.companyId;
+	  //this.form.companyId = this.companyId;
 	  
 	  //备份已填表格（数组未处理）
 	  this.backupForm = this.form
@@ -2130,10 +2960,14 @@ export default {
 				res => {
 				  console.log('this.form', this.form);
 				  if (this.isEdit) {
-					editProject(this.form)
+					editProject(this.form, this.companyId)
 						.then(res => {
 						  console.log('add>>>res', res);
 						  this.$message.success('提交成功！');
+						  
+						  //211202 处理页面跳转返回, 有新增或修改清除缓存
+						  this.pageInfoDel();
+						  
 						  this.goBack();
 						})
 						.catch(err => {
@@ -2141,9 +2975,13 @@ export default {
 						  console.log('add>>>err', err);
 						});
 				  } else {
-					createNewProject(this.form).then(res => {
+					createNewProject(this.form, this.companyId).then(res => {
 					  console.log('add>>>res', res);
 					  this.$message.success('提交成功！');
+					  
+					  //211202 处理页面跳转返回, 有新增或修改清除缓存
+					  this.pageInfoDel();
+					  
 					  //短信
 					  this.messageAfterSubmit(res)
 					}).catch(err => {
@@ -2330,7 +3168,7 @@ export default {
         this.clientForm.clientType = clientTypeMid
       }
       console.log(this.clientForm)
-      addClient(this.clientForm)
+      addClient(this.clientForm, this.companyId)
         .then(res => {
           this.$message.success('添加成功！')
           let client = res.data
@@ -2366,6 +3204,110 @@ export default {
 		});
 	},
 	
+	
+	//211130变动 新增项目名称和范围本地搜索	
+	getAllAbstractProjectData(){
+		const allData = {
+		}
+		getAllAbstractProject(allData, this.companyId)
+		  .then(res => {
+		    //console.log('获取AllAbstractProject数据')
+		    this.tableData = res.data
+		    //this.pageTotal = res.data.length
+		  })
+		  .catch(err => {
+		    console.log(err);
+		  })
+	},
+		
+	projNameQuerySearch(query, callback) {
+		var str=query.replace(/[ `~!@#$%^&*()_\-+=<>?:"{}|,.\/;'\\[\]·~！@#￥%……&*（）——\-+={}|《》？：“”【】、；‘'，。、]/g,'');
+		
+		if(str){
+		  this.loading = true;
+		  setTimeout(() => {
+			this.loading = false;
+			
+			var res=[];
+			var key = "";
+			
+			for(var i=0 ; i<=str.length ;i++){
+			  const newvalue = str.slice(i,i+1); 
+			  if(newvalue.length != 0){
+				if(res.indexOf(newvalue)==-1){
+				  res.push(newvalue);
+				  key+="(?=.*"+newvalue+")";
+				}                
+			  }
+			}
+			
+			key = eval("/"+key+"^.*/g");
+			
+			//项目类型			
+			this.projNameOptions = this.tableData.filter(item => {
+			  return item.projName.match(key);
+			  // key=eval("/(?=.*关)(?=.*键)(?=.*字)^.*/g")
+			});
+			
+			for(let i of this.projNameOptions){  
+				i.value = i.projNum + " | " + i.projName;
+			}			
+			callback(this.projNameOptions);
+			
+		  }, 10);
+		}else{
+			this.projNameOptions = []; 
+			callback(this.projNameOptions);
+		}
+	},
+	projScopeQuerySearch(query, callback) {
+		var str=query.replace(/[ `~!@#$%^&*()_\-+=<>?:"{}|,.\/;'\\[\]·~！@#￥%……&*（）——\-+={}|《》？：“”【】、；‘'，。、]/g,'');
+		if(str){
+		  this.loading = true;
+		  setTimeout(() => {
+			this.loading = false;
+			
+			var res=[];
+			var key = "";
+			
+			for(var i=0 ; i<=str.length ;i++){
+			  const newvalue = str.slice(i,i+1); 
+			  if(newvalue.length != 0){
+				if(res.indexOf(newvalue)==-1){
+				  res.push(newvalue);
+				  key+="(?=.*"+newvalue+")";
+				}                
+			  }
+			}
+			
+			key = eval("/"+key+"^.*/g");
+			
+			//项目类型			
+			this.projScopeOptions = this.tableData.filter(item => {
+			  return item.projScope.match(key);
+			  // key=eval("/(?=.*关)(?=.*键)(?=.*字)^.*/g")
+			});
+			
+			for(let i of this.projScopeOptions){  
+				i.value = i.projNum + " | " + i.projScope;
+			}			
+			callback(this.projScopeOptions);
+			
+		  }, 10);
+		}else{
+			this.projScopeOptions = []; 
+			callback(this.projScopeOptions);
+		}
+	},
+	
+	projNameSelect(item){
+		this.form.projName = item.projName;
+	},
+	
+	projScopeSelect(item){
+		this.form.projScope = item.projScope;
+	},
+	
 	//211029变动 新增: 多个公司切换
 	handleTabsClick(tab, event) {
 	  //console.log("切换到: ", tab.label, tab.name);
@@ -2377,7 +3319,10 @@ export default {
 	  //2. localStorage 将该公司id存储起来, 其他页面也是显示该公司信息
 	  localStorage.setItem('companyId', tab.name);
 	  console.log('公司id', localStorage.getItem('companyId'));
+	  	  
+	  this.reload();
 	  
+	  /* 
 	  //3. this.getData 重新读取该公司表单数据
 	  //不同公司, 表单默认值差异处理
 	  if(this.companyTabsId == 0){
@@ -2394,6 +3339,13 @@ export default {
 	  
 	  //复制独立新表单
 	  this.form = Object.assign({}, this.initform)
+	  
+	  //清除返回缓存
+	  this.pageInfoDel();
+	  
+	  //重新获取数据
+	  this.getAllAbstractProjectData();
+	  */
 	},
 	onProjContactTypeChange(val){
 	  if(val == '惠正公司' || val == '汇正公司' || val == '河源分公司'){
@@ -2414,20 +3366,31 @@ export default {
 		//处理智明业务输入框是否显示
 		if(this.form.projType>=2100 && this.form.projType <2200){
 			//测绘
-			return true;
-		}else{
+			return 1;
+		}else if(this.form.projType>=2200 && this.form.projType <2300){
 			//咨询
 			//对象范围和位置输入框置空
 			this.form.projScope = '';
-			this.form.projLocation = '';
-			return false;  
+			this.form.mappingObjLocation = '';
+			return 2;  
 		}  
-	  }else if(this.companyTabsId == 1){
+	  }else if(this.companyTabsId == 2){
 		//处理汇正
 		
 	  }
-	 
-	  
+	}, 
+	
+	//211202 处理页面跳转返回
+	pageInfoEdit(){
+		var plan_pageinfo = JSON.parse(sessionStorage.getItem('plan_pageinfo'));
+		if(plan_pageinfo){
+		  plan_pageinfo.status = 1; //更新状态
+		  sessionStorage.setItem('plan_pageinfo', JSON.stringify(plan_pageinfo));
+		}	
+	},
+	pageInfoDel(){
+		sessionStorage.removeItem('plan_pageinfo');
+		sessionStorage.removeItem('workbranch_pageinfo');
 	}
   }
 };
@@ -2473,6 +3436,13 @@ export default {
 
 .select-width-100{
 	width: 100%;
+}
+/*el-autocomplete下拉宽度*/
+.input-select{
+	width: 100%;
+}
+.input-select .el-popper[x-placement^=bottom]{
+	width:1000px !important;
 }
 
 </style>
