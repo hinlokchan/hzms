@@ -22,48 +22,48 @@ const ProManageAPIServer = `${host.baseUrl}/${host.ProManageAPIServer}`;
 //   })
 // }
 
-export function getDayReport(data) {
+export function getDayReport(data, companyId) {
   return request({
     url: `${ProManageAPIServer}statistics/dayReport`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data),
     responseType: 'blob'
   });
 }
 
-export function getWeekReport(data) {
+export function getWeekReport(data, companyId) {
   return request({
     url: `${ProManageAPIServer}statistics/getWeekReport`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data),
     responseType: 'blob'
   });
 }
 
-export function getAllMission(data) {
+export function getAllMission(data, companyId) {
   return request({
     url: `${ProManageAPIServer}statistics/missionLoad/getAll`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data),
   });
 }
 
-export function getUserDetailMission(data) {
+export function getUserDetailMission(data, companyId) {
   return request({
     url: `${ProManageAPIServer}statistics/missionLoad/getDetail`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data),
   });
 }
 
-export function getCurrentMission(data) {
+export function getCurrentMission(data, companyId) {
   return request({
     url: `${ProManageAPIServer}statistics/missionLoad/getCurrentUser`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data),
   });
