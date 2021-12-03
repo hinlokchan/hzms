@@ -210,9 +210,33 @@ export default {
       activeRowData: undefined,
       currentPage: 1,
       totalCount: 0,
-      pageSize: 20
+      pageSize: 20,
+	  
+	  //211028变动 新增: 多个公司切换
+	  companyId:'',
+	  companyRange:['HZ', 'ZM','HZKJ'],
     };
   },
+  
+  created() {
+  	//211028变动 新增: 多个公司切换
+  	const value = localStorage.getItem('companyId');
+  	if(value){
+  		this.companyId = value;
+  		//this.companyTabsId = this.companyRange.indexOf(this.companyId);
+  	}else{
+  		this.companyId = this.companyRange[0];
+  		//this.companyTabsId = 0;
+  	}
+  	//console.log('初始化公司id', this.companyId);    
+  	
+	//211202 处理页面跳转返回
+	if(!this.pageInfoLoad()){
+		this.getData()
+	}
+	
+  },
+  
   methods: {
     handleCurrentChange(val) {
       this.currentPage = val
@@ -244,7 +268,7 @@ export default {
       console.log(index, row);
     },
     submitEdit() {
-      updateContractInfo(this.editForm).then(
+      updateContractInfo(this.editForm, this.companyId).then(
           res => {
             this.$message.success('编辑成功');
             this.dialogFormVisible = false;
@@ -257,7 +281,7 @@ export default {
       ;
     },
     getData() {
-      getContractList(this.searchContent).then(
+      getContractList(this.searchContent, this.companyId).then(
           res => {
             for (let i = 0; i < res.data.length; i++) {
               res.data[i].clientName = res.data[i].clientTypeName + '-' + res.data[i].clientName;
@@ -287,7 +311,7 @@ export default {
       updateExternalContractNum({
         projId: this.activeRowData.projId,
         externalContractNum: this.preExternalContractNum
-      }).then(
+      }, this.companyId).then(
           res => {
             this.$message.success('修改成功');
             this.reload();
@@ -318,11 +342,45 @@ export default {
       this.searchContent.contractNum = ''
 
       this.getData()
-    }
+    },	
+	
+	//211202 处理页面跳转返回
+	pageInfoLoad(){
+		const contract_pageinfo = JSON.parse(sessionStorage.getItem('contract_pageinfo'));
+		if(contract_pageinfo){
+		  if(contract_pageinfo.status){
+			//赋值		
+			this.tableData = contract_pageinfo.data;
+			
+			this.pageTotal = contract_pageinfo.pageData.pageTotal;
+			this.currentPage = contract_pageinfo.pageData.currentPage;
+			this.pageSize = contract_pageinfo.pageData.pageSize;
+			
+			this.searchData = contract_pageinfo.searchData;
+		  }
+		  //删除
+		  sessionStorage.removeItem('contract_pageinfo');
+		  return true;
+		}else{
+		  return false;
+		}
+	},
+	
+	pageInfoSave(){
+	  const contract_pageinfo ={
+		searchData: this.searchData,
+		pageData: {
+			pageTotal: this.pageTotal,
+			currentPage: this.currentPage,
+			pageSize: this.pageSize,
+		},
+		data: this.tableData,
+	    status:0
+	  };
+	  sessionStorage.setItem('contract_pageinfo', JSON.stringify(contract_pageinfo));
+	}
   },
-  created() {
-    this.getData();
-  }
+  
 
 };
 </script>
