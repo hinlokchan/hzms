@@ -48,9 +48,9 @@ export default {
       tableData: [],
 	  
 	  //211101变动 新增: 多个公司切换
-	  companyRange:['huizheng', 'zhiming','kuaiji'],
+	  companyRange:['HZ', 'ZM','HZKJ'],
 	  companyId:'',
-	  companyTabsId: 0,
+	  //companyTabsId: 0,
     }
   },
   created() {
@@ -68,12 +68,13 @@ export default {
     getRecord() {
 	  //211110变动 新增: 多个公司切换
 	  const detailData = {
-	  	companyId: this.companyId,
 	  	projId: this.pId
 	  }
-      opRecord(detailData)
+      opRecord(detailData, this.companyId)
         .then(res => {
-          this.tableData = res.data
+			if(res.data){
+				this.tableData = res.data
+			}
         })
         .catch(err => {
         })
