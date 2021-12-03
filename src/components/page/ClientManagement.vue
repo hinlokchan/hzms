@@ -310,23 +310,38 @@ export default {
       pickedRow: {},
       clientTypeList: [],
       pickedClientType: undefined,
-      editedClientName: ''
+      editedClientName: '',
+	  
+	  //211028变动 新增: 多个公司切换
+	  companyId:'',
+	  companyRange:['HZ', 'ZM','HZKJ'],
     };
   },
   created() {
+	//211028变动 新增: 多个公司切换
+	const value = localStorage.getItem('companyId');
+	if(value){
+		this.companyId = value;
+		//this.companyTabsId = this.companyRange.indexOf(this.companyId);
+	}else{
+		this.companyId = this.companyRange[0];
+		//this.companyTabsId = 0;
+	}
+	//console.log('初始化公司id', this.companyId);    
+	
     this.getClientList()
     this.getClientTypeList()
   },
   methods: {
     getClientTypeList() {
-      getClientTypeList()
+      getClientTypeList({}, this.companyId)
           .then(res => {
             this.clientTypeList = res.data
           });
     },
     doSearch(){
       if (this.searchContent !== '') {
-        getRawClientList({ searchContent: this.searchContent})
+        getRawClientList({ searchContent: this.searchContent}, this.companyId)
             .then(
                 res => {
                   this.rawClientList = res.data;
@@ -343,7 +358,7 @@ export default {
       this.currentPage=val
     },
     getClientList() {
-      getClientList()
+      getClientList({}, this.companyId)
           .then(res => {
             console.log('getClientList RES', res)
             this.clientList = res.data
@@ -352,7 +367,7 @@ export default {
             console.log('getClientList ERROR', err)
           })
 
-      getRawClientList({ searchContent: this.searchContent})
+      getRawClientList({ searchContent: this.searchContent}, this.companyId)
           .then(
               res => {
                 console.log(res)
@@ -380,7 +395,7 @@ export default {
                   this.$message.error('委托人数值错误！')
                   return
                 }
-                transferProj({ clientId: this.pickedRow.clientId, transferToClientId: transferToClientId }).then(
+                transferProj({ clientId: this.pickedRow.clientId, transferToClientId: transferToClientId }, this.companyId).then(
                     res => {
                       this.$message.success('移交成功');
                       this.getClientList()
@@ -407,7 +422,7 @@ export default {
                   this.$message.error('委托人类别数值错误')
                   return
                 }
-                changeClientType({ clientId: this.pickedRow.clientId, toClientType: this.pickedClientType }).then(
+                changeClientType({ clientId: this.pickedRow.clientId, toClientType: this.pickedClientType }, this.companyId).then(
                     res => {
                       this.$message.success('更改委托人类别成功');
                       this.getClientList()
@@ -425,7 +440,7 @@ export default {
       this.$confirm('确认编辑', '提示', { confirmButtonText: '确认提交', cancelButtonText: '取消', type: 'warning' })
           .then(
               () => {
-                editClientName({ clientId: this.pickedRow.clientId, editedClientName: this.editedClientName }).then(
+                editClientName({ clientId: this.pickedRow.clientId, editedClientName: this.editedClientName }, this.companyId).then(
                     res => {
                       this.$message.success('编辑保存成功')
                       this.getClientList()
@@ -466,7 +481,7 @@ export default {
           { confirmButtonText: '确定', cancelButtonText: '取消', type: 'error' })
           .then(
               () => {
-                deleteClient({ clientId: row.clientId }).then(
+                deleteClient({ clientId: row.clientId }, this.companyId).then(
                     res => {
                       this.$message.success('删除成功');
                       this.reload();
