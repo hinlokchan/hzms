@@ -213,6 +213,10 @@ export default {
 
         }
       },
+	  
+	  //211028变动 新增: 多个公司切换
+	  companyId:'',
+	  companyRange:['HZ', 'ZM','HZKJ'],
     };
   },
   watch: {
@@ -231,6 +235,20 @@ export default {
       this.projType = val
     }
   },
+  
+  created() {
+  	//211028变动 新增: 多个公司切换
+  	const value = localStorage.getItem('companyId');
+  	if(value){
+  		this.companyId = value;
+  		//this.companyTabsId = this.companyRange.indexOf(this.companyId);
+  	}else{
+  		this.companyId = this.companyRange[0];
+  		//this.companyTabsId = 0;
+  	}
+  	//console.log('初始化公司id', this.companyId);    
+  },
+  
   methods: {
     onClose() {
       this.$emit('update:show', false);
@@ -293,7 +311,7 @@ export default {
 
     createPostMonthReportNum(nodeValue) {
       let formattedTakenDate = this.$moment(this.takenDate).format('YYYY-MM-DD')
-      getOldReportNum({ projId: this.info.projId , takenDate: formattedTakenDate , reportNumType: nodeValue }).then(
+      getOldReportNum({ projId: this.info.projId , takenDate: formattedTakenDate , reportNumType: nodeValue }, this.companyId).then(
           res => {
             console.log(res);
             this.$message.success('获取成功');
@@ -312,7 +330,7 @@ export default {
     },
 
     createCommonReportNum(nodeValue) {
-      createReportNum({ projId: this.info.projId, reportNumType: nodeValue }).then(
+      createReportNum({ projId: this.info.projId, reportNumType: nodeValue }, this.companyId).then(
           res => {
             console.log(res);
             this.$message.success('获取成功');
