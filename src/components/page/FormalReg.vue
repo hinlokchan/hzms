@@ -62,7 +62,7 @@ export default {
   },
   methods: {
     getData() {
-      searchMyProject()
+      searchMyProject({}, this.companyId)
         .then(res => {
           this.tableData = res.data
           console.log('tableData', this.tableData)
