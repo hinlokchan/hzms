@@ -54,12 +54,11 @@
     </el-dialog>
 
 	<!-- 211028变动 新增: 多个公司切换 -->
-	<el-tabs v-model="companyId" type="card" @tab-click="handleTabsClick">
-	  <el-tab-pane label="惠正公司" name="huizheng"></el-tab-pane>
-	  <el-tab-pane label="智明公司" name="zhiming"></el-tab-pane>
-	  <el-tab-pane label="汇正公司" name="kuaiji"></el-tab-pane>
-	</el-tabs>
-
+	  <el-tabs v-model="companyId" type="card" @tab-click="handleTabsClick">
+	    <el-tab-pane label="惠正公司" name="HZ"></el-tab-pane>
+	    <el-tab-pane label="智明公司" name="ZM"></el-tab-pane>
+	    <el-tab-pane label="汇正公司" name="HZKJ"></el-tab-pane>
+	  </el-tabs>
       <div class="handle-box">
         <el-row :gutter="20">
           <el-col :span="4">
@@ -196,7 +195,7 @@
           width="90"
           align="center"
           :filters="projTypeFilters[companyTabsId]"
-          :filter-method="filterProjType[companyTabsId]"
+          :filter-method="filterProjType"
         >
           <template slot-scope="scope">
 <!--            <span>{{scope.row.projType}}</span>-->
@@ -381,7 +380,183 @@
           width="90"
           align="center"
           :filters="projTypeFilters[companyTabsId]"
-          :filter-method="filterProjType[companyTabsId]"
+          :filter-method="filterProjType"
+        >
+          <template slot-scope="scope">
+<!--            <span>{{scope.row.projType}}</span>-->
+            <span>{{projTypes[companyTabsId][scope.row.projType]}}</span>
+            <el-button type="text" icon="el-icon-refresh" size="mini" @click="handleProjType(scope.row)"></el-button>
+          </template>
+        </el-table-column>
+        <!-- <el-table-column
+          prop="projState"
+          label="项目状态"
+          width="80"
+          align="center"
+        >
+          <template slot-scope="props">
+            <el-tag
+              :type="props.row.projState == '正常' ? 'primary' : 'warning'"
+              effect="dark"
+            >{{ props.row.projState }}</el-tag>
+          </template>
+        </el-table-column> -->
+
+        <el-table-column
+          prop="projDate"
+          :formatter="this.$formatDate"
+          label="编制日期"
+          sortable
+          width="105"
+        ></el-table-column>
+        <el-table-column
+          prop="projNum"
+          label="计划编号"
+          width="115"
+        ></el-table-column>
+        <el-table-column
+          prop="projName"
+          label="项目名称"
+          width="250"
+          :show-overflow-tooltip="true"
+        ></el-table-column>
+        <el-table-column
+          prop="projScope"
+          label="项目范围"
+          width="250"
+          :show-overflow-tooltip="true"
+        ></el-table-column>
+        <el-table-column
+          prop="clientName"
+          label="委托人名称"
+          width="180"
+        ></el-table-column>
+        <el-table-column
+          prop="projLeader"
+          label="项目负责人"
+          width="95"
+        ></el-table-column>
+        <el-table-column
+          prop="projReviewer"
+          label="项目复核人"
+          width="95"
+        ></el-table-column>
+        <el-table-column
+          prop="projAsst"
+          label="项目助理"
+          width="80"
+        ></el-table-column>
+        <!-- <el-table-column
+          prop="projRate"
+          label="项目进度"
+          width="90"
+          align="center"
+        >
+          <el-tag effect="dark">编写报告</el-tag>
+        </el-table-column> -->
+        <el-table-column
+          label="操作"
+          width="250"
+          align="center"
+          fixed="right"
+        >
+          <template slot-scope="scope">
+            <el-button
+              type="text"
+              icon="el-icon-info"
+              size="meduim"
+              @click="handleCheck(scope.row)"
+            >详情</el-button>
+            <el-button
+              type="text"
+              icon="el-icon-edit"
+              size="medium"
+              @click="handleEdit(scope.row)"
+            >编辑</el-button>
+<!--            <el-button-->
+<!--              type="text"-->
+<!--              icon="el-icon-edit"-->
+<!--              size="medium"-->
+<!--              @click="handleProjType(scope.row)"-->
+<!--            >更改项目类型</el-button>-->
+            <el-button
+              type="text"
+              icon="el-icon-delete"
+              class="red"
+              size="medium"
+              @click="handleDelete(scope.row)"
+            >删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+<!-- =========================汇正========================= -->
+	  
+      <!-- table -->
+      <el-table
+        :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+        height="550"
+        stripe
+        border
+        class="table"
+        ref="multipleTable"
+        header-cell-class-name="table-header"
+		v-if="companyTabsId == 2"
+      >
+        <!-- <el-table-column type="expand">
+          <template slot-scope="props">
+            <el-form
+              label-position="left"
+              inline
+              class="demo-table-expand"
+            >
+              <el-form-item label="项目类型">
+                <div
+                  v-for="item in projTypeList"
+                  :key="item.value"
+                >
+                  <span v-if="item.value == props.row.projType">{{ item.label }}</span>
+                </div>
+              </el-form-item>
+              <el-form-item label="项目负责人">
+                <span>{{ props.row.projLeader }}</span>
+              </el-form-item>
+              <el-form-item label="项目复核人">
+                <span>{{ props.row.projReviewer }}</span>
+              </el-form-item>
+              <el-form-item label="专业复核人">
+                <span>{{ props.row.projProReviewer }}</span>
+              </el-form-item>
+              <el-form-item label="项目助理">
+                <span>{{ props.row.projAsst }}</span>
+              </el-form-item>
+            </el-form>
+          </template>
+        </el-table-column> -->
+
+        <!-- <el-table-column
+          prop="projDegree"
+          label="紧急程度"
+          width="80"
+          align="center"
+        >
+          <template slot-scope="props">
+            <el-tag
+              :type="props.row.projDegree == 1001 ? 'success' : 'danger'"
+              effect="dark"
+            >
+              <span v-if="props.row.projDegree == 1001">正常</span>
+              <span v-else>紧急</span>
+            </el-tag>
+          </template>
+        </el-table-column> -->
+        <el-table-column
+          prop="projType"
+          label="项目类型"
+          width="90"
+          align="center"
+          :filters="projTypeFilters[companyTabsId]"
+          :filter-method="filterProjType"
         >
           <template slot-scope="scope">
 <!--            <span>{{scope.row.projType}}</span>-->
@@ -645,24 +820,27 @@ export default {
 			{ text: '其他', value: 1100 },
 		],
 		[
-			{ text: '测绘-测绘航空摄影', value: 2100 },
-			{ text: '测绘-工程测量', value: 2101 },
-			{ text: '测绘-界线与不动产测绘', value: 2102 },
-			{ text: '测绘-地理信息系统工程', value: 2103 },
-			{ text: '测绘-其他', value: 2104 },
-			{ text: '咨询-税收预测报告', value: 2200 },
-			{ text: '咨询-PPP全过程咨询', value: 2201 },
-			{ text: '咨询-可行性研究报告', value: 2202 },
-			{ text: '咨询-社会稳定风险评估', value: 2203 },
-			{ text: '咨询-项目建议书', value: 2204 },
-			{ text: '咨询-经济评价报告', value: 2205 },
-			{ text: '咨询-方案咨询', value: 2206 },
-			{ text: '咨询-其他', value: 2207 },
+			{ text: '测绘-测绘航空摄影', value: 2101 },
+			{ text: '测绘-工程测量', value: 2102 },
+			{ text: '测绘-界线与不动产测绘', value: 2103 },
+			{ text: '测绘-地理信息系统工程', value: 2104 },
+			{ text: '测绘-其他', value: 2105 },
+			{ text: '咨询-税收预测报告', value: 2201 },
+			{ text: '咨询-PPP全过程咨询', value: 2202 },
+			{ text: '咨询-可行性研究报告', value: 2203 },
+			{ text: '咨询-社会稳定风险评估', value: 2204 },
+			{ text: '咨询-项目建议书', value: 2205 },
+			{ text: '咨询-经济评价报告', value: 2206 },
+			{ text: '咨询-方案咨询', value: 2207 },
+			{ text: '咨询-其他', value: 2208 },
 		],
 		[
-			{ text: '类型1', value: 3010 },
-			{ text: '类型2', value: 3020 },
-			{ text: '其他', value: 3030 },
+			{ text: '会审', value: 3010 },
+			{ text: '专审', value: 3020 },
+			{ text: '验资', value: 3030 },
+			{ text: '咨询', value: 3040 },
+			{ text: '专评', value: 3050 },
+			{ text: '税审', value: 3060 },
 		],
       ],
       projTypes: [
@@ -684,24 +862,27 @@ export default {
 			1100: '其他'
 		  },
 		  {
-			2100: '测绘-测绘航空摄影',
-			2101: '测绘-工程测量',
-			2102: '测绘-界线与不动产测绘',
-			2103: '测绘-地理信息系统工程',
-			2104: '测绘-其他',
-			2200: '咨询-税收预测报告',
-			2201: '咨询-PPP全过程咨询',
-			2202: '咨询-可行性研究报告',
-			2203: '咨询-社会稳定风险评估',
-			2204: '咨询-项目建议书',
-			2205: '咨询-经济评价报告',
-			2206: '咨询-方案咨询',
-			2207: '咨询-其他',
+			2101: '测绘-测绘航空摄影',
+			2102: '测绘-工程测量',
+			2103: '测绘-界线与不动产测绘',
+			2104: '测绘-地理信息系统工程',
+			2105: '测绘-其他',
+			2201: '咨询-税收预测报告',
+			2202: '咨询-PPP全过程咨询',
+			2203: '咨询-可行性研究报告',
+			2204: '咨询-社会稳定风险评估',
+			2205: '咨询-项目建议书',
+			2206: '咨询-经济评价报告',
+			2207: '咨询-方案咨询',
+			2208: '咨询-其他',
 		  },
 		  {
-			3010: '类型1',
-			3020: '类型2',
-			3030: '其他',
+			3010: '会审',
+			3020: '专审',
+			3030: '验资',
+			3040: '咨询',
+			3050: '专评',
+			3060: '税审',
 		  }
 	  ],
       projTypeOption: [],
@@ -721,10 +902,9 @@ export default {
 	  
 	  
 	  //211028变动 新增: 多个公司切换	  
-	  companyRange:['huizheng', 'zhiming','kuaiji'],
+	  companyRange:['HZ', 'ZM','HZKJ'],
 	  companyId:'',
 	  companyTabsId: 0,
-	  
     }
   },
   created() {
@@ -737,28 +917,35 @@ export default {
 		this.companyId = this.companyRange[0];
 		this.companyTabsId = 0;
 	}
-	console.log('初始化公司id', this.companyId);
-	  
-    this.getData(this.companyId);
-    this.projTypeOption = projTypeOption
+	//console.log('初始化公司id', this.companyId);
+	
+	//211202 处理页面跳转返回
+	if(!this.pageInfoLoad()){
+		this.getData()
+	}
+	
+	this.projTypeOption = projTypeOption
   },
   mounted() {
   },
   methods: {
     getData() {
+		
+	  /* 
       if (sessionStorage.getItem('page')) {
         this.changePage(parseInt(sessionStorage.getItem('page')))
         sessionStorage.removeItem('page')
       }
-	  
+	  */
+	 
 	  //211029变动 新增: 多个公司切换
-	  const allData = {
-	  	companyId: this.companyId,
-	  } 
-	  
-      getAllAbstractProject(allData)
+	
+	  this.currentPage = 1;
+	  this.tableData = [];
+	  this.pageTotal = 0;
+      getAllAbstractProject({}, this.companyId)
         .then(res => {
-          console.log(res.data)		  
+          //console.log("总数:", res.data.length)		  
           this.tableData = res.data
           this.pageTotal = res.data.length
         })
@@ -774,10 +961,12 @@ export default {
         }
       }
 	  //211029变动 新增: 多个公司切换
-	  newArr['companyId'] = this.companyId;
 	  
-      searchProject(newArr).then(res => {
-        console.log(res)
+	  this.currentPage = 1;
+	  this.tableData = [];
+	  this.pageTotal = 0;
+      searchProject(newArr, this.companyId).then(res => {
+        //console.log(res)
         this.tableData = res.data
         this.pageTotal = res.data.length
       }).catch(err => {
@@ -812,7 +1001,7 @@ export default {
     //   }  
     // },
     changePage(val) {
-      console.log(val)
+      //console.log(val)
       this.currentPage = val
     },
     searchChange() {
@@ -824,17 +1013,23 @@ export default {
     },
     handleRefresh() {
       Object.keys(this.searchData).forEach(key => (this.searchData[key] = ''))
-      console.log(this.searchData)
+      //console.log(this.searchData)
       this.searchProjInfo()
     },
     //新增操作
     handleAdd() {
-      console.log('新增项目事件');
+	  //211202 处理页面跳转返回
+	  this.pageInfoSave();
+		
+      //console.log('新增项目事件');
       this.$router.push('/planform')
     },
     //编辑操作
     handleEdit(val) {
-      sessionStorage.setItem('page', this.currentPage)
+	  //211202 处理页面跳转返回
+	  this.pageInfoSave();
+				  
+      //sessionStorage.setItem('page', this.currentPage)
       this.$router.push({ path: '/planform', query: { data: val.projId } })
     },
     handleProjType(val) {
@@ -863,12 +1058,11 @@ export default {
 		  
 		//211029变动 新增: 多个公司切换
 		const changeData = {
-			companyId: this.companyId,
 			projId: this.changeType.projId,
 			toType: this.changeType.toType,
 		} 
 		  
-        alterProjType(changeData)
+        alterProjType(changeData, this.companyId)
           .then(res => {
             this.$message.success('修改成功');
             this.changeTypeVisible = false;
@@ -881,9 +1075,13 @@ export default {
       }
     },
     //查看详情操作
-    handleCheck(val) {
-      sessionStorage.setItem('page', this.currentPage)
+    handleCheck(val) {	  
+	  //211202 处理页面跳转返回
+	  this.pageInfoSave();
+	  
+      //sessionStorage.setItem('page', this.currentPage)
       // const index2 = (this.currentPage - 1)*10 + index
+	  
       console.log('查看项目详情事件', val.projId);
       this.$router.push({ path: '/projcheck', query: { data: val.projId } })
     },
@@ -897,11 +1095,10 @@ export default {
 			  
 			//211028变动 新增: 多个公司删除项目
 			const delData = {
-				companyId: this.companyId,
 				projId: row.projId,
 			}
             //接口会判断是否有报告号并对应删除
-            delProject(delData).then(res => {
+            delProject(delData, this.companyId).then(res => {
               this.$message.success('删除成功');
               this.getData()
             }).catch(err => {
@@ -982,9 +1179,12 @@ export default {
 	  //211029变动 新增: 多个公司切换
 	  //index.js 写法 url: `${ProManageAPIServer}evalObj/getEvalObjListByProjId?projId=`+data,
 	  //projInfo.projId
-	  const getObjData=projInfo.projId + "&companyId='" + this.companyId +"'"; 
+	  //const getObjData=projInfo.projId + "&companyId='" + this.companyId +"'"; 
+	  const getObjData = {
+	  		projId: projInfo.projId,
+	  };
 	  
-      getEvalObjListByProjId(getObjData).then(
+      getEvalObjListByProjId(getObjData, this.companyId).then(
           res => {
             this.evalObjDrawerData.projInfo = projInfo;
             this.evalObjDrawerData.evalObjList = res.data;
@@ -999,12 +1199,19 @@ export default {
     delEvalObj(row) {
 	  //211029变动 新增: 多个公司切换
 	  //'?evalObjId=' + row.evalObjId
-	  const delObjData ="?evalObjId=" + row.evalObjId + "&companyId='" + this.companyId + "'";
+	  //const delObjData ="?evalObjId=" + row.evalObjId + "&companyId='" + this.companyId + "'";
+	  const delObjData = {
+	  		evalObjId: row.evalObjId,
+	  };
 	  	
-      deleteEvalObjById(delObjData).then(
+	  deleteEvalObjById(delObjData, this.companyId).then(
           res => {
             this.$message.success('删除成功')
-            getEvalObjListByProjId(this.evalObjDrawerData.projInfo.projId).then(
+			
+			const getObjData = {
+				projId: this.evalObjDrawerData.projInfo.projId
+			}			
+            getEvalObjListByProjId(getObjData, this.companyId).then(
                 res => {
                   this.evalObjDrawerData.evalObjList = res.data;
                 }
@@ -1023,9 +1230,8 @@ export default {
       this.newEvalObj.evalObjName = this.evalObjDrawerData.newEvalObj
 	  
 	  //211029变动 新增: 多个公司切换
-	  this.newEvalObj.companyId = this.companyId;
 
-      createSingleEvalObj(this.newEvalObj).then(
+      createSingleEvalObj(this.newEvalObj, this.companyId).then(
           res => {
             console.log(res.data)
             this.evalObjSubmitBtnLoading = false
@@ -1061,9 +1267,45 @@ export default {
 	  console.log('公司id', localStorage.getItem('companyId'));
 	  
 	  //3. this.getData 重新读取该公司项目数据, 重置分页	  
-	  this.currentPage = 1;
-	  this.getData(tab.name); //根据公司id获取对应项目数据
+	  //this.getData(tab.name); //根据公司id获取对应项目数据
+	  this.handleRefresh();
 	 
+	}, 
+	
+	//211202 处理页面跳转返回
+	pageInfoLoad(){
+		const plan_pageinfo = JSON.parse(sessionStorage.getItem('plan_pageinfo'));
+		if(plan_pageinfo){
+		  if(plan_pageinfo.status){
+			//赋值		
+			this.tableData = plan_pageinfo.data;
+			
+			this.pageTotal = plan_pageinfo.pageData.pageTotal;
+			this.currentPage = plan_pageinfo.pageData.currentPage;
+			this.pageSize = plan_pageinfo.pageData.pageSize;
+			
+			this.searchData = plan_pageinfo.searchData;
+		  }
+		  //删除
+		  sessionStorage.removeItem('plan_pageinfo');
+		  return true;
+		}else{
+		  return false;
+		}
+	},
+	
+	pageInfoSave(){
+	  const plan_pageinfo ={
+		searchData: this.searchData,
+		pageData: {
+			pageTotal: this.pageTotal,
+			currentPage: this.currentPage,
+			pageSize: this.pageSize,
+		},
+		data: this.tableData,
+	    status:0
+	  };
+	  sessionStorage.setItem('plan_pageinfo', JSON.stringify(plan_pageinfo));
 	}
   }
 };
