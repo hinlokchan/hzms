@@ -28,64 +28,64 @@ export function logout(data) {
   });
 }
 
-export function touch(data) {
+export function touch(data, companyId) {
   return request({
     url: `${ProManageAPIServer}user/isAuthenticated`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
   });
 }
 
-export function getAllAbstractProject(data) {
+export function getAllAbstractProject(data, companyId) {
   return request({
     url: `${ProManageAPIServer}project/getAllAbstractProjInfoList`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
   });
 }
 
-export function getDetailProjInfo(data) {
+export function getDetailProjInfo(data, companyId) {
   return request({
     url: `${ProManageAPIServer}project/getDetailProjInfo`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
   });
 }
 
-export function searchProject(data) {
+export function searchProject(data, companyId) {
   return request({
     url: `${ProManageAPIServer}project/search`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
   });
 }
 
-export function delProject(data) {
+export function delProject(data, companyId) {
   return request({
     url: `${ProManageAPIServer}project/deleteProject`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
   });
 }
 
-export function createNewProject(data) {
+export function createNewProject(data, companyId) {
   return request({
     url: `${ProManageAPIServer}project/createNewProject`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
   });
 }
 
-export function editProject(data) {
+export function editProject(data, companyId) {
   return request({
     url: `${ProManageAPIServer}project/editProject`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
   });
@@ -94,52 +94,52 @@ export function editProject(data) {
 export function isAuthenticated(data) {
   return request({
     url: `${ProManageAPIServer}user/isAuthenticated`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID')},
     method: 'post',
     data: qs.stringify(data)
   });
 }
 
-export function searchMyProject(data) {
+export function searchMyProject(data, companyId) {
   return request({
     url: `${ProManageAPIServer}project/searchMyProject`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
   });
 }
 
-export function getReportNum(data) {
+export function getReportNum(data, companyId) {
   return request({
     url: `${ProManageAPIServer}project/getReportNum`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
   });
 }
 
-export function createReportNum(data) {
+export function createReportNum(data, companyId) {
   return request({
     url: `${ProManageAPIServer}project/createReportNum`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
   });
 }
 
-export function deleteReportNum(data) {
+export function deleteReportNum(data, companyId) {
   return request({
     url: `${ProManageAPIServer}project/deleteReportNum`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
   });
 }
 
-export function alterProjType(data) {
+export function alterProjType(data, companyId) {
   return request({
     url: `${ProManageAPIServer}project/editProject/alterProjType`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
   });
@@ -148,7 +148,7 @@ export function alterProjType(data) {
 export function getUserList(data) {
   return request({
     url: `${ProManageAPIServer}userManage/getUserList`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID')},
     method: 'post',
     data: qs.stringify(data)
   });
@@ -157,7 +157,7 @@ export function getUserList(data) {
 export function addUser(data) {
   return request({
     url: `${ProManageAPIServer}userManage/addUser`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID')},
     method: 'post',
     data: qs.stringify(data)
   });
@@ -184,52 +184,52 @@ export function alterUserInfo(data) {
 export function alterPassword(data) {
   return request({
     url: `${ProManageAPIServer}user/alterPassword`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID')},
     method: 'post',
     data: qs.stringify(data)
   });
 }
 
-export function getSubReportNum(data) {
+export function getSubReportNum(data, companyId) {
   return request({
     url: `${ProManageAPIServer}project/getSubReportNum`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
   });
 }
 
-export function addSubReportNum(data) {
+export function addSubReportNum(data, companyId) {
   return request({
     url: `${ProManageAPIServer}project/addSubReportNum`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
   });
 }
 
-export function getOldReportNum(data) {
+export function getOldReportNum(data, companyId) {
   return request({
     url: `${ProManageAPIServer}project/createPostMonthReportNum`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
   });
 }
 
-export function setWorkAssignment(data) {
+export function setWorkAssignment(data, companyId) {
   return request({
     url: `${ProManageAPIServer}project/workAssignment`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
   });
 }
 
-export function getWorkAssignment(data) {
+export function getWorkAssignment(data, companyId) {
   return request({
     url: `${ProManageAPIServer}project/getWorkAssignment`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
   });
@@ -239,7 +239,7 @@ export function setOldProject(data) {
   return request({
     url: `${ProManageAPIServer}project/oldProjectInput`,
     headers: {
-      cookie: 'JSESSIONID' + Cookies.get('JSESSIONID'),
+      cookie: 'JSESSIONID' + Cookies.get('JSESSIONID'), 
       'Content-Type': 'application/json'
     },
     method: 'post',
@@ -247,28 +247,28 @@ export function setOldProject(data) {
   });
 }
 
-export function createContractNum(data) {
+export function createContractNum(data, companyId) {
   return request({
     url: `${ProManageAPIServer}project/createContractNum`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
   });
 }
 
-export function updateExternalContractNum(data) {
+export function updateExternalContractNum(data, companyId) {
   return request({
     url: `${ProManageAPIServer}contract/updateExternalContractNum`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
   });
 }
 
-export function deleteContractNum(data) {
+export function deleteContractNum(data, companyId) {
   return request({
     url: `${ProManageAPIServer}contract/deleteContractNum`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
   });
@@ -277,168 +277,170 @@ export function deleteContractNum(data) {
 export function userQuery(data) {
   return request({
     url: `${ProManageAPIServer}userManage/fuzzyQuery`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID')},
     method: 'post',
     data: qs.stringify(data)
   });
 }
 
-export function getClientList(data) {
+export function getClientList(data, companyId) {
   return request({
     url: `${ProManageAPIServer}client/getClientList`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
   });
 }
 
-export function getRawClientList(data) {
+export function getRawClientList(data, companyId) {
   return request({
     url: `${ProManageAPIServer}client/getRawClientList`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
   });
 }
 
-export function getClientTypeList() {
+export function getClientTypeList(data, companyId) {
   return request({
     url: `${ProManageAPIServer}client/getClientTypeList`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'get'
   });
 }
 
-export function addClient(data) {
+export function addClient(data, companyId) {
   return request({
     url: `${ProManageAPIServer}client/addClient`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
   });
 }
 
-export function deleteClient(data) {
+export function deleteClient(data, companyId) {
   return request({
     url: `${ProManageAPIServer}client/deleteClient`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
   });
 }
 
-export function changeClientType(data) {
+export function changeClientType(data, companyId) {
   return request({
     url: `${ProManageAPIServer}client/changeClientType`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
   });
 }
 
-export function editClientName(data) {
+export function editClientName(data, companyId) {
   return request({
     url: `${ProManageAPIServer}client/editClientName`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
   });
 }
 
-export function transferProj(data) {
+export function transferProj(data, companyId) {
   return request({
     url: `${ProManageAPIServer}client/transferProj`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
   });
 }
 
-export function delWorkAssignment(data) {
+export function delWorkAssignment(data, companyId) {
   return request({
     url: `${ProManageAPIServer}project/deleteWorkAssignment`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
   });
 }
 
-export function opRecord(data) {
+export function opRecord(data, companyId) {
   return request({
     url: `${ProManageAPIServer}record/getProjOpRec`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
   });
 }
 
-export function setProjState(data) {
+export function setProjState(data, companyId) {
   return request({
     url: `${ProManageAPIServer}project/updateProjState`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
   });
 }
 
-export function createReportQrCode(data) {
+export function createReportQrCode(data, companyId) {
   return request({
     url: `${ProManageAPIServer}qrCode/createReportQrCode`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
   });
 }
 
-export function getContractList(data) {
+export function getContractList(data, companyId) {
   return request({
     url: `${ProManageAPIServer}contract/getContractList`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
   });
 }
 
-export function updateContractInfo(data) {
+export function updateContractInfo(data, companyId) {
   return request({
     url: `${ProManageAPIServer}contract/updateContractInfo`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
   });
 }
 
-export function createEvalObj(data) {
+export function createEvalObj(data, companyId) {
   return request({
     url: `${ProManageAPIServer}evalObj/createEvalObj`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
   })
 }
 
-export function createSingleEvalObj(data) {
+export function createSingleEvalObj(data, companyId) {
   return request({
     url: `${ProManageAPIServer}evalObj/createSingleEvalObj`,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
   })
 }
 
-export function deleteEvalObjById(data) {
+export function deleteEvalObjById(data, companyId) {
   return request({
-    url: `${ProManageAPIServer}evalObj/deleteEvalObjById` + data,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
-    method: 'post'
+    url: `${ProManageAPIServer}evalObj/deleteEvalObjById`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
+    method: 'post',	
+	data: qs.stringify(data)
   })
 }
 
-export function getEvalObjListByProjId(data) {
+export function getEvalObjListByProjId(data, companyId) {
   return request({
-    url: `${ProManageAPIServer}evalObj/getEvalObjListByProjId?projId=`+data,
-    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') },
-    method: 'post'
+    url: `${ProManageAPIServer}evalObj/getEvalObjListByProjId`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
+    method: 'post',	
+	data: qs.stringify(data)
   })
 }
 
