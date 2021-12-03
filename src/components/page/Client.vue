@@ -39,7 +39,11 @@ export default {
       form: {
         clientName: '',
         clientType: ''
-      }
+      },
+	  
+	  //211028变动 新增: 多个公司切换
+	  companyId:'',
+	  companyRange:['HZ', 'ZM','HZKJ'],
     }
   },
   created() {
@@ -47,7 +51,7 @@ export default {
   },
   methods: {
     getClientList() {
-      getClientList()
+      getClientList({}, this.companyId)
         .then(res => {
           console.log('getClientList RES', res)
           this.clientList = res.data
@@ -57,7 +61,7 @@ export default {
         })
     },
     addClient() {
-      addClient(this.form)
+      addClient(this.form, this.companyId)
         .then(res => {
           console.log('addClient RES', res)
           this.getClientList()
