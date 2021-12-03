@@ -256,16 +256,32 @@ export default {
       multiConClientName: '',
       multiConClientId:[],
       multiConClientType:'',
-      multiConStaffName: ''
+      multiConStaffName: '',
+	  
+	  //211028变动 新增: 多个公司切换
+	  companyId:'',
+	  companyRange:['HZ', 'ZM','HZKJ'],
     }
   },
   created() {
-    getClientList().then(
+	//211028变动 新增: 多个公司切换
+	const value = localStorage.getItem('companyId');
+	if(value){
+		this.companyId = value;
+		//this.companyTabsId = this.companyRange.indexOf(this.companyId);
+	}else{
+		this.companyId = this.companyRange[0];
+		//this.companyTabsId = 0;
+	}
+	//console.log('初始化公司id', this.companyId);    
+	  
+	  
+    getClientList({}, this.companyId).then(
         res => {
           this.clientList = res.data
         }
     );
-    getClientTypeList().then(
+    getClientTypeList({}, this.companyId).then(
         res => {
           this.clientTypeList = res.data
         }
@@ -300,7 +316,11 @@ export default {
       })
       var oReq = new XMLHttpRequest()
       // url参数为拿后台数据的接口
-      oReq.open('POST', ProManageAPIServer + path, true)
+      oReq.open('POST', ProManageAPIServer + path, true)	  
+	  
+	  //211101变动 新增: 多个公司切换
+	  oReq.setRequestHeader('companyId',this.companyId)
+	  
       oReq.responseType = 'blob'
       oReq.onload = function (oEvent) {
         var content = oReq.response
