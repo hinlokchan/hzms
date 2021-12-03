@@ -27,7 +27,7 @@ export default new Router({
                 {
                     path: '/plan',
                     component: () => import('../components/page/Plan.vue'),
-                    meta: { title: '项目管理' , permission: true , keepAlive: true}
+                    meta: { title: '项目管理' , permission: true }
                 },
                 {
                     path: '/planform',
@@ -42,7 +42,7 @@ export default new Router({
                 {
                     path: '/workbranch',
                     component: () => import('../components/page/WorkBranch.vue'),
-                    meta: { title: '工作台' , keepAlive: true}
+                    meta: { title: '工作台' }
                 },
                 {
                     path: '/oldplanform',
@@ -57,7 +57,7 @@ export default new Router({
                 {
                     path: '/projstat',
                     component: () => import('../components/page/ProjStateStat.vue'),
-                    meta: { title: '成员项目状态' , permission: true }
+                    meta: { title: '成员项目状态'  }
                 },
                 {
                     path: '/workhandle',
@@ -72,7 +72,7 @@ export default new Router({
                 {
                     path: '/stat',
                     component: () => import('../components/page/Stat.vue'),
-                    meta: { title: '统计管理' , permission: true }
+                    meta: { title: '统计管理' }
                 },
                 {
                     path: '/stat4Common',
@@ -82,12 +82,12 @@ export default new Router({
                 {
                     path: '/contract',
                     component: () => import('../components/page/ContractManage.vue'),
-                    meta: { title: '合同管理' , permission: true , keepAlive: true}
+                    meta: { title: '合同管理' }
                 },
                 {
                     path: '/casesearchdock',
                     component: () => import('../components/page/CaseSearchDock.vue'),
-                    meta: { title: '案例查询' , keepAlive: true}
+                    meta: { title: '案例查询' }
                 },
                 // {
                 //     path: '/client',
@@ -97,17 +97,17 @@ export default new Router({
                 {
                     path: '/usermanage',
                     component: () => import('../components/page/UserManage.vue'),
-                    meta: { title: '用户管理' , permission: true }
+                    meta: { title: '用户管理' }
                 },
                 {
                     path: '/cloudfieldsurvey',
                     component: () => import('../components/page/CloudFieldSurvey.vue'),
-                    meta: { title: '云现勘' , permission: true }
+                    meta: { title: '云现勘' }
                 },
                 {
                     path: '/clientmanagement',
                     component: () => import('../components/page/ClientManagement.vue'),
-                    meta: { title: '委托人管理' , permission: true }
+                    meta: { title: '委托人管理' }
                 },
                 {
                     path: '/casecheck',
