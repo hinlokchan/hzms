@@ -13,9 +13,9 @@
 	  
 	  <!-- 211028变动 新增: 多个公司切换 -->
 	  <el-tabs v-model="companyId" type="card" @tab-click="handleTabsClick">
-	    <el-tab-pane label="惠正公司" name="huizheng"></el-tab-pane>
-	    <el-tab-pane label="智明公司" name="zhiming"></el-tab-pane>
-	    <el-tab-pane label="汇正公司" name="kuaiji"></el-tab-pane>
+	    <el-tab-pane label="惠正公司" name="HZ"></el-tab-pane>
+	    <el-tab-pane label="智明公司" name="ZM"></el-tab-pane>
+	    <el-tab-pane label="汇正公司" name="HZKJ"></el-tab-pane>
 	  </el-tabs>
 	  
       <el-row :gutter="20">
@@ -57,28 +57,28 @@
         <el-row :gutter="10">
           <el-col :span="4">
             <el-input
-              v-model="searchValProjNum"
+              v-model="searchData.projNum"
               placeholder="计划编号"
               @keyup.enter.native="getData"
             ></el-input>
           </el-col>
           <el-col :span="4">
             <el-input
-              v-model="searchValReportNum"
+              v-model="searchData.reportNum"
               placeholder="报告号"
               @keyup.enter.native="getData"
             ></el-input>
           </el-col>
           <el-col :span="5">
             <el-input
-              v-model="searchValProjName"
+              v-model="searchData.projName"
               placeholder="项目名称"
               @keyup.enter.native="getData"
             ></el-input>
           </el-col>
           <el-col :span="5">
             <el-input
-              v-model="searchValProjScope"
+              v-model="searchData.projScope"
               placeholder="项目范围"
               @keyup.enter.native="getData"
             ></el-input>
@@ -106,7 +106,7 @@
               v-model="onGoing"
               active-text="进行中项目"
               inactive-text="所有项目"
-              @change="getOnGoingProj"
+              @change="getData"
             ></el-switch>
           </el-col>
         </el-row>
@@ -259,10 +259,13 @@ export default {
         projId: '',
         toType: ''
       },
-      searchValProjNum: '',
-      searchValReportNum: '',
-      searchValProjName: '',
-      searchValProjScope: '',
+	  searchData:{
+		projNum: '',
+		reportNum: '',
+		projName: '',
+		projScope: '',  
+	  },
+	  
       midNum: 0,
       date1: '',
       getNumType: 0,
@@ -273,7 +276,7 @@ export default {
 	  
 	  	  
 	  //211028变动 新增: 多个公司切换	  
-	  companyRange:['huizheng', 'zhiming','kuaiji'],
+	  companyRange:['HZ', 'ZM','HZKJ'],
 	  companyId:'',
 	  companyTabsId: 0,
     };
@@ -288,9 +291,13 @@ export default {
 		this.companyId = this.companyRange[0];
 		this.companyTabsId = 0;
 	}
-	console.log('初始化公司id', this.companyId);  
-		  
-    this.getData();
+	//console.log('初始化公司id', this.companyId);  
+	
+	//211202 处理页面跳转返回
+	if(!this.pageInfoLoad()){
+		this.getData()
+	}	
+	
     let date = new Date()
     this.timestamp = date.getTime() - date.getHours()*60*60*1000
     console.log(this.timestamp)
@@ -397,23 +404,33 @@ export default {
       this.typeOptions = selOption;
     },
     getData() {
+	  /* 
       if (sessionStorage.getItem('page')) {
         this.changePage(parseInt(sessionStorage.getItem('page')));
         sessionStorage.removeItem('page');
       }
-	  
+	  */
 	  //211029变动 新增: 多个公司切换
-      searchMyProject({
-        projName: this.searchValProjName,
-        reportNum: this.searchValReportNum,
-        projNum: this.searchValProjNum,
-        projScope: this.searchValProjScope,		
-		conpanyId: this.companyId
-      })
+	  
+	  this.currentPage = 1;
+	  this.tableData=[];
+	  this.pageTotal = 0;
+      searchMyProject(this.searchData, this.companyId)
         .then(res => {
-          this.tableData = res.data;
-          console.log(this.tableData)
-          this.pageTotal = res.data.length;
+			
+		  if(this.onGoing){
+			let arr = []
+			for(let i of res.data) {
+			  if(i.projState == 0) {
+			    arr.push(i)
+			  }
+			}
+			this.tableData = arr;
+			this.pageTotal = arr.length;  
+		  }else{
+			this.tableData = res.data;
+			this.pageTotal = res.data.length;  
+		  }
         })
         .catch(err => {
           console.log('field to search myproject');
@@ -421,9 +438,8 @@ export default {
 		
 		//211029变动 新增: 多个公司切换
 		const missionData = {
-			companyId: this.companyId,
 		} 
-        getCurrentMission(missionData)
+        getCurrentMission(missionData, this.companyId)
           .then(res => {
             this.missionData = res.data
             console.log(this.missionData)
@@ -432,15 +448,14 @@ export default {
             console.log('error', err)
           })
     },
+	/* 
     getOnGoingProj() {
       if (this.onGoing == true) {
-        searchMyProject({
-			projName: this.searchValProjName,
-			reportNum: this.searchValReportNum,
-			projNum: this.searchValProjNum,
-			projScope: this.searchValProjScope,		
-			conpanyId: this.companyId
-        })
+		
+		this.currentPage = 1;
+		this.tableData=[];
+		this.pageTotal = 0;
+        searchMyProject(this.searchData, this.companyId)
         .then(res => {
           let arr = []
           for(let i of res.data) {
@@ -448,24 +463,26 @@ export default {
               arr.push(i)
             }
           }
-          this.tableData = arr
+          this.tableData = arr;
+		  this.pageTotal = arr.length;
         })
         .catch(err => {})
       } else {
         this.reset()
       }
     },
+	 */
     showOnlyPl(){
       var list = this.tableData
     },
     reset() {
-      this.searchValProjName = '';
-      this.searchValProjNum = '';
+	  this.currentPage = 1;
+	  this.tableData=[];
+	  this.pageTotal = 0;
+	  this.onGoing = false;
+	  Object.keys(this.searchData).forEach(key => (this.searchData[key] = ''))
 	  
-	  const resetData = {
-	  	companyId: this.companyId,
-	  } 
-      searchMyProject(resetData)
+      searchMyProject(this.searchData, this.companyId)
         .then(res => {
           console.log(res.data);
           this.tableData = res.data;
@@ -475,14 +492,19 @@ export default {
           console.log('field to search');
         });
     },
+	/* 
     handleDetail(val) {
       sessionStorage.setItem('page', this.currentPage);
       // const index2 = (this.currentPage - 1)*10 + index
       console.log('当前行信息 >>>', val);
       this.$router.push({ path: '/projcheck', query: { data: val.projId } });
     },
+	 */
     handleHandle(val) {
-      sessionStorage.setItem('page', this.currentPage);
+	  //211202 处理页面跳转返回
+	  this.pageInfoSave();			
+      //sessionStorage.setItem('page', this.currentPage);
+	  
       this.$router.push({
         path: '/workhandle',
         query: { data: JSON.stringify(val) }
@@ -515,9 +537,49 @@ export default {
 	  console.log('公司id', localStorage.getItem('companyId'));
 	  
 	  //3. this.getData 重新读取该公司项目数据, 重置分页	  
-	  this.currentPage = 1;
-	  this.getData(); //根据公司id获取对应项目数据
+	  
+	  this.reset(); //根据公司id获取对应项目数据
 	 
+	}, 
+	
+	
+	//211202 处理页面跳转返回
+	pageInfoLoad(){
+		const workbranch_pageinfo = JSON.parse(sessionStorage.getItem('workbranch_pageinfo'));
+		if(workbranch_pageinfo){
+		  if(workbranch_pageinfo.status){
+			//赋值		
+			this.tableData = workbranch_pageinfo.data;
+			
+			this.pageTotal = workbranch_pageinfo.pageData.pageTotal;
+			this.currentPage = workbranch_pageinfo.pageData.currentPage;
+			this.pageSize = workbranch_pageinfo.pageData.pageSize;
+			
+			this.searchData = workbranch_pageinfo.searchData;
+			
+			this.onGoing = workbranch_pageinfo.onGoing;
+		  }
+		  //删除
+		  sessionStorage.removeItem('workbranch_pageinfo');
+		  return true;
+		}else{
+		  return false;
+		}
+	},
+	
+	pageInfoSave(){
+	  const workbranch_pageinfo ={
+		searchData: this.searchData,
+		pageData: {
+			pageTotal: this.pageTotal,
+			currentPage: this.currentPage,
+			pageSize: this.pageSize,
+		},
+		data: this.tableData,
+		onGoing: this.onGoing,
+	    status:0
+	  };
+	  sessionStorage.setItem('workbranch_pageinfo', JSON.stringify(workbranch_pageinfo));
 	}
   }
 }
