@@ -2524,11 +2524,14 @@ export default {
     //this.workArrgForm.projId = this.queryData.projId
     this.projTypeOption = projTypeOption
     //处理项目类型value转为label展示
-    for (var i = 0; i < this.projTypeOption.length; i++) {
-      if (this.queryData.projType == this.projTypeOption[i].value) {
-        this.transedProjType.projType = this.projTypeOption[i].label
+    for (var i = 0; i < this.projTypeOption[this.companyTabsId].length; i++) {
+      if (this.queryData.projType == this.projTypeOption[this.companyTabsId][i].value) {
+        this.transedProjType.projType = this.projTypeOption[this.companyTabsId][i].label
       }
     }
+	
+	console.log("ProjType", this.queryData.projType,  this.transedProjType);
+	
     //调项目详情接口
     this.getDetail()
 
