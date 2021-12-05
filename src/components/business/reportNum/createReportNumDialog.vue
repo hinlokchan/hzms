@@ -36,7 +36,14 @@
     <br>
     <span style="margin-top: 20px">选择报告号类型</span>
     <el-cascader-panel
+        v-if="companyId === 'HZ'"
         :options="options"
+        ref="selector"
+        v-model="selectedNode">
+    </el-cascader-panel>
+    <el-cascader-panel
+        v-if="companyId === 'ZM'"
+        :options="zmOptions"
         ref="selector"
         v-model="selectedNode">
     </el-cascader-panel>
@@ -183,6 +190,18 @@ export default {
           ]
         }
       ],
+      zmOptions:[
+        {
+          value: 2101,
+          label: '测绘/CH',
+          disabled: true
+        },
+        {
+          value: 2201,
+          label: '咨询/ZX',
+          disabled: true
+        }
+      ],
       reportNumTypeScope: {
         1010: [1011, 1012, 1013, 1100],
         1020: [1021, 1022, 1023, 1100],
@@ -228,7 +247,6 @@ export default {
         this.info.projType = this.projType
         this.info.projId = this.projId
         this.info.reportNumList = this.reportNumList
-        this.setScope()
       }
     },
     projType(val) {
@@ -246,14 +264,40 @@ export default {
   		this.companyId = this.companyRange[0];
   		//this.companyTabsId = 0;
   	}
-  	//console.log('初始化公司id', this.companyId);    
+  	//console.log('初始化公司id', this.companyId);
+
+    console.log(this.companyId)
+    switch (this.companyId) {
+      case 'HZ': {
+        this.setHzScope();
+        break;
+      }
+      case 'ZM': {
+        this.setZmScope();
+        break;
+      }
+      case 'HZKJ': {
+        return
+      }
+      default : {
+        return
+      }
+    }
+
   },
   
   methods: {
     onClose() {
       this.$emit('update:show', false);
     },
-    setScope() {
+    setZmScope() {
+      if (this.projType < 2200 && this.projType > 2100) {
+        this.zmOptions[0].disabled = false;
+      }else if (this.projType > 2200 && this.projType < 2300) {
+        this.zmOptions[1].disabled = false;
+      }
+    },
+    setHzScope() {
       var scope = this.reportNumTypeScope[this.info.projType]
       console.log(scope)
       var father
