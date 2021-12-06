@@ -1,146 +1,174 @@
 [
   [
-	  {
-		"label": "房地产",
-		"value": "1010",
-		"disable": false
-	  },
-	  {
-		"label": "资产",
-		"value": "1020",
-		"disable": false
-	  },
-	  {
-		"label": "土地",
-		"value": "1030",
-		"disable": false
-	  },
-	  {
-		"label": "房地产咨询",
-		"value": "1041",
-		"disable": false
-	  },
-	  {
-		"label": "资产咨询",
-		"value": "1042",
-		"disable": false
-	  },
-	  {
-		"label": "土地咨询",
-		"value": "1043",
-		"disable": false
-
-	  },
-	  {
-		"label": "PPP",
-		"value": "1050",
-		"disable": false
-	  },
-	  {
-		"label": "房地产复审",
-		"value": "1061",
-		"disable": false
-	  },
-	  {
-		"label": "资产复审",
-		"value": "1062",
-		"disable": false
-	  },
-	  {
-		"label": "土地复审",
-		"value": "1063",
-		"disable": false
-	  },
-	  {
-		"label": "外协",
-		"value": "1070",
-		"disable": false
-	  },
-	  {
-		"label": "协外",
-		"value": "1071",
-		"disable": false
-	  },
-	  {
-		"label": "政策修订",
-		"value": "1080",
-		"disable": false
-	  },
-	  {
-		"label": "绩效",
-		"value": "1090",
-		"disable": false
-	  },
-	  {
-		"label": "其他",
-		"value": "1100",
-		"disable": false
-	  }
+  	  {
+  		"label": "房地产",
+  		"value": "1010",
+  		"type": "FG",
+  		"disable": false
+  	  },
+  	  {
+  		"label": "资产",
+  		"value": "1020",
+  		"type": "ZP",
+  		"disable": false
+  	  },
+  	  {
+  		"label": "土地",
+  		"value": "1030",
+  		"type": "TG",
+  		"disable": false
+  	  },
+  	  {
+  		"label": "房地产咨询",
+  		"value": "1041",
+  		"type": "FZ",
+  		"disable": false
+  	  },
+  	  {
+  		"label": "资产咨询",
+  		"value": "1042",
+  		"type": "ZZ",
+  		"disable": false
+  	  },
+  	  {
+  		"label": "土地咨询",
+  		"value": "1043",
+  		"type": "TZ",
+  		"disable": false
+  
+  	  },
+  	  {
+  		"label": "PPP",
+  		"value": "1050",
+  		"type": "PPP",
+  		"disable": false
+  	  },
+  	  {
+  		"label": "房地产复审",
+  		"value": "1061",
+  		"type": "FSF",
+  		"disable": false
+  	  },
+  	  {
+  		"label": "资产复审",
+  		"value": "1062",
+  		"type": "FSZ",
+  		"disable": false
+  	  },
+  	  {
+  		"label": "土地复审",
+  		"value": "1063",
+  		"type": "FST",
+  		"disable": false
+  	  },
+  	  {
+  		"label": "外协",
+  		"value": "1070",
+  		"type": "WX",
+  		"disable": false
+  	  },
+  	  {
+  		"label": "协外",
+  		"value": "1071",
+  		"type": "XW",
+  		"disable": false
+  	  },
+  	  {
+  		"label": "政策修订",
+  		"value": "1080",
+  		"type": "ZC",
+  		"disable": false
+  	  },
+  	  {
+  		"label": "绩效",
+  		"value": "1090",
+  		"type": "JX",
+  		"disable": false
+  	  },
+  	  {
+  		"label": "其他",
+  		"value": "1100",
+  		"type": "QT",
+  		"disable": false
+  	  }
   ],
   [
     {
       "label": "测绘-测绘航空摄影",
       "value": "2101",
+      "type": "ZC",
       "disable": false
     },
     {
       "label": "测绘-工程测量",
       "value": "2102",
+      "type": "ZC",
       "disable": false
     },
     {
       "label": "测绘-界线与不动产测绘",
       "value": "2103",
+      "type": "ZC",
       "disable": false
     },
     {
       "label": "测绘-地理信息系统工程",
       "value": "2104",
+      "type": "ZC",
       "disable": false
     },
     {
       "label": "测绘-其他",
       "value": "2105",
+      "type": "ZC",
       "disable": false
     },	
 	{
 	  "label": "咨询-税收预测报告",
 	  "value": "2201",
+      "type": "ZZ",
 	  "disable": false
 	},
 	{
 	  "label": "咨询-PPP全过程咨询",
 	  "value": "2202",
+      "type": "ZZ",
 	  "disable": false
 	},
 	{
 	  "label": "咨询-可行性研究报告",
 	  "value": "2203",
+      "type": "ZZ",
 	  "disable": false
 	},
 	{
 	  "label": "咨询-社会稳定风险评估",
 	  "value": "2204",
+      "type": "ZZ",
 	  "disable": false
 	},
 	{
 	  "label": "咨询-项目建议书",
 	  "value": "2205",
+      "type": "ZZ",
 	  "disable": false
 	},
 	{
 	  "label": "咨询-经济评价报告",
 	  "value": "2206",
+      "type": "ZZ",
 	  "disable": false
 	},
 	{
 	  "label": "咨询-方案咨询",
 	  "value": "2207",
+      "type": "ZZ",
 	  "disable": false
 	},
 	{
 	  "label": "咨询-其他",
 	  "value": "2208",
+      "type": "ZZ",
 	  "disable": false
 	}
   ],
@@ -148,31 +176,37 @@
 	{
 	  "label": "会审",
 	  "value": "3010",
+      "type": "HS",
 	  "disable": false
 	},
 	{
 	  "label": "专审",
 	  "value": "3020",
+      "type": "ZS",
 	  "disable": false
 	},
 	{
 	  "label": "验资",
 	  "value": "3030",
+      "type": "YZ",
 	  "disable": false
 	},
 	{
 	  "label": "咨询",
 	  "value": "3040",
+      "type": "ZS",
 	  "disable": false
 	},
 	{
-	  "label": "验资",
+	  "label": "专评",
 	  "value": "3050",
+      "type": "ZP",
 	  "disable": false
 	},
 	{
 	  "label": "税审",
 	  "value": "3060",
+      "type": "SS",
 	  "disable": false
 	}
   ]
