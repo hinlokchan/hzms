@@ -833,9 +833,9 @@
                   </el-option>
                 </el-select>
                 <el-input disabled type="text"
-                          style="width: 50%"
-                          v-if="this.isEdit"
-                          v-model="projTypes[companyTabsId][form.projType]"
+				  class="select-width-100"
+				  v-if="this.isEdit"
+				  v-model="projTypes[companyTabsId][form.projType]"
                 ></el-input>
               </el-form-item>
             </el-col>
