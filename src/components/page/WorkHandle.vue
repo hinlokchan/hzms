@@ -509,6 +509,7 @@
       :projProReviewer="projDetail.projProReviewer"
       :projAsst="projDetail.projAsst"
       :fieldSrvy="projDetail.fieldSrvy"
+	  @response="createWorkArrgResponse"
     ></WorkArrgDialog>
     <!--
                   /\    \                  /\    \                  /\    \                  /\    \         
@@ -1046,6 +1047,7 @@
         </el-card>
       </el-col>
     </el-row>
+	
     <div class="work-title">
       <span class="work-title-name">子项目信息</span>
       <span class="work-title-button">
@@ -1092,7 +1094,6 @@
         width="200"
       >
         <template slot-scope="scope">
-          <!-- <el-button type="text">查看</el-button> -->
           <el-button
             type="text"
             @click="delSubProj(scope.row)"
@@ -1104,18 +1105,10 @@
         </template>
       </el-table-column>
     </el-table>
-    <div class="work-title">
-      <span class="work-title-name">操作记录</span>
-    </div>
-    <el-divider></el-divider>
-    <el-card style="width: 100%">
-      <OpRecord
-          :projId="projDetail.projId"
-      ></OpRecord>
-    </el-card>
-	
 	
 	</div>
+	
+	
 	
 <!-- =========================智明========================= -->
 	<div
@@ -1311,6 +1304,7 @@
             <div>
               <div class="report-num">
                 <el-row>
+				  <!-- 
                   <el-col
                     :span="2"
                     class="report-title"
@@ -1346,6 +1340,8 @@
                       </span>
                     </span>
                   </el-col>
+				  -->
+				  
                   <el-col
                     :span="2"
                     class="report-title"
@@ -1380,6 +1376,7 @@
                       </span>
                     </span>
                   </el-col>
+				  <!-- 
                   <el-col
                     :span="4"
                     class="report-title"
@@ -1414,6 +1411,7 @@
                       </span>
                     </span>
                   </el-col>
+				  -->
                 </el-row>
               </div>
             </div>
@@ -1621,6 +1619,8 @@
         </el-card>
       </el-col>
     </el-row>
+	
+	<!-- 
     <div class="work-title">
       <span class="work-title-name">子项目信息</span>
       <span class="work-title-button">
@@ -1667,7 +1667,6 @@
         width="200"
       >
         <template slot-scope="scope">
-          <!-- <el-button type="text">查看</el-button> -->
           <el-button
             type="text"
             @click="delSubProj(scope.row)"
@@ -1679,17 +1678,10 @@
         </template>
       </el-table-column>
     </el-table>
-    <div class="work-title">
-      <span class="work-title-name">操作记录</span>
-    </div>
-    <el-divider></el-divider>
-    <el-card style="width: 100%">
-      <OpRecord
-          :projId="projDetail.projId"
-      ></OpRecord>
-    </el-card>
+	 -->
 	
 	</div>
+	
 	
 <!-- =========================汇正========================= -->
 	<div
@@ -2131,6 +2123,8 @@
         </el-card>
       </el-col>
     </el-row>
+	
+	<!-- 
     <div class="work-title">
       <span class="work-title-name">子项目信息</span>
       <span class="work-title-button">
@@ -2177,7 +2171,6 @@
         width="200"
       >
         <template slot-scope="scope">
-          <!-- <el-button type="text">查看</el-button> -->
           <el-button
             type="text"
             @click="delSubProj(scope.row)"
@@ -2189,6 +2182,10 @@
         </template>
       </el-table-column>
     </el-table>
+	 -->
+	
+	</div>	
+	
     <div class="work-title">
       <span class="work-title-name">操作记录</span>
     </div>
@@ -2199,7 +2196,6 @@
       ></OpRecord>
     </el-card>
 	
-	</div>	
 	
     <el-dialog
           title="修改外部合同号"
@@ -2492,8 +2488,7 @@ export default {
       },
       contractNumDialogVisible: false,
       preContractNumDialogVisible: false,
-	  
-	  
+	  	  
 	  //211101变动 新增: 多个公司切换
 	  companyRange:['HZ', 'ZM','HZKJ'],
 	  companyId:'',
@@ -2529,8 +2524,6 @@ export default {
         this.transedProjType.projType = this.projTypeOption[this.companyTabsId][i].label
       }
     }
-	
-	console.log("ProjType", this.queryData.projType,  this.transedProjType);
 	
     //调项目详情接口
     this.getDetail()
@@ -2722,7 +2715,38 @@ export default {
 	    }
 	  }else if(this.companyTabsId == 1){
 		//智明  
-		
+		switch (type) {
+		  case 1:
+	        num = this.reportNum.cph
+	        numType = '初评字'
+	        if (this.projDetail.projType >=2100 && this.projDetail.projType < 2200) {
+	          projType = '测'
+	        } else if (this.projDetail.projType >=2200 && this.projDetail.projType < 2300) {
+	          projType = '资'
+	        }
+	        break
+	      case 2:
+	        num = this.reportNum.zph
+			if (this.projDetail.projType >=2100 && this.projDetail.projType < 2200) {
+			  projType = '测绘'
+			} else if (this.projDetail.projType >=2200 && this.projDetail.projType < 2300) {
+			  projType = '资字'
+			}
+	        break
+		}  
+		const comp = '智明'
+		const year = '[' + num.substr(0, 4) + ']'
+		const lastNum = '第' + num.substr(4) + '号'
+		const final = comp + projType + numType + year + lastNum
+		if (type == 1) {
+		  this.cnReportNum.cph = final
+		} else if (type == 2) {
+		  this.cnReportNum.zph = final
+		} else if (type == 3) {
+		  this.cnReportNum.hhh = final
+		}  
+		  
+		  
 	  }else if(this.companyTabsId == 2){
 		//汇正  
 		
@@ -2732,6 +2756,17 @@ export default {
     copy(e) {
       this.$message.success('内容已复制到剪贴板')
     },
+	
+	
+	createWorkArrgResponse() {
+	  console.log('createWorkArrgResponse');
+		
+	  //211207变动 刷新整页改成局部刷新
+	  this.getWorkAssignmentData();
+	  
+	  //211207变动 修改projid刷新操作记录
+	  this.opRefresh();
+	},
     getWorkAssignmentData() {
 	  //211101变动 新增: 多个公司切换
 	  const AssignmentData = {
@@ -2757,9 +2792,10 @@ export default {
 			  workName['汇正'] = ['收集及整理资料','制定审计方案','开展审计工作','编制审计报告','内部审核','与委托方沟通','审计收费','修正定稿及提交报告','工作底稿归档'];
 			  
 			  //console.log('转类型前arrgData', res.data)
-			  
-			  //测试
-			  //this.queryData.projType = 3010;
+			  //复位
+			  this.workName = [];
+			  this.workPeople = [];
+			  this.workDate = [];
 			  
 			  if(this.companyTabsId == 0){
 				//惠正
@@ -2772,13 +2808,6 @@ export default {
 			  }else if(this.companyTabsId == 1 && (this.queryData.projType>=2100 && this.queryData.projType <2200)){
 				//智明测绘  
 				this.workName = workName['智明测绘'];
-				
-				//测试
-				res.data.workPlanPic = res.data.workPlanPic?res.data.workPlanPic:'';
-				res.data.workPlanSche = res.data.workPlanSche?res.data.workPlanSche:'';
-				res.data.drawingPic = res.data.drawingPic?res.data.drawingPic:'';
-				res.data.drawingSche = res.data.drawingSche?res.data.drawingSche:'';
-				
 				this.workPeople.push(res.data.prePreparationPic, res.data.workPlanPic, res.data.fldSrvyPic, res.data.drawingPic, res.data.issueValPic, res.data.internalAuditPic, res.data.commuClientPic, res.data.assemChargePic, res.data.amendFinalPic, res.data.manuArchivePic)
 				this.workDate.push(res.data.prePreparationSche, res.data.workPlanSche, res.data.fldSrvySche, res.data.drawingSche, res.data.issueValSche, res.data.internalAuditSche, res.data.commuClientSche, res.data.assemChargeSche, res.data.amendFinalSche, res.data.manuArchiveSche)
 				this.arrgData = res.data
@@ -2787,13 +2816,6 @@ export default {
 			  }else if(this.companyTabsId == 1 && (this.queryData.projType>=2200 && this.queryData.projType <2300)){
 				//智明咨询  
 				this.workName = workName['智明咨询'];
-								
-				//测试
-				res.data.workPlanPic = res.data.workPlanPic?res.data.workPlanPic:'';
-				res.data.workPlanSche = res.data.workPlanSche?res.data.workPlanSche:'';
-				res.data.dataCollectionPic = res.data.dataCollectionPic?res.data.dataCollectionPic:'';
-				res.data.dataCollectionSche = res.data.dataCollectionSche?res.data.dataCollectionSche:'';
-				
 				this.workPeople.push(res.data.prePreparationPic, res.data.workPlanPic, res.data.dataCollectionPic, res.data.fldSrvyPic, res.data.mktSrvyPic, res.data.issueValPic, res.data.internalAuditPic, res.data.commuClientPic, res.data.assemChargePic, res.data.amendFinalPic, res.data.manuArchivePic)
 				this.workDate.push(res.data.prePreparationSche, res.data.workPlanSche, res.data.dataCollectionSche, res.data.fldSrvySche, res.data.mktSrvySche, res.data.issueValSche, res.data.internalAuditSche, res.data.commuClientSche, res.data.assemChargeSche, res.data.amendFinalSche, res.data.manuArchiveSche)
 				this.arrgData = res.data
@@ -2802,11 +2824,6 @@ export default {
 			  }else if(this.companyTabsId == 2){
 				//汇正
 				this.workName = workName['汇正']; 
-				
-				//测试
-				res.data.workPlanPic = res.data.workPlanPic?res.data.workPlanPic:'';
-				res.data.workPlanSche = res.data.workPlanSche?res.data.workPlanSche:'';
-				
 				this.workPeople.push(res.data.prePreparationPic, res.data.workPlanPic, res.data.fldSrvyPic, res.data.issueValPic, res.data.internalAuditPic, res.data.commuClientPic, res.data.assemChargePic, res.data.amendFinalPic, res.data.manuArchivePic)
 				this.workDate.push(res.data.prePreparationSche, res.data.workPlanSche, res.data.fldSrvySche, res.data.issueValSche, res.data.internalAuditSche, res.data.commuClientSche, res.data.assemChargeSche, res.data.amendFinalSche, res.data.manuArchiveSche)
 				this.arrgData = res.data
@@ -3148,7 +3165,13 @@ export default {
 			}
             createContractNum(createData, this.companyId)
                 .then(res => {
-                  this.reload();
+				  
+				  //211207变动 刷新整页改成局部刷新
+                  //this.reload();
+				  this.getDetail()
+				  
+				  //211207变动 修改projid刷新操作记录
+				  this.opRefresh();
                 })
                 .catch(err => {
                   this.$message.error(err.errorMsg);
@@ -3185,7 +3208,15 @@ export default {
             deleteContractNum(deleteData, this.companyId)
               .then(res => {
                 this.$message.success('合同号已删除！')
-                this.reload()
+				
+				//211207变动 刷新整页改成局部刷新
+                //this.reload()	
+				//清空合同号和外部合同号
+				this.contractNum = '';
+				this.projDetail.contractNum.externalContractNum = ''
+				
+				//211207变动 修改projid刷新操作记录
+				this.opRefresh();
               })
               .catch(err => {
                 this.$message.warning('服务器忙，请稍后重试！')
@@ -3226,7 +3257,7 @@ export default {
       oReq.send(fdata)
     },
     //取号流程
-    handleGetNum() {
+    handleGetNum() {	  
       this.createReportNumDialogVisible = true
     },
     getNewNum(val) {
@@ -3288,6 +3319,9 @@ export default {
     },
     createReportNumResponse() {
       this.getDetail()
+	  
+	  //211207变动 修改projid刷新操作记录
+	  this.opRefresh()
     },
     handleGetOldNum() {
       this.getOldNumVisible = true
@@ -3378,6 +3412,9 @@ export default {
               //this.reload()
               this.getDetail()
               this.delNumVisible = false
+			  
+			  //211206 修复操作记录不刷新的bug
+			  this.opRefresh()
             })
             .catch(err => {
               this.$message.warning('删除失败，请稍后再试')
@@ -3502,78 +3539,7 @@ export default {
     isZcDialogVisible() {
       this.zcDialogVisible = true
     },
-    isWorkArrgDialog() {
-	/* 
-	  //静态测试
-	  this.projDetail = {
-		  actualFee: null,
-		  arrgType: "1001",
-		  assemFeeQuote: null,
-		  assemGoal: "抵押2",
-		  assemNetValue: null,
-		  assemValue: null,
-		  assemValueQuote: null,
-		  baseDate: 1634745600000,
-		  clientContact: "",
-		  clientContactInfo: "",
-		  clientId: 10113,
-		  clientName: "中国银行-陈江支行",
-		  clientType: 101,
-		  compSchedule: 3,
-		  contractNum: {
-			  contractNum: "F21014",
-			  contractNumType: 1010,
-			  externalContractNum: "abc123",
-			  projId: 1010202110004,
-			  takenDate: 1634745600000,
-		  },
-		  externalExpert: "",
-		  fieldSrvy: "叶彬,江锡烽",
-		  finalReview: "",
-		  fldSrvyContact: "",
-		  fldSrvyContactInfo: "",
-		  fldSrvySchedule: 1634745600000,
-		  incumbrancer: "",
-		  infoVerification: "",
-		  instructor: "",
-		  marketEnquiry: "",
-		  newOldType: "1001",
-		  operator: "江锡烽",
-		  projAsst: "蒋巧玲",
-		  projContact: "蔡楚锋",
-		  projContactType: "摇珠",
-		  projDate: 1634777519000,
-		  projDegree: "1001",
-		  projId: 1010202110004,
-		  projLeader: "蔡楚锋",
-		  projName: "测试234",
-		  projNum: "房202110004",
-		  projProReviewer: "",
-		  projProgress: "计划",
-		  projReferer: "",
-		  projRefererInfo: "",
-		  projReviewer: "王伟平",
-		  projScope: "测试234567",
-		  projState: "0",
-		  projType: 2100,
-		  reportDrafter: "",
-		  reportNumList: {
-			  cph: "2021F10001",
-			  hhh: "",
-			  zph: "2021FG10001",
-		  },
-		  riskProfile: "1002",
-		  standardFee: null,
-		  supInstruction: "",
-		  tax: null,
-		  techExpDrafter: "",
-	  };
-	  
-	  console.log(this.projDetail);
-	 */	
-	  //测试
-	  //this.projDetail.projType = 3010;
-	
+    isWorkArrgDialog() {	
       this.workArrgDialogVisible = true
 	  
     },
@@ -3587,8 +3553,13 @@ export default {
 		  }
           delWorkAssignment(workAssignmentData, this.companyId)
             .then(res => {
-              console.log(res)
-              this.reload()
+			  //211207变动 刷新整页改成局部刷新
+			  //this.reload();
+			  this.getWorkAssignmentData();
+			  
+			  //211207变动 修改projid刷新操作记录
+			  this.opRefresh();
+			  
             })
             .catch(err => {
               this.$message.warning('服务器忙，请稍后重试')
@@ -3654,7 +3625,14 @@ export default {
       }, this.companyId).then(
           res => {
             this.$message.success('修改成功');
-            this.reload()
+			
+			//211207变动 刷新整页改成局部刷新
+            //this.reload()			
+			this.getDetail();
+			this.contractNumDialogVisible = false;
+			
+			//211207变动 修改projid刷新操作记录
+			this.opRefresh();
           }
       ).catch(err => {
         this.$message.error('修改失败')
@@ -3729,7 +3707,17 @@ export default {
 	},
 	pageInfoDel(){
 		sessionStorage.removeItem('workbranch_pageinfo');
+	}, 
+	
+	//211207变动 修改projid刷新操作记录
+	opRefresh(){
+		const tempProjId = this.projDetail.projId;
+		this.projDetail.projId = 0;
+		setTimeout(()=>{
+			this.projDetail.projId = tempProjId;
+		},500)
 	}
+	  
   },
 }
 </script>
