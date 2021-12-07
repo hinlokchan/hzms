@@ -380,6 +380,7 @@
                   <span class="detail-content">{{detailData.assemGoal}}</span>
                 </el-form-item>
               </el-col>
+			  <!-- 
               <el-col :span="8">
                 <el-form-item
                   label="初评号"
@@ -388,6 +389,7 @@
                   <span class="detail-content">{{reportNum.cph}}</span>
                 </el-form-item>
               </el-col>
+			  -->
               <el-col :span="8">
                 <el-form-item
                   label="正评号"
@@ -396,6 +398,7 @@
                   <span class="detail-content">{{reportNum.zph}}</span>
                 </el-form-item>
               </el-col>
+			  <!-- 
               <el-col :span="8">
                 <el-form-item
                   label="回函号"
@@ -404,6 +407,7 @@
                   <span class="detail-content">{{reportNum.hhh}}</span>
                 </el-form-item>
               </el-col>
+			  -->
             </el-row>
 			<!-- 无基准日
             <el-row>
@@ -999,7 +1003,7 @@ export default {
 	  this.$message.success('内容已复制到剪贴板')
 	},
 	showInfo(){
-	  var tempType=1;
+	  var tempType=0;
 		
 	  let riskProfile = '';
 	  if (this.detailData.riskProfile == '1001') {
@@ -1025,12 +1029,29 @@ export default {
 	      projLabel = this.projTypeOption[this.companyTabsId][i].label;
 	      projType = this.projTypeOption[this.companyTabsId][i].type;
 		  
-		  //判断模板， 默认1， 绩效2， 复审3
-		  if(projType == 'JX'){
-			tempType = 2;  
-		  }else if(projType == 'FSF' || projType == 'FSZ' || projType == 'FST'){
-			tempType = 3;    
+		  //判断模板， 默认1， 绩效2， 复审3, 智明4, 汇正5
+		  if(this.companyTabsId == 0){
+			//惠正模板
+			if(projType == 'JX'){
+				tempType = 2;  
+			}else if(projType == 'FSF' || projType == 'FSZ' || projType == 'FST'){
+				tempType = 3;    
+			}else{
+				tempType = 1;
+			}
+		  }else if(this.companyTabsId == 1){
+			if(projType == 'ZC'){
+				//智明测绘模板
+				tempType = 11;
+			}else if(projType == 'ZZ'){
+				//智明咨询模板
+				tempType = 12;
+			}
+		  }else if(this.companyTabsId == 2){
+			//汇正模板
+			tempType = 21;
 		  }
+		  
 	    }
 	  }
 	  // ZP项目类型：资；委托 人：(其他):惠州市水务投资集团；项目名称：惠州大道大湖溪段667平方米租金；评估对象及其坐落：同上;；评估目的：物业出租价格；引荐人及其电话：惠州市水务投资集团王总135 0229 7502；现联系单位、人及电话：同上；现勘时间：现勘同事约；报告时间要求：5天；项目风险预测：；评估收费报价：待定；是否曾评估的项目：（若是，原项目组成员：）；项目接洽人""[52]-缨(注师：莎缨;助理：健;专业复核人:远。以下由项目负责人安排 现勘：;资料核查验证：;市场询价调查：;技术报告:；报告编制:; 归档：;对外沟通:
@@ -1049,17 +1070,26 @@ export default {
 	  }
 	  
 	  if(tempType == 1){
-		//默认模板 项目编号:${this.detailData.projNum}; 
+		//惠正默认模板 项目编号:${this.detailData.projNum}; 
 		this.newInfoData = `${projType}项目类型:${projLabel}; 委托人:${clientName}; 项目名称:${this.detailData.projName}; 评估对象及其坐落:${this.detailData.projScope}; 评估目的:${this.detailData.assemGoal}; 引荐人及其电话:${this.detailData.projReferer}${this.detailData.projRefererInfo}; 现勘联系人及电话：${this.detailData.fldSrvyContact}${this.detailData.fldSrvyContactInfo}; 现勘时间: ; 报告时间要求:${this.detailData.compSchedule?this.detailData.compSchedule:' '}天; 项目风险预测:${riskProfile}; 评估收费报价:${this.detailData.assemFeeQuote?this.detailData.assemFeeQuote:''}; 是否曾评估项目:${newOldType}; 项目接洽人:${this.detailData.projContactType} ${this.detailData.projContact} (注师：；助理：；专业复核人:)。以下由项目负责人安排,现勘:${this.detailData.fieldSrvy}; 资料核查验证: ; 市场询价调查: ; 技术报告: ; 报告编制: ; 归档: ; 对外沟通: 。`;
 		  
 	  }else if(tempType == 2){
-		//绩效模板
+		//惠正绩效模板
 		//JX项目类型：绩效评价；委托人：；评价目的：；项目名称： ；引荐人、现勘及资料收集联系电话：；报告时间要求：；收费：。      项目接洽人：(项目组成员： ；总审：；现勘及资料收集和验证：；市场询价调查：；报告编制：；聘请专家：；归档：；对外沟通人：。)
 		this.newInfoData = `${projType}项目类型:${projLabel}; 委托人:${clientName}; 评价目的:${this.detailData.assemGoal}; 项目名称:${this.detailData.projName}; 引荐人及其电话:${this.detailData.projReferer} ${this.detailData.projRefererInfo}; 现勘联系人及电话：${this.detailData.fldSrvyContact} ${this.detailData.fldSrvyContactInfo}; 现勘时间: ; 报告时间要求:${this.detailData.compSchedule?this.detailData.compSchedule:' '}天; 收费报价:${this.detailData.assemFeeQuote?this.detailData.assemFeeQuote:''}; 项目接洽人:${this.detailData.projContactType} ${this.detailData.projContact} (项目组成员：；总审：；); 现勘:${this.detailData.fieldSrvy}; 资料核查验证: ; 市场询价调查: ; 报告编制: ; 聘请专家: ; 归档: ; 对外沟通人: 。`;
 	  }else if(tempType == 3){
-		//复审模板
+		//惠正复审模板
 		//FSZ项目类型：资产复审；委托方：；评估对象范围及其座落：；引荐人、现勘联系单位、人及电话：；现勘时间: ；报告时间要求：2天。评审要求：；  项目接洽人：；(评审师：现勘：助理：   ；对外沟通人：
 		this.newInfoData = `${projType}项目类型:${projLabel}; 委托方:${clientName}; 项目名称:${this.detailData.projName}; 引荐人及其电话:${this.detailData.projReferer}${this.detailData.projRefererInfo}; 现勘联系人及电话：${this.detailData.fldSrvyContact}${this.detailData.fldSrvyContactInfo}; 现勘时间: ; 报告时间要求:${this.detailData.compSchedule?this.detailData.compSchedule:' '}天; 评审要求: ; 项目接洽人:${this.detailData.projContactType} ${this.detailData.projContact} (评审师：；助理：；); 现勘:${this.detailData.fieldSrvy}; 对外沟通人: 。`;
+	  }else if(tempType == 11){
+		//智明测绘模板
+		this.newInfoData = `${projType}项目类型:${projLabel}; 委托人:${clientName}; 项目名称:${this.detailData.projName}; 测绘对象及其坐落:${this.detailData.projScope}; 测绘目的:${this.detailData.assemGoal}; 测绘联系人及电话：${this.detailData.fldSrvyContact}${this.detailData.fldSrvyContactInfo}; 测绘时间: ; 报告时间要求:${this.detailData.compSchedule?this.detailData.compSchedule:' '}天; 项目风险预测:${riskProfile}; 测绘收费报价:${this.detailData.assemFeeQuote?this.detailData.assemFeeQuote:''}; 是否曾测绘项目:${newOldType}; 项目接洽人:${this.detailData.projContactType} ${this.detailData.projContact} (注师：；助理：；专业复核人:)。以下由项目负责人安排,测绘:${this.detailData.fieldSrvy}; 资料核查验证: ; 市场询价调查: ; 技术报告: ; 报告编制: ; 归档: ; 对外沟通: 。`;
+	  }else if(tempType == 12){
+		//智明咨询模板
+		this.newInfoData = `${projType}项目类型:${projLabel}; 委托人:${clientName}; 项目名称:${this.detailData.projName}; 咨询目的:${this.detailData.assemGoal}; 咨询联系人及电话：${this.detailData.fldSrvyContact}${this.detailData.fldSrvyContactInfo}; 咨询时间: ; 报告时间要求:${this.detailData.compSchedule?this.detailData.compSchedule:' '}天; 项目风险预测:${riskProfile}; 咨询收费报价:${this.detailData.assemFeeQuote?this.detailData.assemFeeQuote:''}; 是否曾咨询项目:${newOldType}; 项目接洽人:${this.detailData.projContactType} ${this.detailData.projContact} (注师：；助理：；专业复核人:)。以下由项目负责人安排,咨询:${this.detailData.fieldSrvy}; 资料核查验证: ; 市场询价调查: ; 技术报告: ; 报告编制: ; 归档: ; 对外沟通: 。`;
+	  }else if(tempType == 21){
+		//汇正模板
+		this.newInfoData = `${projType}项目类型:${projLabel}; 委托人:${clientName}; 项目名称:${this.detailData.projName}; 审计目的:${this.detailData.assemGoal}; 审计联系人及电话：${this.detailData.fldSrvyContact}${this.detailData.fldSrvyContactInfo}; 审计时间: ; 报告时间要求:${this.detailData.compSchedule?this.detailData.compSchedule:' '}天; 项目风险预测:${riskProfile}; 审计收费报价:${this.detailData.assemFeeQuote?this.detailData.assemFeeQuote:''}; 是否曾审计项目:${newOldType}; 项目接洽人:${this.detailData.projContactType} ${this.detailData.projContact} (注师：；助理：；专业复核人:)。以下由项目负责人安排,审计:${this.detailData.fieldSrvy}; 资料核查验证: ; 市场询价调查: ; 技术报告: ; 报告编制: ; 归档: ; 对外沟通: 。`;
 	  }
 	  
 	  this.newInfo = true;
