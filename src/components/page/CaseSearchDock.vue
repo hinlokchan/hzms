@@ -24,7 +24,6 @@
             v-if="tableData.list.length>0"
             :row-style="{height:'100px'}"
             @row-click="rowClick"
-            cell-style="font-weight:500"
             :show-header="false"
         >
           <el-table-column>
@@ -85,6 +84,16 @@ export default {
         ]
       },
     }
+  },  
+  created() {
+    isAuthenticated().then(res => {
+      console.log(res);
+    }).catch(error => {
+      console.log(error)
+    });
+  	
+  	//211202 处理页面跳转返回
+  	this.pageInfoLoad()
   },
   methods: {
     formatDate: function(row, column, cellValue) {
@@ -114,23 +123,48 @@ export default {
       let unitPrice = evalObjTotalAssemValue / evalObjAcreage *10000
       return unitPrice.toFixed(2)
     },
-
+	
+	/* 
     detailCheck(row) {
       this.$router.push({ path: '/projcheck', query: { data: row.projId } });
     },
+	 */
 
     rowClick(row){
+	  //211202 处理页面跳转返回
+	  this.pageInfoSave();
+	
       this.$router.push({ path: '/casecheck', query: { data: row.caseId } });
-    }
+    },
+		
+	//211202 处理页面跳转返回
+	pageInfoLoad(){
+		const case_pageinfo = JSON.parse(sessionStorage.getItem('case_pageinfo'));
+		if(case_pageinfo){
+		  if(case_pageinfo.status){
+			//赋值		
+			this.tableData.list = case_pageinfo.data;
+			  		
+			this.keyword = case_pageinfo.searchData;
+		  }
+		  //删除
+		  sessionStorage.removeItem('case_pageinfo');
+		  return true;
+		}else{
+		  return false;
+		}
+	},
+	pageInfoSave(){
+	  const case_pageinfo ={
+		  searchData: this.keyword,
+		
+		  data: this.tableData.list,
+	    status:0
+	  };
+	  sessionStorage.setItem('case_pageinfo', JSON.stringify(case_pageinfo));
+	}
 
   },
-  created() {
-    isAuthenticated().then(res => {
-      console.log(res);
-    }).catch(error => {
-      console.log(error)
-    });
-  }
 }
 </script>
 
@@ -166,5 +200,4 @@ export default {
 .el-footer span {
   color: #989898;
 }
-
 </style>
