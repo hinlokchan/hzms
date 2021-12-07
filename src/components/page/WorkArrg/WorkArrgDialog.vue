@@ -1913,27 +1913,27 @@ export default {
   		this.companyId = this.companyRange[0];
   		this.companyTabsId = 0;
   	}	
-  	console.log('dialog初始化公司id', this.companyId);
+  	//console.log('dialog初始化公司id', this.companyId);
   },
   
   methods: {
     checkData() {
 	  //211101变动 新增: 根据不同公司, 初始化不同arrgForm
       if(this.companyTabsId == 0){
-        this.arrgForm = this.arrgFormHZ;
+		this.arrgForm = Object.assign({}, this.arrgFormHZ);
       }else if(this.companyTabsId == 1 && (this.projType>=2100 && this.projType <2200)){
-        this.arrgForm = this.arrgFormZMCH;
+        this.arrgForm = Object.assign({}, this.arrgFormZMCH);
       }else if(this.companyTabsId == 1 && (this.projType>=2200 && this.projType <2300)){
-        this.arrgForm = this.arrgFormZMZX;
+        this.arrgForm = Object.assign({}, this.arrgFormZMZX);
       }else if(this.companyTabsId == 2){
-        this.arrgForm = this.arrgFormKJ;
+        this.arrgForm = Object.assign({}, this.arrgFormKJ);
       }
 	  
       if (this.arrgData == null) {
-        this.$message.success('新增安排');
+        //this.$message.success('新增安排');
 		
       } else {
-        this.$message.success('编辑安排');		
+        //this.$message.success('编辑安排');		
         this.arrgForm = this.arrgData;
       }
 	  this.arrgForm.projId = this.projId;
@@ -1941,7 +1941,7 @@ export default {
 	  //根据项目组成员多少, 优化对话框宽度
 	  this.dialogWidth = this.projMember.length <=6?'1000px':'90%';
 	  	  
-	  console.log('arrgForm', this.arrgForm);
+	  //console.log('arrgForm', this.arrgForm);
     },
     onClose() {
       this.$emit('update:show', false);
@@ -1991,7 +1991,9 @@ export default {
 			  setWorkAssignment(this.arrgForm, this.companyId)
 				.then(res => {
 				  this.$message.success('提交成功');
-				  this.reload();
+				  //211207变动 刷新整页改成局部刷新
+				  this.onClose();
+				  this.$emit('response');
 				})
 				.catch(err => {
 				  this.$message.error('提交失败，请稍后重试');
@@ -2030,17 +2032,17 @@ export default {
 			  //
 			  //211101变动 新增: 多个公司切换
 			  
-			  console.log('提交arrgForm', this.arrgForm);
-			  /* 
+			  //console.log('提交arrgForm', this.arrgForm);			  
 			  setWorkAssignment(this.arrgForm, this.companyId)
 				.then(res => {
 				  this.$message.success('提交成功');
-				  this.reload();
+				  //211207变动 刷新整页改成局部刷新
+				  this.onClose();
+				  this.$emit('response');
 				})
 				.catch(err => {
 				  this.$message.error('提交失败，请稍后重试');
-				});
-			  */
+				});			 
 			} else {
 			  this.$message.warning('请填写必填信息');
 			}
@@ -2077,15 +2079,17 @@ export default {
 			  //
 			  //211101变动 新增: 多个公司切换
 			  
-			  console.log('提交arrgForm', this.arrgForm);
-			  /* setWorkAssignment(this.arrgForm, this.companyId)
+			  //console.log('提交arrgForm', this.arrgForm);
+			  setWorkAssignment(this.arrgForm, this.companyId)
 				.then(res => {
 				  this.$message.success('提交成功');
-				  this.reload();
+				  //211207变动 刷新整页改成局部刷新
+				  this.onClose();
+				  this.$emit('response');
 				})
 				.catch(err => {
 				  this.$message.error('提交失败，请稍后重试');
-				}); */
+				});
 			} else {
 			  this.$message.warning('请填写必填信息');
 			}
@@ -2122,7 +2126,9 @@ export default {
 			  /* setWorkAssignment(this.arrgForm, this.companyId)
 				.then(res => {
 				  this.$message.success('提交成功');
-				  this.reload();
+				  //211207变动 刷新整页改成局部刷新
+				  this.onClose();
+				  this.$emit('response');
 				})
 				.catch(err => {
 				  this.$message.error('提交失败，请稍后重试');
@@ -2439,41 +2445,6 @@ export default {
 	  
     },
 	
-	/* 
-    transData() {
-      this.arrgForm.assemMethod = this.arrgForm.assemMethod.split(',');
-      //
-      this.arrgForm.prePreparationPic = this.arrgForm.prePreparationPic.split(
-        ','
-      );
-      this.arrgForm.fldSrvyPic = this.arrgForm.fldSrvyPic.split(',');
-      this.arrgForm.mktSrvyPic = this.arrgForm.mktSrvyPic.split(',');
-      this.arrgForm.assemEstPic = this.arrgForm.assemEstPic.split(',');
-      this.arrgForm.issueValPic = this.arrgForm.issueValPic.split(',');
-      this.arrgForm.internalAuditPic = this.arrgForm.internalAuditPic.split(
-        ','
-      );
-      this.arrgForm.commuClientPic = this.arrgForm.commuClientPic.split(',');
-      this.arrgForm.assemChargePic = this.arrgForm.assemChargePic.split(',');
-      this.arrgForm.amendFinalPic = this.arrgForm.amendFinalPic.split(',');
-      this.arrgForm.manuArchivePic = this.arrgForm.manuArchivePic.split(',');
-      //
-      this.arrgForm.prePreparationSche = this.arrgForm.prePreparationSche.split(
-        '-'
-      );
-      this.arrgForm.fldSrvySche = this.arrgForm.fldSrvySche.split('-');
-      this.arrgForm.mktSrvySche = this.arrgForm.mktSrvySche.split('-');
-      this.arrgForm.assemEstSche = this.arrgForm.assemEstSche.split('-');
-      this.arrgForm.issueValSche = this.arrgForm.issueValSche.split('-');
-      this.arrgForm.internalAuditSche = this.arrgForm.internalAuditSche.split(
-        '-'
-      );
-      this.arrgForm.commuClientSche = this.arrgForm.commuClientSche.split('-');
-      //this.arrgForm.assemChargeSche = this.arrgForm.assemChargeSche.split('-')
-      this.arrgForm.amendFinalSche = this.arrgForm.amendFinalSche.split('-');
-      //this.arrgForm.manuArchiveSche = this.arrgForm.manuArchiveSche.split('-')
-    }
-	 */
   }
 };
 </script>
