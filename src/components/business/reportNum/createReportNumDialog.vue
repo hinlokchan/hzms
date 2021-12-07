@@ -193,12 +193,12 @@ export default {
       zmOptions:[
         {
           value: 2101,
-          label: '测绘/CH',
+          label: '测绘/ZC',
           disabled: true
         },
         {
           value: 2201,
-          label: '咨询/ZX',
+          label: '咨询/ZZ',
           disabled: true
         }
       ],
@@ -266,7 +266,7 @@ export default {
   	}
   	//console.log('初始化公司id', this.companyId);
 
-    console.log(this.companyId)
+    //console.log(this.companyId)
     switch (this.companyId) {
       case 'HZ': {
         this.setHzScope();
@@ -299,7 +299,7 @@ export default {
     },
     setHzScope() {
       var scope = this.reportNumTypeScope[this.info.projType]
-      console.log(scope)
+      //console.log(scope)
       var father
       var children
       if (this.info.reportNumList.cph !== '') {
@@ -312,11 +312,11 @@ export default {
         this.options[2].disabled = true
       }
       for (let i = 0; i < this.options.length; i++) {
-        console.log(i);
+        //console.log(i);
         father = this.options[i].children;
         for (let j = 0; j < father.length; j++) {
           if (scope.indexOf(father[j].value) >= 0) {
-            console.log(father[j].label);
+            //console.log(father[j].label);
             father[j].disabled = false
           }
         }
@@ -336,7 +336,7 @@ export default {
       }
 
       let nodeValue = this.selectedNode[this.selectedNode.length - 1];
-      console.log(typeof nodeValue !== 'number')
+      //console.log(typeof nodeValue !== 'number')
       if (typeof nodeValue !== 'number' || nodeValue < 1000) {
         this.message.error('类型错误  ' + nodeValue);
         return
@@ -357,7 +357,7 @@ export default {
       let formattedTakenDate = this.$moment(this.takenDate).format('YYYY-MM-DD')
       getOldReportNum({ projId: this.info.projId , takenDate: formattedTakenDate , reportNumType: nodeValue }, this.companyId).then(
           res => {
-            console.log(res);
+            //console.log(res);
             this.$message.success('获取成功');
             this.onClose()
             this.$emit('response')
@@ -376,7 +376,7 @@ export default {
     createCommonReportNum(nodeValue) {
       createReportNum({ projId: this.info.projId, reportNumType: nodeValue }, this.companyId).then(
           res => {
-            console.log(res);
+            //console.log(res);
             this.$message.success('获取成功');
             this.onClose()
             this.$emit('response')
