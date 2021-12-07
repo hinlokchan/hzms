@@ -38,8 +38,10 @@ export default {
   },
   watch: {
     projId(val) {
-      this.pId = val
-      this.getRecord()
+	  if(val != 0){
+		this.pId = val
+		this.getRecord()
+	  }
     },
   },
   data() {
@@ -58,10 +60,10 @@ export default {
 	const value = localStorage.getItem('companyId');
 	if(value){
 		this.companyId = value;
-		this.companyTabsId = this.companyRange.indexOf(this.companyId);
+		//this.companyTabsId = this.companyRange.indexOf(this.companyId);
 	}else{
 		this.companyId = this.companyRange[0];
-		this.companyTabsId = 0;
+		//this.companyTabsId = 0;
 	}
   },
   methods: {
