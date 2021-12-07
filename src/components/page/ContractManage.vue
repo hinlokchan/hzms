@@ -8,9 +8,16 @@
                     </el-breadcrumb-item>
                 </el-breadcrumb>
             </div>
-          <el-input placeholder="合同号" v-model="searchContent.contractNum" @change="getData" size="small" style="margin-bottom: 20px ; width: 10% ;box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)"></el-input>
-          <el-input placeholder="项目名称" v-model="searchContent.projName" @change="getData" size="small" style="margin-left: 1px;margin-bottom: 20px ; width: 20% ;box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)"></el-input>
-          <el-input placeholder="外部合同号" v-model="searchContent.externalContractNum" @change="getData" size="small" style="margin-left: 1px;margin-bottom: 20px ; width: 20% ;box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)"></el-input>
+			
+			<el-tabs v-model="companyId" type="card" @tab-click="handleTabsClick">
+			  <el-tab-pane label="惠正公司" name="HZ"></el-tab-pane>
+			  <el-tab-pane label="智明公司" name="ZM"></el-tab-pane>
+			  <el-tab-pane label="汇正公司" name="HZKJ"></el-tab-pane>
+			</el-tabs>
+			
+          <el-input placeholder="合同号" v-model="searchData.contractNum" @change="getData" size="small" style="margin-bottom: 20px ; width: 10% ;box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)"></el-input>
+          <el-input placeholder="项目名称" v-model="searchData.projName" @change="getData" size="small" style="margin-left: 1px;margin-bottom: 20px ; width: 20% ;box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)"></el-input>
+          <el-input placeholder="外部合同号" v-model="searchData.externalContractNum" @change="getData" size="small" style="margin-left: 1px;margin-bottom: 20px ; width: 20% ;box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)"></el-input>
           <el-button type="primary" icon="el-icon-search" @click="getData" style="margin-left: 5px" >查找</el-button>
           <el-button type="primary" icon="el-icon-refresh" @click="resetSearch" style="margin-left: 5px" >重置</el-button>
           <el-table
@@ -117,10 +124,10 @@
               hide-on-single-page
               background
               @current-change="handleCurrentChange"
-              :current-page.sync="currentPage"
+              :current-page="currentPage"
               :page-size="pageSize"
               layout="total, prev, pager, next"
-              :total="totalCount"
+              :total="pageTotal"
               style="margin: 10px"
           >
           </el-pagination>
@@ -199,7 +206,7 @@ export default {
         notes: '',
         signingDate: ''
       },
-      searchContent: {
+      searchData: {
         contractNum: '',
         projName: '',
         externalContractNum: ''
@@ -209,7 +216,7 @@ export default {
       contractNumDialogVisible: false,
       activeRowData: undefined,
       currentPage: 1,
-      totalCount: 0,
+      pageTotal: 0,
       pageSize: 20,
 	  
 	  //211028变动 新增: 多个公司切换
@@ -223,10 +230,10 @@ export default {
   	const value = localStorage.getItem('companyId');
   	if(value){
   		this.companyId = value;
-  		//this.companyTabsId = this.companyRange.indexOf(this.companyId);
+  		this.companyTabsId = this.companyRange.indexOf(this.companyId);
   	}else{
   		this.companyId = this.companyRange[0];
-  		//this.companyTabsId = 0;
+  		this.companyTabsId = 0;
   	}
   	//console.log('初始化公司id', this.companyId);    
   	
@@ -281,13 +288,13 @@ export default {
       ;
     },
     getData() {
-      getContractList(this.searchContent, this.companyId).then(
+      getContractList(this.searchData, this.companyId).then(
           res => {
             for (let i = 0; i < res.data.length; i++) {
               res.data[i].clientName = res.data[i].clientTypeName + '-' + res.data[i].clientName;
             }
             this.tableData = res.data;
-            this.totalCount = res.data.length;
+            this.pageTotal = res.data.length;
           }
       );
     },
@@ -314,7 +321,10 @@ export default {
       }, this.companyId).then(
           res => {
             this.$message.success('修改成功');
-            this.reload();
+			
+            //this.reload();
+			this.contractNumDialogVisible = false;
+			this.getData();
           }
       ).catch(err => {
         console.log(err);
@@ -334,15 +344,40 @@ export default {
       return str.match(reg);
     },
     checkDetail(row) {
+	  //211202 处理页面跳转返回
+	  this.pageInfoSave();
+	  
       this.$router.push({ path: '/projcheck', query: { data: row.projId } })
     },
     resetSearch() {
-      this.searchContent.projName = ''
-      this.searchContent.externalContractNum = ''
-      this.searchContent.contractNum = ''
-
+	  //重置
+      this.searchData.projName = ''
+      this.searchData.externalContractNum = ''
+      this.searchData.contractNum = ''
+	  
+	  this.currentPage = 1
+	  this.pageTotal = 0;
+	  this.tableData = [];
+		
       this.getData()
     },	
+		
+	handleTabsClick(tab, event) {
+	  //console.log("切换到: ", tab.label, tab.name);
+	  this.$message.success('切换到: ' + tab.label);
+	  
+	  //1.companyTabsId, 修改公司数组序号id
+	  this.companyTabsId = this.companyRange.indexOf(this.companyId);
+	  
+	  //2. localStorage 将该公司id存储起来, 其他页面也是显示该公司信息
+	  localStorage.setItem('companyId', tab.name);
+	  console.log('公司id', localStorage.getItem('companyId'));
+	  
+	  //3. this.getData 重新读取该公司项目数据, 重置分页	  
+	  //this.getData(tab.name); //根据公司id获取对应项目数据
+	  this.resetSearch();
+	 
+	}, 
 	
 	//211202 处理页面跳转返回
 	pageInfoLoad(){
