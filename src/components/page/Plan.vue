@@ -724,6 +724,7 @@
 </template>
 
 <script>
+import CryptoJS from 'crypto-js'
 import {
   getAllAbstractProject,
   searchProject,
@@ -1030,9 +1031,12 @@ export default {
 	  this.pageInfoSave();
 				  
       //sessionStorage.setItem('page', this.currentPage)
-      this.$router.push({ path: '/planform', query: { data: val.projId } })
+	  const key = this.newCode(val.projId);
+      this.$router.push({ path: '/planform', query: { data: key } })
     },
     handleProjType(val) {
+		
+	  //console.log(val);
 		
 	  //211029变动 新增: 多个公司切换, 通过数组id区分
 	  for (let i of this.projTypeOption[this.companyTabsId]) {
@@ -1050,6 +1054,8 @@ export default {
       for (let i of this.projTypeOption[this.companyTabsId]) {
         i.disable = false
       }
+	  //清空
+	  Object.keys(this.changeType).forEach(key => (this.changeType[key] = ''))
     },
     changeProjType() {
       if (this.changeType.toType == '') {
@@ -1082,8 +1088,9 @@ export default {
       //sessionStorage.setItem('page', this.currentPage)
       // const index2 = (this.currentPage - 1)*10 + index
 	  
-      console.log('查看项目详情事件', val.projId);
-      this.$router.push({ path: '/projcheck', query: { data: val.projId } })
+      //console.log('查看项目详情事件', val.projId);	  
+	  const key = this.newCode(val.projId);
+      this.$router.push({ path: '/projcheck', query: { data: key } })
     },
     // 删除操作
     handleDelete(row) {
@@ -1306,7 +1313,27 @@ export default {
 	    status:0
 	  };
 	  sessionStorage.setItem('plan_pageinfo', JSON.stringify(plan_pageinfo));
-	}
+	},
+	
+	//211210变动 query加密
+	newCode(data){
+	  data = ""+data;
+	  if(data){
+	    const key = CryptoJS.enc.Utf8.parse('65201488');
+	    const iv = CryptoJS.enc.Utf8.parse('45872411');
+	
+	    const encrypted = CryptoJS.TripleDES.encrypt(
+	      data,
+	      key,
+	      {
+	        iv: iv,
+	        mode: CryptoJS.mode.CBC,
+	        padding: CryptoJS.pad.Pkcs7,
+	      },
+	    );
+	  	return encrypted.toString();
+	  }
+	},
   }
 };
 </script>
