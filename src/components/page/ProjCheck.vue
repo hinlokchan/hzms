@@ -535,8 +535,9 @@
                   <span class="detail-content">{{detailData.projReviewer}}</span>
                 </el-form-item>
               </el-col>
-			  <!-- 
-              <el-col :span="8">
+			  
+              <el-col :span="8"
+			  v-if="onProjTypeChangeVisable() == 1">
                 <el-form-item
                   label="专业复核人"
                   class="label"
@@ -544,7 +545,7 @@
                   <span class="detail-content">{{detailData.projProReviewer}}</span>
                 </el-form-item>
               </el-col>
-			  -->
+			 
             </el-row>
             <el-row>
               <el-col :span="8">
@@ -870,7 +871,8 @@
   </div>
 </template>
 
-<script>
+<script>	
+import CryptoJS from 'crypto-js'
 import { getDetailProjInfo, getReportNum, getProjInfoTable } from '@/api/index'
 import OpRecord from './OpRecord'
 import projTypeOption from '../../../public/projTypeOption.json'
@@ -946,10 +948,11 @@ export default {
 	//console.log('初始化公司id', this.companyId);
 	
 	//211202 处理页面跳转返回
-	this.pageInfoEdit();
-	  
-	  
-    this.projId = this.$route.query.data
+	this.pageInfoEdit();	  
+	
+	//211210变动 处理query解密
+    this.projId =  this.newContent(this.$route.query.data);
+	
     this.getDetail()
     this.projTypeOption = projTypeOption
     //this.clientOptions = clientOptions
@@ -972,7 +975,7 @@ export default {
 		projId: this.projId
 	  } 	
 		
-      getDetailProjInfo(detailData, this.companyId).then(res => {
+      getDetailProjInfo(detailData, this.companyId).then(res => {		
         if (JSON.stringify(res.data) === '{}') {
           this.$message.error('计划系统内无该项目数据');
 
@@ -991,8 +994,29 @@ export default {
             this.transedData.projType = this.projTypeOption[this.companyTabsId][i].label
           }
         }
-        this.reportNum = res.data.reportNumList
-      })
+        //this.reportNum = res.data.reportNumList
+		
+		//211209变动 reportNumList新格式转换
+		const reportNumList = res.data.reportNumList?res.data.reportNumList:'';
+		
+		Object.keys(this.reportNum).forEach(key => (this.reportNum[key] = ''))
+		//Object.keys(this.cnReportNum).forEach(key => (this.cnReportNum[key] = ''))
+		
+		//const compList = ['惠正', '智明', '汇正'];
+		reportNumList.forEach((item, index) =>{
+			if(item.reportNum){
+				if (item.reportNumLevel == 1) {
+				  this.reportNum.cph = item.reportNum;
+				} else if (item.reportNumLevel == 2) {
+				  this.reportNum.zph = item.reportNum;
+				} else if (item.reportNumLevel == 3) {
+				  this.reportNum.hhh = item.reportNum;
+				}
+			}
+		})
+      }).catch(error =>{
+		this.$message.error('计划系统内无该项目数据');
+	  })
     },
     goBack() {
       this.$router.back()
@@ -1126,6 +1150,33 @@ export default {
 		  contract_pageinfo.status = 1; //更新状态
 		  sessionStorage.setItem('contract_pageinfo', JSON.stringify(contract_pageinfo));
 		}
+	},
+		
+	//211210变动 query解密
+	newContent(data){
+	  if(data){
+		const key = CryptoJS.enc.Utf8.parse('65201488');
+		const iv = CryptoJS.enc.Utf8.parse('45872411');
+		var base64str = "";
+		try{
+		  base64str = CryptoJS.enc.Base64.parse(data);
+		}catch(e){
+		  return "";
+		}
+
+		const decrypted = CryptoJS.TripleDES.decrypt(
+		  {
+			ciphertext: base64str,
+		  },
+		  key,
+		  {
+			iv: iv,
+			mode: CryptoJS.mode.CBC,
+			padding: CryptoJS.pad.Pkcs7,
+		  },
+		);
+		return decrypted.toString(CryptoJS.enc.Utf8);
+	  }
 	}
   }
 }
