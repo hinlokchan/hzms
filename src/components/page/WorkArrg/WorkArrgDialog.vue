@@ -436,9 +436,10 @@
           ></el-option>
         </el-select>
         <div style="color: red">
-          Tips:选项中没有的评估方法可直接在框内输入创建
+          Tips:选项中没有的测绘方法可直接在框内输入创建
         </div>
       </el-form-item>
+	  <!-- 
       <el-form-item label="现场测绘内容">
         <el-input
           v-model="arrgForm.fldSrvyContent"
@@ -446,6 +447,7 @@
           rows="2"
         ></el-input>
       </el-form-item>
+	  -->
 
       <el-row :gutter="10">
         <el-col :span="10">
@@ -785,7 +787,7 @@
 	      ></el-option>
 	    </el-select>
 	    <div style="color: red">
-	      Tips:选项中没有的评估方法可直接在框内输入创建
+	      Tips:选项中没有的咨询方法可直接在框内输入创建
 	    </div>
 	  </el-form-item>
 	  <el-form-item label="现场内容">
@@ -1144,14 +1146,14 @@
 	>
 	  <el-button @click="defaultArrg">默认安排</el-button>
 	  <!-- 
-	  <el-form-item label="会计方法" prop="assemMethod">
+	  <el-form-item label="审计方法" prop="assemMethod">
 	    <el-select
 		  class="select-width-50"
 	      v-model="arrgForm.assemMethod"
 	      multiple
 	      filterable
 	      allow-create
-	      placeholder="请选择会计方法"
+	      placeholder="请选择审计方法"
 	    >
 	      <el-option
 	        v-for="item in assemMethodOptionsKj"
@@ -1161,7 +1163,7 @@
 	      ></el-option>
 	    </el-select>
 	    <div style="color: red">
-	      Tips:选项中没有的评估方法可直接在框内输入创建
+	      Tips:选项中没有的审计方法可直接在框内输入创建
 	    </div>
 	  </el-form-item>
 	  <el-form-item label="现场内容">
@@ -2056,8 +2058,8 @@ export default {
 			  this.arrgForm.prePreparationPic = this.arrgForm.prePreparationPic.join(',');
 			  this.arrgForm.workPlanPic = this.arrgForm.workPlanPic.join(',');
 			  this.arrgForm.dataCollectionPic = this.arrgForm.dataCollectionPic.join(',');
-			  this.arrgForm.fldSrvyPic = this.arrgForm.fldSrvyPic.join(',');
-			  this.arrgForm.mktSrvyPic = this.arrgForm.mktSrvyPic.join(',');
+			  this.arrgForm.fldSrvyPic = this.arrgForm.fldSrvyPic?this.arrgForm.fldSrvyPic.join(','):'';
+			  this.arrgForm.mktSrvyPic = this.arrgForm.mktSrvyPic?this.arrgForm.mktSrvyPic.join(','):'';
 			  this.arrgForm.issueValPic = this.arrgForm.issueValPic.join(',');
 			  this.arrgForm.internalAuditPic = this.arrgForm.internalAuditPic.join(',');
 			  this.arrgForm.commuClientPic = this.arrgForm.commuClientPic.join(',');
@@ -2068,8 +2070,8 @@ export default {
 			  this.arrgForm.prePreparationSche = this.arrgForm.prePreparationSche.join('-');
 			  this.arrgForm.workPlanSche = this.arrgForm.workPlanSche.join('-');
 			  this.arrgForm.dataCollectionSche = this.arrgForm.dataCollectionSche.join('-');
-			  this.arrgForm.fldSrvySche = this.arrgForm.fldSrvySche.join('-');
-			  this.arrgForm.mktSrvySche = this.arrgForm.mktSrvySche.join('-');
+			  this.arrgForm.fldSrvySche = this.arrgForm.fldSrvySche?this.arrgForm.fldSrvySche.join('-'):'';
+			  this.arrgForm.mktSrvySche = this.arrgForm.mktSrvySche?this.arrgForm.mktSrvySche.join('-'):'';
 			  this.arrgForm.issueValSche = this.arrgForm.issueValSche.join('-');
 			  this.arrgForm.internalAuditSche = this.arrgForm.internalAuditSche.join('-');
 			  this.arrgForm.commuClientSche = this.arrgForm.commuClientSche.join('-');
@@ -2152,6 +2154,9 @@ export default {
 		  this.arrgForm.commuClientPic = [];
 		  this.arrgForm.amendFinalPic = [];
 		  
+		  this.arrgForm.assemChargePic = [];
+		  this.arrgForm.manuArchivePic = [];
+		  
 		  this.arrgForm.prePreparationSche = [];
 		  this.arrgForm.fldSrvySche = [];
 		  this.arrgForm.mktSrvySche = [];
@@ -2179,6 +2184,7 @@ export default {
 
 		  let leader = this.projLeader.split(',');
 		  let reviewer = this.projReviewer.split(',');
+		  let proreviewer = this.projProReviewer.split(',');
 		  let asst = this.projAsst.split(',');
 		  let srvy = this.fieldSrvy.split(',');
 		  for (let i of leader) {
@@ -2191,6 +2197,12 @@ export default {
 			}
 		  }
 		  for (let i of reviewer) {
+			if (i != '') {
+			  this.arrgForm.internalAuditPic.push(i);
+			  this.arrgForm.commuClientPic.push(i);
+			}
+		  }
+		  for (let i of proreviewer) {
 			if (i != '') {
 			  this.arrgForm.internalAuditPic.push(i);
 			  this.arrgForm.commuClientPic.push(i);
@@ -2222,6 +2234,10 @@ export default {
 		  this.arrgForm.commuClientPic = [];
 		  this.arrgForm.amendFinalPic = [];
 		  
+		  this.arrgForm.assemChargePic = [];
+		  this.arrgForm.manuArchivePic = [];
+		  
+		  
 		  this.arrgForm.prePreparationSche = [];
 		  this.arrgForm.fldSrvySche = [];
 		  this.arrgForm.drawingSche = [];
@@ -2230,6 +2246,9 @@ export default {
 		  this.arrgForm.internalAuditSche = [];
 		  this.arrgForm.commuClientSche = [];
 		  this.arrgForm.amendFinalSche = [];
+		  
+		  //this.arrgForm.assemChargeSche = [];
+		  //this.arrgForm.manuArchiveSche = [];
 		  
 		  //赋值
 		  let day = this.baseDate;
@@ -2251,6 +2270,7 @@ export default {
 		  
 		  let leader = this.projLeader.split(',');
 		  let reviewer = this.projReviewer.split(',');
+		  let proreviewer = this.projProReviewer.split(',');
 		  let asst = this.projAsst.split(',');
 		  let srvy = this.fieldSrvy.split(',');
 		  for (let i of leader) {
@@ -2266,14 +2286,17 @@ export default {
 		  for (let i of reviewer) {
 			if (i != '') {
 			  this.arrgForm.internalAuditPic.push(i);
-			  this.arrgForm.commuClientPic.push(i);
+			}
+		  }
+		  for (let i of proreviewer) {
+			if (i != '') {
+			  this.arrgForm.internalAuditPic.push(i);
 			}
 		  }
 		  for (let i of asst) {
 			if (i != '') {
 			  this.arrgForm.drawingPic.push(i);
 			  this.arrgForm.issueValPic.push(i);
-			  this.arrgForm.internalAuditPic.push(i);
 			  this.arrgForm.manuArchivePic.push(i);
 			}
 		  }
@@ -2295,6 +2318,9 @@ export default {
 		  this.arrgForm.internalAuditPic = [];
 		  this.arrgForm.commuClientPic = [];
 		  this.arrgForm.amendFinalPic = [];
+		  
+		  this.arrgForm.assemChargePic = [];
+		  this.arrgForm.manuArchivePic = [];
 		  
 		  this.arrgForm.prePreparationSche = [];
 		  this.arrgForm.workPlanSche = [];
@@ -2327,6 +2353,7 @@ export default {
 		  
 		  let leader = this.projLeader.split(',');
 		  let reviewer = this.projReviewer.split(',');
+		  let proreviewer = this.projProReviewer.split(',');
 		  let asst = this.projAsst.split(',');
 		  let srvy = this.fieldSrvy.split(',');
 		  for (let i of leader) {
@@ -2340,6 +2367,12 @@ export default {
 			}
 		  }
 		  for (let i of reviewer) {
+			if (i != '') {
+			  this.arrgForm.internalAuditPic.push(i);
+			  this.arrgForm.commuClientPic.push(i);
+			}
+		  }
+		  for (let i of proreviewer) {
 			if (i != '') {
 			  this.arrgForm.internalAuditPic.push(i);
 			  this.arrgForm.commuClientPic.push(i);
@@ -2369,6 +2402,9 @@ export default {
 		  this.arrgForm.internalAuditPic = [];
 		  this.arrgForm.commuClientPic = [];
 		  this.arrgForm.amendFinalPic = [];
+		  
+		  this.arrgForm.assemChargePic = [];
+		  this.arrgForm.manuArchivePic = [];
 		  
 		  this.arrgForm.prePreparationSche = [];
 		  this.arrgForm.workPlanSche = [];
@@ -2407,6 +2443,7 @@ export default {
 		  
 		  let leader = this.projLeader.split(',');
 		  let reviewer = this.projReviewer.split(',');
+		  let proreviewer = this.projProReviewer.split(',');
 		  let asst = this.projAsst.split(',');
 		  let srvy = this.fieldSrvy.split(',');
 		  for (let i of leader) {
@@ -2421,6 +2458,12 @@ export default {
 			}
 		  }
 		  for (let i of reviewer) {
+			if (i != '') {
+			  this.arrgForm.internalAuditPic.push(i);
+			  this.arrgForm.commuClientPic.push(i);
+			}
+		  }
+		  for (let i of proreviewer) {
 			if (i != '') {
 			  this.arrgForm.internalAuditPic.push(i);
 			  this.arrgForm.commuClientPic.push(i);
