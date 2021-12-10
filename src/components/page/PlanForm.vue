@@ -135,9 +135,9 @@
                   </el-option>
                 </el-select>
                 <el-input disabled type="text"
-                          style="width: 50%"
-                          v-if="this.isEdit"
-                          v-model="projTypes[companyTabsId][form.projType]"
+				  class="select-width-100"
+				  v-if="this.isEdit"
+				  v-model="projTypes[companyTabsId][form.projType]"
                 ></el-input>
               </el-form-item>
             </el-col>
@@ -1426,8 +1426,9 @@
                 添加
               </el-form-item>
             </el-col>
-			<!-- 
-            <el-col :span="6">
+			
+            <el-col :span="6"
+			v-if="onProjTypeChangeVisable() == 1">
               <el-form-item
                 v-for="(item, index) in form.projProReviewer"
                 :label="'专业复核人' + (index + 1)"
@@ -1456,7 +1457,7 @@
                 添加
               </el-form-item>
             </el-col>
-			 -->
+			
             <el-col :span="6">
               <el-form-item
                 v-for="(item, index) in form.projAsst"
@@ -1585,9 +1586,9 @@
                   </el-option>
                 </el-select>
                 <el-input disabled type="text"
-                          style="width: 50%"
-                          v-if="this.isEdit"
-                          v-model="projTypes[companyTabsId][form.projType]"
+				  class="select-width-100"
+				  v-if="this.isEdit"
+				  v-model="projTypes[companyTabsId][form.projType]"
                 ></el-input>
               </el-form-item>
             </el-col>
@@ -2249,6 +2250,7 @@
 </template>
 
 <script>
+import CryptoJS from 'crypto-js'
 import { createNewProject, editProject,createEvalObj, getAllAbstractProject } from '@/api/index'
 import { getDetailProjInfo, getUserList, userQuery, getClientList, addClient } from '@/api/index'
 import clientOptions from '../../../public/clientName.json'
@@ -2393,8 +2395,28 @@ export default {
 			assemGoal: [
 			  { required: true, message: '请选择项目目的', trigger: 'blur' }
 			],
+			baseDate: [
+			  { required: true, message: '请选择基准日', trigger: 'blur' }
+			],
 			fldSrvySchedule: [
 			  { required: true, message: '请选择现勘日期', trigger: 'blur' }
+			]
+		},
+		{
+			projType: [
+			  { required: true, message: '请选择项目类型', trigger: 'blur' }
+			],
+			projName: [
+			  { required: true, message: '请输入项目名称', trigger: 'blur' }
+			],
+			assemGoal: [
+			  { required: true, message: '请选择审计目的', trigger: 'blur' }
+			],
+			baseDate: [
+			  { required: true, message: '请选择基准日', trigger: 'blur' }
+			],
+			fldSrvySchedule: [
+			  { required: true, message: '请选择审计日期', trigger: 'blur' }
 			]
 		}
 	  ],
@@ -2553,7 +2575,8 @@ export default {
 	  }
 	  
     } else {
-      this.projId = this.$route.query.data
+	  //211210变动 处理query解密
+	  this.projId =  this.newContent(this.$route.query.data);
       this.isEdit = true
       this.getDetail()
 	  
@@ -2756,7 +2779,7 @@ export default {
     },
     getDetail() {
       getDetailProjInfo({ projId: this.projId }, this.companyId).then(res => {
-        console.log(res.data)
+        //console.log(res.data)
         this.dealEditData(res.data)
         // this.form = res.data
       })
@@ -3391,6 +3414,33 @@ export default {
 	pageInfoDel(){
 		sessionStorage.removeItem('plan_pageinfo');
 		sessionStorage.removeItem('workbranch_pageinfo');
+	}, 
+		
+	//211210变动 query解密
+	newContent(data){
+	  if(data){
+		const key = CryptoJS.enc.Utf8.parse('65201488');
+		const iv = CryptoJS.enc.Utf8.parse('45872411');
+		var base64str = "";
+		try{
+		  base64str = CryptoJS.enc.Base64.parse(data);
+		}catch(e){
+		  return "";
+		}
+	
+		const decrypted = CryptoJS.TripleDES.decrypt(
+		  {
+			ciphertext: base64str,
+		  },
+		  key,
+		  {
+			iv: iv,
+			mode: CryptoJS.mode.CBC,
+			padding: CryptoJS.pad.Pkcs7,
+		  },
+		);
+		return decrypted.toString(CryptoJS.enc.Utf8);
+	  }
 	}
   }
 };
