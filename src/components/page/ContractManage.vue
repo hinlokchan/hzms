@@ -188,6 +188,7 @@
 </template>
 
 <script>
+import CryptoJS from 'crypto-js'
 import { getContractList, updateContractInfo, updateExternalContractNum } from '@/api';
 
 export default {
@@ -347,7 +348,8 @@ export default {
 	  //211202 处理页面跳转返回
 	  this.pageInfoSave();
 	  
-      this.$router.push({ path: '/projcheck', query: { data: row.projId } })
+	  const key = this.newCode(row.projId);
+	  this.$router.push({ path: '/projcheck', query: { data: key } })
     },
     resetSearch() {
 	  //重置
@@ -413,7 +415,27 @@ export default {
 	    status:0
 	  };
 	  sessionStorage.setItem('contract_pageinfo', JSON.stringify(contract_pageinfo));
-	}
+	},
+		
+	//211210变动 query加密
+	newCode(data){
+	  data = ""+data;
+	  if(data){
+	    const key = CryptoJS.enc.Utf8.parse('65201488');
+	    const iv = CryptoJS.enc.Utf8.parse('45872411');
+	
+	    const encrypted = CryptoJS.TripleDES.encrypt(
+	      data,
+	      key,
+	      {
+	        iv: iv,
+	        mode: CryptoJS.mode.CBC,
+	        padding: CryptoJS.pad.Pkcs7,
+	      },
+	    );
+	  	return encrypted.toString();
+	  }
+	},
   },
   
 
