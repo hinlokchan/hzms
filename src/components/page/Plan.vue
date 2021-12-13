@@ -1039,10 +1039,26 @@ export default {
 	  //console.log(val);
 		
 	  //211029变动 新增: 多个公司切换, 通过数组id区分
+	  const projType = this.onProjTypeChangeVisable(val.projType);
+	  
 	  for (let i of this.projTypeOption[this.companyTabsId]) {
-        if (val.projType == i.value) {
-          i.disable = true
-        }
+        if(projType == 1 || projType == 2){
+			//智明特别处理
+			if (val.projType == i.value) {
+			  i.disable = true
+			}else if(projType == 1 && i.value >=2200 && i.value < 2300){
+				//测绘时, 禁用切换成智明
+				i.disable = true				
+			}else if(projType == 2 && i.value >=2100 && i.value < 2200){
+				//智明时, 禁用切换成测绘
+				i.disable = true
+			}
+		}else{
+			if (val.projType == i.value) {
+			  i.disable = true
+			}
+		}
+		
       }
 	 
 	  
@@ -1278,6 +1294,25 @@ export default {
 	  this.handleRefresh();
 	 
 	}, 
+	
+	onProjTypeChangeVisable(projType){
+	  if(this.companyTabsId == 0){
+		//处理惠正
+		
+	  }else if(this.companyTabsId == 1){
+		//处理智明业务输入框是否显示
+		if(projType>=2100 && projType <2200){
+			//测绘
+			return 1;
+		}else if(projType>=2200 && projType <2300){
+			//咨询
+			return 2;  
+		}  
+	  }else if(this.companyTabsId == 1){
+		//处理汇正
+		
+	  }
+	},	
 	
 	//211202 处理页面跳转返回
 	pageInfoLoad(){
