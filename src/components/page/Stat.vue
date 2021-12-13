@@ -1,12 +1,12 @@
 <template>
   <div class="container">
     <el-page-header @back="goBack"></el-page-header>
-    <el-card style="width:50%; margin-top: 20px">
+    <el-card style="width:50%; min-width: 600px; margin-top: 20px">
       <div
         slot="header"
         class="clearfix"
       >
-        <span>日计划报表</span>
+        <span><b>日计划报表</b></span>
         <el-button
           style="float:right"
           type="text"
@@ -25,12 +25,12 @@
         </el-date-picker>
       </div>
     </el-card>
-    <el-card style="width:50%; margin-top: 20px">
+    <el-card style="width:50%; min-width: 600px; margin-top: 20px">
       <div
         slot="header"
         class="clearfix"
       >
-        <span>周报表</span>
+        <span><b>周报表</b></span>
         <el-button
           style="float:right"
           type="text"
@@ -48,90 +48,79 @@
         </el-date-picker>
       </div>
     </el-card>
-    <el-card style="width:50%; margin-top: 20px">
+    <el-card style="width:50%; min-width: 600px; margin-top: 20px">
       <div slot="header"
            class="clearfix">
-        <span>多条件筛选导出计划报表</span>
+        <span><b>多条件筛选导出计划报表</b></span>
         <el-button
             style="float:right"
             type="text"
             @click="exportPlan"
         >导出</el-button>
       </div>
-      <div style="margin-bottom: 20px">
-        <span class="demonstration">编制日期&nbsp;&nbsp;</span>
-        <el-date-picker
-            v-model="multiConProjDateStart"
-            type="date"
-            :editable="false"
-            placeholder="请选择开始日期"
-            value-format="yyyy-MM-dd"
-            :picker-options="pickerOptions"
-        >
-        </el-date-picker>&nbsp;
-        <el-date-picker
-            v-model="multiConProjDateEnd"
-            type="date"
-            :editable="false"
-            placeholder="请选择结束日期"
-            value-format="yyyy-MM-dd"
-            :picker-options="pickerOptions"
-        >
-        </el-date-picker>
-      </div>
-      <div style="margin-bottom: 20px">
-        <span class="demonstration">项目类型&nbsp;&nbsp;</span>
-        <el-select v-model="multiConProjType" multiple placeholder="请选择">
-          <el-option
-              v-for="item in multiConProjTypeOps"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-          </el-option>
-        </el-select>
-      </div>
-      <div style="margin-bottom: 20px">
-        <span class="demonstration">委托人类型&nbsp;&nbsp;</span>
-        <el-select
-            v-model="multiConClientType"
-            clearable
-            :disabled="multiConClientId.length !== 0"
-        >
-          <el-option
-              v-for="item in clientTypeList"
-              :key="item.clientType"
-              :label="item.clientTypeName"
-              :value="item.clientType"
-          >
-          </el-option>
-        </el-select>
-      </div>
-      <div style="margin-bottom: 20px">
-        <span class="demonstration">委托人&nbsp;&nbsp;</span>
-        <el-cascader
-            :disabled="multiConClientType !== ''"
-            ref="cascaderAddr"
-            :show-all-levels="false"
-            v-model="multiConClientId"
-            :options="clientList"
-            :props="{ expandTrigger: 'hover' }"
-            filterable
-            clearable
-        >
-        </el-cascader>
-      </div>
-      <div>
-        <span class="demonstration">项目组成员&nbsp;&nbsp;</span>
-        <el-select v-model="multiConStaffName" placeholder="请选择" clearable filterable>
-          <el-option
-              v-for="item in staffList"
-              :key="item.staffId"
-              :label="item.staffName"
-              :value="item.staffName"
-          >
-          </el-option>
-        </el-select>
-      </div>
+	  <el-form label-width="auto">
+	    <el-form-item label="编制日期">
+		  <el-date-picker
+			v-model="multiConProjDate"
+			value-format="yyyy-MM-dd"
+			type="daterange"
+			unlink-panels
+			range-separator="至"
+			start-placeholder="请选择开始日期"
+			end-placeholder="请选择结束日期"
+			:picker-options="pickerOptions2">
+		  </el-date-picker>	
+	    </el-form-item>
+	    <el-form-item label="项目类型">
+			<el-select v-model="multiConProjType" multiple placeholder="请选择">
+			  <el-option
+			      v-for="item in multiConProjTypeOps"
+			      :key="item.value"
+			      :label="item.label"
+			      :value="item.value">
+			  </el-option>
+			</el-select>
+	    </el-form-item>
+	    <el-form-item label="委托人类型">
+			<el-select
+			    v-model="multiConClientType"
+			    clearable
+			    :disabled="multiConClientId.length !== 0"
+			>
+			  <el-option
+			      v-for="item in clientTypeList"
+			      :key="item.clientType"
+			      :label="item.clientTypeName"
+			      :value="item.clientType"
+			  >
+			  </el-option>
+			</el-select>
+	    </el-form-item>
+	    <el-form-item label="委托人">
+			<el-cascader
+			    :disabled="multiConClientType !== ''"
+			    ref="cascaderAddr"
+			    :show-all-levels="false"
+			    v-model="multiConClientId"
+			    :options="clientList"
+			    :props="{ expandTrigger: 'hover' }"
+			    filterable
+			    clearable
+			>
+			</el-cascader>
+	    </el-form-item>
+	    <el-form-item label="项目组成员">
+			<el-select v-model="multiConStaffName" placeholder="请选择" clearable filterable>
+			  <el-option
+			      v-for="item in staffList"
+			      :key="item.staffId"
+			      :label="item.staffName"
+			      :value="item.staffName"
+			  >
+			  </el-option>
+			</el-select>
+	    </el-form-item>
+	  </el-form>
     </el-card>
   </div>
 </template>
@@ -185,8 +174,15 @@ export default {
               picker.$emit('pick', date);
             }
           }
-        ]
+        ],
       },
+	  pickerOptions2: {
+		disabledDate(time) {
+		  return time.getTime() > Date.now()
+        },
+	  },
+		
+	
       multiConProjDate: '',
       multiConProjDateStart: '',
       multiConProjDateEnd: '',
@@ -304,9 +300,10 @@ export default {
       let path = 'statistics/dayReport'
       const formData = new FormData()
       formData.append('dateStr', val)
-      downloadExcel(formData, path)
+      downloadExcel(formData, path, this.companyId)
     },
 
+	/* 
     download(formData,path) {
       const loading = this.$loading({
         lock: true,
@@ -345,6 +342,7 @@ export default {
         }, 300)
       };
     },
+	 */
 
     printWeekReport(val) {
       if (val == '') {
@@ -359,7 +357,7 @@ export default {
       const formData = new FormData()
       formData.append('week', week)
       formData.append('year', year)
-      downloadExcel(formData, path)
+      downloadExcel(formData, path, this.companyId)
     },
     formatDate(now) {
       const time = new Date(now)
@@ -373,38 +371,25 @@ export default {
       this.$router.go(-1)
     },
     exportPlan() {
-
-      var startDate = Date.parse(this.multiConProjDateStart)
-      var endDate = Date.parse(this.multiConProjDateEnd)
-      console.log(this.multiConProjDateStart)
-      console.log(this.multiConProjDateEnd)
-      if (startDate > endDate) {
-        this.$message.error('开始日期不能大于结束日期');
-        return;
-      }
-
-      if (this.multiConProjDateStart === ''
-          || this.multiConProjDateEnd === ''
-          || this.multiConProjDateStart === null
-          || this.multiConProjDateEnd === null
-      ) {
-        this.$message.error('请至少选择编制日期范围作为筛选条件');
-        return;
-      }
-
-      let path = 'statistics/export/exportPlan'
-
-      const formData = new FormData()
-      if (this.multiConClientId.length > 0) {
-        formData.append('clientIdStr', this.multiConClientId[this.multiConClientId.length-1])
-      }
-      formData.append('projDateStart', this.multiConProjDateStart)
-      formData.append('projDateEnd', this.multiConProjDateEnd)
-      formData.append('projTypeArrStr', this.parseArray(this.multiConProjType))
-      formData.append('projMemberStr', this.multiConStaffName)
-      formData.append('clientTypeStr', this.multiConClientType)
-
-      downloadExcel(formData, path)
+	  //211213变动 修改表单样式
+	  if(this.multiConProjDate){
+		let path = 'statistics/export/exportPlan'
+		
+		const formData = new FormData()
+		if (this.multiConClientId.length > 0) {
+		  formData.append('clientIdStr', this.multiConClientId[this.multiConClientId.length-1])
+		}
+		formData.append('projDateStart', this.multiConProjDate[0])
+		formData.append('projDateEnd', this.multiConProjDate[1])
+		formData.append('projTypeArrStr', this.parseArray(this.multiConProjType))
+		formData.append('projMemberStr', this.multiConStaffName)
+		formData.append('clientTypeStr', this.multiConClientType)
+		
+		downloadExcel(formData, path, this.companyId)
+		
+	  }else{
+		this.$message.error('请至少选择编制日期范围作为筛选条件');  
+	  }
 
     },
     parseArray(array) {
