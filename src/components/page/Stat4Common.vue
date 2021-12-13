@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <el-page-header @back="goBack"></el-page-header>
-    <el-card style="width:50%; margin-top: 20px">
+    <el-card style="width:50%; min-width: 600px; margin-top: 20px">
       <div slot="header"
            class="clearfix">
         <span><b>项目周报表</b></span>
@@ -55,11 +55,27 @@ var ProManageAPIServer = `${host.baseUrl}/${host.ProManageAPIServer}`
         }, {
           value: '1',
           label: '助理人员'
-        }]
+        }],
+				
+		//211028变动 新增: 多个公司切换
+		companyId:'',
+		companyRange:['HZ', 'ZM','HZKJ'],
       }
     },
     created() {
-      isAuthenticated();
+	  //211028变动 新增: 多个公司切换
+	  const value = localStorage.getItem('companyId');
+	  if(value){
+	  	this.companyId = value;
+	  	//this.companyTabsId = this.companyRange.indexOf(this.companyId);
+	  }else{
+	  	this.companyId = this.companyRange[0];
+	  	//this.companyTabsId = 0;
+	  }
+	  //console.log('初始化公司id', this.companyId);   
+	  
+      isAuthenticated();	  
+	  
     },
     methods : {
       exportProjLeaderReport() {
@@ -76,9 +92,13 @@ var ProManageAPIServer = `${host.baseUrl}/${host.ProManageAPIServer}`
           return;
         }
 
-        downloadExcel(null, path)
+        downloadExcel(null, path, this.companyId);
 
-      }
+      },
+	  
+	  goBack() {
+	    this.$router.go(-1)
+	  },
     }
   }
 </script>
