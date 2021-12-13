@@ -16,7 +16,7 @@ function endLoading() {
     loading.close()
 }
 
-export function downloadExcel(formData, path) {
+export function downloadExcel(formData, path, companyId) {
     // const loading = this.$loading({
     //     lock: true,
     //     text: '下载中',
@@ -29,7 +29,7 @@ export function downloadExcel(formData, path) {
     oReq.open('POST', ProManageAPIServer + path, true)
 	
 	//211101变动 新增: 多个公司切换
-	oReq.setRequestHeader('companyId',this.companyId)
+	oReq.setRequestHeader('companyId',companyId)
 	
     oReq.responseType = 'blob'
     oReq.onload = function (oEvent) {
@@ -37,7 +37,7 @@ export function downloadExcel(formData, path) {
         var elink = document.createElement('a')
         // name为后台返给前端的文件名，根据下载文件格式加后缀名，后缀名必须加，不然下载在本地不方便打开。
         var headers = oReq.getResponseHeader('content-disposition')
-        const headers2 = headers.split(';')[1].split('=')[1].substr(10)
+        const headers2 = headers.split(';')[1].split('=')[1]
         elink.download = headers2
         elink.style.display = 'none'
         var blob = new Blob([content])
