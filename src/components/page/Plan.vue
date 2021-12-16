@@ -423,7 +423,7 @@
         <el-table-column
           prop="projScope"
           label="项目范围"
-          width="250"
+          min-width="250"
           :show-overflow-tooltip="true"
         ></el-table-column>
         <el-table-column
@@ -456,7 +456,7 @@
         </el-table-column> -->
         <el-table-column
           label="操作"
-          width="250"
+          width="200"
           align="center"
           fixed="right"
         >
@@ -599,7 +599,7 @@
         <el-table-column
           prop="projScope"
           label="项目范围"
-          width="250"
+          min-width="250"
           :show-overflow-tooltip="true"
         ></el-table-column>
         <el-table-column
@@ -632,7 +632,7 @@
         </el-table-column> -->
         <el-table-column
           label="操作"
-          width="250"
+          width="200"
           align="center"
           fixed="right"
         >
@@ -836,12 +836,12 @@ export default {
 			{ text: '咨询-其他', value: 2208 },
 		],
 		[
-			{ text: '会审', value: 3010 },
-			{ text: '专审', value: 3020 },
-			{ text: '验资', value: 3030 },
-			{ text: '咨询', value: 3040 },
-			{ text: '专评', value: 3050 },
-			{ text: '税审', value: 3060 },
+			{ text: '财报审计', value: 3001 },
+			{ text: '专审', value: 3002 },
+			{ text: '专项审计', value: 3003 },
+			{ text: '汇正咨询', value: 3004 },
+			{ text: '发债', value: 3005 },
+			{ text: '税务审计', value: 3006 },
 		],
       ],
       projTypes: [
@@ -878,13 +878,13 @@ export default {
 			2208: '咨-其他',
 		  },
 		  {
-			3010: '会审',
-			3020: '专审',
-			3030: '验资',
-			3040: '咨询',
-			3050: '专评',
-			3060: '税审',
-		  }
+			3001: '财报',
+			3002: '专项',
+			3003: '验资',
+			3004: '咨询',
+			3005: '发债',
+			3006: '税务',
+		  },
 	  ],
       projTypeOption: [],
       changeType: {
