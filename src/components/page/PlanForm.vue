@@ -2932,6 +2932,8 @@ export default {
 			this.isBaseDate = "0";
 		}else if(data.auditPeriodStart){
 			data['auditPeriod'] = [];
+			data.auditPeriodStart = this.formatDate(data.auditPeriodStart);
+			data.auditPeriodEnd = this.formatDate(data.auditPeriodEnd);
 			data.auditPeriod[0] = data.auditPeriodStart;
 			data.auditPeriod[1] = data.auditPeriodEnd;
 			this.isBaseDate = "1";
