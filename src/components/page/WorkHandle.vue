@@ -504,6 +504,8 @@
       :arrgEdit="workArrgEdit"
       :arrgData="arrgData"
       :baseDate="projDetail.baseDate"
+      :auditPeriodStart="projDetail.auditPeriodStart"
+      :auditPeriodEnd="projDetail.auditPeriodEnd"
       :projLeader="projDetail.projLeader"
       :projReviewer="projDetail.projReviewer"
       :projProReviewer="projDetail.projProReviewer"
@@ -707,6 +709,7 @@
               class="card-header"
             >
               <span>报告号信息</span>
+			  <!-- 
               <span style="margin-left: 30px">
                 <el-button
                   type="text"
@@ -715,6 +718,7 @@
                   @click="changeNumShowType"
                 >报告号文字转换</el-button>
               </span>
+			  -->
               <span style="float: right">
                 <el-button
                   slot="reference"
@@ -751,7 +755,7 @@
                   >
                     <span v-if="reportNum.cph == ''">未取号</span>
                     <span v-else>
-                      <span v-if="reportNumShowType == false">{{reportNum.cph}}
+                      <span>{{reportNum.cph}}
                         <el-button
                           style="right: 0px;"
                           type="text"
@@ -761,10 +765,8 @@
                           v-clipboard:success="copy"
                         >复制</el-button>
                       </span>
-                      <span
-                        v-else
-                        style="font-size: 14px;"
-                      >{{cnReportNum.cph}}
+					  <br>
+                      <span style="font-size: 14px;">{{cnReportNum.cph}}
                         <el-button
                           type="text"
                           icon="el-icon-copy-document"
@@ -785,7 +787,7 @@
                   >
                     <span v-if="this.reportNum.zph == ''">未取号</span>
                     <span v-else>
-                      <span v-if="reportNumShowType == false">{{reportNum.zph}}
+                      <span>{{reportNum.zph}}
                         <el-button
                           style="right: 0px;"
                           type="text"
@@ -795,10 +797,8 @@
                           v-clipboard:success="copy"
                         >复制</el-button>
                       </span>
-                      <span
-                        v-else
-                        style="font-size: 14px;"
-                      >{{cnReportNum.zph}}
+                      <br>
+                      <span style="font-size: 14px;">{{cnReportNum.zph}}
                         <el-button
                           type="text"
                           icon="el-icon-copy-document"
@@ -806,7 +806,7 @@
                           v-clipboard:copy="cnReportNum.zph"
                           v-clipboard:success="copy"
                         >复制</el-button>
-                      </span>
+                      </span>					  
                     </span>
                   </el-col>
                   <el-col
@@ -819,7 +819,7 @@
                   >
                     <span v-if="this.reportNum.hhh == ''">未取号</span>
                     <span v-else>
-                      <span v-if="reportNumShowType == false">{{reportNum.hhh}}
+                      <span>{{reportNum.hhh}}
                         <el-button
                           style="right: 0px;"
                           type="text"
@@ -829,10 +829,8 @@
                           v-clipboard:success="copy"
                         >复制</el-button>
                       </span>
-                      <span
-                        v-else
-                        style="font-size: 14px;"
-                      >{{cnReportNum.hhh}}
+					  <br>
+                      <span style="font-size: 14px;">{{cnReportNum.hhh}}
                         <el-button
                           type="text"
                           icon="el-icon-copy-document"
@@ -1261,9 +1259,11 @@
             <div class="text item">
               <div class="item"><span>项目负责人：</span>{{this.projDetail.projLeader}}</div>
               <div class="item"><span>项目复核人：</span>{{this.projDetail.projReviewer}}</div>
-              <div class="item"><span>专业复核人：</span>{{this.projDetail.projProReviewer}}</div>
+              <div class="item"
+			  v-if="onProjTypeChangeVisable() == 1">
+			  <span>专业复核人：</span>{{this.projDetail.projProReviewer}}</div>
               <div class="item"><span>项目助理：</span>{{this.projDetail.projAsst}}</div>
-              <div class="item"><span>{{onProjTypeChangeVisable() == 1 ? "现场测绘：" : "现场咨询："}}</span>{{this.projDetail.fieldSrvy}}</div>
+              <div class="item"><span>{{onProjTypeChangeVisable() == 1 ? "现场测绘：" : "现场调研："}}</span>{{this.projDetail.fieldSrvy}}</div>
             </div>
           </el-card>
         </el-col>
@@ -1277,14 +1277,6 @@
               class="card-header"
             >
               <span>报告号信息</span>
-              <span style="margin-left: 30px">
-                <el-button
-                  type="text"
-                  icon="el-icon-info"
-                  size="medium"
-                  @click="changeNumShowType"
-                >报告号文字转换</el-button>
-              </span>
               <span style="float: right">
                 <el-button
                   slot="reference"
@@ -1322,7 +1314,7 @@
                   >
                     <span v-if="reportNum.cph == ''">未取号</span>
                     <span v-else>
-                      <span v-if="reportNumShowType == false">{{reportNum.cph}}
+                      <span>{{reportNum.cph}}
                         <el-button
                           style="right: 0px;"
                           type="text"
@@ -1332,10 +1324,8 @@
                           v-clipboard:success="copy"
                         >复制</el-button>
                       </span>
-                      <span
-                        v-else
-                        style="font-size: 14px;"
-                      >{{cnReportNum.cph}}
+              					  <br>
+                      <span style="font-size: 14px;">{{cnReportNum.cph}}
                         <el-button
                           type="text"
                           icon="el-icon-copy-document"
@@ -1347,7 +1337,6 @@
                     </span>
                   </el-col>
 				  -->
-				  
                   <el-col
                     :span="2"
                     class="report-title"
@@ -1358,7 +1347,7 @@
                   >
                     <span v-if="this.reportNum.zph == ''">未取号</span>
                     <span v-else>
-                      <span v-if="reportNumShowType == false">{{reportNum.zph}}
+                      <span>{{reportNum.zph}}
                         <el-button
                           style="right: 0px;"
                           type="text"
@@ -1368,10 +1357,8 @@
                           v-clipboard:success="copy"
                         >复制</el-button>
                       </span>
-                      <span
-                        v-else
-                        style="font-size: 14px;"
-                      >{{cnReportNum.zph}}
+                      <br>
+                      <span style="font-size: 14px;">{{cnReportNum.zph}}
                         <el-button
                           type="text"
                           icon="el-icon-copy-document"
@@ -1379,7 +1366,7 @@
                           v-clipboard:copy="cnReportNum.zph"
                           v-clipboard:success="copy"
                         >复制</el-button>
-                      </span>
+                      </span>					  
                     </span>
                   </el-col>
 				  <!-- 
@@ -1393,7 +1380,7 @@
                   >
                     <span v-if="this.reportNum.hhh == ''">未取号</span>
                     <span v-else>
-                      <span v-if="reportNumShowType == false">{{reportNum.hhh}}
+                      <span>{{reportNum.hhh}}
                         <el-button
                           style="right: 0px;"
                           type="text"
@@ -1403,10 +1390,8 @@
                           v-clipboard:success="copy"
                         >复制</el-button>
                       </span>
-                      <span
-                        v-else
-                        style="font-size: 14px;"
-                      >{{cnReportNum.hhh}}
+              					  <br>
+                      <span style="font-size: 14px;">{{cnReportNum.hhh}}
                         <el-button
                           type="text"
                           icon="el-icon-copy-document"
@@ -1797,7 +1782,7 @@
                     size="medium"
                   >{{item.label}}</el-tag>
                 </span>
-              </span>
+              </span>			 
               <span
                 v-for="item in newOldType"
                 :key="'info3'+item.value"
@@ -1817,7 +1802,12 @@
               <div class="item"><span>计划编号：</span>{{this.projDetail.projNum}}</div>
               <div class="item"><span>项目类型：</span>{{this.transedProjType.projType}}</div>
               <div class="item"><span>项目目的：</span>{{this.projDetail.assemGoal}}</div>
-              <div class="item"><span>基准日：</span>{{formatDate(this.projDetail.baseDate)}}</div>
+              <div class="item"
+			  v-if="projDetail.baseDate"
+			  ><span>基准日：</span>{{formatDate(this.projDetail.baseDate)}}</div>
+              <div class="item"
+			  v-if="projDetail.auditPeriodStart"
+			  ><span>审计期间：</span>{{formatDate(projDetail.auditPeriodStart)}} 至 {{formatDate(projDetail.auditPeriodEnd)}}</div>
               <div class="item"><span>项目名称：</span>{{this.projDetail.projName}}</div>
               <div class="item"><span>项目范围：</span>{{this.projDetail.projScope}}</div>
               <div class="item"
@@ -1835,9 +1825,9 @@
             <div class="text item">
               <div class="item"><span>项目负责人：</span>{{this.projDetail.projLeader}}</div>
               <div class="item"><span>项目复核人：</span>{{this.projDetail.projReviewer}}</div>
-              <div class="item"><span>专业复核人：</span>{{this.projDetail.projProReviewer}}</div>
+              <!-- <div class="item"><span>专业复核人：</span>{{this.projDetail.projProReviewer}}</div> -->
               <div class="item"><span>项目助理：</span>{{this.projDetail.projAsst}}</div>
-              <div class="item"><span>现场勘查：</span>{{this.projDetail.fieldSrvy}}</div>
+              <div class="item"><span>现场审计：</span>{{this.projDetail.fieldSrvy}}</div>
             </div>
           </el-card>
         </el-col>
@@ -1851,14 +1841,6 @@
               class="card-header"
             >
               <span>报告号信息</span>
-              <span style="margin-left: 30px">
-                <el-button
-                  type="text"
-                  icon="el-icon-info"
-                  size="medium"
-                  @click="changeNumShowType"
-                >报告号文字转换</el-button>
-              </span>
               <span style="float: right">
                 <el-button
                   slot="reference"
@@ -1884,6 +1866,7 @@
             <div>
               <div class="report-num">
                 <el-row>
+              				  <!-- 
                   <el-col
                     :span="2"
                     class="report-title"
@@ -1895,7 +1878,7 @@
                   >
                     <span v-if="reportNum.cph == ''">未取号</span>
                     <span v-else>
-                      <span v-if="reportNumShowType == false">{{reportNum.cph}}
+                      <span>{{reportNum.cph}}
                         <el-button
                           style="right: 0px;"
                           type="text"
@@ -1905,10 +1888,8 @@
                           v-clipboard:success="copy"
                         >复制</el-button>
                       </span>
-                      <span
-                        v-else
-                        style="font-size: 14px;"
-                      >{{cnReportNum.cph}}
+              					  <br>
+                      <span style="font-size: 14px;">{{cnReportNum.cph}}
                         <el-button
                           type="text"
                           icon="el-icon-copy-document"
@@ -1919,6 +1900,7 @@
                       </span>
                     </span>
                   </el-col>
+              				  -->
                   <el-col
                     :span="2"
                     class="report-title"
@@ -1929,7 +1911,7 @@
                   >
                     <span v-if="this.reportNum.zph == ''">未取号</span>
                     <span v-else>
-                      <span v-if="reportNumShowType == false">{{reportNum.zph}}
+                      <span>{{reportNum.zph}}
                         <el-button
                           style="right: 0px;"
                           type="text"
@@ -1939,10 +1921,8 @@
                           v-clipboard:success="copy"
                         >复制</el-button>
                       </span>
-                      <span
-                        v-else
-                        style="font-size: 14px;"
-                      >{{cnReportNum.zph}}
+                      <br>
+                      <span style="font-size: 14px;">{{cnReportNum.zph}}
                         <el-button
                           type="text"
                           icon="el-icon-copy-document"
@@ -1950,9 +1930,10 @@
                           v-clipboard:copy="cnReportNum.zph"
                           v-clipboard:success="copy"
                         >复制</el-button>
-                      </span>
+                      </span>					  
                     </span>
                   </el-col>
+              				  <!-- 
                   <el-col
                     :span="4"
                     class="report-title"
@@ -1963,7 +1944,7 @@
                   >
                     <span v-if="this.reportNum.hhh == ''">未取号</span>
                     <span v-else>
-                      <span v-if="reportNumShowType == false">{{reportNum.hhh}}
+                      <span>{{reportNum.hhh}}
                         <el-button
                           style="right: 0px;"
                           type="text"
@@ -1973,10 +1954,8 @@
                           v-clipboard:success="copy"
                         >复制</el-button>
                       </span>
-                      <span
-                        v-else
-                        style="font-size: 14px;"
-                      >{{cnReportNum.hhh}}
+              					  <br>
+                      <span style="font-size: 14px;">{{cnReportNum.hhh}}
                         <el-button
                           type="text"
                           icon="el-icon-copy-document"
@@ -1987,6 +1966,7 @@
                       </span>
                     </span>
                   </el-col>
+              		 -->
                 </el-row>
               </div>
             </div>
@@ -2590,7 +2570,11 @@ export default {
 					const type = item.reportNumLevel;					
 					const comp = compList[this.companyTabsId];
 					const year = '[' + num.substr(0, 4) + ']'
-					const lastNum = '第' + num.substr(4) + '号'
+					var lastNum = '第' + num.substr(4) + '号'
+					//处理汇正, 字符串后3位
+					if(this.companyTabsId == 2){
+						lastNum = '第' + num.substring(num.length-3) + '号'
+					}
 					const final = comp + numType + year + lastNum
 					
 					if (type == 1) {
@@ -2693,13 +2677,14 @@ export default {
         })
     },
 	
+	/* 
 	//报告号中文切换
 	changeNumShowType(){		
 		if(this.reportNumList){
 			this.reportNumShowType = !this.reportNumShowType;
 		}
 	},
-	
+	 */
     copy(e) {
       this.$message.success('内容已复制到剪贴板')
     },
@@ -2771,8 +2756,8 @@ export default {
 			  }else if(this.companyTabsId == 2){
 				//汇正
 				this.workName = workName['汇正']; 
-				this.workPeople.push(res.data.prePreparationPic, res.data.workPlanPic, res.data.fldSrvyPic, res.data.issueValPic, res.data.internalAuditPic, res.data.commuClientPic, res.data.assemChargePic, res.data.amendFinalPic, res.data.manuArchivePic)
-				this.workDate.push(res.data.prePreparationSche, res.data.workPlanSche, res.data.fldSrvySche, res.data.issueValSche, res.data.internalAuditSche, res.data.commuClientSche, res.data.assemChargeSche, res.data.amendFinalSche, res.data.manuArchiveSche)
+				this.workPeople.push(res.data.dataCollectionPic, res.data.workPlanPic, res.data.fldSrvyPic, res.data.issueValPic, res.data.internalAuditPic, res.data.commuClientPic, res.data.assemChargePic, res.data.amendFinalPic, res.data.manuArchivePic)
+				this.workDate.push(res.data.dataCollectionSche, res.data.workPlanSche, res.data.fldSrvySche, res.data.issueValSche, res.data.internalAuditSche, res.data.commuClientSche, res.data.assemChargeSche, res.data.amendFinalSche, res.data.manuArchiveSche)
 				this.arrgData = res.data
 				//
 				this.transData(3) 
@@ -2853,10 +2838,8 @@ export default {
 		  this.arrgData.assemMethod = this.arrgData.assemMethod.split(',')
 		  //
 		  this.arrgData.prePreparationPic = this.arrgData.prePreparationPic.split(',')
-		  this.arrgData.workPlanPic = this.arrgData.workPlanPic.split(',') //区别
-		  this.arrgData.dataCollectionPic = this.arrgData.dataCollectionPic.split(',') //区别
+		  this.arrgData.workPlanPic = this.arrgData.workPlanPic.split(',') 
 		  this.arrgData.fldSrvyPic = this.arrgData.fldSrvyPic.split(',')
-		  this.arrgData.mktSrvyPic = this.arrgData.mktSrvyPic.split(',')
 		  this.arrgData.issueValPic = this.arrgData.issueValPic.split(',')
 		  this.arrgData.internalAuditPic = this.arrgData.internalAuditPic.split(',')
 		  this.arrgData.commuClientPic = this.arrgData.commuClientPic.split(',')
@@ -2865,10 +2848,8 @@ export default {
 		  this.arrgData.manuArchivePic = this.arrgData.manuArchivePic.split(',')
 		  //
 		  this.arrgData.prePreparationSche = this.arrgData.prePreparationSche.split('-')
-		  this.arrgData.workPlanSche = this.arrgData.workPlanSche.split('-') //区别
-		  this.arrgData.dataCollectionSche = this.arrgData.dataCollectionSche.split('-') //区别
+		  this.arrgData.workPlanSche = this.arrgData.workPlanSche.split('-') 
 		  this.arrgData.fldSrvySche = this.arrgData.fldSrvySche.split('-')
-		  this.arrgData.mktSrvySche = this.arrgData.mktSrvySche.split('-')
 		  this.arrgData.issueValSche = this.arrgData.issueValSche.split('-')
 		  this.arrgData.internalAuditSche = this.arrgData.internalAuditSche.split('-')
 		  this.arrgData.commuClientSche = this.arrgData.commuClientSche.split('-')
@@ -2878,6 +2859,27 @@ export default {
 		  break
 		case 3:
 		  //汇正
+		  this.arrgData.assemMethod = this.arrgData.assemMethod?this.arrgData.assemMethod.split(','):'';
+		  //
+		  this.arrgData.dataCollectionPic = this.arrgData.dataCollectionPic.split(',')
+		  this.arrgData.workPlanPic = this.arrgData.workPlanPic.split(',') //区别
+		  this.arrgData.fldSrvyPic = this.arrgData.fldSrvyPic.split(',')
+		  this.arrgData.issueValPic = this.arrgData.issueValPic.split(',')
+		  this.arrgData.internalAuditPic = this.arrgData.internalAuditPic.split(',')
+		  this.arrgData.commuClientPic = this.arrgData.commuClientPic.split(',')
+		  this.arrgData.assemChargePic = this.arrgData.assemChargePic.split(',')
+		  this.arrgData.amendFinalPic = this.arrgData.amendFinalPic.split(',')
+		  this.arrgData.manuArchivePic = this.arrgData.manuArchivePic.split(',')
+		  //
+		  this.arrgData.dataCollectionSche = this.arrgData.dataCollectionSche.split('-')
+		  this.arrgData.workPlanSche = this.arrgData.workPlanSche.split('-') //区别
+		  this.arrgData.fldSrvySche = this.arrgData.fldSrvySche.split('-')
+		  this.arrgData.issueValSche = this.arrgData.issueValSche.split('-')
+		  this.arrgData.internalAuditSche = this.arrgData.internalAuditSche.split('-')
+		  this.arrgData.commuClientSche = this.arrgData.commuClientSche.split('-')
+		  //this.arrgData.assemChargeSche = this.arrgData.assemChargeSche.split('-')
+		  this.arrgData.amendFinalSche = this.arrgData.amendFinalSche.split('-')
+		  //this.arrgData.manuArchiveSche = this.arrgData.manuArchiveSche.split('-')
 		  break
 	  }
     },
@@ -3260,7 +3262,7 @@ export default {
           this.$message.success('取号成功')
           //this.reload()
           this.getNumVisible = false
-		  this.reportNumShowType = false
+		  //this.reportNumShowType = false
           this.getDetail()
         })
         .catch(err => {
@@ -3367,6 +3369,7 @@ export default {
               //this.reload()
               this.getDetail()
               this.delNumVisible = false
+			  //this.reportNumShowType = false
 			  
 			  //211206 修复操作记录不刷新的bug
 			  this.opRefresh()
