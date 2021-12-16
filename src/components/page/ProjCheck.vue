@@ -715,7 +715,7 @@
 			      label="审计期间"
 			      class="label"
 			    >
-			      <span class="detail-content">{{detailData.auditPeriodStart}} 至 {{detailData.auditPeriodEnd}}</span>
+			      <span class="detail-content">{{formatDate(detailData.auditPeriodStart)}} 至 {{formatDate(detailData.auditPeriodEnd)}}</span>
 			    </el-form-item>
 			  </el-col>
 			</el-row>
