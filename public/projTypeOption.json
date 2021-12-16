@@ -96,117 +96,117 @@
     {
       "label": "测绘-测绘航空摄影",
       "value": "2101",
-      "type": "ZC",
+      "type": "ZMC",
       "disable": false
     },
     {
       "label": "测绘-工程测量",
       "value": "2102",
-      "type": "ZC",
+      "type": "ZMC",
       "disable": false
     },
     {
       "label": "测绘-界线与不动产测绘",
       "value": "2103",
-      "type": "ZC",
+      "type": "ZMC",
       "disable": false
     },
     {
       "label": "测绘-地理信息系统工程",
       "value": "2104",
-      "type": "ZC",
+      "type": "ZMC",
       "disable": false
     },
     {
       "label": "测绘-其他",
       "value": "2105",
-      "type": "ZC",
+      "type": "ZMC",
       "disable": false
     },	
 	{
 	  "label": "咨询-税收预测报告",
 	  "value": "2201",
-      "type": "ZZ",
+      "type": "ZMZ",
 	  "disable": false
 	},
 	{
 	  "label": "咨询-PPP全过程咨询",
 	  "value": "2202",
-      "type": "ZZ",
+      "type": "ZMZ",
 	  "disable": false
 	},
 	{
 	  "label": "咨询-可行性研究报告",
 	  "value": "2203",
-      "type": "ZZ",
+      "type": "ZMZ",
 	  "disable": false
 	},
 	{
 	  "label": "咨询-社会稳定风险评估",
 	  "value": "2204",
-      "type": "ZZ",
+      "type": "ZMZ",
 	  "disable": false
 	},
 	{
 	  "label": "咨询-项目建议书",
 	  "value": "2205",
-      "type": "ZZ",
+      "type": "ZMZ",
 	  "disable": false
 	},
 	{
 	  "label": "咨询-经济评价报告",
 	  "value": "2206",
-      "type": "ZZ",
+      "type": "ZMZ",
 	  "disable": false
 	},
 	{
 	  "label": "咨询-方案咨询",
 	  "value": "2207",
-      "type": "ZZ",
+      "type": "ZMZ",
 	  "disable": false
 	},
 	{
 	  "label": "咨询-其他",
 	  "value": "2208",
-      "type": "ZZ",
+      "type": "ZMZ",
 	  "disable": false
 	}
   ],
   [ 
 	{
-	  "label": "会审",
-	  "value": "3010",
-      "type": "HS",
+	  "label": "财报审计",
+	  "value": "3001",
+      "type": "KS",
 	  "disable": false
 	},
 	{
-	  "label": "专审",
-	  "value": "3020",
+	  "label": "专项审计",
+	  "value": "3002",
       "type": "ZS",
 	  "disable": false
 	},
 	{
 	  "label": "验资",
-	  "value": "3030",
+	  "value": "3003",
       "type": "YZ",
 	  "disable": false
 	},
 	{
-	  "label": "咨询",
-	  "value": "3040",
-      "type": "ZS",
+	  "label": "汇正咨询",
+	  "value": "3004",
+      "type": "ZX",
 	  "disable": false
 	},
 	{
-	  "label": "专评",
-	  "value": "3050",
-      "type": "ZP",
+	  "label": "发债",
+	  "value": "3005",
+      "type": "FZ",
 	  "disable": false
 	},
 	{
-	  "label": "税审",
-	  "value": "3060",
-      "type": "SS",
+	  "label": "税务审计",
+	  "value": "3006",
+      "type": "SZ",
 	  "disable": false
 	}
   ]
