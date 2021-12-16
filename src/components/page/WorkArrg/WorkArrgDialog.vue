@@ -1176,10 +1176,10 @@
 	  -->
 	  <el-row :gutter="10">
 	    <el-col :span="10">
-	      <el-form-item label="收集及整理资料" prop="prePreparationSche">
+	      <el-form-item label="收集及整理资料" prop="dataCollectionSche">
 	        <el-date-picker
 	          style="width: 100%"
-	          v-model="arrgForm.prePreparationSche"
+	          v-model="arrgForm.dataCollectionSche"
 	          type="daterange"
 	          range-separator="至"
 	          start-placeholde="开始日期"
@@ -1189,9 +1189,9 @@
 	      </el-form-item>
 	    </el-col>
 	    <el-col :span="14">
-	      <el-form-item prop="prePreparationPic" label="责任人">
+	      <el-form-item prop="dataCollectionPic" label="责任人">
 	        <el-checkbox-group
-	          v-model="arrgForm.prePreparationPic"
+	          v-model="arrgForm.dataCollectionPic"
 	          style="width: 100%"
 	        >
 	          <el-checkbox-button
@@ -1819,9 +1819,9 @@ export default {
 	    assemMethod: '',
 	    fldSrvyContent: '',
 	    //人员
-	    prePreparationPic: [], //前期准备、明确需求
-		workPlanPic: [], //制定工作方案
+	    //prePreparationPic: [], //前期准备、明确需求
 		dataCollectionPic: [], //资料收集
+		workPlanPic: [], //制定工作方案
 	    fldSrvyPic: [], //现场调研
 	    mktSrvyPic: [], //市场调查询价
 	    //assemEstPic: [], //评定估算
@@ -1832,9 +1832,9 @@ export default {
 	    amendFinalPic: [], //出具正式报告
 	    manuArchivePic: [], //整理归档
 	    //日期
-	    prePreparationSche: [],
-		workPlanSche: [], 
+	    //prePreparationSche: [],
 		dataCollectionSche: [],
+		workPlanSche: [], 
 	    fldSrvySche: [],
 	    mktSrvySche: [],
 	    //assemEstSche: [],
@@ -1853,7 +1853,7 @@ export default {
 	      { required: true, message: '请填写会计方法', trigger: 'change' }
 	    ],
 	    */
-	    prePreparationSche: [
+	    dataCollectionSche: [
 	      { required: true, message: '请选择日期', trigger: 'change' }
 	    ],
 	    workPlanSche: [
@@ -1875,7 +1875,7 @@ export default {
 	      { required: true, message: '请选择日期', trigger: 'change' }
 	    ],
 	    //
-	    prePreparationPic: [
+	    dataCollectionPic: [
 	      { required: true, message: '请选择责任人', trigger: 'change' }
 	    ],
 	    workPlanPic: [
@@ -1955,24 +1955,18 @@ export default {
 			if (valid) {
 			  this.arrgForm.assemMethod = this.arrgForm.assemMethod.join(',');
 			  //
-			  this.arrgForm.prePreparationPic = this.arrgForm.prePreparationPic.join(
-				','
-			  );
+			  this.arrgForm.prePreparationPic = this.arrgForm.prePreparationPic.join(',');
 			  this.arrgForm.fldSrvyPic = this.arrgForm.fldSrvyPic.join(',');
 			  this.arrgForm.mktSrvyPic = this.arrgForm.mktSrvyPic.join(',');
 			  this.arrgForm.assemEstPic = this.arrgForm.assemEstPic.join(',');
 			  this.arrgForm.issueValPic = this.arrgForm.issueValPic.join(',');
-			  this.arrgForm.internalAuditPic = this.arrgForm.internalAuditPic.join(
-				','
-			  );
+			  this.arrgForm.internalAuditPic = this.arrgForm.internalAuditPic.join(',');
 			  this.arrgForm.commuClientPic = this.arrgForm.commuClientPic.join(',');
 			  this.arrgForm.assemChargePic = this.arrgForm.assemChargePic.join(',');
 			  this.arrgForm.amendFinalPic = this.arrgForm.amendFinalPic.join(',');
 			  this.arrgForm.manuArchivePic = this.arrgForm.manuArchivePic.join(',');
 			  //
-			  this.arrgForm.prePreparationSche = this.arrgForm.prePreparationSche.join(
-				'-'
-			  );
+			  this.arrgForm.prePreparationSche = this.arrgForm.prePreparationSche.join('-');
 			  this.arrgForm.fldSrvySche = this.arrgForm.fldSrvySche.join('-');
 			  this.arrgForm.mktSrvySche = this.arrgForm.mktSrvySche.join('-');
 			  this.arrgForm.assemEstSche = this.arrgForm.assemEstSche.join('-');
@@ -2102,7 +2096,7 @@ export default {
 			if (valid) {
 			  //this.arrgForm.assemMethod = this.arrgForm.assemMethod.join(',');
 			  //人员
-			  this.arrgForm.prePreparationPic = this.arrgForm.prePreparationPic.join(',');
+			  this.arrgForm.dataCollectionPic = this.arrgForm.dataCollectionPic.join(',');
 			  this.arrgForm.workPlanPic = this.arrgForm.workPlanPic.join(',');
 			  this.arrgForm.fldSrvyPic = this.arrgForm.fldSrvyPic.join(',');
 			  this.arrgForm.issueValPic = this.arrgForm.issueValPic.join(',');
@@ -2112,7 +2106,7 @@ export default {
 			  this.arrgForm.amendFinalPic = this.arrgForm.amendFinalPic.join(',');
 			  this.arrgForm.manuArchivePic = this.arrgForm.manuArchivePic.join(',');
 			  //日期
-			  this.arrgForm.prePreparationSche = this.arrgForm.prePreparationSche.join('-');
+			  this.arrgForm.dataCollectionSche = this.arrgForm.dataCollectionSche.join('-');
 			  this.arrgForm.workPlanSche = this.arrgForm.workPlanSche.join('-');
 			  this.arrgForm.fldSrvySche = this.arrgForm.fldSrvySche.join('-');
 			  this.arrgForm.issueValSche = this.arrgForm.issueValSche.join('-');
@@ -2122,10 +2116,9 @@ export default {
 			  this.arrgForm.amendFinalSche = this.arrgForm.amendFinalSche.join('-');
 			  //this.arrgForm.manuArchiveSche = this.arrgForm.manuArchiveSche.join('-')
 			  //
-			  //211101变动 新增: 多个公司切换
-			  
-			  console.log('提交arrgForm', this.arrgForm);
-			  /* setWorkAssignment(this.arrgForm, this.companyId)
+			  //211101变动 新增: 多个公司切换			  
+			  //console.log('提交arrgForm', this.arrgForm);
+			  setWorkAssignment(this.arrgForm, this.companyId)
 				.then(res => {
 				  this.$message.success('提交成功');
 				  //211207变动 刷新整页改成局部刷新
@@ -2134,7 +2127,7 @@ export default {
 				})
 				.catch(err => {
 				  this.$message.error('提交失败，请稍后重试');
-				}); */
+				});
 			} else {
 			  this.$message.warning('请填写必填信息');
 			}
@@ -2395,7 +2388,7 @@ export default {
 	  }else if(this.companyTabsId == 2){
 		//汇正
 		  //重置空值
-		  this.arrgForm.prePreparationPic = [];
+		  this.arrgForm.dataCollectionPic = [];
 		  this.arrgForm.workPlanPic = [];
 		  this.arrgForm.fldSrvyPic = [];
 		  this.arrgForm.issueValPic = [];
@@ -2406,7 +2399,7 @@ export default {
 		  this.arrgForm.assemChargePic = [];
 		  this.arrgForm.manuArchivePic = [];
 		  
-		  this.arrgForm.prePreparationSche = [];
+		  this.arrgForm.dataCollectionSche = [];
 		  this.arrgForm.workPlanSche = [];
 		  this.arrgForm.fldSrvySche = [];
 		  this.arrgForm.issueValSche = [];
@@ -2433,7 +2426,7 @@ export default {
 		  let day15 = this.$moment(day + 1209600000).format('MM/DD');
 		  let day16 = this.$moment(day + 1296000000).format('MM/DD');
 		  //console.log(day, day1, day2, day3, day4, day5, day6);
-		  this.arrgForm.prePreparationSche.push(day1, day4);
+		  this.arrgForm.dataCollectionSche.push(day1, day4);
 		  this.arrgForm.workPlanSche.push(day4, day4);
 		  this.arrgForm.fldSrvySche.push(day5, day12);
 		  this.arrgForm.issueValSche.push(day13, day15);
@@ -2448,7 +2441,7 @@ export default {
 		  let srvy = this.fieldSrvy.split(',');
 		  for (let i of leader) {
 			if (i != '') {
-			  this.arrgForm.prePreparationPic.push(i);
+			  this.arrgForm.dataCollectionPic.push(i);
 			  this.arrgForm.workPlanPic.push(i);
 			  this.arrgForm.fldSrvyPic.push(i);
 			  this.arrgForm.internalAuditPic.push(i);
@@ -2471,7 +2464,7 @@ export default {
 		  }
 		  for (let i of asst) {
 			if (i != '') {
-			  this.arrgForm.prePreparationPic.push(i);
+			  this.arrgForm.dataCollectionPic.push(i);
 			  this.arrgForm.fldSrvyPic.push(i);
 			  this.arrgForm.issueValPic.push(i);
 			  this.arrgForm.manuArchivePic.push(i);
@@ -2479,7 +2472,7 @@ export default {
 		  }
 		  for (let i of srvy) {
 			if (i != '') {
-			  this.arrgForm.prePreparationPic.push(i);
+			  this.arrgForm.dataCollectionPic.push(i);
 			  this.arrgForm.fldSrvyPic.push(i);
 			}
 		  }  
