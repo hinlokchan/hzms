@@ -46,7 +46,13 @@
         :options="zmOptions"
         ref="selector"
         v-model="selectedNode">
-    </el-cascader-panel>
+    </el-cascader-panel>	
+	<el-cascader-panel
+	    v-if="companyId === 'HZKJ'"
+	    :options="hzkjOptions"
+	    ref="selector"
+	    v-model="selectedNode">
+	</el-cascader-panel>
     <span slot="footer" class="dialog-footer">
     <el-button @click="onClose">取 消</el-button>
     <el-button type="primary" @click="handleCreateReportNum" :disabled="selectedNode === undefined" >确 定</el-button>
@@ -202,6 +208,48 @@ export default {
           disabled: true
         }
       ],
+      hzkjOptions:[
+        {
+          value: 3001,
+          label: '财报审计/KS',
+          disabled: true
+        },
+        {
+          value: 3002,
+          label: '专项审计(专审字)/ZS',
+          disabled: true
+        },
+        {
+          value: 3101,
+          label: '专项审计(专字)/Z',
+          disabled: true
+        },
+        {
+          value: 3003,
+          label: '验资/YZ',
+          disabled: true
+        },
+        {
+          value: 3004,
+          label: '汇正咨询(咨字)/ZX',
+          disabled: true
+        },
+        {
+          value: 3102,
+          label: '税务咨询(税咨字)/S',
+          disabled: true
+        },
+        {
+          value: 3005,
+          label: '发债/FZ',
+          disabled: true
+        },
+        {
+          value: 3006,
+          label: '税务审计/SZ',
+          disabled: true
+        },
+      ],
       reportNumTypeScope: {
         1010: [1011, 1012, 1013, 1100],
         1020: [1021, 1022, 1023, 1100],
@@ -264,9 +312,7 @@ export default {
   		this.companyId = this.companyRange[0];
   		//this.companyTabsId = 0;
   	}
-  	//console.log('初始化公司id', this.companyId);
-
-    //console.log(this.companyId)
+	
     switch (this.companyId) {
       case 'HZ': {
         this.setHzScope();
@@ -277,7 +323,8 @@ export default {
         break;
       }
       case 'HZKJ': {
-        return
+		this.setHzkjScope();
+        break;
       }
       default : {
         return
@@ -289,13 +336,51 @@ export default {
   methods: {
     onClose() {
       this.$emit('update:show', false);
-    },
+    },	
+	setHzkjScope() {
+	  if (this.info.reportNumList.zph){
+		  this.$message.warning('已存在正评号, 如需修改请先取消之前的正评号');
+	  }else{
+		  switch (this.projType) {
+			case 3001:{
+				this.hzkjOptions[0].disabled = false;
+				break;
+			}
+			case 3002:{
+				this.hzkjOptions[1].disabled = false;
+				this.hzkjOptions[2].disabled = false;
+				break;
+			}
+			case 3003:{
+				this.hzkjOptions[3].disabled = false;
+				break;
+			}
+			case 3004:{
+				this.hzkjOptions[4].disabled = false;
+				this.hzkjOptions[5].disabled = false;
+				break;
+			}
+			case 3005:{
+				this.hzkjOptions[6].disabled = false;
+				break;
+			}
+			case 3006:{
+				this.hzkjOptions[7].disabled = false;
+				break;
+			}
+		  }
+	  }
+	},
     setZmScope() {
-      if (this.projType < 2200 && this.projType > 2100) {
-        this.zmOptions[0].disabled = false;
-      }else if (this.projType > 2200 && this.projType < 2300) {
-        this.zmOptions[1].disabled = false;
-      }
+	  if (this.info.reportNumList.zph){
+	  	this.$message.warning('已存在正评号, 如需修改请先取消之前的正评号');
+	  }else{
+		  if (this.projType < 2200 && this.projType > 2100) {
+			this.zmOptions[0].disabled = false;
+		  }else if (this.projType > 2200 && this.projType < 2300) {
+			this.zmOptions[1].disabled = false;
+		  }
+	  }
     },
     setHzScope() {
       var scope = this.reportNumTypeScope[this.info.projType]
