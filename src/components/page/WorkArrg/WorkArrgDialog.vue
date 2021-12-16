@@ -1469,6 +1469,8 @@ export default {
     projType: { type: Number },
     projMember: { type: Array },
     baseDate: { type: Number },
+    auditPeriodStart: { type: Number },
+    auditPeriodEnd: { type: Number },
     projLeader: { type: String },
     projReviewer: { type: String },
     projProReviewer: { type: String },
@@ -2406,9 +2408,9 @@ export default {
 		  this.arrgForm.internalAuditSche = [];
 		  this.arrgForm.commuClientSche = [];
 		  this.arrgForm.amendFinalSche = [];
-		  
+		  		  
 		  //赋值
-		  let day = this.baseDate;
+		  let day = this.baseDate?this.baseDate:this.auditPeriodStart;
 		  let day1 = this.$moment(day).format('MM/DD');
 		  let day2 = this.$moment(day + 86400000).format('MM/DD');
 		  let day3 = this.$moment(day + 172800000).format('MM/DD');
@@ -2433,7 +2435,7 @@ export default {
 		  this.arrgForm.internalAuditSche.push(day15, day15);
 		  this.arrgForm.commuClientSche.push(day15, day15);
 		  this.arrgForm.amendFinalSche.push(day16, day16);
-		  
+		  		  
 		  let leader = this.projLeader.split(',');
 		  let reviewer = this.projReviewer.split(',');
 		  let proreviewer = this.projProReviewer.split(',');
