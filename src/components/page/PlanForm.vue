@@ -103,7 +103,7 @@
 <!-- =========================惠正========================= -->
       <div class="form-box"
 	  v-if="companyTabsId == 0">
-        <div class="form-item-title" style="width: 120px;">
+        <div class="form-item-title">
           <h3>惠正项目信息</h3>
         </div>
         <el-form
@@ -286,7 +286,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="委托人联系人电话">
+              <el-form-item label="委托人联系电话">
                 <el-input v-model="form.clientContactInfo" clearable></el-input>
               </el-form-item>
             </el-col>
@@ -801,7 +801,7 @@
 <!-- =========================智明========================= -->
       <div class="form-box"
 	  v-if="companyTabsId == 1">
-        <div class="form-item-title" style="width: 120px;">
+        <div class="form-item-title">
           <h3>智明项目信息</h3>
         </div>
         <el-form
@@ -970,7 +970,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="委托方联系人电话">
+              <el-form-item label="委托方联系电话">
                 <el-input v-model="form.clientContactInfo" clearable></el-input>
               </el-form-item>
             </el-col>
@@ -1232,6 +1232,7 @@
                 </el-select>
               </el-form-item>
             </el-col>
+			<!-- 
             <el-col :span="6">
               <el-form-item label="紧急程度">
                 <el-select
@@ -1251,6 +1252,7 @@
                 </el-select>
               </el-form-item>
             </el-col>
+			 -->
             <el-col :span="6">
               <el-form-item label="风险预测">
                 <el-select 
@@ -1501,7 +1503,7 @@
             <el-col :span="6">
               <el-form-item
                 v-for="(item, index) in form.fieldSrvy"
-			    :label="onProjTypeChangeVisable() == 1?'现场测绘' + (index + 1):'现场咨询' + (index + 1)"
+			    :label="onProjTypeChangeVisable() == 1?'现场测绘' + (index + 1):'现场调研' + (index + 1)"
                 :key="index"
               >
                 <div class="flexBox">
@@ -1554,7 +1556,7 @@
 <!-- =========================汇正========================= -->
       <div class="form-box"
 	  v-if="companyTabsId == 2">
-        <div class="form-item-title" style="width: 120px;">
+        <div class="form-item-title">
           <h3>汇正项目信息</h3>
         </div>
         <el-form
@@ -1742,7 +1744,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="委托方联系人电话">
+              <el-form-item label="委托方联系电话">
                 <el-input v-model="form.clientContactInfo" clearable></el-input>
               </el-form-item>
             </el-col>
@@ -1786,7 +1788,29 @@
                 <el-input v-model="form.projRefererInfo" clearable></el-input>
               </el-form-item>
             </el-col>
-			 -->
+			 -->		  
+		    <el-col :span="6">
+		      <el-form-item
+		        label="审计目的"
+		        prop="assemGoal"
+		        class="red-item"
+		      >
+		        <el-select
+		  				  class="select-width-100"
+		          v-model="form.assemGoal"
+		          placeholder="请选择"
+		          filterable
+		          allow-create
+		        >
+		          <el-option
+		            v-for="item in assemGoalList[companyTabsId]"
+		            :key="item"
+		            :value="item"
+		            :label="item"
+		          ></el-option>
+		        </el-select>
+		      </el-form-item>
+		    </el-col>
           </el-row>
           <el-row :gutter="20">
             <el-col :span="12">
@@ -1822,34 +1846,12 @@
 			  </el-form-item>
 			</el-col>
 			<el-col :span="6">
-			  <el-form-item label="被审计联系人电话">
+			  <el-form-item label="被审计联系电话">
 			    <el-input v-model="form.fldSrvyContactInfo" clearable></el-input>
 			  </el-form-item>
 			</el-col>
           </el-row>
           <el-row :gutter="20">
-            <el-col :span="6">
-              <el-form-item
-                label="审计目的"
-                prop="assemGoal"
-                class="red-item"
-              >
-                <el-select
-				  class="select-width-100"
-                  v-model="form.assemGoal"
-                  placeholder="请选择"
-                  filterable
-                  allow-create
-                >
-                  <el-option
-                    v-for="item in assemGoalList[companyTabsId]"
-                    :key="item"
-                    :value="item"
-                    :label="item"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
             <el-col :span="6">
               <el-form-item label="计划完成天数">
                 <el-input
@@ -1866,21 +1868,6 @@
             </el-col>
             <el-col :span="6">
               <el-form-item
-                label="基准日"
-                prop="baseDate"
-                class="red-item"
-              >
-                <el-date-picker
-                  type="date"
-                  placeholder="选择日期"
-                  v-model="form.baseDate"
-                  value-format="yyyy-MM-dd"
-                  style="width: 100%;"
-                ></el-date-picker>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item
                 label="计划审计日期"
                 prop="fldSrvySchedule"
                 class="red-item"
@@ -1893,6 +1880,52 @@
                   style="width: 100%;"
                 ></el-date-picker>
               </el-form-item>
+            </el-col>
+            <el-col :span="12">
+			  <el-form-item
+				v-show="isBaseDate == 1"
+			    label="审计期间"
+			    prop="auditPeriod"
+			  	:rules="isBaseDate==1?rules.auditPeriod : [{ required: false, trigger: 'blur' }]"
+			    class="red-item"
+			  >
+                <el-date-picker
+              	v-model="form.auditPeriod"
+              	value-format="yyyy-MM-dd"
+              	type="daterange"
+              	unlink-panels
+              	range-separator="至"
+              	start-placeholder="选择日期范围"
+              	end-placeholder=""
+              	:picker-options="pickerOptions"
+				style="width: 240px;"
+				@change="handleDatePicker">
+                </el-date-picker>	
+			    <div>
+			        <el-radio v-model="isBaseDate" label="0" @change="handleRadio">基准日</el-radio>
+			        <el-radio v-model="isBaseDate" label="1" @change="handleRadio">审计期间</el-radio>
+			  	</div>
+			  </el-form-item>
+			  
+			  <el-form-item
+				v-show="isBaseDate == 0"
+			    label="基准日"
+			    prop="baseDate"
+				:rules="isBaseDate==0?rules.baseDate : [{ required: false, trigger: 'blur' }]"
+			    class="red-item"
+			  >
+				<el-date-picker
+				  type="date"
+				  placeholder="选择日期"
+				  v-model="form.baseDate"
+				  value-format="yyyy-MM-dd"
+				></el-date-picker>
+			    <div>
+			        <el-radio v-model="isBaseDate" label="0" @change="handleRadio">基准日</el-radio>
+			        <el-radio v-model="isBaseDate" label="1" @change="handleRadio">审计期间</el-radio>
+			  	</div>
+			  </el-form-item>
+			  
             </el-col>
             <!-- <el-col :span="6">
               <el-form-item
@@ -1931,6 +1964,7 @@
                 </el-select>
               </el-form-item>
             </el-col>
+			<!-- 
             <el-col :span="6">
               <el-form-item label="紧急程度">
                 <el-select
@@ -1950,6 +1984,7 @@
                 </el-select>
               </el-form-item>
             </el-col>
+			 -->
             <el-col :span="6">
               <el-form-item label="风险预测">
                 <el-select 
@@ -2313,6 +2348,11 @@ export default {
 		
 		//智明
 		mappingObjLocation:'',
+		
+		//汇正
+		auditPeriod:'',
+		auditPeriodStart:'',
+		auditPeriodEnd:'',
       },
       backupForm: {},
 	  
@@ -2356,7 +2396,20 @@ export default {
 	  		
 		//智明
 		mappingObjLocation:'',
+		
+		//汇正
+		auditPeriod:'',
+		auditPeriodStart:'',
+		auditPeriodEnd:'',
 	  },
+	  
+	  //211214变动 新增: 汇正审计期间
+	  pickerOptions: {
+	  	/* disabledDate(time) {
+	  	  return time.getTime() > Date.now()
+	    }, */
+	  },	  
+	  isBaseDate:"0",
 	  
 	  
 	  //211101变动 新增: 多个公司 -->
@@ -2409,11 +2462,17 @@ export default {
 			projName: [
 			  { required: true, message: '请输入项目名称', trigger: 'blur' }
 			],
+			projScope: [
+			  { required: true, message: '请输入被审计单位', trigger: 'blur' }
+			],
 			assemGoal: [
 			  { required: true, message: '请选择审计目的', trigger: 'blur' }
 			],
 			baseDate: [
 			  { required: true, message: '请选择基准日', trigger: 'blur' }
+			],
+			auditPeriod: [
+			  { required: true, message: '请选择审计期间', trigger: 'blur' }
 			],
 			fldSrvySchedule: [
 			  { required: true, message: '请选择审计日期', trigger: 'blur' }
@@ -2468,12 +2527,12 @@ export default {
 			2208: '咨询-其他',
 		  },
 		  {
-			3010: '会审',
-			3020: '专审',
-			3030: '验资',
-			3040: '咨询',
-			3050: '专评',
-			3060: '税审',
+			3001: '财报审计',
+			3002: '专项审计',
+			3003: '验资',
+			3004: '汇正咨询',
+			3005: '发债',
+			3006: '税务审计',
 		  }
 	  ],
       clientTypeOptions: [
@@ -2506,7 +2565,8 @@ export default {
             { value: '122', label: '招商银行' },
             { value: '123', label: '东莞银行' },
             { value: '124', label: '华夏银行' },
-            { value: '125', label: '农业发展银行' }
+            { value: '125', label: '农业发展银行' },
+            { value: '126', label: '浙商银行' }
           ]
         },
         { value: '1001', label: '自然资源局' },
@@ -2863,8 +2923,22 @@ export default {
       // this.form.projDate = this.formatDate(this.form.projDate)
       data.projType = data.projType + ''
       data.projDate = this.formatDate(data.projDate)
-      data.baseDate = this.formatDate(data.baseDate)
       data.fldSrvySchedule = this.formatDate(data.fldSrvySchedule)
+	  	  
+	  //211214新增 处理汇正审计期间
+	  if(this.companyTabsId == 2){
+		if(data.baseDate){
+			data.baseDate = this.formatDate(data.baseDate);
+			this.isBaseDate = "0";
+		}else if(data.auditPeriodStart){
+			data['auditPeriod'] = [];
+			data.auditPeriod[0] = data.auditPeriodStart;
+			data.auditPeriod[1] = data.auditPeriodEnd;
+			this.isBaseDate = "1";
+		}
+	  }else{
+		data.baseDate = this.formatDate(data.baseDate)  
+	  }
       
       //211103变动 修复:克隆功能 新增估价对象bug
       data.evalObjArray = [];	  
@@ -2970,7 +3044,10 @@ export default {
 	  if (this.form.clientName == '' && this.form.clientId == '') {
 		this.$message.warning('请填写委托人！')
 		return 0
-	  } else {
+	  }else if(this.companyTabsId == 2 && this.form.auditPeriod == '' && this.form.baseDate == ''){
+	    this.$message.warning('请选择审计期间或基准日！')
+	    return 0
+	  }else {
 		  
 		this.$refs.ruleForm.validate((valid) => {
 		  if (valid) {
@@ -3056,13 +3133,36 @@ export default {
         if (this.form.projType == this.projTypeOption[this.companyTabsId][i].value) {
           projLabel = this.projTypeOption[this.companyTabsId][i].label;
     	  projType = this.projTypeOption[this.companyTabsId][i].type;
-    	  
+    	  /* 
     	  //判断模板， 默认1， 绩效2， 复审3
     	  if(projType == 'JX'){
     		tempType = 2;  
     	  }else if(projType == 'FSF' || projType == 'FSZ' || projType == 'FST'){
     		tempType = 3;    
     	  }
+		  */
+		  //判断模板， 默认1， 绩效2， 复审3, 智明4, 汇正5
+		  if(this.companyTabsId == 0){
+			//惠正模板
+			if(projType == 'JX'){
+				tempType = 2;  
+			}else if(projType == 'FSF' || projType == 'FSZ' || projType == 'FST'){
+				tempType = 3;    
+			}else{
+				tempType = 1;
+			}
+		  }else if(this.companyTabsId == 1){
+			if(projType == 'ZMC'){
+				//智明测绘模板
+				tempType = 11;
+			}else if(projType == 'ZMZ'){
+				//智明咨询模板
+				tempType = 12;
+			}
+		  }else if(this.companyTabsId == 2){
+			//汇正模板
+			tempType = 21;
+		  }
         }
       }
       // ZP项目类型：资；委托 人：(其他):惠州市水务投资集团；项目名称：惠州大道大湖溪段667平方米租金；评估对象及其坐落：同上;；评估目的：物业出租价格；引荐人及其电话：惠州市水务投资集团王总135 0229 7502；现联系单位、人及电话：同上；现勘时间：现勘同事约；报告时间要求：5天；项目风险预测：；评估收费报价：待定；是否曾评估的项目：（若是，原项目组成员：）；项目接洽人""[52]-缨(注师：莎缨;助理：健;专业复核人:远。以下由项目负责人安排 现勘：;资料核查验证：;市场询价调查：;技术报告:；报告编制:; 归档：;对外沟通:
@@ -3083,7 +3183,16 @@ export default {
       }else if(tempType == 3){
     	//复审模板
     	this.newInfoData = `${projType}项目类型:${projLabel}; 委托方:${clientName}; 项目名称:${this.form.projName}; 引荐人及其电话:${this.form.projReferer}${this.form.projRefererInfo}; 现勘联系人及电话：${this.form.fldSrvyContact}${this.form.fldSrvyContactInfo}; 现勘时间: ; 报告时间要求:${this.form.compSchedule}天; 评审要求: ; 项目接洽人:${this.form.projContactType} ${this.form.projContact} (评审师：；助理：；); 现勘:${this.form.fieldSrvy}; 对外沟通人: 。`;
-      }
+      }else if(tempType == 11){
+		//智明测绘模板
+		this.newInfoData = `${projType}项目类型:${projLabel}; 委托人:${clientName}; 项目名称:${this.form.projName}; 测绘对象及其坐落:${this.form.projScope}; 测绘目的:${this.form.assemGoal}; 测绘联系人及电话：${this.form.fldSrvyContact}${this.form.fldSrvyContactInfo}; 测绘时间: ; 报告时间要求:${this.form.compSchedule}天; 项目风险预测:${riskProfile}; 测绘收费报价:${this.form.assemFeeQuote?this.form.assemFeeQuote:''}; 是否曾测绘项目:${newOldType}; 项目接洽人:${this.form.projContactType} ${this.form.projContact} (注师：；助理：；专业复核人:)。以下由项目负责人安排,测绘:${this.form.fieldSrvy}; 资料核查验证: ; 市场询价调查: ; 技术报告: ; 报告编制: ; 归档: ; 对外沟通: 。`;
+	  }else if(tempType == 12){
+		//智明咨询模板
+		this.newInfoData = `${projType}项目类型:${projLabel}; 委托人:${clientName}; 项目名称:${this.form.projName}; 咨询目的:${this.form.assemGoal}; 咨询联系人及电话：${this.form.fldSrvyContact}${this.form.fldSrvyContactInfo}; 咨询时间: ; 报告时间要求:${this.form.compSchedule}天; 项目风险预测:${riskProfile}; 咨询收费报价:${this.form.assemFeeQuote?this.form.assemFeeQuote:''}; 是否曾咨询项目:${newOldType}; 项目接洽人:${this.form.projContactType} ${this.form.projContact} (注师：；助理：；专业复核人:)。以下由项目负责人安排,咨询:${this.form.fieldSrvy}; 资料核查验证: ; 市场询价调查: ; 技术报告: ; 报告编制: ; 归档: ; 对外沟通: 。`;
+	  }else if(tempType == 21){
+		//汇正模板
+		this.newInfoData = `${projType}项目类型:${projLabel}; 委托人:${clientName}; 项目名称:${this.form.projName}; 审计目的:${this.form.assemGoal}; 审计联系人及电话：${this.form.fldSrvyContact}${this.form.fldSrvyContactInfo}; 审计时间: ; 报告时间要求:${this.form.compSchedule}天; 项目风险预测:${riskProfile}; 审计收费报价:${this.form.assemFeeQuote?this.form.assemFeeQuote:''}; 是否曾审计项目:${newOldType}; 项目接洽人:${this.form.projContactType} ${this.form.projContact} (注师：；助理：；专业复核人:)。以下由项目负责人安排,审计:${this.form.fieldSrvy}; 资料核查验证: ; 市场询价调查: ; 技术报告: ; 报告编制: ; 归档: ; 对外沟通: 。`;
+	  }
       //this.newInfoData = `项目编号:${res.data.projNum};项目类型:${this.transedData.projType};委托人:${clientName};项目名称:${this.form.projName};评估对象及其坐落:${this.form.projScope};评估目的:${this.form.assemGoal};引荐人及其电话:${this.form.projReferer}${this.form.projRefererInfo};现勘联系单位人及电话：${this.form.fldSrvyContact}${this.form.fldSrvyContactInfo};现勘时间:${this.form.fldSrvySchedule};报告时间要求:${this.form.compSchedule}天;项目风险预测:${riskProfile};评估收费报价:${this.form.assemFeeQuote};是否曾评估项目:${newOldType};项目接洽人:${this.form.projContact} ${this.form.projContactType}(注师：；助理：；专业复核人:)。以下由项目负责人安排,现勘:${this.form.fieldSrvy};资料核查验证: ;市场询价调查: ;技术报告: ;报告编制: ;归档: ;对外沟通: 。`;
       this.newInfo = true;
     },
@@ -3331,6 +3440,23 @@ export default {
 		this.form.projScope = item.projScope;
 	},
 	
+	handleRadio(val){
+		//console.log(val);
+		if(val == "1"){
+			this.form.baseDate = '';
+		}else if(val == "0"){
+			this.form.auditPeriod = '';
+			this.form.auditPeriodStart = '';
+			this.form.auditPeriodEnd = '';
+		}
+	},
+	handleDatePicker(val){
+		if(val){
+			this.form.auditPeriodStart = val[0];
+			this.form.auditPeriodEnd = val[1];
+		}
+	},
+	
 	//211029变动 新增: 多个公司切换
 	handleTabsClick(tab, event) {
 	  //console.log("切换到: ", tab.label, tab.name);
@@ -3446,53 +3572,60 @@ export default {
 };
 </script>
 
-<style lang="less">
-.form-item-title {
-  width: 100px;
-  text-align: center;
-  margin: 10px 0 20px 0;
-  border-left: solid 5px #409eff;
-}
-.flexBox {
-  display: flex;
-  justify-content: space-between;
-}
-.flexBox el-input {
-  margin-right: 5px;
-}
-.my-autocomplete {
-  li {
-    line-height: normal;
-    padding: 7px;
-
-    .name {
-      text-overflow: ellipsis;
-      overflow: hidden;
-    }
-    .id {
-      font-size: 12px;
-      color: #b4b4b4;
-      float: right;
-    }
-
-    .highlighted .id {
-      color: #ddd;
-    }
-  }
-}
-.red-item .el-form-item__label {
-  color: #ed1941;
-}
-
-.select-width-100{
-	width: 100%;
-}
-/*el-autocomplete下拉宽度*/
-.input-select{
-	width: 100%;
-}
-.input-select .el-popper[x-placement^=bottom]{
-	width:1000px !important;
-}
+<style scoped lang="less">
+	.form-item-title {
+	  width: 200px;
+	  text-align: left;
+	  margin: 10px 0 20px 0;
+	  padding-left: 5px;
+	  border-left: solid 5px #409eff;
+	}
+	.flexBox {
+	  display: flex;
+	  justify-content: space-between;
+	}
+	.flexBox el-input {
+	  margin-right: 5px;
+	}
+	.my-autocomplete {
+	  li {
+	    line-height: normal;
+	    padding: 7px;
+	
+	    .name {
+	      text-overflow: ellipsis;
+	      overflow: hidden;
+	    }
+	    .id {
+	      font-size: 12px;
+	      color: #b4b4b4;
+	      float: right;
+	    }
+	
+	    .highlighted .id {
+	      color: #ddd;
+	    }
+	  }
+	}
+	
+	.select-width-100{
+		width: 100%;
+	}
+	/*el-autocomplete下拉宽度*/
+	.input-select{
+		width: 100%;
+	}
+	/deep/ .input-select .el-popper[x-placement^=bottom]{
+		width:1000px !important;
+	}
+	
+	/deep/ .el-form-item__label {
+	  color: #000;
+	  font-size: 16px;
+	}
+	
+	/deep/ .red-item .el-form-item__label {
+	  color: #ed1941;
+	}
 
 </style>
