@@ -120,32 +120,6 @@
   </div>
 </template>
 
-<style>
-.demo-table-expand {
-  font-size: 0;
-}
-.demo-table-expand label {
-  width: 90px;
-  color: #99a9bf;
-}
-.demo-table-expand .el-form-item {
-  margin-right: 0;
-  margin-bottom: 0;
-  width: 50%;
-}
-.el-table .success-row {
-  background: #ecffe0;
-}
-#no-hover .el-table__row:hover > td {
-  background-color: #ffffff !important;
-
-}
-
-#no-hover .el-table__row--striped:hover > td {
-  background-color: #ffffff !important;
-
-}
-</style>
 
 <script>
   import { getEvalObjListByProjId, getUserList } from '@/api';
@@ -341,15 +315,17 @@ export default {
 
     },
     fsDisable(staffName) {
-      console.log(this.surveyDataMap[this.deliveryInfo.projId])
+      //console.log(this.surveyDataMap[this.deliveryInfo.projId])
       let survey = this.surveyDataMap[this.deliveryInfo.projId]
+	  
       if (survey === undefined || survey.surveySurveyors === '') {
         return false;
-      }
-      console.log(survey.surveySurveyors)
+      }	  
+	  //console.log(survey.surveySurveyors)
       let surveyorArray = survey.surveySurveyors.split(',');
 
       return surveyorArray.indexOf(staffName) > -1;
+	  
 
     },
     arraySpan({ row, column, rowIndex, columnIndex }){
@@ -390,3 +366,30 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.demo-table-expand {
+  font-size: 0;
+}
+.demo-table-expand label {
+  width: 90px;
+  color: #99a9bf;
+}
+.demo-table-expand .el-form-item {
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 50%;
+}
+.el-table .success-row {
+  background: #ecffe0;
+}
+#no-hover .el-table__row:hover > td {
+  background-color: #ffffff !important;
+
+}
+
+#no-hover .el-table__row--striped:hover > td {
+  background-color: #ffffff !important;
+
+}
+</style>
