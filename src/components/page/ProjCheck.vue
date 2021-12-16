@@ -75,7 +75,7 @@
 			  @click="showInfo"
 			>查看计划消息</el-button>
 			
-            <span style="float: right; font-size: 14px;">计划录入:{{detailData.operator}}，编制日期:{{this.formatDate(detailData.projDate)}}</span>
+            <span style="float: right; font-size: 14px;">编制日期:{{this.formatDate(detailData.projDate)}}</span>
           </div>
           <div style="font-size: 20px">{{detailData.projName}}</div>
         </el-card>
@@ -343,7 +343,7 @@
 			  @click="showInfo"
 			>查看计划消息</el-button>
 			
-            <span style="float: right; font-size: 14px;">计划录入:{{detailData.operator}}，编制日期:{{this.formatDate(detailData.projDate)}}</span>
+            <span style="float: right; font-size: 14px;">编制日期:{{this.formatDate(detailData.projDate)}}</span>
           </div>
           <div style="font-size: 20px">{{detailData.projName}}</div>
         </el-card>
@@ -408,9 +408,6 @@
                 </el-form-item>
               </el-col>
 			  -->
-            </el-row>
-			<!-- 无基准日
-            <el-row>
               <el-col :span="8">
                 <el-form-item
                   label="基准日"
@@ -420,7 +417,7 @@
                 </el-form-item>
               </el-col>
             </el-row>
-			 -->
+			
             <el-row
 			v-if="onProjTypeChangeVisable() == 1">
               <el-col :span="12">
@@ -558,7 +555,7 @@
               </el-col>
               <el-col :span="8">
                 <el-form-item
-                  :label="onProjTypeChangeVisable() == 1?'现场测绘':'现场咨询'"
+                  :label="onProjTypeChangeVisable() == 1?'现场测绘':'现场调研'"
                   class="label"
                 >
                   <span class="detail-content">{{detailData.fieldSrvy}}</span>
@@ -635,7 +632,7 @@
 			  @click="showInfo"
 			>查看计划消息</el-button>
 			
-            <span style="float: right; font-size: 14px;">计划录入:{{detailData.operator}}，编制日期:{{this.formatDate(detailData.projDate)}}</span>
+            <span style="float: right; font-size: 14px;">编制日期:{{this.formatDate(detailData.projDate)}}</span>
           </div>
           <div style="font-size: 20px">{{detailData.projName}}</div>
         </el-card>
@@ -672,6 +669,7 @@
                   <span class="detail-content">{{detailData.assemGoal}}</span>
                 </el-form-item>
               </el-col>
+			  <!-- 
               <el-col :span="8">
                 <el-form-item
                   label="初评号"
@@ -680,6 +678,7 @@
                   <span class="detail-content">{{reportNum.cph}}</span>
                 </el-form-item>
               </el-col>
+			  -->
               <el-col :span="8">
                 <el-form-item
                   label="正评号"
@@ -688,6 +687,7 @@
                   <span class="detail-content">{{reportNum.zph}}</span>
                 </el-form-item>
               </el-col>
+			  <!-- 
               <el-col :span="8">
                 <el-form-item
                   label="回函号"
@@ -696,10 +696,9 @@
                   <span class="detail-content">{{reportNum.hhh}}</span>
                 </el-form-item>
               </el-col>
-            </el-row>
-			<!-- 无基准日
-            <el-row>
-              <el-col :span="8">
+			  -->
+              <el-col :span="8"
+			  v-if="detailData.baseDate">
                 <el-form-item
                   label="基准日"
                   class="label"
@@ -708,7 +707,19 @@
                 </el-form-item>
               </el-col>
             </el-row>
-			 -->
+			
+			<el-row>
+			  <el-col :span="8"
+			  v-if="detailData.auditPeriodStart">
+			    <el-form-item
+			      label="审计期间"
+			      class="label"
+			    >
+			      <span class="detail-content">{{detailData.auditPeriodStart}} 至 {{detailData.auditPeriodEnd}}</span>
+			    </el-form-item>
+			  </el-col>
+			</el-row>
+			
 			<el-row>
               <el-col :span="24">
                 <el-form-item
@@ -986,6 +997,7 @@ export default {
               }
               , 1000);
           return;
+		 
         }
         this.detailData = res.data;
         //处理value转为label展示
@@ -995,13 +1007,12 @@ export default {
           }
         }
         //this.reportNum = res.data.reportNumList
-		
 		//211209变动 reportNumList新格式转换
-		const reportNumList = res.data.reportNumList?res.data.reportNumList:'';
+		const reportNumList = res.data.reportNumList?res.data.reportNumList:[];
 		
 		Object.keys(this.reportNum).forEach(key => (this.reportNum[key] = ''))
 		//Object.keys(this.cnReportNum).forEach(key => (this.cnReportNum[key] = ''))
-		
+				
 		//const compList = ['惠正', '智明', '汇正'];
 		reportNumList.forEach((item, index) =>{
 			if(item.reportNum){
@@ -1014,6 +1025,7 @@ export default {
 				}
 			}
 		})
+		
       }).catch(error =>{
 		this.$message.error('计划系统内无该项目数据');
 	  })
@@ -1064,10 +1076,10 @@ export default {
 				tempType = 1;
 			}
 		  }else if(this.companyTabsId == 1){
-			if(projType == 'ZC'){
+			if(projType == 'ZMC'){
 				//智明测绘模板
 				tempType = 11;
-			}else if(projType == 'ZZ'){
+			}else if(projType == 'ZMZ'){
 				//智明咨询模板
 				tempType = 12;
 			}
@@ -1182,7 +1194,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .detail {
   padding: 10px;
 }
@@ -1197,7 +1209,7 @@ export default {
 .label span {
   font-size: 16px;
 }
-.label .el-form-item__label {
+/deep/ .label .el-form-item__label {
   color: #009ad6;
   font-size: 16px;
 }
