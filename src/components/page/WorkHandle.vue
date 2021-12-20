@@ -1239,7 +1239,10 @@
               <div class="item"><span>计划编号：</span>{{this.projDetail.projNum}}</div>
               <div class="item"><span>项目类型：</span>{{this.transedProjType.projType}}</div>
               <div class="item"><span>{{onProjTypeChangeVisable() == 1 ? "测绘目的：" : "咨询目的："}}</span>{{this.projDetail.assemGoal}}</div>
-              <div class="item"><span>基准日：</span>{{formatDate(this.projDetail.baseDate)}}</div>
+              <div class="item"
+			  v-if="onProjTypeChangeVisable() == 1"><span>进场日期：</span>{{formatDate(this.projDetail.fldSrvySchedule)}}</div>
+			  <div class="item"
+			  v-if="onProjTypeChangeVisable() == 2"><span>基准日：</span>{{formatDate(this.projDetail.baseDate)}}</div>
               <div class="item"><span>项目名称：</span>{{this.projDetail.projName}}</div>
               <div class="item"
 			  v-if="onProjTypeChangeVisable() == 1">
