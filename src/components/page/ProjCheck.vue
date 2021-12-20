@@ -408,14 +408,25 @@
                 </el-form-item>
               </el-col>
 			  -->
-              <el-col :span="8">
+              <el-col :span="8"
+			  v-if="onProjTypeChangeVisable() == 1">
                 <el-form-item
-                  label="基准日"
+                  label="进场日期"
                   class="label"
                 >
-                  <span class="detail-content">{{this.formatDate(detailData.baseDate)}}</span>
+                  <span class="detail-content">{{detailData.fldSrvySchedule}}</span>
                 </el-form-item>
               </el-col>
+			  
+			  <el-col :span="8"
+			  v-if="onProjTypeChangeVisable() == 2">
+			    <el-form-item
+			      label="基准日"
+			      class="label"
+			    >
+			      <span class="detail-content">{{this.formatDate(detailData.baseDate)}}</span>
+			    </el-form-item>
+			  </el-col>
             </el-row>
 			
             <el-row
