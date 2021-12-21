@@ -3071,7 +3071,9 @@ export default {
 
       createReportQrCode(this.qrcodeForm, this.companyId)
           .then(res => {
-            this.qrCodeSrc = `${ProManageAPIServer}qrCode/readReportQrCode/`+this.projDetail.projId
+			var timestamp=new Date().getTime();  
+			  
+            this.qrCodeSrc = `${ProManageAPIServer}qrCode/readReportQrCode/`+this.projDetail.projId+"?s="+timestamp;
             this.qrcodeVisible = true
             // this.$nextTick(() => {
             //   this.qrCodeSrc = `${ProManageAPIServer}/qrCode/readReportQrCode/`+this.projDetail.projId
