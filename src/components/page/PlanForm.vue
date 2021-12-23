@@ -2624,10 +2624,14 @@ export default {
 		//惠正计划完成天数默认3
 		this.form.compSchedule = 3;
 		this.initform.compSchedule = 3;
+		this.form.arrgType = '1001';
+		this.initform.arrgType = '1001';
 	  }else if(this.companyTabsId == 1){
 		//智明计划完成天数默认5 
 		this.form.compSchedule = 5;
 		this.initform.compSchedule = 5;
+		this.form.arrgType = '1002';
+		this.initform.arrgType = '1002';
 	  }else if(this.companyTabsId == 2){
 		//汇正计划完成天数默认15
 		this.form.compSchedule = 15;
