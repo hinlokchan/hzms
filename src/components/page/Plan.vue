@@ -1316,7 +1316,8 @@ export default {
 	
 	//211202 处理页面跳转返回
 	pageInfoLoad(){
-		const plan_pageinfo = JSON.parse(sessionStorage.getItem('plan_pageinfo'));
+		//const plan_pageinfo = JSON.parse(sessionStorage.getItem('plan_pageinfo'));
+		const plan_pageinfo = JSON.parse(this.global.plan_pageinfo);
 		if(plan_pageinfo){
 		  if(plan_pageinfo.status){
 			//赋值		
@@ -1329,7 +1330,8 @@ export default {
 			this.searchData = plan_pageinfo.searchData;
 		  }
 		  //删除
-		  sessionStorage.removeItem('plan_pageinfo');
+		  //sessionStorage.removeItem('plan_pageinfo');
+		  this.global.plan_pageinfo = null;
 		  return true;
 		}else{
 		  return false;
@@ -1337,7 +1339,6 @@ export default {
 	},
 	
 	pageInfoSave(){
-	  /* 
 	  const plan_pageinfo ={
 		searchData: this.searchData,
 		pageData: {
@@ -1348,8 +1349,8 @@ export default {
 		data: this.tableData,
 	    status:0
 	  };
-	  sessionStorage.setItem('plan_pageinfo', JSON.stringify(plan_pageinfo));
-	  */
+	  //sessionStorage.setItem('plan_pageinfo', JSON.stringify(plan_pageinfo));	 
+	  this.global.plan_pageinfo = JSON.stringify(plan_pageinfo);
 	},
 	
 	//211210变动 query加密
