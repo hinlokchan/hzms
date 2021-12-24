@@ -544,7 +544,8 @@ export default {
 	
 	//211202 处理页面跳转返回
 	pageInfoLoad(){
-		const workbranch_pageinfo = JSON.parse(sessionStorage.getItem('workbranch_pageinfo'));
+		//const workbranch_pageinfo = JSON.parse(sessionStorage.getItem('workbranch_pageinfo'));
+		const workbranch_pageinfo = JSON.parse(this.global.workbranch_pageinfo);
 		if(workbranch_pageinfo){
 		  if(workbranch_pageinfo.status){
 			//赋值		
@@ -559,7 +560,7 @@ export default {
 			this.onGoing = workbranch_pageinfo.onGoing;
 		  }
 		  //删除
-		  sessionStorage.removeItem('workbranch_pageinfo');
+		  this.global.workbranch_pageinfo = null;
 		  return true;
 		}else{
 		  return false;
@@ -578,7 +579,8 @@ export default {
 		onGoing: this.onGoing,
 	    status:0
 	  };
-	  sessionStorage.setItem('workbranch_pageinfo', JSON.stringify(workbranch_pageinfo));
+	  //sessionStorage.setItem('workbranch_pageinfo', JSON.stringify(workbranch_pageinfo));
+	  this.global.workbranch_pageinfo = JSON.stringify(workbranch_pageinfo);
 	},
 		
 	//211210变动 query加密
