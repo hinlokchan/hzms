@@ -3537,15 +3537,20 @@ export default {
 	
 	//211202 处理页面跳转返回
 	pageInfoEdit(){
-		var plan_pageinfo = JSON.parse(sessionStorage.getItem('plan_pageinfo'));
+		//var plan_pageinfo = JSON.parse(sessionStorage.getItem('plan_pageinfo'));
+		var plan_pageinfo = JSON.parse(this.global.plan_pageinfo);
 		if(plan_pageinfo){
 		  plan_pageinfo.status = 1; //更新状态
-		  sessionStorage.setItem('plan_pageinfo', JSON.stringify(plan_pageinfo));
+		  //sessionStorage.setItem('plan_pageinfo', JSON.stringify(plan_pageinfo));
+		  this.global.plan_pageinfo = JSON.stringify(plan_pageinfo);
 		}	
 	},
 	pageInfoDel(){
-		sessionStorage.removeItem('plan_pageinfo');
-		sessionStorage.removeItem('workbranch_pageinfo');
+		//sessionStorage.removeItem('plan_pageinfo');
+		//sessionStorage.removeItem('workbranch_pageinfo');
+		
+		this.global.plan_pageinfo = null;
+		this.global.workbranch_pageinfo = null;
 	}, 
 		
 	//211210变动 query解密
