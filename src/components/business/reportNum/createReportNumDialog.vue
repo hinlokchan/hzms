@@ -211,42 +211,42 @@ export default {
       hzkjOptions:[
         {
           value: 3001,
-          label: '财报审计/KS',
+          label: '财报审计/KKS',
           disabled: true
         },
         {
           value: 3002,
-          label: '专项审计(专审字)/ZS',
+          label: '专项审计(专审字)/KZS',
           disabled: true
         },
         {
           value: 3101,
-          label: '专项审计(专字)/Z',
+          label: '专项审计(专字)/KZ',
           disabled: true
         },
         {
           value: 3003,
-          label: '验资/YZ',
+          label: '验资/KYZ',
           disabled: true
         },
         {
           value: 3004,
-          label: '汇正咨询(咨字)/ZX',
+          label: '汇正咨询(咨字)/KZX',
           disabled: true
         },
         {
           value: 3102,
-          label: '税务咨询(税咨字)/S',
+          label: '税务咨询(税咨字)/KS',
           disabled: true
         },
         {
           value: 3005,
-          label: '发债/FZ',
+          label: '发债/KFZ',
           disabled: true
         },
         {
           value: 3006,
-          label: '税务审计/SZ',
+          label: '税务审计/KSZ',
           disabled: true
         },
       ],
