@@ -1337,6 +1337,7 @@ export default {
 	},
 	
 	pageInfoSave(){
+	  /* 
 	  const plan_pageinfo ={
 		searchData: this.searchData,
 		pageData: {
@@ -1348,6 +1349,7 @@ export default {
 	    status:0
 	  };
 	  sessionStorage.setItem('plan_pageinfo', JSON.stringify(plan_pageinfo));
+	  */
 	},
 	
 	//211210变动 query加密
