@@ -1,7 +1,8 @@
 <template>
   <div class="container">
     <el-page-header @back="goBack"></el-page-header>
-    <el-card style="width:50%; min-width: 600px; margin-top: 20px">
+	<!-- 211224变动, 删除日报表
+    <el-card style="width:50%; min-width: 600px; margin-top: 20px">	  
       <div
         slot="header"
         class="clearfix"
@@ -9,10 +10,10 @@
         <span><b>日计划报表</b></span>
         <el-button
           style="float:right"
-          type="text"
+          type="button"
           @click="printDayReport(dateStr)"
         >导出</el-button>
-      </div>
+      </div>	  
       <div>
         <el-date-picker
           v-model="dateStr"
@@ -25,6 +26,7 @@
         </el-date-picker>
       </div>
     </el-card>
+	 -->
     <el-card style="width:50%; min-width: 600px; margin-top: 20px">
       <div
         slot="header"
@@ -33,7 +35,7 @@
         <span><b>周报表</b></span>
         <el-button
           style="float:right"
-          type="text"
+          type="button"
           @click="printWeekReport(week)"
         >导出</el-button>
       </div>
@@ -54,7 +56,7 @@
         <span><b>多条件筛选导出计划报表</b></span>
         <el-button
             style="float:right"
-            type="text"
+            type="button"
             @click="exportPlan"
         >导出</el-button>
       </div>
