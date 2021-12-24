@@ -191,10 +191,12 @@ export default {
     },
 		
 	pageInfoEdit(){
-		var case_pageinfo = JSON.parse(sessionStorage.getItem('case_pageinfo'));
+		//var case_pageinfo = JSON.parse(sessionStorage.getItem('case_pageinfo'));
+		var case_pageinfo = JSON.parse(this.global.case_pageinfo);
 		if(case_pageinfo){
 		  case_pageinfo.status = 1; //更新状态
-		  sessionStorage.setItem('case_pageinfo', JSON.stringify(case_pageinfo));
+		  //sessionStorage.setItem('case_pageinfo', JSON.stringify(case_pageinfo));
+		  this.global.case_pageinfo = JSON.stringify(case_pageinfo);
 		}			
 	}
   },
