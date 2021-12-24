@@ -199,54 +199,54 @@ export default {
       zmOptions:[
         {
           value: 2101,
-          label: '测绘/ZC',
+          label: '测绘/ZMC',
           disabled: true
         },
         {
           value: 2201,
-          label: '咨询/ZZ',
+          label: '咨询/ZMZ',
           disabled: true
         }
       ],
       hzkjOptions:[
         {
           value: 3001,
-          label: '财报审计/KS',
+          label: '财报审计/KKS',
           disabled: true
         },
         {
           value: 3002,
-          label: '专项审计(专审字)/ZS',
+          label: '专项审计(专审字)/KZS',
           disabled: true
         },
         {
           value: 3101,
-          label: '专项审计(专字)/Z',
+          label: '专项审计(专字)/KZ',
           disabled: true
         },
         {
           value: 3003,
-          label: '验资/YZ',
+          label: '验资/KYZ',
           disabled: true
         },
         {
           value: 3004,
-          label: '汇正咨询(咨字)/ZX',
+          label: '汇正咨询(咨字)/KZX',
           disabled: true
         },
         {
           value: 3102,
-          label: '税务咨询(税咨字)/S',
+          label: '税务咨询(税咨字)/KS',
           disabled: true
         },
         {
           value: 3005,
-          label: '发债/FZ',
+          label: '发债/KFZ',
           disabled: true
         },
         {
           value: 3006,
-          label: '税务审计/SZ',
+          label: '税务审计/KSZ',
           disabled: true
         },
       ],
@@ -261,7 +261,7 @@ export default {
         1061: [1061, 1100],
         1062: [1062, 1100],
         1063: [1063, 1100],
-        1070: [1070, 1012, 1022, 1032, 1013, 1023, 1033, 1100],
+        1070: [1070, 1011, 1021, 1031, 1012, 1022, 1032, 1013, 1023, 1033, 1100],
         1071: [1071, 1100],
         1080: [1013, 1023, 1033, 1100],
         1090: [1090, 1100],
