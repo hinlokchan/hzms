@@ -199,12 +199,12 @@ export default {
       zmOptions:[
         {
           value: 2101,
-          label: '测绘/ZC',
+          label: '测绘/ZMC',
           disabled: true
         },
         {
           value: 2201,
-          label: '咨询/ZZ',
+          label: '咨询/ZMZ',
           disabled: true
         }
       ],
