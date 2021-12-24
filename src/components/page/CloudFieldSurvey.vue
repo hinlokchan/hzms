@@ -380,7 +380,7 @@ export default {
   margin-bottom: 0;
   width: 50%;
 }
-.el-table .success-row {
+/deep/ .el-table .success-row {
   background: #ecffe0;
 }
 #no-hover .el-table__row:hover > td {
