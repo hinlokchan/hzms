@@ -1162,6 +1162,7 @@ export default {
 	},	
 	
 	pageInfoEdit(){
+		/* 
 		var plan_pageinfo = JSON.parse(sessionStorage.getItem('plan_pageinfo'));
 		if(plan_pageinfo){
 		  plan_pageinfo.status = 1; //更新状态
@@ -1173,6 +1174,20 @@ export default {
 		  contract_pageinfo.status = 1; //更新状态
 		  sessionStorage.setItem('contract_pageinfo', JSON.stringify(contract_pageinfo));
 		}
+		
+		 */
+		
+		var plan_pageinfo = JSON.parse(this.global.plan_pageinfo);
+		if(plan_pageinfo){
+		  plan_pageinfo.status = 1; //更新状态
+		  this.global.plan_pageinfo = JSON.stringify(plan_pageinfo);
+		}	
+		
+		var contract_pageinfo = JSON.parse(this.global.contract_pageinfo);
+		if(contract_pageinfo){
+		  contract_pageinfo.status = 1; //更新状态
+		  this.global.contract_pageinfo = JSON.stringify(contract_pageinfo);
+		}	
 	},
 		
 	//211210变动 query解密
