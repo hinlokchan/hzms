@@ -139,7 +139,8 @@ export default {
 		
 	//211202 处理页面跳转返回
 	pageInfoLoad(){
-		const case_pageinfo = JSON.parse(sessionStorage.getItem('case_pageinfo'));
+		//const case_pageinfo = JSON.parse(sessionStorage.getItem('case_pageinfo'));
+		const case_pageinfo = JSON.parse(this.global.case_pageinfo);
 		if(case_pageinfo){
 		  if(case_pageinfo.status){
 			//赋值		
@@ -148,7 +149,8 @@ export default {
 			this.keyword = case_pageinfo.searchData;
 		  }
 		  //删除
-		  sessionStorage.removeItem('case_pageinfo');
+		  //sessionStorage.removeItem('case_pageinfo');
+		  this.global.case_pageinfo = null;
 		  return true;
 		}else{
 		  return false;
@@ -161,7 +163,8 @@ export default {
 		  data: this.tableData.list,
 	    status:0
 	  };
-	  sessionStorage.setItem('case_pageinfo', JSON.stringify(case_pageinfo));
+	  //sessionStorage.setItem('case_pageinfo', JSON.stringify(case_pageinfo));
+	  this.global.case_pageinfo = JSON.stringify(case_pageinfo);
 	}
 
   },
