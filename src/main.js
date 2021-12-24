@@ -35,6 +35,9 @@ import moment from 'moment';
 import less from 'less'
 import VueClipboard from 'vue-clipboard2'
 
+import globalVariable from './utils/globalvariable'
+Vue.prototype.global = globalVariable;
+
 Vue.prototype.$formatDate = formatDate;
 Vue.prototype.$moment = moment;
 Vue.config.productionTip = false;
