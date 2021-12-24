@@ -3662,14 +3662,18 @@ export default {
 	},	
 	
 	pageInfoEdit(){
-		var workbranch_pageinfo = JSON.parse(sessionStorage.getItem('workbranch_pageinfo'));
+		//var workbranch_pageinfo = JSON.parse(sessionStorage.getItem('workbranch_pageinfo'));
+		var workbranch_pageinfo = JSON.parse(this.global.workbranch_pageinfo);
 		if(workbranch_pageinfo){
 		  workbranch_pageinfo.status = 1; //更新状态
-		  sessionStorage.setItem('workbranch_pageinfo', JSON.stringify(workbranch_pageinfo));
+		  //sessionStorage.setItem('workbranch_pageinfo', JSON.stringify(workbranch_pageinfo));
+		  this.global.workbranch_pageinfo = JSON.stringify(workbranch_pageinfo);
 		}	
 	},
 	pageInfoDel(){
-		sessionStorage.removeItem('workbranch_pageinfo');
+		//sessionStorage.removeItem('workbranch_pageinfo');
+		
+		this.global.workbranch_pageinfo = null;
 	}, 
 	
 	//211207变动 修改projid刷新操作记录
