@@ -383,7 +383,8 @@ export default {
 	
 	//211202 处理页面跳转返回
 	pageInfoLoad(){
-		const contract_pageinfo = JSON.parse(sessionStorage.getItem('contract_pageinfo'));
+		//const contract_pageinfo = JSON.parse(sessionStorage.getItem('contract_pageinfo'));
+		const contract_pageinfo = JSON.parse(this.global.contract_pageinfo);
 		if(contract_pageinfo){
 		  if(contract_pageinfo.status){
 			//赋值		
@@ -396,7 +397,8 @@ export default {
 			this.searchData = contract_pageinfo.searchData;
 		  }
 		  //删除
-		  sessionStorage.removeItem('contract_pageinfo');
+		  //sessionStorage.removeItem('contract_pageinfo');
+		  this.global.contract_pageinfo = null;
 		  return true;
 		}else{
 		  return false;
@@ -414,7 +416,8 @@ export default {
 		data: this.tableData,
 	    status:0
 	  };
-	  sessionStorage.setItem('contract_pageinfo', JSON.stringify(contract_pageinfo));
+	  //sessionStorage.setItem('contract_pageinfo', JSON.stringify(contract_pageinfo));
+	  this.global.contract_pageinfo = JSON.stringify(contract_pageinfo);
 	},
 		
 	//211210变动 query加密
