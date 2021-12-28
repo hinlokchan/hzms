@@ -298,14 +298,6 @@
                 prop="projName"
                 class="red-item"
               >
-				<!-- 
-                <el-input
-                  v-model="form.projName"
-                  type="textarea"
-                  autosize
-                  maxlength="240"
-                ></el-input>
-				 -->
 				<el-autocomplete
 				  class="input-select"
                   type="textarea"
@@ -315,8 +307,18 @@
 				  :trigger-on-focus="false"
 				  :popper-append-to-body="false"
 				  @select="projNameSelect"
+				  @input="chageProjName()"
 				  clearable 
 				></el-autocomplete>
+				
+				<el-input
+				  v-model="newProjName"
+				  type="textarea"
+				  autosize
+				  maxlength="240"
+				  style="display: none;"
+				></el-input>
+				
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -337,14 +339,6 @@
                 prop="projScope"
                 class="red-item"
               >
-				<!-- 
-                <el-input
-                  v-model="form.projScope"
-                  type="textarea"
-                  autosize
-                  maxlength="240"
-                ></el-input>
-				 -->
 				<el-autocomplete
 				  class="input-select"
                   type="textarea"
@@ -354,8 +348,17 @@
 				  :trigger-on-focus="false"
 				  :popper-append-to-body="false"
 				  @select="projScopeSelect"
+				  @input="chageProjScope()"
 				  clearable 
 				></el-autocomplete>
+				
+				<el-input
+				  v-model="newProjScope"
+				  type="textarea"
+				  autosize
+				  maxlength="240"
+				  style="display: none;"
+				></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -982,14 +985,6 @@
                 prop="projName"
                 class="red-item"
               >
-			    <!-- 
-                <el-input
-                  v-model="form.projName"
-                  type="textarea"
-                  autosize
-                  maxlength="240"
-                ></el-input>
-				 -->
 				<el-autocomplete
 				  class="input-select"
 				  type="textarea"
@@ -999,8 +994,18 @@
 				  :trigger-on-focus="false"
 				  :popper-append-to-body="false"
 				  @select="projNameSelect"
+				  @input="chageProjName()"
 				  clearable 
 				></el-autocomplete>
+				
+				<el-input
+				  v-model="newProjName"
+				  type="textarea"
+				  autosize
+				  maxlength="240"
+				  style="display: none;"
+				></el-input>
+				
               </el-form-item>
             </el-col>
 			
@@ -1082,8 +1087,18 @@
 				  :trigger-on-focus="false"
 				  :popper-append-to-body="false"
 				  @select="projScopeSelect"
+				  @input="chageProjScope()"
 				  clearable 
 				></el-autocomplete>
+				
+				<el-input
+				  v-model="newProjScope"
+				  type="textarea"
+				  autosize
+				  maxlength="240"
+				  style="display: none;"
+				></el-input>
+				
 			  </el-form-item>
 			</el-col>  
             
@@ -1756,14 +1771,6 @@
                 prop="projName"
                 class="red-item"
               >
-			    <!-- 
-                <el-input
-                  v-model="form.projName"
-                  type="textarea"
-                  autosize
-                  maxlength="240"
-                ></el-input>
-				 -->
 				<el-autocomplete
 				  class="input-select"
 				  type="textarea"
@@ -1773,8 +1780,17 @@
 				  :trigger-on-focus="false"
 				  :popper-append-to-body="false"
 				  @select="projNameSelect"
+				  @input="chageProjName()"
 				  clearable 
 				></el-autocomplete>
+				
+				<el-input
+				  v-model="newProjName"
+				  type="textarea"
+				  autosize
+				  maxlength="240"
+				  style="display: none;"
+				></el-input>
               </el-form-item>
             </el-col>
 			<!-- 
@@ -1819,14 +1835,6 @@
                 prop="projScope"
                 class="red-item"
               >
-			    <!-- 
-                <el-input
-                  v-model="form.projScope"
-                  type="textarea"
-                  autosize
-                  maxlength="240"
-                ></el-input>
-				 -->
 				<el-autocomplete
 				  class="input-select"
 				  type="textarea"
@@ -1836,8 +1844,18 @@
 				  :trigger-on-focus="false"
 				  :popper-append-to-body="false"
 				  @select="projScopeSelect"
+				  @input="chageProjScope()"
 				  clearable 
 				></el-autocomplete>
+				
+				<el-input
+				  v-model="newProjScope"
+				  type="textarea"
+				  autosize
+				  maxlength="240"
+				  style="display: none;"
+				></el-input>				
+				
               </el-form-item>
             </el-col>
 			<el-col :span="6">
@@ -2588,12 +2606,17 @@ export default {
 	  projScopeOptions:[],
 	  loading:false,
 	  
+	  //211228新增 范围搜索防误点, 可重新粘贴
+	  newProjName:'',
+	  newProjScope:'',
+	  
 	  //211101变动 新增: 多个公司切换
 	  companyRange:['HZ', 'ZM','HZKJ'],
 	  companyId:'',
 	  companyTabsId: 0,
 	  
 	  tabsDisable:false,	  
+	  
     };
   },
   created() {
@@ -3350,6 +3373,7 @@ export default {
 		getAllAbstractProject(allData, this.companyId)
 		  .then(res => {
 		    //console.log('获取AllAbstractProject数据')
+			this.tableData.length = 0; //释放数组
 		    this.tableData = res.data
 		    //this.pageTotal = res.data.length
 		  })
@@ -3381,7 +3405,8 @@ export default {
 			
 			key = eval("/"+key+"^.*/g");
 			
-			//项目类型			
+			//项目名称			
+			this.projNameOptions = [];
 			this.projNameOptions = this.tableData.filter(item => {
 			  return item.projName.match(key);
 			  // key=eval("/(?=.*关)(?=.*键)(?=.*字)^.*/g")
@@ -3420,7 +3445,8 @@ export default {
 			
 			key = eval("/"+key+"^.*/g");
 			
-			//项目类型			
+			//项目范围
+			this.projScopeOptions = [];
 			this.projScopeOptions = this.tableData.filter(item => {
 			  return item.projScope.match(key);
 			  // key=eval("/(?=.*关)(?=.*键)(?=.*字)^.*/g")
@@ -3435,6 +3461,30 @@ export default {
 		}else{
 			this.projScopeOptions = []; 
 			callback(this.projScopeOptions);
+		}
+	},
+	
+	chageProjName(){
+		if(this.form.projName.indexOf(' | ') != -1){
+			this.$copyText(this.newProjName).then((e)=> {
+				this.$message.warning('可 Ctrl+V 粘贴替换刚选择的内容')
+			}, (e)=> {
+				this.$message.warning('复制失败')
+			})
+		}else{
+			this.newProjName = this.form.projName
+		}
+	},
+	
+	chageProjScope(){
+		if(this.form.projScope.indexOf(' | ') != -1){
+			this.$copyText(this.newProjScope).then((e)=> {
+				this.$message.warning('可 Ctrl+V 粘贴替换刚选择的内容')
+			}, (e)=> {
+				this.$message.warning('复制失败')
+			})
+		}else{
+			this.newProjScope = this.form.projScope
 		}
 	},
 	
