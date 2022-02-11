@@ -109,7 +109,13 @@ export default {
           this.$message.warning('未查询到数据');
           return;
         } else {
-          this.tableData.list = res.data;
+          //this.tableData.list = res.data;		  
+		  //220211 变动 按基准日排序
+		  this.tableData.list =  res.data.sort(
+			(a, b) => new Date(b['baseDate']) - new Date(a['baseDate'])
+		  );		  
+		 
+		  
           this.$message.success('搜索到 ' + res.data.length + ' 条数据');
         }
       }).catch(error => {
