@@ -1466,6 +1466,7 @@ export default {
     arrgEdit: { type: Boolean, default: false },
     arrgData: { type: Object },
     projId: { type: Number },
+    subProjId: { type: String },
     projType: { type: Number },
     projMember: { type: Array },
     baseDate: { type: Number },
@@ -1500,7 +1501,7 @@ export default {
     return {
       visible: this.show,
 	  arrgForm: {}, //公共表单
-	  dialogWidth: '1000px',
+	  dialogWidth: '1100px',
 	  
 	  //211101变动 新增: 多个公司切换
 	  companyRange:['HZ', 'ZM','HZKJ'],
@@ -1512,6 +1513,7 @@ export default {
 	  //惠正
 	  arrgFormHZ: {
 	    projId: '',
+		subProjId: '',
 	    assemMethod: '',
 	    fldSrvyContent: '',
 	    //人员
@@ -1619,6 +1621,7 @@ export default {
 	  //智明
 	  arrgFormZMCH: {
 	    projId: '',
+		subProjId: '',
 	    assemMethod: '',
 	    fldSrvyContent: '',
 	    //人员
@@ -1650,6 +1653,7 @@ export default {
 	  },
 	  arrgFormZMZX: {
 	    projId: '',
+		subProjId: '',
 	    assemMethod: '',
 	    fldSrvyContent: '',
 	    //人员
@@ -1818,6 +1822,7 @@ export default {
 	  //汇正  
 	  arrgFormKJ: {
 		projId: '',
+		subProjId: '',
 	    assemMethod: '',
 	    fldSrvyContent: '',
 	    //人员
@@ -1935,17 +1940,15 @@ export default {
 	  
       if (this.arrgData == null) {
         //this.$message.success('新增安排');
-		
       } else {
-        //this.$message.success('编辑安排');		
-        this.arrgForm = this.arrgData;
+        //this.$message.success('编辑安排');	
+        this.arrgForm = this.arrgData;	
       }
 	  this.arrgForm.projId = this.projId;
+	  this.arrgForm.subProjId = this.subProjId;
 	  
 	  //根据项目组成员多少, 优化对话框宽度
-	  this.dialogWidth = this.projMember.length <=6?'1000px':'90%';
-	  	  
-	  //console.log('arrgForm', this.arrgForm);
+	  this.dialogWidth = this.projMember.length <=6?'1100px':'90%';
     },
     onClose() {
       this.$emit('update:show', false);
@@ -2217,6 +2220,7 @@ export default {
 			  this.arrgForm.fldSrvyPic.push(i);
 			}
 		  }
+		 
 	  }else if(this.companyTabsId == 1 && (this.projType>=2100 && this.projType <2200)){
 		//智明测绘  
 		  //重置空值
