@@ -82,26 +82,35 @@
         >确定</el-button>
       </div>
     </el-dialog>
+	
+	
+	
+	
     <el-dialog
-      title="创建子项目信息"
+      title="新增项目"
       :visible.sync="subProjVisible"
-      width="60%"
+      width="800px"
+	  top="20px"
     >
-      <h3>父项目报告号:{{subFatherReport}}</h3>
+		<!-- <div class="dialog_body">
+			<div class="dialog_content"> -->
+      <!-- <h3>父项目报告号:{{subFatherReport}}</h3> -->
       <el-form
         ref="subFormRules"
         :model="subProjForm"
         label-width="auto"
         :rules="subFormRules"
       >
+		<el-divider><strong>基本信息</strong></el-divider>
         <el-form-item
-          label="子项目报告号"
-          prop="subReportNum"
+          label="子项目号"
+          prop="subProjNum"
         >
           <el-input
-            placeholder="例:001"
-            style="width: 80px"
-            v-model="subProjForm.subReportNum"
+            placeholder="第一个字符只能输入数字或英文; 例: 001"
+            style="width: 100%"
+            v-model.trim="subProjForm.subProjNum"
+			clearable
           ></el-input>
         </el-form-item>
         <el-form-item
@@ -109,30 +118,32 @@
           prop="subProjName"
         >
           <el-input
-            style="width: 200px"
             v-model="subProjForm.subProjName"
+			clearable
           ></el-input>
-        </el-form-item>
-        <el-form-item
-          label="子项目基准日"
-          prop="subBaseDate"
-        >
-          <el-date-picker
-            type="date"
-            value-format="yyyy-MM-dd"
-            style="width: 200px"
-            v-model="subProjForm.subBaseDate"
-          ></el-date-picker>
         </el-form-item>
         <el-form-item
           label="子项目项目范围"
           prop="subProjScope"
         >
           <el-input
-            style="width: 200px"
             v-model="subProjForm.subProjScope"
+			clearable
           ></el-input>
-        </el-form-item>
+        </el-form-item>		
+		<el-form-item
+		  label="子项目基准日"
+		  prop="subBaseDate"
+		>
+		  <el-date-picker
+		    type="date"
+		    value-format="yyyy-MM-dd"
+		    style="width: 200px"
+		    v-model="subProjForm.subBaseDate"
+		  ></el-date-picker>
+		</el-form-item>
+		
+		<el-divider><strong>项目组成员信息</strong></el-divider>
         <el-form-item
           label="项目负责人"
           prop="subProjLeader"
@@ -194,7 +205,7 @@
           </el-checkbox-group>
         </el-form-item>
       </el-form>
-      <div slot="footer">
+      <div slot="footer" class="dialog-footer">
         <el-button
           type="text"
           @click="subProjVisible = false"
@@ -204,7 +215,214 @@
           @click="addSubProj(subFatherReport)"
         >确认提交</el-button>
       </div>
+        <!--    </div>	
+		</div> -->
     </el-dialog>
+	
+	<el-dialog
+	  title="修改项目"
+	  :visible.sync="editSubProjVisible"
+	  width="800px"
+	  top="20px"
+	  v-if="editSubProjForm"
+	>
+		<!-- <div class="dialog_body">
+			<div class="dialog_content"> -->
+	  <!-- <h3>父项目报告号:{{subFatherReport}}</h3> -->
+	  <el-form
+	    ref="editSubProjForm"
+	    :model="editSubProjForm"
+	    label-width="auto"
+	    :rules="editSubProjFormRules"
+	  >
+		<el-divider><strong>基本信息</strong></el-divider>
+	    <el-form-item
+	      label="子项目号"
+	      prop="subProjNum"
+		  v-if="subTableData.length > 1"
+	    >
+	      <el-input
+	        placeholder="第一个字符只能输入数字或英文; 例: 001"
+	        style="width: 100%"
+	        v-model.trim="editSubProjForm.subProjNum"
+			clearable
+	      ></el-input>
+	    </el-form-item>
+	    <el-form-item
+	      label="子项目项目名称"
+	      prop="subProjName"
+	    >
+	      <el-input
+	        v-model="editSubProjForm.subProjName"
+			clearable
+	      ></el-input>
+	    </el-form-item>
+	    <el-form-item
+	      label="子项目项目范围"
+	      prop="subProjScope"
+	    >
+	      <el-input
+	        v-model="editSubProjForm.subProjScope"
+			clearable
+	      ></el-input>
+	    </el-form-item>		
+		<el-form-item
+		  label="子项目基准日"
+		  prop="subBaseDate"
+		>
+		  <el-date-picker
+		    type="date"
+		    value-format="yyyy-MM-dd"
+		    style="width: 200px"
+		    v-model="editSubProjForm.subBaseDate"
+		  ></el-date-picker>
+		</el-form-item>
+		
+		<el-divider><strong>项目组成员信息</strong></el-divider>
+	    <el-form-item
+	      label="项目负责人"
+	      prop="subProjLeader"
+	    >
+	      <el-checkbox-group v-model="editSubProjForm.subProjLeader">
+	        <el-checkbox
+	          v-for="item in workArrgProjMember"
+	          :key="item"
+	          :label="item"
+	        ></el-checkbox>
+	      </el-checkbox-group>
+	    </el-form-item>
+	    <el-form-item
+	      label="项目复核人"
+	      prop="subProjReviewer"
+	    >
+	      <el-checkbox-group v-model="editSubProjForm.subProjReviewer">
+	        <el-checkbox
+	          v-for="item in workArrgProjMember"
+	          :key="item"
+	          :label="item"
+	        ></el-checkbox>
+	      </el-checkbox-group>
+	    </el-form-item>
+	    <el-form-item
+	      label="专业复核人"
+	      prop="subProjProReviewer"
+	    >
+	      <el-checkbox-group v-model="editSubProjForm.subProjProReviewer">
+	        <el-checkbox
+	          v-for="item in workArrgProjMember"
+	          :key="item"
+	          :label="item"
+	        ></el-checkbox>
+	      </el-checkbox-group>
+	    </el-form-item>
+	    <el-form-item
+	      label="项目助理"
+	      prop="subProjAsst"
+	    >
+	      <el-checkbox-group v-model="editSubProjForm.subProjAsst">
+	        <el-checkbox
+	          v-for="item in workArrgProjMember"
+	          :key="item"
+	          :label="item"
+	        ></el-checkbox>
+	      </el-checkbox-group>
+	    </el-form-item>
+	    <el-form-item
+	      label="现场勘查"
+	      prop="subFieldSrvy"
+	    >
+	      <el-checkbox-group v-model="editSubProjForm.subFieldSrvy">
+	        <el-checkbox
+	          v-for="item in workArrgProjMember"
+	          :key="item"
+	          :label="item"
+	        ></el-checkbox>
+	      </el-checkbox-group>
+	    </el-form-item>
+	  </el-form>
+	  <div slot="footer" class="dialog-footer">
+	    <el-button
+	      type="text"
+	      @click="editSubProjVisible = false"
+	    >取 消</el-button>
+	    <el-button
+	      type="primary"
+	      @click="editSubProjSubmit(projDetail.projId)"
+	    >确认提交</el-button>
+	  </div>
+	    <!--    </div>	
+		</div> -->
+	</el-dialog>
+	
+	<el-dialog
+	  title="新增项目前, 请先修改第一条项目的子项目号"
+	  :visible.sync="subBasicInfoDialogVisible"
+	  width="800px"
+	>
+		<div class="dialog_body">
+			<div class="dialog_content">
+	  <!-- <h3>父项目报告号:{{subFatherReport}}</h3> -->
+	  <el-form
+	    ref="subBasicInfoForm"
+	    :model="subBasicInfoForm"
+	    label-width="auto"
+	    :rules="subBasicInfoFormRules"
+	  >
+	    <el-form-item
+	      label="子项目号"
+	      prop="subProjNum"
+	    >
+	      <el-input
+	        placeholder="第一个字符只能输入数字或英文; 例: 001"
+	        style="width: 100%"
+	        v-model.trim="subBasicInfoForm.subProjNum"
+			clearable
+	      ></el-input>
+	    </el-form-item>
+	    <el-form-item
+	      label="子项目项目名称"
+	      prop="subProjName"
+	    >
+	      <el-input
+	        v-model="subBasicInfoForm.subProjName"
+			clearable
+	      ></el-input>
+	    </el-form-item>
+	    <el-form-item
+	      label="子项目项目范围"
+	      prop="subProjScope"
+	    >
+	      <el-input
+	        v-model="subBasicInfoForm.subProjScope"
+			clearable
+	      ></el-input>
+	    </el-form-item>		
+		<el-form-item
+		  label="子项目基准日"
+		  prop="subBaseDate"
+		>
+		  <el-date-picker
+		    type="date"
+		    value-format="yyyy-MM-dd"
+		    style="width: 200px"
+		    v-model="subBasicInfoForm.subBaseDate"
+		  ></el-date-picker>
+		</el-form-item>
+	  </el-form>
+	  <div slot="footer" class="dialog-footer">
+	    <el-button
+	      type="text"
+	      @click="subBasicInfoDialogVisible = false"
+	    >取 消</el-button>
+	    <el-button
+	      type="primary"
+	      @click="subBasicInfoEdit(projDetail.projId)"
+	    >确认提交</el-button>
+	  </div>
+	        </div>	
+		</div>
+	</el-dialog>
+	
     <el-dialog
       title="更改项目类型"
       :visible.sync="changeTypeVisible"
@@ -303,6 +521,80 @@
           type="primary"
         >确认更改</el-button>
       </div>
+    </el-dialog>
+	
+	<!-- 220216 项目工作信息 -->
+	<el-dialog
+	  title="项目工作信息"
+	  :visible.sync="showWorkArrgVisible"
+	  width="800px"
+	  top="20px"
+	  v-if="workArrgEdit"
+	>
+		<!-- <div class="dialog_body">
+			<div class="dialog_content"> -->
+		<el-row :gutter="20">
+		  <el-col :span="24">
+			<el-card>
+			  <div>
+				<div class="text">
+				  <div class="item"><span>评估方法：</span>{{workAssemMethod}}</div>
+				  <div class="item"><span>现场调查内容：</span>{{arrgData.fldSrvyContent}}</div>
+				</div>
+			  </div>
+			</el-card>
+		  </el-col>
+		</el-row>
+		<el-row
+		  :gutter="20"
+		  style="margin-top: 15px"
+		>
+		  <el-col :span="24">
+			<el-card>
+			  <div slot="header">综合进度安排</div>
+			  <div>
+				<el-row :gutter="20">
+				  <el-col :span="8">
+					<h4>综合进度</h4>
+				  </el-col>
+				  <el-col :span="6">
+					<h4>时间安排</h4>
+				  </el-col>
+				  <el-col :span="10">
+					<h4>责任人</h4>
+				  </el-col>
+				</el-row>
+				<el-row>
+				  <el-col :span="8">
+					<div
+					  class="workname-left"
+					  v-for="item in workName"
+					  :key="item"
+					>
+					  {{item}}
+					</div>
+				  </el-col>
+				  <el-col :span="6">
+					<div
+					  class="workname-left"
+					  v-for="(item, i) in workDate"
+					  :key="i"
+					>{{item}}</div>
+				  </el-col>
+				  <el-col :span="10">
+					<div
+					  class="workname-left"
+					  v-for="(item, i) in workPeople"
+					  :key="i"
+					>{{item}}</div>
+				  </el-col>
+				</el-row>
+			  </div>
+			</el-card>
+		  </el-col>
+		</el-row>	
+        <!--    </div>	
+		</div> -->
     </el-dialog>
 
     <!-- <el-dialog
@@ -496,21 +788,43 @@
       :show.sync="zcDialogVisible"
       :projId="projDetail.projId"
     />
-    <WorkArrgDialog
+	
+	<!-- 
+	<WorkArrgDialog	
+	  :show.sync="workArrgDialogVisible"
+	  :projId="projDetail.projId"
+	  :subProjId="projDetail.subProjId"
+	  :projType="projDetail.projType"
+	  :projMember="projMember"
+	  :arrgEdit="workArrgEdit"
+	  :arrgData="arrgData"
+	  :baseDate="projDetail.baseDate"
+	  :auditPeriodStart="projDetail.auditPeriodStart"
+	  :auditPeriodEnd="projDetail.auditPeriodEnd"
+	  :projLeader="projDetail.projLeader"
+	  :projReviewer="projDetail.projReviewer"
+	  :projProReviewer="projDetail.projProReviewer"
+	  :projAsst="projDetail.projAsst"
+	  :fieldSrvy="projDetail.fieldSrvy"
+	  @response="createWorkArrgResponse"
+	></WorkArrgDialog>
+	 -->
+    <WorkArrgDialog	
       :show.sync="workArrgDialogVisible"
       :projId="projDetail.projId"
+      :subProjId="projDetail.subProjId"
       :projType="projDetail.projType"
-      :projMember="projMember"
       :arrgEdit="workArrgEdit"
       :arrgData="arrgData"
-      :baseDate="projDetail.baseDate"
       :auditPeriodStart="projDetail.auditPeriodStart"
       :auditPeriodEnd="projDetail.auditPeriodEnd"
-      :projLeader="projDetail.projLeader"
-      :projReviewer="projDetail.projReviewer"
-      :projProReviewer="projDetail.projProReviewer"
-      :projAsst="projDetail.projAsst"
-      :fieldSrvy="projDetail.fieldSrvy"
+      :projMember="workArrgProjMember"
+      :baseDate="workArrgProjMemberInfo.baseDate"
+      :projLeader="workArrgProjMemberInfo.projLeader"
+      :projReviewer="workArrgProjMemberInfo.projReviewer"
+      :projProReviewer="workArrgProjMemberInfo.projProReviewer"
+      :projAsst="workArrgProjMemberInfo.projAsst"
+      :fieldSrvy="workArrgProjMemberInfo.fieldSrvy"
 	  @response="createWorkArrgResponse"
     ></WorkArrgDialog>
     <!--
@@ -573,6 +887,7 @@
           :disabled="projDetail.projState == 2 ? true : false"
         >标记为中止</el-button>
       </div>
+	  <!-- 
       <div class="work-title">
         <span class="work-title-name">惠正项目信息</span>
         <span class="work-title-button">
@@ -593,13 +908,6 @@
             @click="handleEdit()"
             :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
           >修改项目信息</el-button>
-		  <!-- 
-          <el-button
-              icon="el-icon-set-up"
-              size="medium"
-              :disabled="true"
-          >更改项目类型（已停用）</el-button>
-		  -->
           <el-button
             v-if="this.projDetail.projType == 1010 || this.projDetail.projType == 1030 || this.projDetail.projType == 1041 || this.projDetail.projType == 1042"
             icon="el-icon-lx-qrcode"
@@ -615,9 +923,35 @@
           >打印计划信息表</el-button>
         </span>
       </div>
+	  -->
+	  <div class="work-title">
+	    <span class="work-title-name">计划信息</span>
+	    <span class="work-title-button">
+	      <el-button
+	          icon="el-icon-s-claim"
+	          size="medium"
+	          @click="checkCFSDetail"
+	          v-if="projDetail.projType == 1010"
+	      >现勘记录</el-button>
+		  <el-button-group style="margin-left: 10px;">
+			  <el-button
+				icon="el-icon-info"
+				size="medium"
+				@click="handleDetail()"
+			  >查看计划</el-button>
+			  <el-button
+				icon="el-icon-edit"
+				size="medium"
+				@click="handleEdit()"
+				:disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
+				type="primary"
+			  >修改计划</el-button>
+		  </el-button-group>
+	    </span>
+	  </div>
       <el-divider></el-divider>
-      <el-row :gutter="20">
-        <el-col :span="12">
+      <el-row :gutter="10">
+        <el-col :span="10">
           <el-card>
             <div
               slot="header"
@@ -684,7 +1018,7 @@
             </div>
           </el-card>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="7">
           <el-card>
             <div
               slot="header"
@@ -699,197 +1033,24 @@
             </div>
           </el-card>
         </el-col>
-        <el-col
-          :span="24"
-          style="margin-top: 10px;"
-        >
-          <el-card style="height: 180px">
-            <div
-              slot="header"
-              class="card-header"
-            >
-              <span>报告号信息</span>
-			  <!-- 
-              <span style="margin-left: 30px">
-                <el-button
-                  type="text"
-                  icon="el-icon-info"
-                  size="medium"
-                  @click="changeNumShowType"
-                >报告号文字转换</el-button>
-              </span>
-			  -->
-              <span style="float: right">
-                <el-button
-                  slot="reference"
-                  type="primary"
-                  icon="el-icon-circle-plus-outline"
-                  @click="handleGetNum"
-                  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
-                >取号</el-button>
-<!--                <el-button-->
-<!--                  type="primary"-->
-<!--                  icon="el-icon-circle-plus-outline"-->
-<!--                  @click="handleGetOldNum"-->
-<!--                  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"-->
-<!--                >取往月报告号</el-button>-->
-                <el-button
-                  type="danger"
-                  icon="el-icon-circle-close"
-                  @click="handleDelNum()"
-                  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
-                >取消报告号</el-button>
-              </span>
-            </div>
-            <div>
-              <div class="report-num">
-                <el-row>
-                  <el-col
-                    :span="2"
-                    class="report-title"
-                  >初评号
-                  </el-col>
-                  <el-col
-                    :span="5"
-                    class="report-content"
-                  >
-                    <span v-if="reportNum.cph == ''">未取号</span>
-                    <span v-else>
-                      <span>{{reportNum.cph}}
-                        <el-button
-                          style="right: 0px;"
-                          type="text"
-                          icon="el-icon-copy-document"
-                          size="medium"
-                          v-clipboard:copy="reportNum.cph"
-                          v-clipboard:success="copy"
-                        >复制</el-button>
-                      </span>
-					  <br>
-                      <span style="font-size: 14px;">{{cnReportNum.cph}}
-                        <el-button
-                          type="text"
-                          icon="el-icon-copy-document"
-                          size="medium"
-                          v-clipboard:copy="cnReportNum.cph"
-                          v-clipboard:success="copy"
-                        >复制</el-button>
-                      </span>
-                    </span>
-                  </el-col>
-                  <el-col
-                    :span="2"
-                    class="report-title"
-                  >正评号</el-col>
-                  <el-col
-                    :span="5"
-                    class="report-content"
-                  >
-                    <span v-if="this.reportNum.zph == ''">未取号</span>
-                    <span v-else>
-                      <span>{{reportNum.zph}}
-                        <el-button
-                          style="right: 0px;"
-                          type="text"
-                          icon="el-icon-copy-document"
-                          size="medium"
-                          v-clipboard:copy="reportNum.zph"
-                          v-clipboard:success="copy"
-                        >复制</el-button>
-                      </span>
-                      <br>
-                      <span style="font-size: 14px;">{{cnReportNum.zph}}
-                        <el-button
-                          type="text"
-                          icon="el-icon-copy-document"
-                          size="medium"
-                          v-clipboard:copy="cnReportNum.zph"
-                          v-clipboard:success="copy"
-                        >复制</el-button>
-                      </span>					  
-                    </span>
-                  </el-col>
-                  <el-col
-                    :span="4"
-                    class="report-title"
-                  >回函（其他）号</el-col>
-                  <el-col
-                    :span="6"
-                    class="report-content"
-                  >
-                    <span v-if="this.reportNum.hhh == ''">未取号</span>
-                    <span v-else>
-                      <span>{{reportNum.hhh}}
-                        <el-button
-                          style="right: 0px;"
-                          type="text"
-                          icon="el-icon-copy-document"
-                          size="medium"
-                          v-clipboard:copy="reportNum.hhh"
-                          v-clipboard:success="copy"
-                        >复制</el-button>
-                      </span>
-					  <br>
-                      <span style="font-size: 14px;">{{cnReportNum.hhh}}
-                        <el-button
-                          type="text"
-                          icon="el-icon-copy-document"
-                          size="medium"
-                          v-clipboard:copy="cnReportNum.hhh"
-                          v-clipboard:success="copy"
-                        >复制</el-button>
-                      </span>
-                    </span>
-                  </el-col>
-                </el-row>
-              </div>
-            </div>
-          </el-card>
-        </el-col>
-        <el-col
-          :span="12"
-          style="margin-top: 10px"
-        >
+        <el-col :span="7">
           <el-card>
             <div
               slot="header"
               class="card-header"
-            >
-              <span>合同号信息</span>
-              <span style="float: right">
-                <el-button
-                  icon="el-icon-suitcase"
-                  type="primary"
-                  size="medium"
-                  @click="handleCreateContractNum()"
-                  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 || this.contractNum != '')"
-                >获取</el-button>
-                <el-button
-                  icon="el-icon-suitcase"
-                  type="danger"
-                  size="medium"
-                  @click="handleDeleteContractNum()"
-                  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 || this.contractNum == '' )"
-                >删除</el-button>
-              </span>
-            </div>
+            >委托信息</div>
             <div class="text item">
-              <div class="item">
-                <span v-if="this.contractNum == ''">未取号</span>
-                <div v-else>
-                  <span>公司合同号：</span>{{this.contractNum}}<br>
-                  <span>外部合同号：</span>{{this.projDetail.contractNum.externalContractNum}}
-                  <el-button
-                      type="text"
-                      size="medium"
-                      @click="openContractNumDialog"
-                  ><i class="el-icon-edit"></i></el-button>
-                </div>
-              </div>
+              <div class="item"><span>接洽人：</span>{{projDetail.projContactType}} {{projDetail.projContact}}</div>
+              <div class="item"><span>委托方：</span>{{projDetail.clientName}}</div>
+              <div class="item"><span>委托方联系人：</span>{{projDetail.clientContact}} {{projDetail.clientContactInfo}}</div>
+              <div class="item"><span>产权持有人：</span>{{projDetail.incumbrancer}}</div>
+              <div class="item"><span>计划现勘日：</span>{{formatDate(projDetail.fldSrvySchedule)}}</div>
+			  <div class="item"><span>现勘联系人：</span>{{projDetail.fldSrvyContact}} {{projDetail.fldSrvyContactInfo}}</div>
+			  <div class="item"><span>引荐人：</span>{{projDetail.projReferer}} {{projDetail.projRefererInfo}}</div>
             </div>
           </el-card>
-
         </el-col>
+        
         <!-- <el-col
           :span="12"
           style="margin-top: 10px"
@@ -957,7 +1118,574 @@
         >展开详情</el-button>
       </span>
     </div> -->
+	
+	
+	<div class="work-title">
+	  <span class="work-title-name">项目信息</span>
+	  <span class="work-title-button">
+		<!-- 变动20220214 改版-->
+		<el-button-group>
+			<el-button
+			  type="primary"
+			  size="medium"
+			  icon="el-icon-document-add"
+			  @click="handleGetNum"
+			  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
+			>取号</el-button>
+			<el-button
+			  v-if="reportNum.cph != '' || reportNum.zph != '' || reportNum.hhh != ''"
+			  size="medium"
+			  type="danger"
+			  icon="el-icon-document-delete"
+			  @click="handleDelNum()"
+			  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
+			>取消取号</el-button>
+		</el-button-group>
+		<!-- 
+		<el-button-group style="margin-left: 10px;">
+			<el-button
+			  icon="el-icon-s-order"
+			  size="medium"
+			  type="primary"
+			  @click="isWorkArrgDialog()"
+			  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
+			>安排</el-button>
+			<el-button
+			  v-if="workArrgEdit == true"
+			  icon="el-icon-view"
+			  size="medium"
+			  @click=""
+			  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
+			>查看</el-button>
+			<el-button
+			  v-if="workArrgEdit == true"
+			  icon="el-icon-refresh-right"
+			  size="medium"
+			  type="danger"
+			  @click="resetArrg()"
+			  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
+			>清空安排</el-button>			
+		</el-button-group>
+		 -->
+		<el-tooltip class="item" effect="dark" content="新增前, 请先录入第一条项目的子项目号" placement="top-end">
+		    <el-button
+			  icon="el-icon-circle-plus-outline"
+			  size="medium"
+				type="primary"
+			  @click="handleAddSubProj(projDetail.projId)"
+			  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
+				 style="margin-left: 10px;"
+			>新增项目</el-button>
+		</el-tooltip>
+		
+		<!-- 
+	    <el-button
+	      icon="el-icon-circle-plus-outline"
+	      size="medium"
+	      @click="handleAddSubProj(reportNum.cph)"
+	      :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
+			 style="margin-left: 10px;"
+		>新增子项目(初评)</el-button>
+	    <el-button
+	      icon="el-icon-circle-plus-outline"
+	      size="medium"
+	      @click="handleAddSubProj(reportNum.zph)"
+	      :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
+	    >新增子项目(正评)</el-button>		
+		 -->
+	  </span>
+	</div>
+	<el-divider></el-divider>
+	<el-table
+	  :data="subTableData"
+	  border
+	>
+	  <el-table-column
+	    label="序号"
+	    width="50"
+		type="index"
+		align="center"
+	  ></el-table-column>
+	  <el-table-column
+	    label="子项目号"
+	    width="80"
+	    prop="subProjNum"
+	  >
+		  <template slot-scope="scope">
+			{{scope.row.subProjNum}}
+			<div
+			v-if="subTableData.length == 1 && scope.row.subProjNum">
+				<el-button
+				  type="warning"
+				  size="mini"
+				  @click="removeSubProjNum(scope.row.subProjId)"
+				>移除</el-button>
+			</div>
+		  </template>	
+	  </el-table-column>
+	  <el-table-column
+	    label="基准日"
+	    width="90"
+	    prop="subBaseDate"
+	  >
+		<template slot-scope="scope">
+			{{formatDate(scope.row.subBaseDate)}}
+		</template>	
+	  </el-table-column>
+	  <el-table-column
+	    label="项目名称"
+		min-width="200px"
+	    prop="subProjName"
+	  ></el-table-column>
+	  <el-table-column
+	    label="项目范围"
+		min-width="200px"
+	    prop="subProjScope"
+	  ></el-table-column>
+	  
+	  <el-table-column
+	    label="报告号"
+	    width="180"
+	  >
+		<template slot-scope="scope">
+		  <div style="text-align: left;">
+		      <el-popover trigger="hover" placement="left" :title="`报告号${scope.row.subProjNum?'-'+scope.row.subProjNum:''}`">
+		        <p v-if="reportNum.cph != ''">
+					<span>初评号: </span><br>
+					<span>{{handleShowSubNum(reportNum.cph, scope.row.subProjNum)}}
+					  <el-button
+					    style="right: 0px;"
+					    type="text"
+					    size="medium"
+					    v-clipboard:copy="handleShowSubNum(reportNum.cph, scope.row.subProjNum)"
+					    v-clipboard:success="copy"
+					  >复制</el-button>
+					</span><br>
+					<span style="font-size: 14px;">{{handleShowSubNum(cnReportNum.cph, scope.row.subProjNum, 1)}}
+					  <el-button
+					    type="text"
+					    size="medium"
+					    v-clipboard:copy="handleShowSubNum(cnReportNum.cph, scope.row.subProjNum, 1)"
+					    v-clipboard:success="copy"
+					  >复制</el-button>
+					</span>
+				</p><br>
+				<p v-if="reportNum.zph != ''">
+					<span>正评号: </span><br>
+					<span>{{handleShowSubNum(reportNum.zph, scope.row.subProjNum)}}
+					  <el-button
+					    style="right: 0px;"
+					    type="text"
+					    size="medium"
+					    v-clipboard:copy="handleShowSubNum(reportNum.zph, scope.row.subProjNum)"
+					    v-clipboard:success="copy"
+					  >复制</el-button>
+					</span><br>
+					<span style="font-size: 14px;">{{handleShowSubNum(cnReportNum.zph, scope.row.subProjNum, 1)}}
+					  <el-button
+					    type="text"
+					    size="medium"
+					    v-clipboard:copy="handleShowSubNum(cnReportNum.zph, scope.row.subProjNum, 1)"
+					    v-clipboard:success="copy"
+					  >复制</el-button>
+					</span>
+				</p><br>
+				<p v-if="reportNum.hhh != ''">
+					<span>函号: </span><br>
+					<span>{{handleShowSubNum(reportNum.hhh, scope.row.subProjNum)}}
+					  <el-button
+					    style="right: 0px;"
+					    type="text"
+					    size="medium"
+					    v-clipboard:copy="handleShowSubNum(reportNum.hhh, scope.row.subProjNum)"
+					    v-clipboard:success="copy"
+					  >复制</el-button>
+					</span><br>
+					<span style="font-size: 14px;">{{handleShowSubNum(cnReportNum.hhh, scope.row.subProjNum, 1)}}
+					  <el-button
+					    type="text"
+					    size="medium"
+					    v-clipboard:copy="handleShowSubNum(cnReportNum.hhh, scope.row.subProjNum, 1)"
+					    v-clipboard:success="copy"
+					  >复制</el-button>
+					</span>
+				</p>
+				<div slot="reference" class="name-wrapper">
+		          {{reportNum.cph?"初评: "+handleShowSubNum(reportNum.cph, scope.row.subProjNum):"初评: 未取号"}}
+				  <br>
+				  {{reportNum.zph?"正评: "+handleShowSubNum(reportNum.zph, scope.row.subProjNum):"正评: 未取号"}}
+				  <br>
+				  {{reportNum.hhh?"函号: "+handleShowSubNum(reportNum.hhh, scope.row.subProjNum):"函号: 未取号"}}
+		        </div>
+		      </el-popover>
+		    </div>
+		</template>
+	  </el-table-column>
+	  
+	  <!-- 
+	  <el-table-column
+	    label="初评号"
+	    width="180"
+	  >
+		<template slot-scope="scope">
+			<span v-if="reportNum.cph == ''">未取号</span>
+			<span v-else>
+			  <span>{{handleShowSubNum(reportNum.cph, scope.row.subProjNum)}}
+			    <el-button
+			      style="right: 0px;"
+			      type="text"
+			      size="medium"
+			      v-clipboard:copy="handleShowSubNum(reportNum.cph, scope.row.subProjNum)"
+			      v-clipboard:success="copy"
+			    >复制</el-button>
+			  </span>
+				<br>
+			  <span style="font-size: 14px;">{{handleShowSubNum(cnReportNum.cph, scope.row.subProjNum, 1)}}
+			    <el-button
+			      type="text"
+			      size="medium"
+			      v-clipboard:copy="handleShowSubNum(cnReportNum.cph, scope.row.subProjNum, 1)"
+			      v-clipboard:success="copy"
+			    >复制</el-button>
+			  </span>
+			</span>
+		</template>
+	  </el-table-column>
+	  <el-table-column
+	    label="正评号"
+	    width="180"
+	  >
+	  		<template slot-scope="scope">
+	  			<span v-if="reportNum.zph == ''">未取号</span>
+	  			<span v-else>
+	  			  <span>{{handleShowSubNum(reportNum.zph, scope.row.subProjNum)}}
+	  			    <el-button
+	  			      style="right: 0px;"
+	  			      type="text"
+	  			      size="medium"
+	  			      v-clipboard:copy="handleShowSubNum(reportNum.zph, scope.row.subProjNum)"
+	  			      v-clipboard:success="copy"
+	  			    >复制</el-button>
+	  			  </span>
+	  				<br>
+	  			  <span style="font-size: 14px;">{{handleShowSubNum(cnReportNum.zph, scope.row.subProjNum, 1)}}
+	  			    <el-button
+	  			      type="text"
+	  			      size="medium"
+	  			      v-clipboard:copy="handleShowSubNum(cnReportNum.zph, scope.row.subProjNum, 1)"
+	  			      v-clipboard:success="copy"
+	  			    >复制</el-button>
+	  			  </span>
+	  			</span>
+	  		</template>
+	  </el-table-column>
+	  <el-table-column
+	    label="函号"
+	    width="180"
+	  >
+	  		<template slot-scope="scope">
+	  			<span v-if="reportNum.hhh == ''">未取号</span>
+	  			<span v-else>
+	  			  <span>{{handleShowSubNum(reportNum.hhh, scope.row.subProjNum)}}
+	  			    <el-button
+	  			      style="right: 0px;"
+	  			      type="text"
+	  			      size="medium"
+	  			      v-clipboard:copy="handleShowSubNum(reportNum.hhh, scope.row.subProjNum)"
+	  			      v-clipboard:success="copy"
+	  			    >复制</el-button>
+	  			  </span>
+	  				<br>
+	  			  <span style="font-size: 14px;">{{handleShowSubNum(cnReportNum.hhh, scope.row.subProjNum, 1)}}
+	  			    <el-button
+	  			      type="text"
+	  			      size="medium"
+	  			      v-clipboard:copy="handleShowSubNum(cnReportNum.hhh, scope.row.subProjNum, 1)"
+	  			      v-clipboard:success="copy"
+	  			    >复制</el-button>
+	  			  </span>
+	  			</span>
+	  		</template>
+	  </el-table-column>
+	  -->
+	  <el-table-column
+	      label="安排"
+	      width="150"
+		  fixed="right"
+	    >
+		  <template slot-scope="scope">
+			<!-- <el-button-group> -->
+				<el-button
+				  size="mini"
+				  type="primary"
+				  @click="isWorkArrgDialog(scope.row)"
+				  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
+				>安排</el-button>
+				
+				<el-button
+				  v-if="scope.row.workAssignment != null"
+				  size="mini"
+				  type="danger"
+				  @click="resetArrg(scope.row.subProjId)"
+				  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
+				>删除</el-button>
+			<!-- </el-button-group> -->
+			
+			<div v-if="scope.row.workAssignment != null" style="height: 10px;">
+			</div>
+			<!-- <el-button-group> -->
+				<el-button
+				  v-if="scope.row.workAssignment != null"
+				  size="mini"
+				  @click="showWorkArrg(scope.row.subProjId)"
+				  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
+				>查看</el-button>
+				
+				<el-button
+				  v-if="scope.row.workAssignment != null"
+				  size="mini"
+				  type="success"
+				  @click="handlePrintProj(scope.row.subProjNum)"
+				  :disabled="projDetail.projState == 2 ? true : false"
+				>打印</el-button>
+			<!-- </el-button-group> -->
+		  </template>
+	  </el-table-column>
+	  	  
+	  <el-table-column
+	    label="操作"
+	    width="150"
+		fixed="right"
+	  >
+	    <template slot-scope="scope">
+	      <el-button
+	        type="primary"
+			size="mini"
+	        @click="handleEditSubProj(scope.row)"
+	      >修改</el-button>
+	      <el-button
+	        type="danger"
+			size="mini"
+	        @click="delSubProj(scope.row)"
+			v-if="scope.row.isDefault != 1"
+	      >删除</el-button>
+	    </template>
+	  </el-table-column>
+	  
+	  <el-table-column
+	    label="正评登记"
+	    width="100"
+	  	fixed="right"
+	  >
+	    <template slot-scope="scope">
+				
+				<el-button
+				  type="primary"
+				  size="mini"
+				  @click="jumpToSubHandle(scope.row)"
+				>录正评</el-button>
+				<!-- 
+				<div style="height: 1px;"></div>
+				<el-button :type="newButtonType(scope.row.status)" plain size="mini">{{newButtonValue(scope.row.status)}}</el-button>
+				 -->
+				<div style="height: 1px;"></div>
+				<el-tag style="width: 69px; text-align: center;" :type="newButtonType(scope.row.subProjStatus)">{{newButtonValue(scope.row.subProjStatus)}}</el-tag>
+		 
+	    </template>
+	  </el-table-column>
+	</el-table>
+	
+	<div class="work-title">
+	  <span class="work-title-name">合同信息</span>
+	  <span class="work-title-button">
+	  </span>
+	</div>
+	<el-divider></el-divider>
+	<el-row :gutter="10">
+		<!-- 报告号 -->
+		<!-- 
+		<el-col
+		  :span="24"
+		  style="margin-top: 10px;"
+		>
+		  <el-card style="height: 180px">
+			<div
+			  slot="header"
+			  class="card-header"
+			>
+			  <span>报告号信息</span>
+			  <span style="float: right">
+				<el-button
+				  slot="reference"
+				  type="primary"
+				  icon="el-icon-circle-plus-outline"
+				  @click="handleGetNum"
+				  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
+				>取号</el-button>
+				<el-button
+				  type="danger"
+				  icon="el-icon-circle-close"
+				  @click="handleDelNum()"
+				  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
+				>取消报告号</el-button>
+			  </span>
+			</div>
+			<div>
+			  <div class="report-num">
+				<el-row>
+				  <el-col
+					:span="2"
+					class="report-title"
+				  >初评号
+				  </el-col>
+				  <el-col
+					:span="5"
+					class="report-content"
+				  >
+					<span v-if="reportNum.cph == ''">未取号</span>
+					<span v-else>
+					  <span>{{reportNum.cph}}
+						<el-button
+						  style="right: 0px;"
+						  type="text"
+						  icon="el-icon-copy-document"
+						  size="medium"
+						  v-clipboard:copy="reportNum.cph"
+						  v-clipboard:success="copy"
+						>复制</el-button>
+					  </span>
+					  <br>
+					  <span style="font-size: 14px;">{{cnReportNum.cph}}
+						<el-button
+						  type="text"
+						  icon="el-icon-copy-document"
+						  size="medium"
+						  v-clipboard:copy="cnReportNum.cph"
+						  v-clipboard:success="copy"
+						>复制</el-button>
+					  </span>
+					</span>
+				  </el-col>
+				  <el-col
+					:span="2"
+					class="report-title"
+				  >正评号</el-col>
+				  <el-col
+					:span="5"
+					class="report-content"
+				  >
+					<span v-if="this.reportNum.zph == ''">未取号</span>
+					<span v-else>
+					  <span>{{reportNum.zph}}
+						<el-button
+						  style="right: 0px;"
+						  type="text"
+						  icon="el-icon-copy-document"
+						  size="medium"
+						  v-clipboard:copy="reportNum.zph"
+						  v-clipboard:success="copy"
+						>复制</el-button>
+					  </span>
+					  <br>
+					  <span style="font-size: 14px;">{{cnReportNum.zph}}
+						<el-button
+						  type="text"
+						  icon="el-icon-copy-document"
+						  size="medium"
+						  v-clipboard:copy="cnReportNum.zph"
+						  v-clipboard:success="copy"
+						>复制</el-button>
+					  </span>					  
+					</span>
+				  </el-col>
+				  <el-col
+					:span="4"
+					class="report-title"
+				  >回函（其他）号</el-col>
+				  <el-col
+					:span="6"
+					class="report-content"
+				  >
+					<span v-if="this.reportNum.hhh == ''">未取号</span>
+					<span v-else>
+					  <span>{{reportNum.hhh}}
+						<el-button
+						  style="right: 0px;"
+						  type="text"
+						  icon="el-icon-copy-document"
+						  size="medium"
+						  v-clipboard:copy="reportNum.hhh"
+						  v-clipboard:success="copy"
+						>复制</el-button>
+					  </span>
+					  <br>
+					  <span style="font-size: 14px;">{{cnReportNum.hhh}}
+						<el-button
+						  type="text"
+						  icon="el-icon-copy-document"
+						  size="medium"
+						  v-clipboard:copy="cnReportNum.hhh"
+						  v-clipboard:success="copy"
+						>复制</el-button>
+					  </span>
+					</span>
+				  </el-col>
+				</el-row>
+			  </div>
+			</div>
+		  </el-card>
+		</el-col>
+		 -->
+		<el-col
+		  :span="24"
+		  style="margin-top: 10px"
+		>
+		  <el-card>
+			<div
+			  slot="header"
+			  class="card-header"
+			>
+			  <span>合同号信息</span>
+			  <span style="float: right">
+				<el-button-group>
+					<el-button
+					  icon="el-icon-suitcase"
+					  type="primary"
+					  size="medium"
+					  @click="handleCreateContractNum()"
+					  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 || this.contractNum != '')"
+					>取号</el-button>
+					<el-button
+					  icon="el-icon-suitcase"
+					  type="danger"
+					  size="medium"
+					  @click="handleDeleteContractNum()"
+					  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 || this.contractNum == '' )"
+					>删除</el-button>
+				</el-button-group>
+			  </span>
+			</div>
+			<div class="text item">
+			  <div class="item">
+				<span v-if="this.contractNum == ''">未取号</span>
+				<div v-else>
+				  <span>公司合同号：</span>{{this.contractNum}}<br>
+				  <span>外部合同号：</span>{{this.projDetail.contractNum.externalContractNum}}
+				  <el-button
+					  type="text"
+					  size="medium"
+					  @click="openContractNumDialog"
+				  ><i class="el-icon-edit"></i></el-button>
+				</div>
+			  </div>
+			</div>
+		  </el-card>
 
+		</el-col>
+    </el-row>
+	
+	<!-- 项目工作信息使用弹框显示 -->
+	<!-- 
     <el-divider></el-divider>
     <div class="work-title">
       <span class="work-title-name">项目工作信息</span>
@@ -1045,66 +1773,8 @@
         </el-card>
       </el-col>
     </el-row>
-	
-    <div class="work-title">
-      <span class="work-title-name">子项目信息</span>
-      <span class="work-title-button">
-        <el-button
-          icon="el-icon-circle-plus-outline"
-          size="medium"
-          @click="handleAddSubProj(reportNum.cph)"
-          :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
-        >新增子项目(初评)</el-button>
-        <el-button
-          icon="el-icon-circle-plus-outline"
-          size="medium"
-          @click="handleAddSubProj(reportNum.zph)"
-          :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
-        >新增子项目(正评)</el-button>
-      </span>
-    </div>
-    <el-divider></el-divider>
-    <el-table
-      :data="subTableData"
-      border
-    >
-      <el-table-column
-        label="父报告号"
-        width="120"
-        prop="reportNum"
-      ></el-table-column>
-      <el-table-column
-        label="子项目报告号"
-        width="120"
-        prop="subReportNum"
-      ></el-table-column>
-      <el-table-column
-        label="子项目名称"
-        prop="subProjName"
-      ></el-table-column>
-      <el-table-column
-        label="子项目范围"
-        prop="subProjScope"
-      ></el-table-column>
-
-      <el-table-column
-        label="操作"
-        width="200"
-      >
-        <template slot-scope="scope">
-          <el-button
-            type="text"
-            @click="delSubProj(scope.row)"
-          >删除</el-button>
-		  <!-- 
-          <el-button
-            type="text"
-            @click="handleSubProjDetail(scope.row)"
-          >详情</el-button>
-		  -->
-        </template>
-      </el-table-column>
-    </el-table>
+	 -->
+    
 	
 	</div>
 	
@@ -1644,7 +2314,7 @@
       <el-table-column
         label="子项目报告号"
         width="120"
-        prop="subReportNum"
+        prop="subProjNum"
       ></el-table-column>
       <el-table-column
         label="子项目名称"
@@ -2143,7 +2813,7 @@
       <el-table-column
         label="子项目报告号"
         width="120"
-        prop="subReportNum"
+        prop="subProjNum"
       ></el-table-column>
       <el-table-column
         label="子项目名称"
@@ -2232,7 +2902,7 @@ import { createReportQrCode,editProject, getDetailProjInfo,
   getWorkAssignment, delWorkAssignment, setWorkAssignment, createReportNum,
   deleteReportNum, alterProjType, getProjInfoTable, getOldReportNum,
   createContractNum, deleteContractNum, setProjState ,updateExternalContractNum} from '@/api/index'
-import { addSubProject, getSubProjectInfoList, delSubProject } from '@/api/subReport'
+import { addSubProject, getSubProjectInfoList, editSubProject, delSubProject , removeSubProjNum } from '@/api/subReport'
 import { getEvalObjDetail } from '@/api/assemobjdetail'
 import { checkFaRegister, submitFaRegister, editFaRegister } from '@/api/formalreg'
 //json
@@ -2260,7 +2930,13 @@ export default {
     return {
       createReportNumDialogVisible: false,
       queryData: {},
-      arrgData: {},
+	  
+	  //220222 子项目安排
+      //arrgData: {},
+      arrgData: null,
+	  workArrgProjMember:[],
+	  workArrgProjMemberInfo:{},
+	  
       projDetail: {},
       projMember: [],
 	  reportNum: {
@@ -2333,8 +3009,9 @@ export default {
       ],
       //子项目表单
       subProjForm: {
-        reportNum: '',
-        subReportNum: '',
+        //reportNum: '',
+        projId: '',
+        subProjNum: '',
         subProjName: '',
         subBaseDate: '',
         subProjScope: '',
@@ -2346,15 +3023,24 @@ export default {
 
       },
       subFormRules: {
-        subReportNum: [
-          { required: true, message: '请输入子项目报告号', trigger: 'blur' }
+        subProjNum: [
+          { required: true, message: '请输入子项目报告号', trigger: 'blur' },
+		  {
+			validator: (rule, value, callback) => {
+				if (/^[A-Za-z0-9].*/g.test(value) == false) {
+				  callback(new Error("子项目号第一个字符必须是数字或英文"));
+				} else {
+				  callback();
+				}
+			}, trigger: 'blur'
+		  }
         ],
         subProjName: [{ required: true, message: '请输入子项目名称', trigger: 'blur' }],
-        subProjScope: [{ required: true, message: '请输入子项目范围', trigger: 'blur' }],
+        //subProjScope: [{ required: true, message: '请输入子项目范围', trigger: 'blur' }],
         subBaseDate: [{ required: true, message: '请输入子项目基准日', trigger: 'blur' }],
         subProjLeader: [{ required: true, message: '请选择子项目负责人', trigger: 'change' }],
         subProjReviewer: [{ required: true, message: '请选择子项目复核人', trigger: 'change' }],
-        subProjProReviewer: [{ required: true, message: '请选择子项目专业复核人', trigger: 'change' }],
+        //subProjProReviewer: [{ required: true, message: '请选择子项目专业复核人', trigger: 'change' }],
         subProjAsst: [{ required: true, message: '请选择子项目项目助理', trigger: 'change' }]
         //subProj: [{ required: true, message: '请输入子项目范围', trigger: 'change' }],
       },
@@ -2400,7 +3086,7 @@ export default {
         //基本信息
         paReportNum: '',
         faReportNum: '',
-        subReportNum: '',
+        subProjNum: '',
         evalGoal: '',
         valueType: '',
         evalObjCount: '',
@@ -2437,7 +3123,7 @@ export default {
       },
       regForm: {
         projId: '',
-        subReportNum: '',
+        subProjNum: '',
 
         projCompTime: '',
         standardFee: '',
@@ -2489,8 +3175,129 @@ export default {
 	  companyTabsId: 0,
 	  
 	  tabsDisable:true,	  
+	  
+	  //220216变动 新增: 工作安排弹出框
+	  showWorkArrgVisible:false,
+	  
+	  //修改第一条项目基本信息
+	  subBasicInfoDialogVisible:false,
+	  subBasicInfoForm:{},
+	  subBasicInfoFormRules:{
+		subProjNum: [
+		  { required: true, message: '请输入子项目报告号', trigger: 'blur' },
+		  {
+			validator: (rule, value, callback) => {
+				if (/^[A-Za-z0-9].*/g.test(value) == false) {
+				  callback(new Error("子项目号第一个字符必须是数字或英文"));
+				} else {
+				  callback();
+				}
+			}, trigger: 'blur'
+		  }
+		],
+		subProjName: [{ required: true, message: '请输入子项目名称', trigger: 'blur' }],
+		//subProjScope: [{ required: true, message: '请输入子项目范围', trigger: 'blur' }],
+		subBaseDate: [{ required: true, message: '请输入子项目基准日', trigger: 'blur' }],
+		
+	  },
+	  
+	  //修改子项目信息
+	  editSubProjVisible:false,
+	  editSubProjForm:{},
+	  editSubProjFormRules:{
+	  		subProjNum: [
+	  		  { required: true, message: '请输入子项目报告号', trigger: 'blur' },
+	  		  {
+	  			validator: (rule, value, callback) => {
+	  				if (/^[A-Za-z0-9].*/g.test(value) == false) {
+	  				  callback(new Error("子项目号第一个字符必须是数字或英文"));
+	  				} else {
+	  				  callback();
+	  				}
+	  			}, trigger: 'blur'
+	  		  }
+	  		],
+	  		subProjName: [{ required: true, message: '请输入子项目名称', trigger: 'blur' }],
+	  		//subProjScope: [{ required: true, message: '请输入子项目范围', trigger: 'blur' }],
+	  		subBaseDate: [{ required: true, message: '请输入子项目基准日', trigger: 'blur' }],
+			subProjLeader: [{ required: true, message: '请选择子项目负责人', trigger: 'change' }],
+			subProjReviewer: [{ required: true, message: '请选择子项目复核人', trigger: 'change' }],
+			//subProjProReviewer: [{ required: true, message: '请选择子项目专业复核人', trigger: 'change' }],
+			subProjAsst: [{ required: true, message: '请选择子项目项目助理', trigger: 'change' }]
+	  		  
+	  },
     };
   },
+  
+  computed:{
+	  /* 
+  	newTagType(){
+  		return (data)=>{
+  			if(data == "0"){
+  				return "info";
+  			}else if(data == "1"){
+  				return "";
+  			}else if(data == "2"){
+  				return "warning";
+  			}else if(data == "3"){
+  				return "success";
+  			}else{
+				return "info";
+			}
+  		}
+  	},
+	newTagValue(){
+		return (data)=>{
+			if(data == "0"){
+				return "未提交";
+			}else if(data == "1"){
+				return "待审核";
+			}else if(data == "2"){
+				return "待修改";
+			}else if(data == "3"){
+				return "已通过";
+			}else{
+				return "未提交";
+			}
+		}
+	},
+	 */
+	newButtonType(){
+		return (data)=>{
+			if(data){				
+				if(data.mainStatus == "1"){
+					return "primary";
+				}else if(data.mainStatus == "2"){
+					return "success";
+				}else if(data.mainStatus == "3"){
+					return "warning";
+				}else{
+					return "info";
+				}
+			}else{
+				return "info";
+			}
+		}
+	},
+	newButtonValue(){
+		return (data)=>{
+			if(data){
+				if(data.mainStatus == "1"){
+					return "待审核";
+				}else if(data.mainStatus == "2"){
+					return "已通过";
+				}else if(data.mainStatus == "3"){
+					return "待修改";
+				}else{
+					return "未提交";
+				}
+			}else{
+				return "未提交";
+			}
+		}
+	},
+  },
+  
   created() {
 	//211028变动 新增: 多个公司切换
 	const value = localStorage.getItem('companyId');
@@ -2600,6 +3407,7 @@ export default {
               this.contractNum = res.data.contractNum.contractNum
               this.externalContractNum = res.data.contractNum.externalContractNum
             }
+			
             //提取项目组成员
             const leader = this.projDetail.projLeader.split(',')
             const reviewer = this.projDetail.projReviewer.split(',')
@@ -2619,7 +3427,11 @@ export default {
 			}
 			
 			//调工作安排接口
-			this.getWorkAssignmentData()
+			//220221 非惠正页面加载时, 获取安排, 惠正的安排在子项目列表信息里面
+			if(this.companyTabsId != 0){
+				this.workArrgProjMember = this.projMember
+				this.getWorkAssignmentData()
+			}			
 			
           }
           this.$nextTick(() => {
@@ -2628,7 +3440,7 @@ export default {
               if (this.projDetail.projType == i.value) {
                 i.disable = true
               }
-            }
+            }			
 			
 			//211101变动 新增: 多个公司切换
 			const projData = {
@@ -2647,13 +3459,14 @@ export default {
         })
         .catch(err => {
           this.$message.error('获取项目详细信息失败')
+		  console.log(err)
         })
     },
     check() {
 	  //211101变动 新增: 多个公司切换
 	  const checkData = {
 	  	projId: this.projDetail.projId, 
-		subReportNum: '-'
+		subProjNum: '-'
 	  } 
       checkFaRegister(checkData, this.companyId)
         .then(res => {
@@ -2692,20 +3505,36 @@ export default {
       this.$message.success('内容已复制到剪贴板')
     },
 	
+	//220221 查看子项目安排
+	showWorkArrg(subProjId){
+		if(subProjId){
+			this.projDetail.subProjId = subProjId;
+			this.getWorkAssignmentData("show");
+		}else{
+			this.showWorkArrgVisible = true
+		}
+	},
 	
 	createWorkArrgResponse() {
 	  console.log('createWorkArrgResponse');
 		
 	  //211207变动 刷新整页改成局部刷新
-	  this.getWorkAssignmentData();
+	  //220221 非惠正,创建后读取安排
+	  if(this.projDetail.subProjId){
+		this.getDetail()
+	  }else{
+	  	this.getWorkAssignmentData()
+	  }
 	  
 	  //211207变动 修改projid刷新操作记录
 	  this.opRefresh();
 	},
-    getWorkAssignmentData() {
+    getWorkAssignmentData(handle) {
 	  //211101变动 新增: 多个公司切换
 	  const AssignmentData = {
-	  	projId: this.projDetail.projId
+	  	projId: this.projDetail.projId,
+		//子项目
+		subProjId: this.projDetail.subProjId,
 	  } 
       getWorkAssignment(AssignmentData, this.companyId)
         .then(res => {
@@ -2765,6 +3594,7 @@ export default {
 				//
 				this.transData(3) 
 			  }
+			  
 			  //console.log('workName', this.workName);
               
               //后期看看让后端分割出date和people
@@ -2773,7 +3603,15 @@ export default {
               //console.log('转类型后arrgData', this.arrgData)
               // console.log('workPeople', this.workPeople)
               // console.log('workArrgEdit', this.workArrgEdit)
-            }
+            
+			}
+			  
+			//220222 新增子项目查看或编辑时, 打开对应对话框
+			if(handle == "show"){
+				this.showWorkArrgVisible = true
+			}else if(handle == "edit"){
+				this.workArrgDialogVisible = true
+			}
           }
         })
         .catch(err => {
@@ -2942,7 +3780,7 @@ export default {
 		//211101变动 新增: 多个公司切换
 		const evalObjData = {
 			projId: this.projDetail.projId, 
-			subReportNum: '-'
+			subProjNum: '-'
 		}
         getEvalObjDetail(evalObjData, this.companyId)
           .then(res => {
@@ -2974,7 +3812,7 @@ export default {
         if (valid) {
           if (this.statusInfo.registerState == false) {
             this.regForm.projId = this.projDetail.projId
-            this.regForm.subReportNum = this.projDetail.subReportNum
+            this.regForm.subProjNum = this.projDetail.subProjNum
             //
             this.regForm.infoVerification = this.regForm.infoVerification.join(',')
             this.regForm.marketEnquiry = this.regForm.marketEnquiry.join(',')
@@ -3024,7 +3862,7 @@ export default {
       })
       // if (this.statusInfo.registerState == false) {
       //   this.regForm.projId = this.projDetail.projId
-      //   this.regForm.subReportNum = this.projDetail.subReportNum
+      //   this.regForm.subProjNum = this.projDetail.subProjNum
       //   //
       //   this.regForm.infoVerification = this.regForm.infoVerification.join(',')
       //   this.regForm.marketEnquiry = this.regForm.marketEnquiry.join(',')
@@ -3184,6 +4022,7 @@ export default {
       }
     },
     handlePrintProj(val) {
+		console.log("打印项目计划", val)
 	  if(this.workArrgEdit){
 		//伪加载中，防止重复提交请求
 		const loading = this.$loading({
@@ -3211,6 +4050,7 @@ export default {
 		}
 		const fdata = new FormData()
 		fdata.append('projId', parseInt(that.queryData.projId))
+		fdata.append('subProjNum', val)
 		oReq.send(fdata)  
 	  }else{
 		this.$message.warning('请先安排工作计划, 再打印计划信息表');
@@ -3385,9 +4225,50 @@ export default {
         })
         .catch(() => { })
     },//end of delNum
+	
+	handleShowSubNum(reportNum, subNum, isCN){
+		if(isCN){
+			if(subNum){				
+				return reportNum.replace("号","")+"-"+subNum+"号";
+			}else{
+				return reportNum;
+			}
+		}else{
+			if(subNum){
+				return reportNum+"-"+subNum;
+			}else{
+				return reportNum;
+			}
+		}
+	},
 
     //子项目
     handleAddSubProj(val) {
+		//判断第一条子项目号是否为空
+		if(this.subTableData[0].subProjNum){
+			//报告号projId
+			this.subFatherReport = val
+					
+			this.subProjVisible = true
+		}else{
+			this.$message.warning('新增项目前, 请先修改第一条项目的子项目号')
+			
+			const subBasicInfoForm = {
+				subProjId:this.subTableData[0].subProjId,
+				subProjNum:this.subTableData[0].subProjNum,
+				subProjName:this.subTableData[0].subProjName,
+				subProjScope:this.subTableData[0].subProjScope,
+				subBaseDate:this.formatDate(this.subTableData[0].subBaseDate),
+			}
+			this.subBasicInfoForm = subBasicInfoForm
+			
+			this.subBasicInfoDialogVisible = true;
+			
+			
+		}
+		
+        
+	  /* 
       if (val !== '') {
         console.log(val)
         this.subProjVisible = true
@@ -3395,7 +4276,88 @@ export default {
       } else {
         this.$message('请先获取的对应初(正)评号')
       }
+	  */
+	  
     },
+	
+	//修改子项目
+	handleEditSubProj(subData) {
+		
+		//提取项目组成员		
+		const leader = subData.subProjLeader?subData.subProjLeader.split(','):[];
+		const reviewer = subData.subProjReviewer?subData.subProjReviewer.split(','):[];
+		const projReviewer = subData.subProjProReviewer?subData.subProjProReviewer.split(','):[];
+		const asst = subData.subProjAsst?subData.subProjAsst.split(','):[];
+		const srvy = subData.subFieldSrvy?subData.subFieldSrvy.split(','):[];
+		//var arr = new Array;
+		//this.workArrgProjMember = Array.from(new Set(arr.concat(leader, reviewer, projReviewer, asst, srvy)));
+		this.workArrgProjMember = this.projMember;
+				
+		const editSubProjForm = {
+			subProjId:subData.subProjId,
+			subProjNum:subData.subProjNum,
+			subProjName:subData.subProjName,
+			subProjScope:subData.subProjScope,
+			subBaseDate:this.formatDate(subData.subBaseDate),
+			subProjLeader:leader,
+			subProjReviewer:reviewer,
+			subProjProReviewer:projReviewer,
+			subProjAsst:asst,
+			subFieldSrvy:srvy,
+		}
+		this.editSubProjForm = editSubProjForm
+		
+				
+		this.editSubProjVisible = true;
+		
+	},
+	editSubProjSubmit(val){
+		this.$refs.editSubProjForm.validate((valid) => {
+			if (valid) {
+				//console.log('subBasicInfo', this.subBasicInfo);
+				
+				//远程更新
+				var editData = Object.assign({}, this.editSubProjForm);
+				editData.subProjLeader = editData.subProjLeader?editData.subProjLeader.join(','):'';
+				editData.subProjReviewer = editData.subProjReviewer?editData.subProjReviewer.join(','):'';
+				editData.subProjProReviewer = editData.subProjProReviewer?editData.subProjProReviewer.join(','):'';
+				editData.subProjAsst = editData.subProjAsst?editData.subProjAsst.join(','):'';
+				editData.subFieldSrvy = editData.subFieldSrvy?editData.subFieldSrvy.join(','):'';
+				editData['projId'] = val
+				
+				editSubProject(editData, this.companyId)
+				.then(res => {
+				    this.$message.success('项目信息修改成功')
+					
+					//1. 刷新项目组列表
+					const projData = {
+						projId: val
+					}
+					getSubProjectInfoList(projData, this.companyId)
+					.then(res => {
+					  this.subTableData = res.data
+					})
+					.catch(err => {
+					})  
+					
+					//2. 关闭弹出框
+					this.editSubProjVisible = false
+				})
+				.catch(err => {
+				    if (err.statusCode == 5002) {
+				      this.$message.warning('该子报告号已存在，请勿重新添加')
+				    } else {
+				      this.$message.warning('修改失败，请稍后重试')
+				    }
+				})
+				
+			}else{
+				this.$message('请填写必填信息或格式有误');
+			}
+		})
+	},
+	
+	
     handleSubProjDetail(val) {
       console.log('subProjDetailval', val)
 	  //const key = this.newCode(this.projDetail.projId);
@@ -3405,22 +4367,47 @@ export default {
       //val传入对应父项目报告号
       this.$refs.subFormRules.validate((valid) => {
         if (valid) {
-          this.subProjForm.subProjLeader = this.subProjForm.subProjLeader.join(',')
-          this.subProjForm.subProjReviewer = this.subProjForm.subProjReviewer.join(',')
-          this.subProjForm.subProjProReviewer = this.subProjForm.subProjProReviewer.join(',')
-          this.subProjForm.subProjAsst = this.subProjForm.subProjAsst.join(',')
-          this.subProjForm.subFieldSrvy = this.subProjForm.subFieldSrvy.join(',')
-          console.log('新增子项目（正评）form', this.subProjForm)
-          this.subProjForm.reportNum = val
+		  /* 
+          this.subProjForm.subProjLeader = this.subProjForm.subProjLeader?this.subProjForm.subProjLeader.join(','):''
+          this.subProjForm.subProjReviewer = this.subProjForm.subProjReviewer?this.subProjForm.subProjReviewer.join(','):''
+          this.subProjForm.subProjProReviewer = this.subProjForm.subProjProReviewer?this.subProjForm.subProjProReviewer.join(','):''
+          this.subProjForm.subProjAsst = this.subProjForm.subProjAsst?this.subProjForm.subProjAsst.join(','):''
+          this.subProjForm.subFieldSrvy = this.subProjForm.subFieldSrvy?this.subProjForm.subFieldSrvy.join(','):''
+          
+		  this.subProjForm.projId = val 
+		  */
+		  
+		  //远程更新
+		  var addData = Object.assign({}, this.subProjForm);
+		  addData.subProjLeader = addData.subProjLeader?addData.subProjLeader.join(','):'';
+		  addData.subProjReviewer = addData.subProjReviewer?addData.subProjReviewer.join(','):'';
+		  addData.subProjProReviewer = addData.subProjProReviewer?addData.subProjProReviewer.join(','):'';
+		  addData.subProjAsst = addData.subProjAsst?addData.subProjAsst.join(','):'';
+		  addData.subFieldSrvy = addData.subFieldSrvy?addData.subFieldSrvy.join(','):'';
+		  addData['projId'] = val
 		  
 		  //211101变动 新增: 多个公司切换
-          addSubProject(this.subProjForm, this.companyId)
+          addSubProject(addData, this.companyId)
             .then(res => {
               this.$message.success('创建子项目成功')
-              this.reload()
+              //this.reload()
+			  
+			  //1. 刷新项目组列表
+			  this.reloadSubTableData() 
+			  
+			  //2. 关闭弹出框
+			  this.subProjVisible = false
+			  
             })
             .catch(err => {
-              if (statusCode == 5002) {
+              if (err.statusCode == 5002) {
+				/*  
+				this.subProjForm.subProjLeader = []
+				this.subProjForm.subProjReviewer = []
+				this.subProjForm.subProjProReviewer = []
+				this.subProjForm.subProjAsst = []
+				this.subProjForm.subFieldSrvy = []
+				 */  
                 this.$message.warning('该子报告号已存在，请勿重新添加')
               } else {
                 this.$message.warning('添加失败，请稍后重试')
@@ -3431,6 +4418,59 @@ export default {
         }
       })
     },
+	
+	subBasicInfoEdit(val){
+		this.$refs.subBasicInfoForm.validate((valid) => {
+			if (valid) {
+				//console.log('subBasicInfo', this.subBasicInfo);
+				
+				//远程更新
+				var editData = Object.assign({}, this.subBasicInfoForm);
+				editData['projId'] = val
+				
+				editSubProject(editData, this.companyId)
+				.then(res => {
+				    this.$message.success('基本信息修改成功')
+					
+					//1. 刷新项目组列表
+					this.reloadSubTableData();
+					
+					//2. 关闭弹出框
+					this.subBasicInfoDialogVisible = false
+				})
+				.catch(err => {
+				    if (err.statusCode == 5002) {
+				      this.$message.warning('该子报告号已存在，请勿重新添加')
+				    } else {
+				      this.$message.warning('修改失败，请稍后重试')
+				    }
+				})
+				
+			}else{
+				this.$message('请填写必填信息或格式有误');
+			}
+		})
+	},
+	
+	reloadSubTableData(){
+		//1. 刷新项目组列表
+		const projData = {
+			projId: this.projDetail.projId
+		}
+		getSubProjectInfoList(projData, this.companyId)
+		.then(res => {
+		  this.subTableData = res.data
+		})
+		.catch(err => {
+		})
+	},
+	
+	//220218新增 条状修改项目信息
+	editSubProj(projId, val) {
+		//this.$router.push({ path: '/worksubhandle', query: { projId: projId, data: val } })
+		
+	},	
+	
     delSubProj(row) {
       this.$confirm('确定要删除吗？', '提示', { type: 'warning' })
         .then(() => {
@@ -3441,14 +4481,57 @@ export default {
           delSubProject(delSubData, this.companyId)
             .then(res => {
               this.$message.success('删除子项目成功')
-              this.reload()
+			  
+              this.reloadSubTableData()
             })
             .catch(err => {
-              this.$message.warning('删除失败，请稍后重试')
+				if(err.statusCode == 500){
+					this.$message.warning('删除失败，至少保留一个项目')
+				}else{
+					this.$message.warning('删除失败，请稍后重试')
+				}              
             })
         })
         .catch(() => { })
     },
+	
+	removeSubProjNum(subProjId) {
+	  this.$confirm('确定要删除吗？', '提示', { type: 'warning' })
+	    .then(() => {
+		  //211101变动 新增: 多个公司切换
+		  const removeSubData = {
+		  	subProjId: subProjId
+		  }
+	      removeSubProjNum(removeSubData, this.companyId)
+	        .then(res => {
+	          this.$message.success('移除子项目报告号成功')
+	          this.reloadSubTableData()
+	        })
+	        .catch(err => {
+				if(err.statusCode == 500){
+					this.$message.warning('删除失败，至少保留一个项目')
+				}else{
+					this.$message.warning('删除失败，请稍后重试')
+				}              
+	        })
+	    })
+	    .catch(() => { })
+	},
+	
+	jumpToSubHandle(subData) {
+		if(subData.workAssignment){
+			if(this.contractNum){
+				this.$router.push({ path: '/worksubhandle', query: { projId: subData.projId, data: subData.subProjId } })
+			}else{
+				this.$message.warning('请先取合同号')
+			}
+		}else{
+			this.$message.warning('请先完成项目安排')
+		}
+		
+	},
+	
+	
     formatDate(now) {
       const time = new Date(now)
       var year = time.getFullYear();  //取得4位数的年份
@@ -3477,7 +4560,7 @@ export default {
 	  //211101变动 新增: 多个公司切换
 	  const evalObjData = {
 	  	projId: this.projDetail.projId, 
-		subReportNum: '-'
+		subProjNum: '-'
 	  }
       getEvalObjDetail(evalObjData, this.companyId)
         .then(res => {
@@ -3503,23 +4586,75 @@ export default {
     isZcDialogVisible() {
       this.zcDialogVisible = true
     },
-    isWorkArrgDialog() {	
-      this.workArrgDialogVisible = true
+    isWorkArrgDialog(subData) {	
+	  //220221 新增子项目 惠正,打开前获取
+	  if(subData){
+		//有子项目时, 使用子项目成员信息
+		this.projDetail.subProjId = subData.subProjId;
+		
+		//修改 projMember
+		//提取项目组成员
+		const leader = subData.subProjLeader?subData.subProjLeader.split(','):[];
+		const reviewer = subData.subProjReviewer?subData.subProjReviewer.split(','):[];
+		const projReviewer = subData.subProjProReviewer?subData.subProjProReviewer.split(','):[];
+		const asst = subData.subProjAsst?subData.subProjAsst.split(','):[];
+		const srvy = subData.subFieldSrvy?subData.subFieldSrvy.split(','):[];
+		//this.workArrgmidMember.push(...leader, ...reviewer, ...projReviewer, ...asst, ...srvy)
+		//const mid2 = Array.from(new Set(this.workArrgmidMember))
+		//this.workArrgProjMember = mid2.filter(item => item)
+		
+		//console.log("项目组备选", leader, reviewer, projReviewer, asst, srvy)
+		//console.log(subData.baseDate)
+		var arr = new Array;
+		this.workArrgProjMember = Array.from(new Set(arr.concat(leader, reviewer, projReviewer, asst, srvy)));
+		this.workArrgProjMemberInfo={
+			//baseDate:this.formatDate(subData.baseDate),
+			baseDate:new Date(subData.subBaseDate).getTime(),
+			projLeader:subData.subProjLeader,
+			projReviewer:subData.subProjReviewer,
+			projProReviewer:subData.subProjProReviewer,
+			projAsst:subData.subProjAsst,
+			fieldSrvy:subData.subFieldSrvy,
+		}					
+		//console.log("workArrgProjMember", this.workArrgProjMember);
+			
+		this.getWorkAssignmentData("edit")
+	  }else{
+		//没子项目时, 使用计划项目组成员信息
+		this.workArrgProjMember = this.projMember;
+		this.workArrgProjMemberInfo={
+			baseDate:this.projDetail.baseDate,
+			projLeader:this.projDetail.projLeader,
+			projReviewer:this.projDetail.projReviewer,
+			projProReviewer:this.projDetail.projProReviewer,
+			projAsst:this.projDetail.projAsst,
+			fieldSrvy:this.projDetail.fieldSrvy,			
+		}
+		  
+		this.workArrgDialogVisible = true
+	  }
 	  
     },
-    resetArrg() {
+    resetArrg(subProjId) {
       this.$confirm('确定要清空工作安排吗？', '提示', {
         type: 'warning'
       })
         .then(() => {
 		  const workAssignmentData = {
-		  	projId: this.projDetail.projId
+		  	projId: this.projDetail.projId,
+		  	subProjId: subProjId
 		  }
           delWorkAssignment(workAssignmentData, this.companyId)
             .then(res => {
 			  //211207变动 刷新整页改成局部刷新
 			  //this.reload();
-			  this.getWorkAssignmentData();
+			  
+			  //220221 非惠正, 删除安排后, 重新获取安排, 惠正, 重新获取子项目列表
+			  if(subProjId){
+				this.getDetail()
+			  }else{
+			  	this.getWorkAssignmentData()
+			  }
 			  
 			  //211207变动 修改projid刷新操作记录
 			  this.opRefresh();
@@ -3730,8 +4865,9 @@ export default {
 		);
 		return decrypted.toString(CryptoJS.enc.Utf8);
 	  }
-	}
+	},
 	  
+	
   },
 }
 </script>
@@ -3794,4 +4930,39 @@ export default {
   margin-top: 15px;
   line-height: 30px;
 }
+
+
+/*表单*/
+  /* 
+  >>> .el-dialog__body {
+    padding: 0px;
+    margin: 0;
+  }
+ */
+/* 
+  .dialog_body {
+    padding: 0px;
+    margin: 0;
+    overflow: hidden;
+    overflow-y: auto;
+    max-height: calc(100VH - 85px);  
+  }
+
+  .dialog_havefooter{
+    max-height: calc(100VH - 165px);  
+  }
+
+  .dialog_content {
+    
+    margin: 0;
+    overflow: hidden;
+    overflow-y: auto;
+    max-height: 100%;
+  }
+
+  .dialog-footer{
+    text-align: right;
+    margin-top: 6px;
+  }
+  */
 </style>

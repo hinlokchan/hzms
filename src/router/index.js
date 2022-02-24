@@ -45,6 +45,16 @@ export default new Router({
                     meta: { title: '工作台' }
                 },
                 {
+                    path: '/workbranchcheck',
+                    component: () => import('../components/page/WorkBranchCheck.vue'),
+                    meta: { title: '工作台处理' }
+                },
+                {
+                    path: '/worksubhandlecheck',
+                    component: () => import('../components/page/WorkSubHandleCheck.vue'),
+                    meta: { title: '项目信息审核' }
+                },
+                {
                     path: '/oldplanform',
                     component: () => import('../components/page/OldPlanForm.vue'),
                     meta: { title: '旧项目录入' }
@@ -63,6 +73,11 @@ export default new Router({
                     path: '/workhandle',
                     component: () => import('../components/page/WorkHandle.vue'),
                     meta: { title: '项目工作管理' }
+                },
+                {
+                    path: '/worksubhandle',
+                    component: () => import('../components/page/WorkSubHandle.vue'),
+                    meta: { title: '项目信息' }
                 },
                 // {
                 //     path: '/subworkhandle',
