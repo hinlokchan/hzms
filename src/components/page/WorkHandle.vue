@@ -4597,7 +4597,7 @@ export default {
 			const path = 'register/batchExportRegisterInfoExcel'
 			downloadExcel(formData, path, this.companyId)
 		}else{
-			const path = 'register/batchExportChargeDocExcel'
+			const path = 'register/chargeDoc/batchExportExcel'
 			downloadExcel(formData, path, this.companyId)
 		}
 	},
