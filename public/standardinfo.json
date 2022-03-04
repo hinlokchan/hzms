@@ -1,0 +1,226 @@
+[
+	{
+		"standard_id": "1",
+		"standard_title": "资产类",
+		"standard_fileid": "粤价[2010]142号",
+		"standard_order": "1000",
+		"standard_info": [
+			{
+				"counter_id": "8",
+				"standard_id": "2",
+				"counter_levelid": "1",
+				"counter_down": "0",
+				"counter_up": "100",
+				"counter_levelinfo": "100以下部分 (含100)",
+				"counter_rate": "10",
+				"counter_qc": "0"
+			},
+			{
+				"counter_id": "9",
+				"standard_id": "2",
+				"counter_levelid": "2",
+				"counter_down": "100",
+				"counter_up": "1000",
+				"counter_levelinfo": "100以上～1000 (含1000)",
+				"counter_rate": "4.5",
+				"counter_qc": "0.55"
+			},
+			{
+				"counter_id": "10",
+				"standard_id": "2",
+				"counter_levelid": "3",
+				"counter_down": "1000",
+				"counter_up": "5000",
+				"counter_levelinfo": "1000以上～5000 (含5000)",
+				"counter_rate": "1.5",
+				"counter_qc": "3.55"
+			},
+			{
+				"counter_id": "11",
+				"standard_id": "2",
+				"counter_levelid": "4",
+				"counter_down": "5000",
+				"counter_up": "10000",
+				"counter_levelinfo": "5000以上～10000 (含10000)",
+				"counter_rate": "1",
+				"counter_qc": "6.05"
+			},
+			{
+				"counter_id": "12",
+				"standard_id": "2",
+				"counter_levelid": "5",
+				"counter_down": "10000",
+				"counter_up": "100000",
+				"counter_levelinfo": "10000以上～100000 (含100000)",
+				"counter_rate": "0.2",
+				"counter_qc": "14.05"
+			},
+			{
+				"counter_id": "13",
+				"standard_id": "2",
+				"counter_levelid": "6",
+				"counter_down": "100000",
+				"counter_up": "100000000",
+				"counter_levelinfo": "100000以上部分",
+				"counter_rate": "0.15",
+				"counter_qc": "19.05"
+			}
+		]
+	},
+	{
+		"standard_id": "2",
+		"standard_title": "房地产类",
+		"standard_fileid": "计价格[1995]971号",
+		"standard_order": "2000",
+		"standard_info": [
+			{
+				"counter_id": "1",
+				"standard_id": "1",
+				"counter_levelid": "1",
+				"counter_down": "0",
+				"counter_up": "100",
+				"counter_levelinfo": "100以下部分 (含100)",
+				"counter_rate": "5",
+				"counter_qc": "0"
+			},
+			{
+				"counter_id": "2",
+				"standard_id": "1",
+				"counter_levelid": "2",
+				"counter_down": "100",
+				"counter_up": "1000",
+				"counter_levelinfo": "100以上～1000 (含1000)",
+				"counter_rate": "2.5",
+				"counter_qc": "0.25"
+			},
+			{
+				"counter_id": "3",
+				"standard_id": "1",
+				"counter_levelid": "3",
+				"counter_down": "1000",
+				"counter_up": "2000",
+				"counter_levelinfo": "1000以上～2000 (含2000)",
+				"counter_rate": "1.5",
+				"counter_qc": "1.25"
+			},
+			{
+				"counter_id": "4",
+				"standard_id": "1",
+				"counter_levelid": "4",
+				"counter_down": "2000",
+				"counter_up": "5000",
+				"counter_levelinfo": "2000以上～5000 (含5000)",
+				"counter_rate": "0.8",
+				"counter_qc": "2.65"
+			},
+			{
+				"counter_id": "5",
+				"standard_id": "1",
+				"counter_levelid": "5",
+				"counter_down": "5000",
+				"counter_up": "8000",
+				"counter_levelinfo": "5000以上～8000 (含8000)",
+				"counter_rate": "0.4",
+				"counter_qc": "4.65"
+			},
+			{
+				"counter_id": "6",
+				"standard_id": "1",
+				"counter_levelid": "6",
+				"counter_down": "8000",
+				"counter_up": "10000",
+				"counter_levelinfo": "8000以上～10000 (含10000)",
+				"counter_rate": "0.2",
+				"counter_qc": "6.25"
+			},
+			{
+				"counter_id": "7",
+				"standard_id": "1",
+				"counter_levelid": "7",
+				"counter_down": "10000",
+				"counter_up": "100000000",
+				"counter_levelinfo": "10000以上部分",
+				"counter_rate": "0.1",
+				"counter_qc": "7.25"
+			}
+		]
+	},
+	{
+		"standard_id": "3",
+		"standard_title": "土地类",
+		"standard_fileid": "计价格[1994]2017号",
+		"standard_order": "3000",
+		"standard_info": [
+			{
+				"counter_id": "14",
+				"standard_id": "3",
+				"counter_levelid": "1",
+				"counter_down": "0",
+				"counter_up": "100",
+				"counter_levelinfo": "100以下部分 (含100)",
+				"counter_rate": "4",
+				"counter_qc": "0"
+			},
+			{
+				"counter_id": "15",
+				"standard_id": "3",
+				"counter_levelid": "2",
+				"counter_down": "100",
+				"counter_up": "200",
+				"counter_levelinfo": "100以上～200 (含200)",
+				"counter_rate": "3",
+				"counter_qc": "0.1"
+			},
+			{
+				"counter_id": "16",
+				"standard_id": "3",
+				"counter_levelid": "3",
+				"counter_down": "200",
+				"counter_up": "1000",
+				"counter_levelinfo": "200以上～1000 (含1000)",
+				"counter_rate": "2",
+				"counter_qc": "0.3"
+			},
+			{
+				"counter_id": "17",
+				"standard_id": "3",
+				"counter_levelid": "4",
+				"counter_down": "1000",
+				"counter_up": "2000",
+				"counter_levelinfo": "1000以上～2000 (含2000)",
+				"counter_rate": "1.5",
+				"counter_qc": "0.8"
+			},
+			{
+				"counter_id": "18",
+				"standard_id": "3",
+				"counter_levelid": "5",
+				"counter_down": "2000",
+				"counter_up": "5000",
+				"counter_levelinfo": "2000以上～5000 (含5000)",
+				"counter_rate": "0.8",
+				"counter_qc": "2.2"
+			},
+			{
+				"counter_id": "19",
+				"standard_id": "3",
+				"counter_levelid": "6",
+				"counter_down": "5000",
+				"counter_up": "10000",
+				"counter_levelinfo": "5000以上～10000 (含10000)",
+				"counter_rate": "0.4",
+				"counter_qc": "4.2"
+			},
+			{
+				"counter_id": "20",
+				"standard_id": "3",
+				"counter_levelid": "7",
+				"counter_down": "10000",
+				"counter_up": "100000000",
+				"counter_levelinfo": "10000以上部分",
+				"counter_rate": "0.1",
+				"counter_qc": "7.2"
+			}
+		]
+	}
+]

@@ -50,11 +50,6 @@ export default new Router({
                     meta: { title: '工作台处理' }
                 },
                 {
-                    path: '/worksubhandlecheck',
-                    component: () => import('../components/page/WorkSubHandleCheck.vue'),
-                    meta: { title: '项目信息审核' }
-                },
-                {
                     path: '/oldplanform',
                     component: () => import('../components/page/OldPlanForm.vue'),
                     meta: { title: '旧项目录入' }
@@ -75,10 +70,22 @@ export default new Router({
                     meta: { title: '项目工作管理' }
                 },
                 {
-                    path: '/worksubhandle',
-                    component: () => import('../components/page/WorkSubHandle.vue'),
-                    meta: { title: '项目信息' }
+                    path: '/worksubregister',
+                    component: () => import('../components/page/WorkSubRegister.vue'),
+                    meta: { title: '项目正评信息' }
                 },
+                {
+                    path: '/worksubreceipt',
+                    component: () => import('../components/page/WorkSubReceipt.vue'),
+                    meta: { title: '项目凭证信息' }
+                },
+				/* 
+                {
+                    path: '/worksubregistercheck',
+                    component: () => import('../components/page/WorkSubRegisterCheck.vue'),
+                    meta: { title: '项目信息审核' }
+                },
+				 */
                 // {
                 //     path: '/subworkhandle',
                 //     component: () => import('../components/page/SubWorkHandle.vue'),

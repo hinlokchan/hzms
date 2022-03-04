@@ -7,6 +7,7 @@
     "label": "惠州市",
     "value": "441300",
     "children": [
+	  { "value": "441301", "label": "市辖区" },
       {
       "label": "惠城区",
       "value": "441302"
@@ -33,6 +34,7 @@
     "label": "广州市",
     "value": "440100",
     "children": [
+	  { "value": "440101", "label": "市辖区" },
       {
       "label": "荔湾区",
       "value": "440103"

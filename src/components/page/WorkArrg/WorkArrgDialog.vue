@@ -107,7 +107,7 @@
               range-separator="至"
               start-placeholde="开始日期"
               end-placeholde="结束日期"
-              value-format="MM/dd"
+              value-format="yyyy/MM/dd"
             ></el-date-picker>
           </el-form-item>
         </el-col>
@@ -137,7 +137,7 @@
               range-separator="至"
               start-placeholde="开始日期"
               end-placeholde="结束日期"
-              value-format="MM/dd"
+              value-format="yyyy/MM/dd"
             ></el-date-picker>
           </el-form-item>
         </el-col>
@@ -167,7 +167,7 @@
               range-separator="至"
               start-placeholde="开始日期"
               end-placeholde="结束日期"
-              value-format="MM/dd"
+              value-format="yyyy/MM/dd"
             ></el-date-picker>
           </el-form-item>
         </el-col>
@@ -197,7 +197,7 @@
               range-separator="至"
               start-placeholde="开始日期"
               end-placeholde="结束日期"
-              value-format="MM/dd"
+              value-format="yyyy/MM/dd"
             ></el-date-picker>
           </el-form-item>
         </el-col>
@@ -227,7 +227,7 @@
               range-separator="至"
               start-placeholde="开始日期"
               end-placeholde="结束日期"
-              value-format="MM/dd"
+              value-format="yyyy/MM/dd"
             ></el-date-picker>
           </el-form-item>
         </el-col>
@@ -257,7 +257,7 @@
               range-separator="至"
               start-placeholde="开始日期"
               end-placeholde="结束日期"
-              value-format="MM/dd"
+              value-format="yyyy/MM/dd"
             ></el-date-picker>
           </el-form-item>
         </el-col>
@@ -287,7 +287,7 @@
               range-separator="至"
               start-placeholde="开始日期"
               end-placeholde="结束日期"
-              value-format="MM/dd"
+              value-format="yyyy/MM/dd"
             ></el-date-picker>
           </el-form-item>
         </el-col>
@@ -317,7 +317,7 @@
               range-separator="至"
               start-placeholde="开始日期"
               end-placeholde="结束日期"
-              value-format="MM/dd"
+              value-format="yyyy/MM/dd"
             ></el-date-picker> -->
             <el-input
               v-model="arrgForm.assemChargeSche"
@@ -351,7 +351,7 @@
               range-separator="至"
               start-placeholde="开始日期"
               end-placeholde="结束日期"
-              value-format="MM/dd"
+              value-format="yyyy/MM/dd"
             ></el-date-picker>
           </el-form-item>
         </el-col>
@@ -381,7 +381,7 @@
               range-separator="至"
               start-placeholde="开始日期"
               end-placeholde="结束日期"
-              value-format="MM/dd"
+              value-format="yyyy/MM/dd"
             ></el-date-picker> -->
             <el-input
               v-model="arrgForm.manuArchiveSche"
@@ -1989,6 +1989,7 @@ export default {
 			  //211101变动 新增: 多个公司切换
 			  
 			  //console.log('提交arrgForm', this.arrgForm);
+			  
 			  setWorkAssignment(this.arrgForm, this.companyId)
 				.then(res => {
 				  this.$message.success('提交成功');
@@ -1999,6 +2000,8 @@ export default {
 				.catch(err => {
 				  this.$message.error('提交失败，请稍后重试');
 				});
+				
+				
 			} else {
 			  this.$message.warning('请填写必填信息');
 			}
@@ -2166,11 +2169,11 @@ export default {
 		  
 		  //赋值
 		  let day = this.baseDate;
-		  let day1 = this.$moment(day).format('MM/DD');
-		  let day2 = this.$moment(day + 86400000).format('MM/DD');
-		  let day3 = this.$moment(day + 172800000).format('MM/DD');
-		  let day4 = this.$moment(day + 259200000).format('MM/DD');
-		  //console.log(day, day1, day2, day3, day4);
+		  let day1 = this.$moment(day).format('YYYY/MM/DD');
+		  let day2 = this.$moment(day + 86400000).format('YYYY/MM/DD');
+		  let day3 = this.$moment(day + 172800000).format('YYYY/MM/DD');
+		  let day4 = this.$moment(day + 259200000).format('YYYY/MM/DD');
+		  console.log(day, day1, day2, day3, day4);
 		  this.arrgForm.prePreparationSche.push(day1, day1);
 		  this.arrgForm.fldSrvySche.push(day1, day1);
 		  this.arrgForm.mktSrvySche.push(day1, day1);
@@ -2179,6 +2182,8 @@ export default {
 		  this.arrgForm.internalAuditSche.push(day3, day3);
 		  this.arrgForm.commuClientSche.push(day3, day3);
 		  this.arrgForm.amendFinalSche.push(day4, day4);
+		  
+		  console.log('fldSrvySche', this.arrgForm.fldSrvySche)
 
 		  let leader = this.projLeader.split(',');
 		  let reviewer = this.projReviewer.split(',');
