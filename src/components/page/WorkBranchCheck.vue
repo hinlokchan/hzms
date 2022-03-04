@@ -9,12 +9,12 @@
           <el-breadcrumb-item>工作台处理</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
-	  
+	   
 	  <!-- 弹出框 -->
+	  
 	  <el-dialog :title="`发票开具 ${subBillInfoTitle}`" :visible.sync="subBillInfoVisible" width="600px">
 		<el-form
 			ref="subBillInfoForm"
-			:visible.sync="subBillInfoVisible"
 			:model="subBillInfoForm"
 			:rules="subBillInfoRules"
 			label-width="125px"
@@ -52,11 +52,10 @@
 		  >确认更改</el-button>
 		</div>
 	  </el-dialog>
-	  
+	 
 	  <el-dialog :title="`问题记录 ${subProblemInfoTitle}`" :visible.sync="subProblemInfoVisible" :modal="false" v-dialogDrag width="600px"	  >
 		<el-form
 			ref="subProblemInfoForm"
-			:visible.sync="subProblemInfoVisible"
 			:model="subProblemInfoForm"
 			:rules="subProblemInfoRules"
 			label-width="125px"
@@ -99,7 +98,6 @@
 	  <el-dialog :title="`收费录入 ${subPayInfoTitle}`" :visible.sync="subPayInfoVisible" :modal="false" v-dialogDrag width="600px"	  >
 		<el-form
 			ref="subPayInfoForm"
-			:visible.sync="subPayInfoVisible"
 			:model="subPayInfoForm"
 			:rules="subPayInfoRules"
 			label-width="125px"
@@ -275,6 +273,7 @@
 		highlight-current-row
         @expand-change="expandChange"
 		:expand-row-keys="expands"
+		
 		@row-click="rowClick"
 		:row-key="getRowKeys"
       >	  
@@ -320,7 +319,7 @@
 			  width="220"
 			>
 			  <template slot-scope="scope"> 
-				
+								
 			    <el-button
 			      type="primary"
 				  size="mini"
@@ -350,11 +349,6 @@
 				  size="mini"
 			      @click="editProblemSubProj(scope.row)"
 			    >记录</el-button>
-			    <el-button
-			      type="primary"
-				  size="mini"
-			      @click="editEvaluationSubProj(scope.row)"
-			    >评价</el-button>
 				
 			  </template>
 			</el-table-column>
@@ -491,7 +485,7 @@ import {
   deleteReportNum
 } from '@/api/index'
 import {getCurrentMission} from '@/api/statistics'
-import { getSubProjectInfoList, getRegisterList } from '@/api/subReport'
+import { getSubProjectInfoList, getManageRegisterList } from '@/api/subReport'
 export default {
   name: 'workbranch',
   data() {
@@ -734,6 +728,21 @@ export default {
 			}, trigger: 'blur',
 		}  
 	  ],
+	  
+	  dialogVisible:false,
+	  
+	  dialogFormVisible: false,
+	  form: {
+		name: '',
+		region: '',
+		date1: '',
+		date2: '',
+		delivery: false,
+		type: [],
+		resource: '',
+		desc: ''
+	  },
+	  formLabelWidth: '120px',
     };
   },
   computed:{
@@ -781,14 +790,16 @@ export default {
 	//console.log('初始化公司id', this.companyId);  
 	
 	//211202 处理页面跳转返回
-	if(!this.pageInfoLoad()){
+	
+	//if(!this.pageInfoLoad()){
 		this.getData()
-	}	
+	//}
+		
 	
     let date = new Date()
     this.timestamp = date.getTime() - date.getHours()*60*60*1000
     console.log(this.timestamp)
-    this.projLeaderFilter[0].value = localStorage.getItem('staffName')
+    //this.projLeaderFilter[0].value = localStorage.getItem('staffName')
   },
   methods: {
     projLeaderFilterHandler(value, row, column) {
@@ -911,7 +922,7 @@ export default {
 	  this.tableData=[];
 	  this.pageTotal = 0;
 	  
-      getRegisterList(this.searchData, this.companyId)
+      getManageRegisterList(this.searchData, this.companyId)
         .then(res => {
 			
 		  if(this.onGoing){
@@ -927,6 +938,7 @@ export default {
 			this.tableData = res.data;
 			this.pageTotal = res.data.length;  
 		  }
+		  //console.log(this.tableData)
         })
         .catch(err => {
           console.log('field to search myproject');
@@ -944,15 +956,7 @@ export default {
             console.log('error', err)
           })
     },
-	resetExpand(){
-		/* 
-		this.expands = {
-		  expand_id:'',
-		  expand_status:false,
-		};
-		 */
-		this.expands = [];
-	},
+	
 	/* 
     getOnGoingProj() {
       if (this.onGoing == true) {
@@ -1007,7 +1011,7 @@ export default {
 	 */
     handleHandle(val) {
 	  //211202 处理页面跳转返回
-	  this.pageInfoSave();			
+	  //this.pageInfoSave();			
       //sessionStorage.setItem('page', this.currentPage);
 	  
 	  const key = this.newCode(val.projId);
@@ -1017,9 +1021,6 @@ export default {
     changePage(val) {
       console.log(val);
       this.currentPage = val;
-	  
-	  //220220
-	  this.resetExpand();
     },
     tagType(val) {
       if (val == 0) {
@@ -1119,8 +1120,8 @@ export default {
 	},
 	
 	expandChange(row,expandedRows) {
-		
-			console.log(row, expandedRows)
+	  console.log('row', row)
+	  console.log('expandedRows', expandedRows)
 		
 	  if (expandedRows.length) {
 	    this.expands = []
@@ -1132,16 +1133,20 @@ export default {
 	    }
 	  } else {
 	    this.expands = []// 默认不展开
-	    this.evalObj = []
-	    return
 	  }
 	},	
 	
 	getRowKeys(row) {
 	  return row.projId
 	},
+	
+	getSubRowKeys(row){
+		return row.subProjNum
+	},
 	  
 	getTableInfo(projId){
+		this.subProjdataList = [];
+		
 		const projData = {
 			projId: projId,
 		}
@@ -1159,12 +1164,12 @@ export default {
 	//子项目处理按钮  
 	//跳转正评修改页
 	jumpToSubHandle(subData) {
-		this.$router.push({ path: '/worksubhandle', query: { projId: subData.projId, data: subData.subProjId } })
+		this.$router.push({ path: '/worksubregister', query: { projId: subData.projId, data: subData.subProjId } })
 	},
 	//跳转正评审核页
 	jumpToSubHandleCheck(subData) {
 		if(subData.subProjStatus.mainStatus == "1"){
-			this.$router.push({ path: '/worksubhandlecheck', query: { projId: subData.projId, data: subData.subProjId } })
+			this.$router.push({ path: '/worksubregistercheck', query: { projId: subData.projId, data: subData.subProjId } })
 		}else{
 			this.$message.warning("请等待子项目正评提交后再审核")
 		}
@@ -1174,7 +1179,6 @@ export default {
 	
 	editPaySubProj(subData) {
 		//this.$message("收费录入")
-		this.resetExpand();
 		this.subPayInfoTitle = "".concat("计划编号:", subData.projId, subData.subProjNum?" 子报告号:"+subData.subProjNum:"");
 		
 		//初始化表单
@@ -1198,7 +1202,6 @@ export default {
 	},
 	editBillSubProj(subData) {
 		//this.$message("发票开具")
-		this.resetExpand();
 		this.subBillInfoTitle = "".concat("计划编号:", subData.projId, subData.subProjNum?" 子报告号:"+subData.subProjNum:"");
 		
 		//初始化表单
@@ -1218,7 +1221,6 @@ export default {
 	},
 	editProblemSubProj(subData) {
 		//this.$message("问题记录")
-		this.resetExpand();
 		this.subProblemInfoTitle = "".concat("计划编号:", subData.projId, subData.subProjNum?" 子报告号:"+subData.subProjNum:"");
 		
 		//初始化表单
@@ -1237,9 +1239,8 @@ export default {
 		this.subProblemInfoVisible = true
 	},
 	editEvaluationSubProj(subData) {
-		this.resetExpand();
 		this.$message("项目评价")
-		//this.$router.push({ path: '/worksubhandlecheck', query: { projId: projId, data: val } })
+		//this.$router.push({ path: '/worksubregistercheck', query: { projId: projId, data: val } })
 	},
 	
 	//弹出框提交
