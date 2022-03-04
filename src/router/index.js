@@ -75,20 +75,17 @@ export default new Router({
                     meta: { title: '项目正评信息' }
                 },
                 {
-                    path: '/worksubchargedoc',
-                    component: () => import('../components/page/WorkSubChargeDoc.vue'),
-                    meta: { title: '收费底单信息' }
-                },
-                {
                     path: '/worksubreceipt',
                     component: () => import('../components/page/WorkSubReceipt.vue'),
                     meta: { title: '项目凭证信息' }
                 },
+				/* 
                 {
                     path: '/worksubregistercheck',
                     component: () => import('../components/page/WorkSubRegisterCheck.vue'),
                     meta: { title: '项目信息审核' }
                 },
+				 */
                 // {
                 //     path: '/subworkhandle',
                 //     component: () => import('../components/page/SubWorkHandle.vue'),
