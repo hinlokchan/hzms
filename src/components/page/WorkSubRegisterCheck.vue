@@ -2,6 +2,33 @@
   <div class="container">
     <el-page-header @back="goBack"></el-page-header>
 	
+	<el-drawer
+	  title="登记审核"
+	  :before-close="handleDelItem"
+	  :visible.sync="registerCheckVisible"
+	  direction="rtl"
+	  ref="drawer"
+	  :modal="false"
+	  >
+	  <div class="demo-drawer__content" style="padding: 10px;">
+	    <el-form ref="registerCheckForm" label-width="125px">
+		  <div
+		  v-for="(item, index) in registerCheckForm"
+		  :key="index">
+	      <el-form-item :label="item.label" :prop="item.name">
+	        <el-input :id="'name'+item.id" placeholder="输入存在问题, 点右侧按钮可清空" v-model.trim="item[item.name]" clearable></el-input>
+	      </el-form-item>
+		  </div>
+	    </el-form>
+	    <div class="demo-drawer__footer">
+		  <div style="text-align: center;">
+	      <el-button size="medium" @click="$refs.drawer.closeDrawer()">取消</el-button>
+	      <el-button size="medium" type="primary" @click="registerCheckSubmit">提交</el-button>
+		  </div>
+	    </div>
+	  </div>
+	</el-drawer>
+	
 	<el-dialog title="修改委托方 (提交后需计划部门审核)" :visible.sync="clientNameVisible" :modal="false" v-dialogDrag width="800px"	  >
 		<el-form
 			ref="clientNameForm"
@@ -276,7 +303,7 @@
 	  </div>
 	</el-dialog>
 	
-	
+	<!-- :rules="subInfoRules" -->	
 	<el-form
 		ref="subInfoForm"
 		:model="subInfoForm"
@@ -284,20 +311,36 @@
 		:rules="subInfoRules"
 		v-if="subInfoForm"
 	>
+		<el-divider>存在问题</el-divider>
+		<el-row :gutter="20">
+			<el-col :span="24">
+				<el-form-item label="问题清单">
+					<el-input v-model="registerCheckInfo" readonly type="textarea" autosize maxlength="2000" style="width: 100%;"
+					></el-input>
+				</el-form-item>
+			</el-col>
+		</el-row>
+	
 		<el-divider>委托方信息</el-divider>
 		<el-row :gutter="20">
 			<el-col :span="12">
 				<el-form-item label="委托方" prop="regClientName" class="red-item">
+					<span slot="label" @click="handleAddItem(1,'regClientName', '委托方')">委托方</span>
+					
 					<el-input v-model="subInfoForm.regClientName" disabled style="width: 100%" clearable></el-input>
+					<!-- 
 					<el-tooltip effect="dark" content="委托方全称不对, 可以提交修改申请, 由计划部门审核更新" placement="top-start">
 					<el-tag @click="editClientName(subInfoForm)">
 						修改
 					</el-tag>
 					</el-tooltip>
+					 -->
 				</el-form-item>
 			</el-col>
 			<el-col :span="12">
 				<el-form-item label="委托方性质" prop="regClientType" class="red-item">
+					<span slot="label" @click="handleAddItem(2,'regClientType', '委托方性质')">委托方性质</span>
+					
 					<el-select
 						v-model="subInfoForm.regClientType"
 					>
@@ -315,11 +358,15 @@
 		<el-row :gutter="20">
 			<el-col :span="12">
 				<el-form-item label="被评估单位" prop="regEvaluatedUnit" class="red-item">
+					<span slot="label" @click="handleAddItem(3,'regEvaluatedUnit', '被评估单位')">被评估单位</span>
+					
 					<el-input v-model="subInfoForm.regEvaluatedUnit" style="width: 100%" clearable></el-input>
 				</el-form-item>
 			</el-col>
 			<el-col :span="12">
 				<el-form-item label="评估对象" prop="regEvalObject" class="red-item">
+					<span slot="label" @click="handleAddItem(4,'regEvalObject', '评估对象')">评估对象</span>
+					
 					<el-cascader
 						v-model="subInfoForm.regEvalObject"
 						style="width: 100%"
@@ -332,6 +379,8 @@
 			</el-col>
 			<el-col :span="12">
 				<el-form-item label="行政区域" prop="regAdminRegion" class="red-item">
+				  <span slot="label" @click="handleAddItem(5,'regAdminRegion', '行政区域')">行政区域</span>
+					
 				  <el-cascader
 				    v-model="subInfoForm.regAdminRegion"
 				    style="width: 100%"
@@ -350,16 +399,22 @@
 					:min="1"
 					type="number"></el-input>
 					 -->
+					<span slot="label" @click="handleAddItem(6,'regEvalObjCount', '数量')">数量</span>
+									
 					<el-input v-model.trim="subInfoForm.regEvalObjCount" style="width: 100%" clearable></el-input>
 				</el-form-item>
 			</el-col>
 			<el-col :span="12">
 				<el-form-item label="贷款人" prop="cdLoaner">
+					<span slot="label" @click="handleAddItem(7,'cdLoaner', '贷款人')">贷款人</span>
+					
 					<el-input v-model.trim="subInfoForm.cdLoaner" style="width: 100%" clearable></el-input>
 				</el-form-item>
 			</el-col>
 			<el-col :span="12">
 				<el-form-item label="银行名称" prop="cdBankName">
+					<span slot="label" @click="handleAddItem(8,'cdBankName', '银行名称')">银行名称</span>
+					
 					<el-input v-model.trim="subInfoForm.cdBankName" style="width: 100%" clearable></el-input>
 				</el-form-item>
 			</el-col>
@@ -368,6 +423,8 @@
 		<el-row :gutter="20">
 			<el-col :span="12">
 				<el-form-item label="评估目的" prop="regEvalGoal" class="red-item">
+					<span slot="label" @click="handleAddItem(9,'regEvalGoal', '评估目的')">评估目的</span>
+					
 					<el-select	v-model="subInfoForm.regEvalGoal"  style="width: 100%;">
 						<el-option
 							v-for="item, index in regEvalGoalOption"
@@ -381,6 +438,8 @@
 			</el-col>
 			<el-col :span="12">
 				<el-form-item label="评估方法" prop="regEvalMethod" class="red-item">
+					<span slot="label" @click="handleAddItem(10,'regEvalMethod', '评估方法')">评估方法</span>
+					
 					<el-select
 						v-model="subInfoForm.regEvalMethod"
 						multiple
@@ -403,6 +462,8 @@
 			<el-col :span="8">
 				<el-form-item label="资产总值(元)" prop="regTotalAssets"
 				:rules="subInfoForm.regOwnersEquity?subProjRuleNoReq:subProjRuleReq">
+					<span slot="label" @click="handleAddItem(11,'regTotalAssets', '资产总值(元)')">资产总值(元)</span>
+				
 					<el-input v-model="subInfoForm.regTotalAssets" style="width: 100%" clearable
 					placeholder="资产总值和所有者权益二者不能同时为空"
 					oninput="value=value.replace(/[^\-\d.]/g,'')"
@@ -414,6 +475,8 @@
 			</el-col>
 			<el-col :span="8">
 				<el-form-item label="负债总值(元)" prop="regTotalDebts">
+					<span slot="label" @click="handleAddItem(12,'regTotalDebts', '负债总值(元)')">负债总值(元)</span>
+									
 					<el-input v-model="subInfoForm.regTotalDebts" style="width: 100%" clearable
 					oninput="value=value.replace(/[^\-\d.]/g,'')"></el-input>
 					<span v-if="subInfoForm.regTotalDebts">
@@ -424,6 +487,8 @@
 			<el-col :span="8">
 				<el-form-item label="所有者权益(元)" prop="regOwnersEquity"
 				:rules="subInfoForm.regTotalAssets?subProjRuleNoReq:subProjRuleReq">
+					<span slot="label" @click="handleAddItem(13,'regOwnersEquity', '所有者权益(元)')">所有者权益(元)</span>
+				
 					<el-input v-model="subInfoForm.regOwnersEquity" style="width: 100%" clearable
 					placeholder="资产总值和所有者权益二者不能同时为空"
 					oninput="value=value.replace(/[^\-\d.]/g,'')"
@@ -437,6 +502,8 @@
 		<el-row :gutter="20">
 			<el-col :span="8">
 				<el-form-item label="评估结论" prop="regEvalConclusion" class="red-item">
+					<span slot="label" @click="handleAddItem(14,'regEvalConclusion', '评估结论')">评估结论</span>
+									
 					<el-select
 						v-model="subInfoForm.regEvalConclusion"
 						style="width: 100%;"
@@ -453,22 +520,28 @@
 			</el-col>
 			<el-col :span="8">
 				<el-form-item label="评估值(元)" prop="regEvalConclusionValue" class="red-item">
+					<span slot="label" @click="handleAddItem(15,'regEvalConclusionValue', '评估值(元)')">评估值(元)</span>
+					
 					<el-input v-model="subInfoForm.regEvalConclusionValue" style="width: 100%" clearable
 					oninput="value=value.replace(/[^\-\d.]/g,'')"
 					@change="handleChangeStandardFee"
 					disabled></el-input>		
 					<span v-if="subInfoForm.regTotalAssets && subInfoForm.regOwnersEquity">
+					<!-- 
 					<el-tag @click="handleCopyEvalConclusionValue('资产总值', subInfoForm.regTotalAssets)">
 						资产总值
 					</el-tag>
 					<el-tag style="margin-left: 10px;" @click="handleCopyEvalConclusionValue('所有者权益', subInfoForm.regOwnersEquity)">
 						所有者权益
 					</el-tag>
+					 -->
 					</span>
 				</el-form-item>
 			</el-col>
 			<el-col :span="8">
 				<el-form-item label="出报告日期" prop="regReportIssueDate" class="red-item">
+					<span slot="label" @click="handleAddItem(16,'regReportIssueDate', '出报告日期')">出报告日期</span>
+					
 					<el-date-picker
 					  type="date"
 					  value-format="yyyy-MM-dd"
@@ -483,6 +556,8 @@
 		<el-row :gutter="20">
 			<el-col :span="8">
 				<el-form-item label="凭证类型" prop="cdReceiptType" class="red-item">
+					<span slot="label" @click="handleAddItem(17,'cdReceiptType', '凭证类型')">凭证类型</span>
+					
 					<el-select
 						v-model="subInfoForm.cdReceiptType"
 						style="width: 100%;"
@@ -501,6 +576,8 @@
 			<el-col :span="16"
 			v-if="subInfoForm.cdReceiptType=='专用发票'||subInfoForm.cdReceiptType=='普通发票'">
 				<el-form-item label="开票抬头" prop="cdInvoiceTitle">
+					<span slot="label" @click="handleAddItem(18,'cdInvoiceTitle', '开票抬头')">开票抬头</span>
+					
 					<el-tooltip class="item" effect="dark" content="没有该发票信息时, 请先点新增按钮" placement="top-start">
 					<el-select
 					  v-model="subInfoForm.cdInvoiceTitle"
@@ -517,6 +594,7 @@
 					  ></el-option>
 					</el-select>
 					</el-tooltip>
+					<!-- 
 					<el-tag @click="handleAddInvoice">
 						新增
 					</el-tag>
@@ -524,12 +602,15 @@
 					v-if="subInfoForm.cdInvoiceTitle != ''">
 						修改
 					</el-tag>
+					 -->
 				</el-form-item>
 			</el-col>
 			<el-col :span="16"
 			v-else>
 				<el-form-item label="开票抬头" prop="cdInvoiceTitle"
 				:rules="subInfoForm.cdReceiptType=='开收据'?cdInvoiceTitleReq:[]">
+					<span slot="label" @click="handleAddItem(18,'cdInvoiceTitle', '开票抬头')">开票抬头</span>
+				
 					<el-input v-model="subInfoForm.cdInvoiceTitle" style="width: 100%" clearable
 					placeholder="请输入"></el-input>
 				</el-form-item>
@@ -538,6 +619,8 @@
 		<el-row :gutter="20">
 			<el-col :span="8">
 				<el-form-item label="项目分类" prop="cdChargeType" class="red-item">
+					<span slot="label" @click="handleAddItem(19,'cdChargeType', '项目分类')">项目分类</span>
+									
 					<el-select
 						v-model="subInfoForm.cdChargeType"
 						style="width: 100%;"
@@ -555,11 +638,15 @@
 			</el-col>
 			<el-col :span="8">
 				<el-form-item label="联系人" prop="cdContact">
+					<span slot="label" @click="handleAddItem(20,'cdContact', '联系人')">联系人</span>
+					
 					<el-input v-model.trim="subInfoForm.cdContact" style="width: 100%" clearable></el-input>
 				</el-form-item>
 			</el-col>
 			<el-col :span="8">
 				<el-form-item label="联系电话" prop="cdContactInfo">
+					<span slot="label" @click="handleAddItem(21,'cdContactInfo', '联系电话')">联系电话</span>
+					
 					<el-input v-model.trim="subInfoForm.cdContactInfo" style="width: 100%" clearable></el-input>
 				</el-form-item>
 			</el-col>
@@ -586,6 +673,8 @@
 		<el-row :gutter="20">
 			<el-col :span="8">
 				<el-form-item label="是否签协议" prop="cdDoSignAgreement" class="red-item">
+					<span slot="label" @click="handleAddItem(22,'cdDoSignAgreement', '是否签协议')">是否签协议</span>
+					
 					<el-select
 						v-model="subInfoForm.cdDoSignAgreement"
 						style="width: 100%;"
@@ -602,6 +691,8 @@
 			</el-col>
 			<el-col :span="8">
 				<el-form-item label="预收款金额" prop="cdAdvReceivedAmount" >
+					<span slot="label" @click="handleAddItem(23,'cdAdvReceivedAmount', '预收款金额')">预收款金额</span>
+					
 					<el-input v-model="subInfoForm.cdAdvReceivedAmount" style="width: 100%" clearable
 					oninput="value=value.replace(/[^\d.]/g,'')"></el-input>
 					<span v-if="subInfoForm.cdAdvReceivedAmount">
@@ -611,6 +702,8 @@
 			</el-col>
 			<el-col :span="8">
 				<el-form-item label="预收款日期" prop="cdAdvReceivedDate" >
+					<span slot="label" @click="handleAddItem(24,'cdAdvReceivedDate', '预收款日期')">预收款日期</span>
+					
 					<el-date-picker
 					  type="date"
 					  value-format="yyyy-MM-dd"
@@ -644,6 +737,8 @@
 			 -->
 			<el-col :span="8">
 				<el-form-item label="标准收费(元)" prop="cdStandardFee" class="red-item">
+					<span slot="label" @click="handleAddItem(25,'cdStandardFee', '标准收费(元)')">标准收费(元)</span>
+					
 					<el-input v-model="subInfoForm.cdStandardFee" style="width: 100%" clearable
 					oninput="value=value.replace(/[^\d.]/g,'')"
 					@change="handleChangeDiscount"
@@ -655,6 +750,8 @@
 			</el-col>
 			<el-col :span="8">
 				<el-form-item label="应收费用(元)" prop="cdReceivable" class="red-item">
+					<span slot="label" @click="handleAddItem(26,'cdReceivable', '应收费用(元)')">应收费用(元)</span>
+					
 					<el-input v-model="subInfoForm.cdReceivable" style="width: 100%" clearable
 					oninput="value=value.replace(/[^\d.]/g,'')"
 					@change="handleChangeDiscount"></el-input>
@@ -665,6 +762,8 @@
 			</el-col>
 			<el-col :span="8">
 				<el-form-item label="折扣" prop="cdDiscount" class="red-item">
+					<span slot="label" @click="handleAddItem(27,'cdDiscount', '折扣')">折扣</span>
+					
 					<el-input v-model="subInfoForm.cdDiscount" disabled style="width: 100%" clearable></el-input>
 				</el-form-item>
 			</el-col>
@@ -674,11 +773,15 @@
 		<el-row :gutter="20">
 			<el-col :span="8">
 				<el-form-item label="备案号" prop="regRecordNum" class="red-item">
+					<span slot="label" @click="handleAddItem(28,'regRecordNum', '备案号')">备案号</span>
+					
 					<el-input v-model="subInfoForm.regRecordNum" style="width: 100%" clearable></el-input>
 				</el-form-item>
 			</el-col>
 			<el-col :span="8">
 				<el-form-item label="合同号" prop="regContractNum" class="red-item">
+					<span slot="label" @click="handleAddItem(29,'regContractNum', '合同号')">合同号</span>
+					
 					<div
 					v-if="subInfoForm.regContractNum">
 						<el-input v-model="subInfoForm.regContractNum" disabled style="width: 100%" clearable></el-input>
@@ -691,6 +794,8 @@
 			</el-col>		
 			<el-col :span="8">
 				<el-form-item label="安排类型" prop="regArrgType" class="red-item">
+					<span slot="label" @click="handleAddItem(30,'regArrgType', '安排类型')">安排类型</span>
+					
 					<el-select
 						v-model="subInfoForm.regArrgType"
 						disabled
@@ -709,11 +814,15 @@
 		<el-row :gutter="20">
 			<el-col :span="8">
 				<el-form-item label="摇珠单/委托书" prop="regEntrustLetterNum">
+					<span slot="label" @click="handleAddItem(31,'regEntrustLetterNum', '摇珠单/委托书')">摇珠单/委托书</span>
+					
 					<el-input v-model="subInfoForm.regEntrustLetterNum" style="width: 100%" clearable></el-input>
 				</el-form-item>
 			</el-col>
 			<el-col :span="8">
 				<el-form-item label="摇珠/委托时间" prop="regEntrustTime">
+					<span slot="label" @click="handleAddItem(32,'regEntrustTime', '摇珠/委托时间')">摇珠/委托时间</span>
+					
 					<el-date-picker
 					  type="date"
 					  value-format="yyyy-MM-dd"
@@ -724,6 +833,8 @@
 			</el-col>
 			<el-col :span="8">
 				<el-form-item label="外协情况" prop="regOutsourceStatus">
+					<span slot="label" @click="handleAddItem(33,'regOutsourceStatus', '外协情况')">外协情况</span>
+					
 					<el-input v-model="subInfoForm.regOutsourceStatus" style="width: 100%" clearable></el-input>
 				</el-form-item>
 			</el-col>
@@ -734,6 +845,8 @@
 		<el-row :gutter="20">
 			<el-col :span="8">
 				<el-form-item label="项目负责人" prop="regProjLeader" class="red-item">
+					<span slot="label" @click="handleAddItem(34,'regProjLeader', '项目负责人')">项目负责人</span>
+					
 					<el-select
 						v-model="subInfoForm.regProjLeader"
 						style="width: 100%;"
@@ -752,6 +865,8 @@
 			</el-col>
 			<el-col :span="8">
 				<el-form-item label="签字估价师" prop="regSignedAppraiser" class="red-item">
+					<span slot="label" @click="handleAddItem(35,'regSignedAppraiser', '签字估价师')">签字估价师</span>
+					
 					<el-select
 						v-model="subInfoForm.regSignedAppraiser"
 						style="width: 100%;"
@@ -770,6 +885,8 @@
 			</el-col>
 			<el-col :span="8">
 				<el-form-item label="专业复核人" prop="regProjProReviewer">
+					<span slot="label" @click="handleAddItem(36,'regProjProReviewer', '专业复核人')">专业复核人</span>
+					
 					<el-select
 						v-model="subInfoForm.regProjProReviewer"
 						style="width: 100%;"
@@ -788,6 +905,8 @@
 			</el-col>
 			<el-col :span="8">
 				<el-form-item label="现勘" prop="regFieldSrvy" class="red-item">
+					<span slot="label" @click="handleAddItem(37,'regFieldSrvy', '现勘')">现勘</span>
+					
 					<el-select
 						v-model="subInfoForm.regFieldSrvy"
 						style="width: 100%;"
@@ -806,6 +925,8 @@
 			</el-col>
 			<el-col :span="8">
 				<el-form-item label="资料收集验证" prop="regInfoVerification" class="red-item">
+					<span slot="label" @click="handleAddItem(38,'regInfoVerification', '资料收集验证')">资料收集验证</span>
+					
 					<el-select
 						v-model="subInfoForm.regInfoVerification"
 						style="width: 100%;"
@@ -824,6 +945,8 @@
 			</el-col>
 			<el-col :span="8">
 				<el-form-item label="市场询价调查" prop="regMarketEnquiry" class="red-item">
+					<span slot="label" @click="handleAddItem(39,'regMarketEnquiry', '市场询价调查')">市场询价调查</span>
+					
 					<el-select
 						v-model="subInfoForm.regMarketEnquiry"
 						style="width: 100%;"
@@ -842,6 +965,8 @@
 			</el-col>
 			<el-col :span="8">
 				<el-form-item label="技术说明" prop="regTechExpDrafter" class="red-item">
+					<span slot="label" @click="handleAddItem(40,'regTechExpDrafter', '技术说明')">技术说明</span>
+					
 					<el-select
 						v-model="subInfoForm.regTechExpDrafter"
 						style="width: 100%;"
@@ -860,6 +985,8 @@
 			</el-col>
 			<el-col :span="8">
 				<el-form-item label="报告拟稿" prop="regReportDrafter" class="red-item">
+					<span slot="label" @click="handleAddItem(41,'regReportDrafter', '报告拟稿')">报告拟稿</span>
+					
 					<el-select
 						v-model="subInfoForm.regReportDrafter"
 						style="width: 100%;"
@@ -878,6 +1005,8 @@
 			</el-col>
 			<el-col :span="8">
 				<el-form-item label="助理(归档)" prop="regProjArchive" class="red-item">
+					<span slot="label" @click="handleAddItem(42,'regProjArchive', '助理(归档)')">助理(归档)</span>
+					
 					<el-select
 						v-model="subInfoForm.regProjArchive"
 						style="width: 100%;"
@@ -896,6 +1025,8 @@
 			</el-col>
 			<el-col :span="8">
 				<el-form-item label="收费跟进" prop="regFeeFollowUp" class="red-item">
+					<span slot="label" @click="handleAddItem(43,'regFeeFollowUp', '收费跟进')">收费跟进</span>
+					
 					<el-select
 						v-model="subInfoForm.regFeeFollowUp"
 						style="width: 100%;"
@@ -914,6 +1045,8 @@
 			</el-col>
 			<el-col :span="8">
 				<el-form-item label="接洽人" prop="cdProjContact" class="red-item">
+					<span slot="label" @click="handleAddItem(44,'cdProjContact', '接洽人')">接洽人</span>
+					
 					<el-tooltip class="item" effect="dark" content="如需修改, 请联系计划部门" placement="top-start">
 					<el-input v-model="subInfoForm.cdProjContact" disabled style="width: 100%" clearable></el-input>
 					</el-tooltip>
@@ -921,6 +1054,8 @@
 			</el-col>
 			<el-col :span="8">
 				<el-form-item label="总审" prop="regFinalReview" class="red-item">
+					<span slot="label" @click="handleAddItem(45,'regFinalReview', '总审')">总审</span>
+					
 					<el-select
 						v-model="subInfoForm.regFinalReview"
 						style="width: 100%;"
@@ -940,6 +1075,7 @@
 	</el-form>
 		
 	<el-divider></el-divider>
+	<!-- 
 	<div style="text-align: center;">
 		<el-tooltip class="item" effect="dark" content="临时保存时, 必填项可先不填" placement="top"
 		v-if="parseInt(registerStatus) == 0">
@@ -950,6 +1086,7 @@
 			<el-button type="primary" icon="el-icon-edit-outline" size="medium" @click.native="subInfoFormSubmit()">确认提交</el-button>
 		</el-button-group>
 	</div>
+	 -->
   </div>
 </template>
 
@@ -1295,6 +1432,15 @@ export default {
 			},
 			
 			clientChangeList:[],
+			
+			//登记审核对话框
+			registerCheckVisible:false,
+			//registerCheckTitle:'',
+			//registerCheckItemInfo:{},
+			registerCheckForm:[],
+			registerCheckRules:{
+			},
+			registerCheckInfo:'',
 			
 			//211101变动 新增: 多个公司切换
 			companyRange:['HZ', 'ZM','HZKJ'],
@@ -2348,6 +2494,76 @@ export default {
 			.catch(err => {
 			})
 		},
+		
+		
+		handleAddItem(itemId, itemName, itemLabel){
+			const newList = this.registerCheckForm.filter(item => {
+			    //条件匹配
+			    return item.name == itemName;
+			}); 
+			
+			if(newList.length == 0){				
+				//不存在				
+				var newItem = {};
+				newItem['id'] = itemId;
+				newItem['label'] = itemLabel;
+				newItem['name'] = itemName;
+				newItem[itemName] = '';
+				
+				this.registerCheckForm.push(newItem);
+			}
+			
+			this.registerCheckVisible = true;
+			
+			this.$nextTick(function () {
+				document.getElementById('name'+itemId).focus();
+			})
+		},
+		
+		handleDelItem(){
+			//删除值为空的item
+			this.registerCheckForm = this.registerCheckForm.filter(item => {
+			    return item[item.name] != "";
+			}); 
+			
+			this.registerCheckVisible = false;
+			
+			//重新排序
+			this.handleSortItem();
+		},
+		
+		handleSortItem(){
+			//重新排序
+			this.registerCheckForm = this.registerCheckForm.sort((a, b)=>{
+				return a.id - b.id
+			});
+		},
+		
+		registerCheckSubmit(){
+			this.$confirm('确认提交正评信息?', '提示', { type: 'info' })
+			.then(() => {
+				//删除空值
+				this.handleDelItem();
+				
+				//转换成逗号分隔, 英文逗号转中文逗号
+				var newItem=[];
+				this.registerCheckForm.forEach((item, index) =>{
+					const newItemValue = item.label + ":" + item[item.name].replace(/\,/g, "，");
+					newItem.push(newItemValue)
+				});
+				
+				var registerCheckForm={
+					subProjId: this.subProjId,
+					checkInfo: newItem?newItem.join(','):'',
+				}
+				
+				this.registerCheckInfo = registerCheckForm.checkInfo;
+				
+				this.registerCheckVisible = false;
+				
+				console.log(registerCheckForm);
+			})
+		},
 				
 		changeMoneyToChinese(money){
 			var cnNums = new Array("零","壹","贰","叁","肆","伍","陆","柒","捌","玖"); //汉字的数字  
@@ -2506,4 +2722,5 @@ export default {
 	/deep/ .red-item .el-form-item__label {
 	  color: #ed1941;
 	}
+	
 </style>

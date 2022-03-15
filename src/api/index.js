@@ -283,6 +283,8 @@ export function userQuery(data) {
   });
 }
 
+
+//委托人
 export function getClientList(data, companyId) {
   return request({
     url: `${ProManageAPIServer}client/getClientList`,
@@ -353,6 +355,68 @@ export function transferProj(data, companyId) {
     data: qs.stringify(data)
   });
 }
+
+
+//委托人申请新增
+export function addClientNameChange(data, companyId) {
+  return request({
+    url: `${ProManageAPIServer}client/modifyApplication/submitApplication`, 
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
+//委托人申请修改
+export function editClientNameChange(data, companyId) {
+  return request({
+    url: `${ProManageAPIServer}client/modifyApplication/editApplication`, 
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
+//委托人申请撤销
+export function delClientNameChange(data, companyId) {
+  return request({
+    url: `${ProManageAPIServer}client/modifyApplication/withdrawApplication`, 
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
+//委托人申请信息
+export function getClientNameChangeInfo(data, companyId) {
+  return request({
+    url: `${ProManageAPIServer}client/modifyApplication/getApplicationListByClientId`, 
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
+//委托人申请列表
+export function getClientNameChangeList(data, companyId) {
+  return request({
+    url: `${ProManageAPIServer}client/modifyApplication/getApplicationList`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
+//委托人申请审核
+export function auditClientNameChange(data, companyId) {
+  return request({
+    url: `${ProManageAPIServer}client/modifyApplication/audit`, 
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
 
 export function delWorkAssignment(data, companyId) {
   return request({

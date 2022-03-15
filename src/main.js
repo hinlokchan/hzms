@@ -38,6 +38,8 @@ import VueClipboard from 'vue-clipboard2'
 import globalVariable from './utils/globalvariable'
 Vue.prototype.global = globalVariable;
 
+import '@/utils/dialogdrag.js' //对话框拖拽,双击全屏,拉伸
+
 Vue.prototype.$formatDate = formatDate;
 Vue.prototype.$moment = moment;
 Vue.config.productionTip = false;
