@@ -140,6 +140,7 @@
         class="table"
         ref="multipleTable"
         header-cell-class-name="table-header"
+		@filter-change="projTypeFilterChange"
 		v-if="companyTabsId == 0"
       >
         <!-- <el-table-column type="expand">
@@ -195,7 +196,8 @@
           width="90"
           align="center"
           :filters="projTypeFilters[companyTabsId]"
-          :filter-method="filterProjType"
+		  :filtered-value="projTypeFilterValue"
+		  column-key="projType"
         >
           <template slot-scope="scope">
 <!--            <span>{{scope.row.projType}}</span>-->
@@ -325,6 +327,7 @@
         class="table"
         ref="multipleTable"
         header-cell-class-name="table-header"
+		@filter-change="projTypeFilterChange"
 		v-if="companyTabsId == 1"
       >
         <!-- <el-table-column type="expand">
@@ -380,7 +383,8 @@
           width="90"
           align="center"
           :filters="projTypeFilters[companyTabsId]"
-          :filter-method="filterProjType"
+		  :filtered-value="projTypeFilterValue"
+		  column-key="projType"
         >
           <template slot-scope="scope">
 <!--            <span>{{scope.row.projType}}</span>-->
@@ -501,6 +505,7 @@
         class="table"
         ref="multipleTable"
         header-cell-class-name="table-header"
+		@filter-change="projTypeFilterChange"
 		v-if="companyTabsId == 2"
       >
         <!-- <el-table-column type="expand">
@@ -556,7 +561,8 @@
           width="90"
           align="center"
           :filters="projTypeFilters[companyTabsId]"
-          :filter-method="filterProjType"
+		  :filtered-value="projTypeFilterValue"
+		  column-key="projType"
         >
           <template slot-scope="scope">
 <!--            <span>{{scope.row.projType}}</span>-->
@@ -801,6 +807,9 @@ export default {
       changeTypeVisible: false,
       form: {},
 	  
+	  //处理过滤的bug
+	  tableFullData: [],
+	  
 	  //211028变动 新增: 多个公司切换, 通过companyTabsId切换过滤选项
       projTypeFilters: [
 		[
@@ -902,6 +911,12 @@ export default {
       },
 	  
 	  
+	  filtersitem:{
+	  	projType:'',
+	  },
+	  
+	  projTypeFilterValue:[],
+	  
 	  //211028变动 新增: 多个公司切换	  
 	  companyRange:['HZ', 'ZM','HZKJ'],
 	  companyId:'',
@@ -946,7 +961,9 @@ export default {
 	  this.pageTotal = 0;
       getAllAbstractProject({}, this.companyId)
         .then(res => {
-          //console.log("总数:", res.data.length)		  
+          //console.log("总数:", res.data.length)	  
+          this.tableFullData = res.data
+			
           this.tableData = res.data
           this.pageTotal = res.data.length
         })
@@ -966,8 +983,15 @@ export default {
 	  this.currentPage = 1;
 	  this.tableData = [];
 	  this.pageTotal = 0;
+	  
+	  Object.keys(this.filtersitem).forEach(key => (this.filtersitem[key] = ''))
+	  this.projTypeFilterValue = [];//数组元素全转为数字
+	  this.projTypeFilterValue = this.projTypeFilterValue.map(Number); 
+	  
       searchProject(newArr, this.companyId).then(res => {
-        //console.log(res)
+        //console.log(res)		
+		this.tableFullData = res.data
+		
         this.tableData = res.data
         this.pageTotal = res.data.length
       }).catch(err => {
@@ -1179,9 +1203,33 @@ export default {
       //     .catch(() => { })
       // }
     },
+	/* 
     filterProjType(value, row) {
       return row.projType === value
     },
+	 */
+	projTypeFilterChange(filters){
+		//更新过滤字段
+		Object.keys(this.filtersitem).forEach((item, index) =>{
+		  if(filters[item]){
+			this.filtersitem[item] = filters[item].join(',');
+		  }
+		});
+		
+		var newList = this.tableFullData;
+		Object.keys(this.filtersitem).forEach((item, index) =>{
+		  if(this.filtersitem[item]){
+			//循环过滤多个不为空的条件
+			newList = newList.filter(item2 => {
+				return this.filtersitem[item].indexOf(item2[item]) !=-1;
+			});
+		  }
+		});			
+		this.tableData = newList;
+		this.currentPage = 1;
+		this.pageTotal = this.tableData.length;
+	},
+	
     beforeEvalObjDialogClose() {
       // this.evalObjDrawerData.evalObjList = []
       // this.evalObjDrawerData.projInfo = {}
@@ -1328,7 +1376,15 @@ export default {
 			this.pageSize = plan_pageinfo.pageData.pageSize;
 			
 			this.searchData = plan_pageinfo.searchData;
+			
+			this.filtersitem = plan_pageinfo.filtersitem;
+			this.projTypeFilterValue = this.filtersitem.projType?this.filtersitem.projType.split(','):[];
+			//数组元素全转为数字
+			this.projTypeFilterValue = this.projTypeFilterValue.map(Number); 
+								
+			this.tableFullData = plan_pageinfo.fullData;			
 		  }
+		  
 		  //删除
 		  //sessionStorage.removeItem('plan_pageinfo');
 		  this.global.plan_pageinfo = null;
@@ -1347,8 +1403,11 @@ export default {
 			pageSize: this.pageSize,
 		},
 		data: this.tableData,
-	    status:0
+		fullData: this.tableFullData,
+		filtersitem: this.filtersitem,
+	    status:0,
 	  };
+		//console.log('save', plan_pageinfo)
 	  //sessionStorage.setItem('plan_pageinfo', JSON.stringify(plan_pageinfo));	 
 	  this.global.plan_pageinfo = JSON.stringify(plan_pageinfo);
 	},
