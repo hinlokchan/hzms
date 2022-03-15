@@ -10,135 +10,268 @@
         </el-breadcrumb>
       </div>
 	   
-	  <!-- 弹出框 -->
-	  
-	  <el-dialog :title="`发票开具 ${subBillInfoTitle}`" :visible.sync="subBillInfoVisible" width="600px">
-		<el-form
-			ref="subBillInfoForm"
-			:model="subBillInfoForm"
-			:rules="subBillInfoRules"
-			label-width="125px"
-		>
-			<el-form-item label="项目名称" prop="subProjName">
-				<el-input v-model="subBillInfoForm.subProjName" disabled
-					type="textarea" autosize maxlength="240" style="width: 100%;"
-				></el-input>
-			</el-form-item>
-			<el-form-item label="项目范围" prop="subProjScope">
-				<el-input v-model="subBillInfoForm.subProjScope" disabled
-					type="textarea" autosize maxlength="240" style="width: 100%;"
-				></el-input>
-			</el-form-item>
-			<el-form-item label="归档发票抬头" prop="subProjFPTT" class="red-item">
-			  <el-input v-model="subBillInfoForm.subProjFPTT" style="width: 100%" clearable></el-input>
-			</el-form-item>
-			<el-form-item label="已开发票金额" prop="subProjFPJE" class="red-item">
-			  <el-input v-model="subBillInfoForm.subProjFPJE" style="width: 100%" clearable
-			  oninput="value=value.replace(/[^\d.]/g,'')"></el-input>
-			</el-form-item>
-			<el-form-item label="已开收据金额" prop="subProjSJJE" >
-			  <el-input v-model="subBillInfoForm.subProjSJJE" style="width: 100%" clearable
-			  oninput="value=value.replace(/[^\d.]/g,'')"></el-input>
-			</el-form-item>
-		</el-form>
-		<div
-		  slot="footer"
-		  class="dialog-footer"
-		>
-		  <el-button @click="subBillInfoVisible = false">取 消</el-button>
-		  <el-button
-			@click="subBillInfoEdit()"
-			type="primary"
-		  >确认更改</el-button>
-		</div>
+	  <!-- 弹出框 -->	  
+	  <el-dialog :title="`开票处理 ${subBillInfoTitle}`" :visible.sync="subBillInfoVisible" :modal="false" v-dialogDrag width="800px">
+	  		<el-form
+	  			ref="subBillInfoForm"
+	  			:model="subBillInfoForm"
+	  			:rules="subBillInfoRules"
+	  			label-width="100px"
+	  		>
+	  		<el-row :gutter="20">
+	  			<el-col :span="12">	
+	  				<el-form-item label="子项目号" prop="bindingSubProjNum">
+	  					<el-input v-model="subBillInfoForm.bindingSubProjNum" style="width: 100%" 
+						type="textarea"	autosize
+						readonly></el-input>
+	  				</el-form-item>		
+	  			</el-col>
+	  			<el-col :span="12">		
+	  				<el-form-item label="收费凭证" prop="receiptType">
+	  					<el-input v-model="subBillInfoForm.receiptType" style="width: 100%" readonly></el-input>
+	  				</el-form-item>
+	  			</el-col>
+			</el-row>
+			<el-row :gutter="20">
+	  			<el-col :span="12">	
+	  				<el-form-item label="开票抬头" prop="invoiceTitle">
+	  					<el-input v-model="subBillInfoForm.invoiceTitle" style="width: 100%"
+						type="textarea"	autosize
+						readonly></el-input>
+						
+						<span style="font-size: 14px;">
+						  <el-button
+						    type="text"
+						    icon="el-icon-document-copy"
+						    size="medium"
+						    v-clipboard:copy="subBillInfoForm.invoiceTitle"
+						    v-clipboard:success="copy"
+						  >复制</el-button>
+						</span>
+	  				</el-form-item>
+	  			</el-col>
+	  			<el-col :span="12">	
+	  				<el-form-item label="开票税号" prop="dutyParagraph">
+	  					<el-input v-model="subBillInfoForm.dutyParagraph" style="width: 100%" readonly></el-input>
+						<span style="font-size: 14px;">
+						  <el-button
+						    type="text"
+						    icon="el-icon-document-copy"
+						    size="medium"
+						    v-clipboard:copy="subBillInfoForm.dutyParagraph"
+						    v-clipboard:success="copy"
+						  >复制</el-button>
+						</span>
+	  				</el-form-item>
+	  			</el-col>
+			</el-row>
+			<el-row :gutter="20">
+	  			<el-col :span="12">	
+	  				<el-form-item label="地址" prop="address">
+						<el-input v-model="subBillInfoForm.address" style="width: 100%"
+						type="textarea"	autosize
+						readonly></el-input>
+						<span style="font-size: 14px;"
+						v-if="subBillInfoForm.address">
+						  <el-button
+						    type="text"
+						    icon="el-icon-document-copy"
+						    size="medium"
+						    v-clipboard:copy="subBillInfoForm.address"
+						    v-clipboard:success="copy"
+						  >复制</el-button>
+						</span>
+	  				</el-form-item>
+	  			</el-col>
+	  			<el-col :span="12">	
+	  				<el-form-item label="电话" prop="telNum">
+	  					<el-input v-model="subBillInfoForm.telNum" style="width: 100%" readonly></el-input>
+						<span style="font-size: 14px;"
+						v-if="subBillInfoForm.telNum">
+						  <el-button
+						    type="text"
+						    icon="el-icon-document-copy"
+						    size="medium"
+						    v-clipboard:copy="subBillInfoForm.telNum"
+						    v-clipboard:success="copy"
+						  >复制</el-button>
+						</span>
+	  				</el-form-item>
+	  			</el-col>
+	  			<el-col :span="12">	
+	  				<el-form-item label="开户行" prop="depositBank">
+	  					<el-input v-model="subBillInfoForm.depositBank" style="width: 100%" readonly></el-input>
+						<span style="font-size: 14px;"
+						v-if="subBillInfoForm.depositBank">
+						  <el-button
+						    type="text"
+						    icon="el-icon-document-copy"
+						    size="medium"
+						    v-clipboard:copy="subBillInfoForm.depositBank"
+						    v-clipboard:success="copy"
+						  >复制</el-button>
+						</span>
+	  				</el-form-item>
+	  			</el-col>
+	  			<el-col :span="12">	
+	  				<el-form-item label="账号" prop="bankAccount">
+	  					<el-input v-model="subBillInfoForm.bankAccount" style="width: 100%" readonly></el-input>
+						<span style="font-size: 14px;"
+						v-if="subBillInfoForm.bankAccount">
+						  <el-button
+						    type="text"
+						    icon="el-icon-document-copy"
+						    size="medium"
+						    v-clipboard:copy="subBillInfoForm.bankAccount"
+						    v-clipboard:success="copy"
+						  >复制</el-button>
+						</span>
+	  				</el-form-item>
+	  			</el-col>
+				<el-col :span="12">	
+					<el-form-item label="收据号" prop="quittanceNum"
+					:rules="subBillInfoForm.receiptType=='开收据'?quittanceNumRules:{}">
+						<el-input v-model="subBillInfoForm.quittanceNum" style="width: 100%" 
+						:readonly="subBillInfoForm.receiptType=='开收据'?false:true"></el-input>
+					</el-form-item>
+				</el-col>
+				<el-col :span="12"
+				v-if="subBillInfoForm.receiptType != '开收据'">	
+					<el-form-item label="收据日期" prop="quittanceDate">
+						<el-input v-model="subBillInfoForm.quittanceDate" style="width: 100%" readonly></el-input>
+					</el-form-item>
+				</el-col>
+	  			<el-col :span="12">	
+	  				<el-form-item label="开票金额" prop="totalAmount">
+	  					<el-input v-model="subBillInfoForm.totalAmount" style="width: 100%" readonly></el-input>
+						<el-button
+						  type="text"
+						  icon="el-icon-document-copy"
+						  size="medium"
+						  v-clipboard:copy="subBillInfoForm.totalAmount"
+						  v-clipboard:success="copy"
+						>复制</el-button>
+	  				</el-form-item>
+	  			</el-col>
+	  			<el-col :span="12"
+				v-if="subBillInfoForm.receiptType == '普通发票' || subBillInfoForm.receiptType == '专用发票'">	
+	  				<el-form-item label="发票号" prop="invoiceNum" class="red-item">
+	  					<el-input v-model.trim="subBillInfoForm.invoiceNum" style="width: 100%"></el-input>
+	  				</el-form-item>
+	  			</el-col>
+	  		</el-row>
+	  		</el-form>
+	  		<div
+	  		  slot="footer"
+	  		  class="dialog-footer"
+	  		>
+	  		  <el-button @click="subBillInfoVisible = false">取 消</el-button>
+	  		  <el-button
+	  			@click="subBillInfoEdit()"
+	  			type="primary"
+	  		  >确认开票</el-button>
+	  		</div>
 	  </el-dialog>
-	 
-	  <el-dialog :title="`问题记录 ${subProblemInfoTitle}`" :visible.sync="subProblemInfoVisible" :modal="false" v-dialogDrag width="600px"	  >
-		<el-form
-			ref="subProblemInfoForm"
-			:model="subProblemInfoForm"
-			:rules="subProblemInfoRules"
-			label-width="125px"
-		>
-			<el-form-item label="项目名称" prop="subProjName">
-				<el-input v-model="subProblemInfoForm.subProjName" disabled
-					type="textarea" autosize maxlength="240" style="width: 100%;"
-				></el-input>
-			</el-form-item>
-			<el-form-item label="项目范围" prop="subProjScope">
-				<el-input v-model="subProblemInfoForm.subProjScope" disabled
-					type="textarea" autosize maxlength="240" style="width: 100%;"
-				></el-input>
-			</el-form-item>
-			<el-form-item label="底单没登记" prop="subProjDDMDJ">
-			  <el-input v-model="subProblemInfoForm.subProjDDMDJ" style="width: 100%" clearable
-				type="textarea" autosize maxlength="240"></el-input>
-			</el-form-item>
-			<el-form-item label="催收记录" prop="subProjCSJL">
-			  <el-input v-model="subProblemInfoForm.subProjCSJL" style="width: 100%" clearable
-				type="textarea" autosize maxlength="240"></el-input>
-			</el-form-item>
-			<el-form-item label="登记错误记录" prop="subProjDJCWJL">
-			  <el-input v-model="subProblemInfoForm.subProjDJCWJL" style="width: 100%" clearable
-				type="textarea" autosize maxlength="240"></el-input>
-			</el-form-item>
-		</el-form>
-		<div
-		  slot="footer"
-		  class="dialog-footer"
-		>
-		  <el-button @click="subProblemInfoVisible = false">取 消</el-button>
-		  <el-button
-			@click="subProblemInfoEdit()"
-			type="primary"
-		  >确认更改</el-button>
-		</div>
-	  </el-dialog>
-	  
-	  <el-dialog :title="`收费录入 ${subPayInfoTitle}`" :visible.sync="subPayInfoVisible" :modal="false" v-dialogDrag width="600px"	  >
+	 	  
+	  <el-dialog :title="`收款处理 ${subPayInfoTitle}`" :visible.sync="subPayInfoVisible" :modal="false" v-dialogDrag width="800px">
 		<el-form
 			ref="subPayInfoForm"
 			:model="subPayInfoForm"
 			:rules="subPayInfoRules"
-			label-width="125px"
+			label-width="100px"
 		>
-			<el-form-item label="项目名称" prop="subProjName">
-				<el-input v-model="subPayInfoForm.subProjName" disabled
-					type="textarea" autosize maxlength="240" style="width: 100%;"
-				></el-input>
-			</el-form-item>
-			<el-form-item label="项目范围" prop="subProjScope">
-				<el-input v-model="subPayInfoForm.subProjScope" disabled
-					type="textarea" autosize maxlength="240" style="width: 100%;"
-				></el-input>
-			</el-form-item>
-			<el-form-item label="现收" prop="subProjXSJE"
-			:rules="subPayInfoForm.subProjYSJE?subProjRuleNoReq:subProjRuleReq">
-			<el-input v-model="subPayInfoForm.subProjXSJE" style="width: 100%" clearable
-				  oninput="value=value.replace(/[^\d.]/g,'')"></el-input>
-			</el-form-item>
-			<el-form-item label="银收" prop="subProjYSJE"
-			:rules="subPayInfoForm.subProjXSJE?subProjRuleNoReq:subProjRuleReq">
-			<el-input v-model="subPayInfoForm.subProjYSJE" style="width: 100%" clearable
-				  oninput="value=value.replace(/[^\d.]/g,'')"></el-input>
-			</el-form-item>
-			<el-form-item label="已开发票金额">
-				{{subPayInfoForm.subProjFPJE?subPayInfoForm.subProjFPJE:'未开'}}
-				<!-- 
-				<el-input v-model="subPayInfoForm.subProjFPJE" style="width: 100%" clearable disabled></el-input>
-				 -->
-			</el-form-item>
-			<el-form-item label="收费情况" prop="subProjSFQK">
-			  <el-input v-model="subPayInfoForm.subProjSFQK" style="width: 100%" clearable
-				type="textarea" autosize maxlength="240"></el-input>
-			</el-form-item>
-			<el-form-item label="收费记录" prop="subProjSFJL">
-				
-			</el-form-item>
-			<el-form-item label="收费合计" prop="subProjSFHJ">
-			<el-input v-model="subPayInfoForm.subProjSFHJ" style="width: 100%" disabled
-				  oninput="value=value.replace(/[^\d.]/g,'')"></el-input>
-			</el-form-item>
+		<el-row :gutter="20">
+			<el-col :span="12">	
+				<el-form-item label="子项目号" prop="bindingSubProjNum">
+					<el-input v-model="subPayInfoForm.bindingSubProjNum" style="width: 100%"
+					type="textarea"	autosize
+					readonly></el-input>
+				</el-form-item>		
+			</el-col>
+			<el-col :span="12">		
+				<el-form-item label="收费凭证" prop="receiptType">
+					<el-input v-model="subPayInfoForm.receiptType" style="width: 100%" readonly></el-input>
+				</el-form-item>
+			</el-col>
+		</el-row>
+		<el-row :gutter="20">
+			<el-col :span="12">	
+				<el-form-item label="开票抬头" prop="invoiceTitle">
+					<el-input v-model="subPayInfoForm.invoiceTitle" style="width: 100%"
+					type="textarea"	autosize
+					readonly></el-input>
+				</el-form-item>
+			</el-col>
+			<el-col :span="12">	
+				<el-form-item label="开票税号" prop="dutyParagraph">
+					<el-input v-model="subPayInfoForm.dutyParagraph" style="width: 100%" readonly></el-input>
+				</el-form-item>
+			</el-col>
+		</el-row>
+		<el-row :gutter="20">
+			<el-col :span="12">	
+				<el-form-item label="地址" prop="address">
+					<el-input v-model="subPayInfoForm.address" style="width: 100%"
+					type="textarea"	autosize
+					readonly></el-input>
+				</el-form-item>
+			</el-col>
+			<el-col :span="12">	
+				<el-form-item label="电话" prop="telNum">
+					<el-input v-model="subPayInfoForm.telNum" style="width: 100%" readonly></el-input>
+				</el-form-item>
+			</el-col>
+			<el-col :span="12">	
+				<el-form-item label="开户行" prop="depositBank">
+					<el-input v-model="subPayInfoForm.depositBank" style="width: 100%" readonly></el-input>
+				</el-form-item>
+			</el-col>
+			<el-col :span="12">	
+				<el-form-item label="账号" prop="bankAccount">
+					<el-input v-model="subPayInfoForm.bankAccount" style="width: 100%" readonly></el-input>
+				</el-form-item>
+			</el-col>
+			<el-col :span="12">	
+				<el-form-item label="收据号" prop="quittanceNum">
+					<el-input v-model="subPayInfoForm.quittanceNum" style="width: 100%" readonly></el-input>
+				</el-form-item>
+			</el-col>
+			<el-col :span="12">	
+				<el-form-item label="收据日期" prop="quittanceDate">
+					<el-input v-model="subPayInfoForm.quittanceDate" style="width: 100%" readonly></el-input>
+				</el-form-item>
+			</el-col>
+			<el-col :span="12">	
+				<el-form-item label="发票号" prop="invoiceNum">
+					<el-input v-model="subPayInfoForm.invoiceNum" style="width: 100%" readonly></el-input>
+				</el-form-item>
+			</el-col>
+			<el-col :span="12">	
+				<el-form-item label="发票日期" prop="invoiceDate">
+					<el-input v-model="subPayInfoForm.invoiceDate" style="width: 100%" readonly></el-input>
+				</el-form-item>
+			</el-col>
+			<el-col :span="12">	
+				<el-form-item label="开票金额" prop="totalAmount">
+					<el-input v-model="subPayInfoForm.totalAmount" style="width: 100%" readonly></el-input>
+				</el-form-item>
+			</el-col>
+			<el-col :span="12">	
+				<el-form-item label="收费方式" prop="paymentType" class="red-item">
+					<el-select
+						v-model="subPayInfoForm.paymentType"
+					>
+						<el-option
+							v-for="item, index in paymentTypeOption"
+							:key="index"
+							:label="item"
+							:value="item"
+						>
+						</el-option>
+					</el-select>
+				</el-form-item>
+			</el-col>
+		</el-row>
 		</el-form>
 		<div
 		  slot="footer"
@@ -148,121 +281,239 @@
 		  <el-button
 			@click="subPayInfoEdit()"
 			type="primary"
-		  >确认更改</el-button>
+		  >确认收款</el-button>
 		</div>
+	  </el-dialog>
+	  
+	  
+	  <el-dialog :title="`问题记录 ${subProblemInfoTitle}`" :visible.sync="subProblemInfoVisible" :modal="false" v-dialogDrag width="600px"	  >
+	  		<el-form
+	  			ref="subProblemInfoForm"
+	  			:model="subProblemInfoForm"
+	  			:rules="subProblemInfoRules"
+	  			label-width="125px"
+	  		>
+	  			<el-form-item label="项目名称" prop="subProjName">
+	  				<el-input v-model="subProblemInfoForm.subProjName" readonly
+	  					type="textarea" autosize maxlength="240" style="width: 100%;"
+	  				></el-input>
+	  			</el-form-item>
+	  			<el-form-item label="项目范围" prop="subProjScope">
+	  				<el-input v-model="subProblemInfoForm.subProjScope" readonly
+	  					type="textarea" autosize maxlength="240" style="width: 100%;"
+	  				></el-input>
+	  			</el-form-item>
+	  			<el-form-item label="底单没登记" prop="subProjDDMDJ"
+	  			:rules="(subProblemInfoForm.subProjCSJL||subProblemInfoForm.subProjDJCWJL)?[]:inputReq">
+	  			  <el-input v-model="subProblemInfoForm.subProjDDMDJ" style="width: 100%" clearable
+	  			  placeholder="三个问题至少录入一个"
+	  				type="textarea" autosize maxlength="240"></el-input>
+	  			</el-form-item>
+	  			<el-form-item label="催收记录" prop="subProjCSJL"
+	  			:rules="(subProblemInfoForm.subProjDDMDJ||subProblemInfoForm.subProjDJCWJL)?[]:inputReq">
+	  			  <el-input v-model="subProblemInfoForm.subProjCSJL" style="width: 100%" clearable
+	  			  placeholder="三个问题至少录入一个"
+	  				type="textarea" autosize maxlength="240"></el-input>
+	  			</el-form-item>
+	  			<el-form-item label="登记错误记录" prop="subProjDJCWJL"
+	  			:rules="(subProblemInfoForm.subProjCSJL||subProblemInfoForm.subProjDDMDJ)?[]:inputReq">
+	  			  <el-input v-model="subProblemInfoForm.subProjDJCWJL" style="width: 100%" clearable
+	  			  placeholder="三个问题至少录入一个"
+	  				type="textarea" autosize maxlength="240"></el-input>
+	  			</el-form-item>
+	  		</el-form>
+	  		<div
+	  		  slot="footer"
+	  		  class="dialog-footer"
+	  		>
+	  		  <el-button @click="subProblemInfoVisible = false">取 消</el-button>
+	  		  <el-button
+	  			@click="subProblemInfoEdit()"
+	  			type="primary"
+	  		  >确认更改</el-button>
+	  		</div>
+	  </el-dialog>
+	  
+	  <el-dialog :title="`凭证处理 ${receiptTitle}`" :visible.sync="receiptVisible" width="1100px" top="20px">
+		<el-form
+			ref="receiptForm"
+			:model="receiptForm"
+			:rules="receiptFormRules"
+			:close-on-click-modal="false"
+			label-width="100px"
+		>
+			<el-row :gutter="20">
+				<el-col :span="8">				
+					<el-form-item label="发票金额" prop="subProjFPJE">
+					  <el-input v-model="receiptForm.subProjFPJE" style="width: 100%" clearable
+					  readonly
+					  oninput="value=value.replace(/[^\d.]/g,'')"></el-input>
+					</el-form-item>
+				</el-col>
+				<el-col :span="8">
+					<el-form-item label="收据金额" prop="subProjSJJE" >
+					  <el-input v-model="receiptForm.subProjSJJE" style="width: 100%" clearable
+					  readonly
+					  oninput="value=value.replace(/[^\d.]/g,'')"></el-input>
+					</el-form-item>
+				</el-col>
+				<el-col :span="8">	
+					<el-form-item label="无凭证金额" prop="subProjWPJE" >
+					  <el-input v-model="receiptForm.subProjSJJE" style="width: 100%" clearable
+					  readonly
+					  oninput="value=value.replace(/[^\d.]/g,'')"></el-input>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row :gutter="20">
+				<el-col :span="8">			
+					<el-form-item label="银收金额" prop="subProjYSJE">
+					  <el-input v-model="receiptForm.subProjYSJE" style="width: 100%" clearable
+					  readonly
+					  oninput="value=value.replace(/[^\d.]/g,'')"></el-input>
+					</el-form-item>
+				</el-col>
+				<el-col :span="8">	
+					<el-form-item label="现收金额" prop="subProjXSJE">
+					  <el-input v-model="receiptForm.subProjXSJE" style="width: 100%" clearable
+					  readonly
+					  oninput="value=value.replace(/[^\d.]/g,'')"></el-input>
+					</el-form-item>
+				</el-col>
+				<!-- 
+				<el-col :span="8">	
+					<el-form-item label="收费情况" prop="subProjFPTT" class="red-item">
+					  <el-input v-model="receiptForm.subProjFPTT" style="width: 100%" clearable></el-input>
+					</el-form-item>
+				</el-col>
+				 -->
+			</el-row>
+			<el-row :gutter="10" style="margin-top: 20px;">
+				<el-col :span="24">
+					<el-table :data="receiptList"
+						ref="receipttable"
+						show-summary
+						row-key="receiptId"
+						:tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+						:summary-method="getSummaries"
+						@row-click="expandSubChange"
+						default-expand-all
+						border>
+					  <el-table-column label="子项目号" prop="bindingSubProjNum" ></el-table-column>
+					  
+					  <el-table-column label="收费凭证" width="80" prop="receiptType" ></el-table-column>
+					  
+					  <el-table-column label="开票抬头" prop="invoiceTitle" ></el-table-column>
+					  
+					  <el-table-column label="开票金额" width="120" prop="totalAmount" ></el-table-column>
+					  
+					  <el-table-column label="应收费用" prop="cdReceivable" ></el-table-column>
+					  
+					  <el-table-column label="票费差额" width="80" prop="difference" >
+						  <template slot-scope="scope">
+							  <el-tag :type="newButtonTypeDifference(scope.row.difference)"
+							  v-if="scope.row.difference">
+								  {{scope.row.difference}}
+							  </el-tag>
+						  </template>
+					  </el-table-column>
+					  
+					  <!-- 
+					  <el-table-column label="子项目id" prop="bindingSubProjId" ></el-table-column>
+					  -->
+					  <el-table-column label="录入日期" width="90" prop="createdDate" >
+						  <template slot-scope="scope">
+							  <div
+							  v-if="!isNaN(parseFloat(scope.row.receiptId))">
+								{{scope.row.createdDate}}
+							  </div>
+						  </template>
+					  </el-table-column>
+					  
+					  <el-table-column label="其他信息"  width="150" prop="" >
+						  <template slot-scope="scope">
+							<div
+							v-if="!isNaN(parseFloat(scope.row.receiptId))">
+								<div
+								v-if="scope.row.receiptType.indexOf('发票')!=-1">
+									发票编号: {{scope.row.invoiceNum}}
+									<br>
+									<span
+									v-if="scope.row.invoiceDate">
+										发票日期: {{scope.row.invoiceDate}}
+									</span>
+									<span
+									v-else>
+										发票日期: <el-tag type="warning">未开票</el-tag>
+									</span>
+								</div>
+								<div
+								v-else-if="scope.row.receiptType == '开收据'">	
+									收据编号: {{scope.row.quittanceNum}}
+									<br>
+									<span
+									v-if="scope.row.quittanceDate">
+										收据日期: {{scope.row.quittanceDate}}
+									</span>
+									<span
+									v-else>
+										收据日期: <el-tag type="warning">未开具</el-tag>
+									</span>
+								</div>
+									收款方式: {{scope.row.paymentType}}
+								<br>
+								<span
+								v-if="scope.row.collectionDate">
+									收款日期: {{scope.row.collectionDate}}
+								</span>
+								<span
+								v-else>
+									收款日期: <el-tag type="warning">未收款</el-tag>
+								</span>
+							
+							</div>
+						  </template>
+					  </el-table-column>
+					
+					  <el-table-column label="操作" width="150">
+						<template slot-scope="scope">
+							<div
+							v-if="!isNaN(parseFloat(scope.row.receiptId))">
+							<el-button
+							  type="primary"
+								size="mini"
+							  @click="editBillSubProj(scope.row)"
+							>开票</el-button>
+							<el-button
+							  type="success"
+								size="mini"
+							  @click="editPaySubProj(scope.row)"
+							>收款</el-button>  
+							</div>
+							<div
+							v-else>
+								<el-button
+								  type="success"
+									size="mini"
+								  @click=""
+								>点击展合</el-button>
+							</div>
+						</template>
+					  </el-table-column>
+					</el-table>
+				</el-col>
+			</el-row>
+		</el-form>
 	  </el-dialog>
 	  
 	  
 	  <!-- 211028变动 新增: 多个公司切换 -->
 	  <el-tabs v-model="companyId" type="card" @tab-click="handleTabsClick">
 	    <el-tab-pane label="惠正公司" name="HZ"></el-tab-pane>
-	    <el-tab-pane label="智明公司" name="ZM"></el-tab-pane>
-	    <el-tab-pane label="汇正公司" name="HZKJ"></el-tab-pane>
+	    <el-tab-pane label="智明公司" name="ZM" disabled></el-tab-pane>
+	    <el-tab-pane label="汇正公司" name="HZKJ" disabled></el-tab-pane>
 	  </el-tabs>
 	  
-	  <!-- 
-      <el-row :gutter="20">
-        <el-col :span="8">
-          <el-card :body-style="{ padding: '0px' }">
-            <div class="grid-content grid-con-1">
-              <i class="el-icon-lx-edit grid-con-icon"></i>
-              <div class="grid-cont-right">
-                <div class="grid-num">{{missionData.onGoing}}</div>
-                <div>待完成项目</div>
-              </div>
-            </div>
-          </el-card>
-        </el-col>
-        <el-col :span="8">
-          <el-card :body-style="{ padding: '0px' }">
-            <div class="grid-content grid-con-3">
-              <i class="el-icon-lx-warn grid-con-icon"></i>
-              <div class="grid-cont-right">
-                <div class="grid-num">{{missionData.urgent}}</div>
-                <div>紧急项目</div>
-              </div>
-            </div>
-          </el-card>
-        </el-col>
-        <el-col :span="8">
-          <el-card :body-style="{ padding: '0px' }">
-            <div class="grid-content grid-con-2">
-              <i class="el-icon-bell grid-con-icon"></i>
-              <div class="grid-cont-right">
-                <div class="grid-num">{{missionData.new}}</div>
-                <div>本日新项目</div>
-              </div>
-            </div>
-          </el-card>
-        </el-col>
-      </el-row>
-      <div class="search">
-        <el-row :gutter="10">
-          <el-col :span="4">
-            <el-input
-              v-model="searchData.projNum"
-              placeholder="计划编号"
-              @keyup.enter.native="getData"
-            ></el-input>
-          </el-col>
-          <el-col :span="4">
-            <el-input
-              v-model="searchData.reportNum"
-              placeholder="报告号"
-              @keyup.enter.native="getData"
-            ></el-input>
-          </el-col>
-          <el-col :span="5">
-            <el-input
-              v-model="searchData.projName"
-              placeholder="项目名称"
-              @keyup.enter.native="getData"
-            ></el-input>
-          </el-col>
-          <el-col :span="5">
-            <el-input
-              v-model="searchData.projScope"
-              placeholder="项目范围"
-              @keyup.enter.native="getData"
-            ></el-input>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-button
-              icon="el-icon-search"
-              @click="getData"
-              type="text"
-              size="medium"
-            >搜 索</el-button>
-            <el-button
-              @click="reset"
-              type="text"
-              icon="el-icon-refresh-right"
-              size="medium"
-            >重 置</el-button>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col>
-            <el-switch
-              v-model="onGoing"
-              active-text="进行中项目"
-              inactive-text="所有项目"
-              @change="getData"
-            ></el-switch>
-          </el-col>
-        </el-row>
-      </div>
-	  -->	 
-	   
-	   
-      <!-- table multipleTable @row-dblclick="handleHandle" -->
-	  <!-- 	  
-	  class="table"
-	  height="600"
-	  style="width: 100%"
-	  -->
       <el-table
         ref="table"
         :data="tableData.slice((currentPage - 1) * pageSize, currentPage * pageSize)"
@@ -275,7 +526,7 @@
 		:expand-row-keys="expands"
 		
 		@row-click="rowClick"
-		:row-key="getRowKeys"
+		row-key="projId"
       >	  
 	  <!-- 展开行  v-loading="expandLoading"element-loading-text="Loading"-->
 	  <el-table-column type="expand" width="20">
@@ -316,10 +567,11 @@
 	        </el-table-column>
 			<el-table-column
 			  label="操作"
-			  width="220"
+			  width="150"
+			  align="center"
 			>
 			  <template slot-scope="scope"> 
-								
+				<!-- 				
 			    <el-button
 			      type="primary"
 				  size="mini"
@@ -331,19 +583,20 @@
 				  size="mini"
 			      @click="editBillSubProj(scope.row)"
 			    >发票</el-button>
-				
+				 -->
+				<el-button
+				  type="primary"
+				  size="mini"
+				  @click="jumpToSubHandleCheck(scope.row)"
+				  :disabled="scope.row.subProjStatus.mainStatus>0?false:true"
+				>审核</el-button>
+				<!-- 
 			    <el-button
 			      type="warning"
 				  size="mini"
 			      @click="jumpToSubHandle(scope.row)"
 			    >修改</el-button>
-				
-				<el-button
-				  type="success"
-				  size="mini"
-				  @click="jumpToSubHandleCheck(scope.row)"
-				>审核</el-button>
-								
+				 -->				
 			    <el-button
 			      type="primary"
 				  size="mini"
@@ -365,25 +618,6 @@
 	    </template>
 	  </el-table-column>
 	  
-	    <!-- 
-        <el-table-column
-          prop="projState"
-          label="项目状态"
-          width="80"
-          align="center"
-        >
-          <template slot-scope="props">
-            <el-tag
-                  :type="tagType(props.row.projState)"
-                  disable-transitions
-              >
-                <span v-if="props.row.projState == 0">进行中</span>
-                <span v-if="props.row.projState == 1">已完成</span>
-                <span v-if="props.row.projState == 2">中止</span>
-            </el-tag>
-          </template>
-        </el-table-column>
-		 -->
         <el-table-column
           prop="projDate"
           label="编制日期"
@@ -419,6 +653,30 @@
           label="项目负责人"
           width="110"
         >
+			<template slot-scope="scope">
+				<div style="text-align: left;">
+				    <el-popover trigger="hover" placement="left-end" title="项目组成员">
+						<span>项目负责人: </span><br>
+						<span>{{scope.row.projLeader}}</span>
+						</p><br>
+						<span>项目复核人: </span><br>
+						<span>{{scope.row.projReviewer}}</span>
+						</p><br>
+						<span>助理: </span><br>
+						<span>{{scope.row.projAsst}}</span>
+						<div slot="reference" class="name-wrapper">
+							{{scope.row.projLeader}}
+						</div>
+				    </el-popover>
+				</div>
+			</template>
+		</el-table-column>
+		<!-- 
+        <el-table-column
+          prop="projLeader"
+          label="项目负责人"
+          width="110"
+        >
         </el-table-column>
         <el-table-column
           prop="projReviewer"
@@ -432,6 +690,7 @@
           width="110"
         >
         </el-table-column>
+		 -->
         <!-- <el-table-column
           prop="projState"
           label="项目进度"
@@ -443,22 +702,31 @@
           </template>
         </el-table-column> -->
 		
-		<!-- 
+		
         <el-table-column
           label="操作"
           align="center"
-          width="120"
+          width="150"
         >
           <template slot-scope="scope">
+			<el-button
+			  type="text"
+			  icon="el-icon-s-claim"
+			  @click=""
+			  size="medium"
+			>登记</el-button>
+			
+			<!-- @click.native.stop="editReceiptSubProj(scope.row)" -->
+			
             <el-button
               type="text"
-              icon="el-icon-s-order"
-              @click="handleHandle(scope.row)"
+              icon="el-icon-bank-card"
+              @click="editReceiptSubProj(scope.row)"
               size="medium"
-            >处理项目</el-button>
+            >凭证</el-button>
           </template>
         </el-table-column>
-		 -->
+		
       </el-table>
       <div class="pagination">
         <el-pagination
@@ -475,19 +743,10 @@
 <script>
 import CryptoJS from 'crypto-js'
 import {
-  getAllAbstractProject,
-  searchMyProject,
-  getReportNum,
-  createReportNum,
-  alterProjType,
-  getSubReportNum,
-  addSubReportNum,
-  deleteReportNum
-} from '@/api/index'
-import {getCurrentMission} from '@/api/statistics'
-import { getSubProjectInfoList, getManageRegisterList } from '@/api/subReport'
+  getAllAbstractProject, searchMyProject, getReportNum, createReportNum, alterProjType, getSubReportNum, addSubReportNum, deleteReportNum} from '@/api/index'
+import { getSubProjectInfoList, getManageRegisterList, getReceiptList, getRegisterList } from '@/api/subReport'
 export default {
-  name: 'workbranch',
+  name: 'workbranchcheck',
   data() {
     return {		
       currentPage: 1, // 当前页码
@@ -504,14 +763,6 @@ export default {
         { value: '1042', label: '资产咨询' },
         { value: '1043', label: '土地咨询' }
       ],
-      getNumVisible: false,
-      changeNumVisible: false,
-      innerVisible: false,
-      arrMemberVisible: false,
-      changeType: {
-        projId: '',
-        toType: ''
-      },
 	  searchData:{
 		projNum: '',
 		reportNum: '',
@@ -519,12 +770,6 @@ export default {
 		projScope: '',  
 	  },
 	  
-      midNum: 0,
-      date1: '',
-      getNumType: 0,
-      getNumData: {},
-      getSubNum: '',
-      projLeaderFilter: [{ text: '我负责的项目', value: '' }],
       timestamp: 0,
 	  
 	  	  
@@ -551,54 +796,30 @@ export default {
 	  subBillInfoVisible:false,
 	  subBillInfoTitle:'',
 	  subBillInfoForm:{
-		subProjId: "", //子项目id
-		subProjNum: "", //子项目报告号
-		subProjName: "", //项目名称
-		subProjScope: "", //项目范围
-		
-		subProjFPTT: "", //归档发票抬头
-		subProjFPJE: "", //已开发票金额
-		subProjSJJE: "", //已开收据金额
+		receiptId: '', //凭证id
+		bindingSubProjNum: '', //子项目号
+		receiptType:'', //收费凭证
+		invoiceTitle:'', //开票抬头
+		dutyParagraph:'', //开票税号
+		totalAmount:'',  //开票金额
+		address: '',//地址
+		telNum: '',//电话
+		depositBank: '',//开户行
+		bankAccount: '',//账号
+		quittanceNum: '', //收据号
+		quittanceDate: '', //收据日期		
+		invoiceNum:'', //发票号
 	  },
 	  subBillInfoRules:{
-		  subProjFPTT:[{ required: true, message: '请输入归档发票抬头', trigger: 'blur' }],
-		  subProjFPJE:[
-			{ required: true, message: '请输入已开发票金额', trigger: 'blur' },
-			{
-				validator: (rule, value, callback) => {
-					if(value){
-						if (/^(([1-9]{1}\d*)|(0{1}))(\.\d{0,2})?$/.test(value) == false) {
-							callback(new Error("请输入正确金额"));
-						} else {
-							callback();
-						}
-					}else{
-						callback();
-					}
-				}, trigger: 'blur',
-			}
-		  ],
-		  subProjSJJE:[
-			{
-				validator: (rule, value, callback) => {
-					if(value){
-						if (/^(([1-9]{1}\d*)|(0{1}))(\.\d{0,2})?$/.test(value) == false) {
-							callback(new Error("请输入正确金额"));
-						} else {
-							callback();
-						}
-					}else{
-						callback();
-					}
-				}, trigger: 'blur',
-			}
-		  ],
+		invoiceNum: [{ required: true, message: '请输入发票号', trigger: 'blur' }],
 	  },
+	  quittanceNumRules: [{ required: true, message: '请输入收据号', trigger: 'blur' }],
 	  
 	  //问题记录
 	  subProblemInfoVisible:false,
 	  subProblemInfoTitle:'',
 	  subProblemInfoForm:{
+		projId: "", //子项目id
 		subProjId: "", //子项目id
 		subProjNum: "", //子项目报告号
 		subProjName: "", //项目名称
@@ -610,139 +831,57 @@ export default {
 	  subProblemInfoRules:{
 	  },
 	  
-	  //收费录入
+	  inputReq:[{ required: true, message: '请输入', trigger: 'blur' }],
+	  
+	  //收款处理
 	  subPayInfoVisible:false,
 	  subPayInfoTitle:'',
 	  subPayInfoForm:{
+		receiptId: '', //凭证id
+		bindingSubProjNum: '', //子项目号
+		receiptType:'', //收费凭证
+		invoiceTitle:'', //开票抬头
+		dutyParagraph:'', //开票税号
+		totalAmount:'',  //开票金额
+		address: '',//地址
+		telNum: '',//电话
+		depositBank: '',//开户行
+		bankAccount: '',//账号		
+		quittanceNum:'', //收据号
+		quittanceDate:'', //收据日期
+		invoiceNum:'', //发票号
+		invoiceDate:'', //发票日期
+		paymentType: '', //现收或银收
+	  },
+	  subPayInfoRules:{
+		paymentType:[{ required: true, message: '请选择',trigger: 'blur'}],
+	  },
+	  paymentTypeOption:['现收', '银收', '待定'],
+	  
+	  //凭证信息
+	  receiptList:[],
+	  receiptVisible:false,
+	  receiptTitle:'',
+	  receiptForm:{
+		projId: "", //子项目id
 		subProjId: "", //子项目id
 		subProjNum: "", //子项目报告号
 		subProjName: "", //项目名称
 		subProjScope: "", //项目范围
 		
-		//subProjSFFS: ["现收","银收"],
-		//subProjSFJE: "",
-		subProjXSJE: "", //现收
-		subProjYSJE: "", //银收
-		subProjSFQK: "", //收费情况
-		subProjSFJL: [], //收费记录
-		subProjSFHJ: "", //收费合计
+		subProjXSJE: "", //现收合计金额
+		subProjYSJE: "", //银收合计金额
 		
-		subProjFPJE:"", //已开发票金额
+		subProjFPJE: "", //已开发票金额
+		subProjSJJE: "", //已开收据金额
+		subProjWPJE: "", //没开凭证金额
+		
+		subProjSFQK: "", //收费情况 每笔收费情况
+		
 	  },
-	  subPayInfoRules:{
-		/* 
-		subProjSFFS:[
-			{ required: true, message: '请选择收费方式', trigger: 'blur' },
-		],  
-		subProjSFJE:[
-			{ required: true, message: '请输入收费金额', trigger: 'blur' },
-			{
-				validator: (rule, value, callback) => {
-					if(value){
-						if (/^(([1-9]{1}\d*)|(0{1}))(\.\d{0,2})?$/.test(value) == false) {
-							callback(new Error("请输入正确金额"));
-						} else {
-							callback();
-						}
-					}else{
-						callback();
-					}
-				}, trigger: 'blur',
-			}
-		], 
-		 */
-		subProjXSJE:[
-			{
-				validator: (rule, value, callback) => {
-					if(value){
-						if (/^(([1-9]{1}\d*)|(0{1}))(\.\d{0,2})?$/.test(value) == false) {
-							callback(new Error("请输入正确金额"));
-						} else {
-							callback();
-						}
-					}else{
-						callback();
-					}
-				}, trigger: 'blur',
-			}
-		], 
-		subProjYSJE:[
-			{
-				validator: (rule, value, callback) => {
-					if(value){
-						if (/^(([1-9]{1}\d*)|(0{1}))(\.\d{0,2})?$/.test(value) == false) {
-							callback(new Error("请输入正确金额"));
-						} else {
-							callback();
-						}
-					}else{
-						callback();
-					}
-				}, trigger: 'blur',
-			}
-		], 
-		subProjSFHJ:[
-			{
-				validator: (rule, value, callback) => {
-					if(value){
-						if (/^(([1-9]{1}\d*)|(0{1}))(\.\d{0,2})?$/.test(value) == false) {
-							callback(new Error("请输入正确金额"));
-						} else {
-							callback();
-						}
-					}else{
-						callback();
-					}
-				}, trigger: 'blur',
-			}
-		], 
-	  },
-	  subProjRuleNoReq:[
-		{
-			validator: (rule, value, callback) => {
-				if(value){
-					if (/^(([1-9]{1}\d*)|(0{1}))(\.\d{0,2})?$/.test(value) == false) {
-						callback(new Error("请输入正确金额"));
-					} else {
-						callback();
-					}
-				}else{
-					callback();
-				}
-			}, trigger: 'blur',
-		}  
-	  ],
-	  subProjRuleReq:[
-		{ required: true, message: '请填写现收或银收',trigger: 'blur'},
-		{
-			validator: (rule, value, callback) => {
-				if(value){
-					if (/^(([1-9]{1}\d*)|(0{1}))(\.\d{0,2})?$/.test(value) == false) {
-						callback(new Error("请输入正确金额"));
-					} else {
-						callback();
-					}
-				}else{
-					callback();
-				}
-			}, trigger: 'blur',
-		}  
-	  ],
+	  receiptFormRules:{},
 	  
-	  dialogVisible:false,
 	  
-	  dialogFormVisible: false,
-	  form: {
-		name: '',
-		region: '',
-		date1: '',
-		date2: '',
-		delivery: false,
-		type: [],
-		resource: '',
-		desc: ''
-	  },
-	  formLabelWidth: '120px',
     };
   },
   computed:{
@@ -776,6 +915,34 @@ export default {
 			}
 		}
 	},
+	
+	newTagValue(){
+		return (data)=>{
+			if(data == "0"){
+				return "未提交";
+			}else if(data == "1"){
+				return "待审核";
+			}else if(data == "2"){
+				return "待修改";
+			}else if(data == "3"){
+				return "已通过";
+			}else{
+				return "未提交";
+			}
+		}
+	},
+		
+	newButtonTypeDifference(){
+		return (data)=>{
+			if(data == '一致'){
+				return "success";
+			}else if(data < 0){
+				return "warning";
+			}else{
+				return "danger";
+			}
+		}
+	},
   },
   created() {
 	//211028变动 新增: 多个公司切换
@@ -799,237 +966,57 @@ export default {
     let date = new Date()
     this.timestamp = date.getTime() - date.getHours()*60*60*1000
     console.log(this.timestamp)
-    //this.projLeaderFilter[0].value = localStorage.getItem('staffName')
   },
   methods: {
-    projLeaderFilterHandler(value, row, column) {
-      const property = column['property'];
-      return row[property] === value;
-    },
-    // deleteReportNum(reportNum) {
-    //   deleteReportNum({ reportNum: reportNum }).then(res => {
-    //     this.$message.success('删除成功');
-    //     this.getNumVisible = false
-    //     this.getData();
-    //   }).catch(err => {
-    //     this.$message.error('删除失败');
-    //   })
-    // },
-	
-	/* 
-    alterProjType() {
-      console.log('this.changeType', this.changeType);
-      if (this.changeType.toType == '') {
-        this.$message.info('请选择修改类型');
-      } else {
-        alterProjType(this.changeType)
-          .then(res => {
-            this.$message.success('修改成功');
-            this.changeNumVisible = false;
-            this.getData();
-          })
-          .catch(err => {
-            this.$message.error('修改失败');
-          });
-      }
-    },
-	 */
-	
-    //完整号显示
-    changeNum(num, type) {
-      if (num) {
-        const comp = '惠正';
-        const year = '[' + num.substr(0, 4) + ']';
-        const lastNum = '第' + num.substr(4) + '号';
-        let midType = '';
-        let numType = '';
-        if (
-          this.getNumData.projType == 1010 ||
-          this.getNumData.projType == 1020 ||
-          this.getNumData.projType == 1030
-        ) {
-          if (this.getNumData.projType == 1010) {
-            midType = '房地';
-          } else if (this.getNumData.projType == 1020) {
-            midType = '土地';
-          } else {
-            midType = '资产';
-          }
-          if (type == 1) {
-            numType = '初评字';
-          } else if (type == 2) {
-            numType = '估字';
-          } else if (type == 3) {
-            numType = '资字';
-          }
-        } else if (
-          this.getNumData.projType == 1061 ||
-          this.getNumData.projType == 1062 ||
-          this.getNumData.projType == 1063
-        ) {
-          midType = '申报字';
-        } else if (this.getNumData.projType == 1090) {
-          midType = '绩效评字';
-        } else if (
-          this.getNumData.projType == 1050 ||
-          this.getNumData.projType == 1080
-        ) {
-          midType = '资字';
-        } else if (this.getNumData.projType == 1070) {
-          midType = '测绘';
-        } else if (this.getNumData.projType == 1100) {
-          midType = '函';
-        }
-        if (type == 4) {
-          midType = '函';
-          numType = '';
-        }
-        return comp + midType + numType + year + lastNum;
-      } else {
-        return '';
-      }
-    },
-    changeProjType(data) {
-      console.log('data>>>', data);
-      this.changeType.projId = data.projId;
-      this.changeNumVisible = true;
-      let selOption = this.typeOptions;
-      const index = selOption.findIndex((item, index, arr) => {
-        console.log('value>>>', item);
-        return item.value == data.projType;
-      });
-      //selOption.splice(index, 1)
-      this.typeOptions = selOption;
-    },
+		
     getData() {
-	  /* 
-      if (sessionStorage.getItem('page')) {
-        this.changePage(parseInt(sessionStorage.getItem('page')));
-        sessionStorage.removeItem('page');
-      }
-	  */
-	  //220220 
+	  //重置表格展开
 	  this.expands = [];
-	  /* 
-	  this.expands = {
-	    expand_id:'',
-	    expand_status:false,
-	  };
-	 */
-	  //211029变动 新增: 多个公司切换
 	  
+	  //重置分页信息
 	  this.currentPage = 1;
-	  this.tableData=[];
 	  this.pageTotal = 0;
 	  
-      getManageRegisterList(this.searchData, this.companyId)
-        .then(res => {
-			
-		  if(this.onGoing){
-			let arr = []
-			for(let i of res.data) {
-			  if(i.projState == 0) {
-			    arr.push(i)
-			  }
-			}
-			this.tableData = arr;
-			this.pageTotal = arr.length;  
-		  }else{
-			this.tableData = res.data;
-			this.pageTotal = res.data.length;  
-		  }
-		  //console.log(this.tableData)
-        })
-        .catch(err => {
-          console.log('field to search myproject');
-        })
-		
-		//211029变动 新增: 多个公司切换
-		const missionData = {
-		} 
-        getCurrentMission(missionData, this.companyId)
-          .then(res => {
-            this.missionData = res.data
-            console.log(this.missionData)
-          })
-          .catch(err => {
-            console.log('error', err)
-          })
+	  //刷新项目处理列表
+	  this.getManageRegisterListData({}, (mrRes)=>{
+	  	this.tableData = mrRes.data;
+	  	this.pageTotal = mrRes.length;
+	  });
     },
 	
-	/* 
-    getOnGoingProj() {
-      if (this.onGoing == true) {
+	getManageRegisterListData(searchData, successc) {
 		
-		this.currentPage = 1;
-		this.tableData=[];
-		this.pageTotal = 0;
-        searchMyProject(this.searchData, this.companyId)
-        .then(res => {
-          let arr = []
-          for(let i of res.data) {
-            if(i.projState == 0) {
-              arr.push(i)
-            }
-          }
-          this.tableData = arr;
-		  this.pageTotal = arr.length;
-        })
-        .catch(err => {})
-      } else {
-        this.reset()
-      }
-    },
-	 */
-    showOnlyPl(){
-      var list = this.tableData
-    },
+		getManageRegisterList(searchData, this.companyId)
+		.then(res => {
+			if (res.statusCode == 200) {
+				successc(res);
+			}
+		})
+		.catch(err => {
+		  console.log('项目处理列表', err)
+		})
+	},
+	
     reset() {
+		//重置分页信息
 	  this.currentPage = 1;
 	  this.tableData=[];
 	  this.pageTotal = 0;
 	  this.onGoing = false;
 	  Object.keys(this.searchData).forEach(key => (this.searchData[key] = ''))
 	  
-      searchMyProject(this.searchData, this.companyId)
-        .then(res => {
-          console.log(res.data);
-          this.tableData = res.data;
-          this.pageTotal = res.data.length;
-        })
-        .catch(err => {
-          console.log('field to search');
-        });
+      //刷新项目处理列表
+      this.getManageRegisterListData({}, (mrRes)=>{
+      	this.tableData = mrRes.data;
+      	this.pageTotal = mrRes.length;
+      });
+		
     },
-	/* 
-    handleDetail(val) {
-      sessionStorage.setItem('page', this.currentPage);
-      // const index2 = (this.currentPage - 1)*10 + index
-      console.log('当前行信息 >>>', val);
-      this.$router.push({ path: '/projcheck', query: { data: val.projId } });
-    },
-	 */
-    handleHandle(val) {
-	  //211202 处理页面跳转返回
-	  //this.pageInfoSave();			
-      //sessionStorage.setItem('page', this.currentPage);
-	  
-	  const key = this.newCode(val.projId);
-	  
-	  this.$router.push({ path: '/workhandlecheck', query: { data: key } })
-    },
+	
+	//分页
     changePage(val) {
       console.log(val);
       this.currentPage = val;
-    },
-    tagType(val) {
-      if (val == 0) {
-        return 'primary'
-      } else if (val == 1) {
-        return 'success'
-      } else if (val == 2) {
-        return 'danger'
-      }
     },
 	
 	//211028变动 新增: 多个公司切换
@@ -1113,16 +1100,12 @@ export default {
 	},
 	
 	
-	//展开行
-	
+	//展开行	
 	rowClick(row,index) {
 	  this.$refs.table.toggleRowExpansion(row)
 	},
 	
-	expandChange(row,expandedRows) {
-	  console.log('row', row)
-	  console.log('expandedRows', expandedRows)
-		
+	expandChange(row,expandedRows) {		
 	  if (expandedRows.length) {
 	    this.expands = []
 	    if (row) {
@@ -1135,33 +1118,59 @@ export default {
 	    this.expands = []// 默认不展开
 	  }
 	},	
-	
+	/* 
 	getRowKeys(row) {
 	  return row.projId
 	},
-	
 	getSubRowKeys(row){
 		return row.subProjNum
 	},
-	  
+	 */
+	
+	//子表格
 	getTableInfo(projId){
 		this.subProjdataList = [];
-		
+		/* 
 		const projData = {
 			projId: projId,
 		}
 		getSubProjectInfoList(projData, this.companyId)
 		.then(res => {
+			console.log('subList',  res.data)
 		    this.subProjdataList = res.data
 		})
 		.catch(err => {
 		})
-	},
-	handleClick(data){
-	  console.log(data);
+		 */
+		
+		this.getSubProjectInfoListData(projId, (splData)=>{
+		    this.subProjdataList = splData
+			console.log('splData', splData)
+		})
+		
+		this.getRegisterListData(projId, (relData)=>{
+		    //this.subProjdataList = relData
+			console.log('relData', relData)
+		})
 	},
 	
-	//子项目处理按钮  
+	//子项目列表
+	getSubProjectInfoListData(projId, successc) {
+		const projData = {
+			projId: projId,
+		}
+		getSubProjectInfoList(projData, this.companyId)
+		.then(res => {
+			if (res.statusCode == 200) {
+				successc(res.data);
+			}
+		})
+		.catch(err => {
+			console.log('子项目列表', err)
+		})
+	},
+	
+	//子表格 处理登记信息审核
 	//跳转正评修改页
 	jumpToSubHandle(subData) {
 		this.$router.push({ path: '/worksubregister', query: { projId: subData.projId, data: subData.subProjId } })
@@ -1177,24 +1186,264 @@ export default {
 		
 	},
 	
+	
+	//子表格 处理凭证信息审核
+		
+	//刷新凭证
+	reflashReceiptList(projId){
+		this.getReceiptListData(projId, (rlData)=>{
+			//this.receiptList = rlData
+			this.getRegisterListData(projId, (relData)=>{
+			//	this.registerList = relData
+				//const relData = this.subProjdataList;
+				
+				console.log('rlData', rlData)
+				console.log('relData', relData)
+				
+				var rTotal={
+					xs:0,
+					ys:0,
+					fp:0,
+					fpok:0,
+					sj:0,
+					sjok:0,
+					wp:0,
+					wpok:0,
+				}
+				
+				//循环得到项目应收费
+				var newList = [];
+				var newItem = {};
+				rlData.forEach((item, index) =>{
+					if(item.receiptType == '专用发票' || item.receiptType == '普通发票'){
+						rTotal.fp += parseFloat(item.totalAmount);
+						if(item.paymentType){
+							rTotal.fpok += parseFloat(item.totalAmount);
+						}
+					}else if(item.receiptType == '开收据'){
+						rTotal.sj += parseFloat(item.totalAmount);
+						if(item.paymentType){
+							rTotal.sjok += parseFloat(item.totalAmount);
+						}
+					}else{
+						rTotal.wp += parseFloat(item.totalAmount);
+						if(item.paymentType){
+							rTotal.wpok += parseFloat(item.totalAmount);
+						}
+					}
+					
+					if(item.paymentType == '现收'){
+						rTotal.xs += parseFloat(item.totalAmount);
+					}else if(item.paymentType == '银收'){
+						rTotal.ys += parseFloat(item.totalAmount);
+					}
+					
+					//当多项时, 作为1层
+					if(item.makeOutPattern == 1){
+						newItem = item
+						var cdReceivable = 0;
+						relData.forEach((item2, index2) =>{
+							if(item.bindingSubProjId.indexOf(item2.subProjId) != -1){
+								cdReceivable += parseFloat(item2.cdReceivable)
+							}
+						});
+						newItem.cdReceivable = cdReceivable;
+						newList.push(newItem)
+					}else{
+						//判断1层列表是否存在
+						const findres = newList.find((ev) => {
+							return ev.bindingSubProjId === item.bindingSubProjId;
+						});
+						
+						if (findres == undefined){
+							//不存在 undefined, 作为第一层, 原来item作为第二层
+							
+							var itemtemp = item							
+							//获取cdReceivable
+							const findreceivable = relData.find((ev) => {
+								return ev.subProjId === item.bindingSubProjId;
+							});							
+							if(findreceivable != undefined){
+								//找到
+								itemtemp.cdReceivable =  parseFloat(findreceivable.cdReceivable)
+							}
+							
+							newItem = Object.assign({}, itemtemp)
+							newItem.receiptId = 'new'+ newItem.receiptId;
+							
+							newItem.receiptType = '';
+							newItem.invoiceTitle = '';
+							newItem.paymentType = '';
+							newItem.quittanceNum = '';
+							newItem.quittanceDate = '';
+							newItem.invoiceNum = '';
+							newItem.invoiceDate = '';
+							newItem.collectionDate = '';
+							newItem.children = [];
+							
+							newItem.children.push(itemtemp)
+							newList.push(newItem)
+						}else{
+							//已经存在
+							var itemtemp = item							
+							//获取cdReceivable
+							const findreceivable = relData.find((ev) => {
+								return ev.subProjId === item.bindingSubProjId;
+							});							
+							if(findreceivable != undefined){
+								//找到
+								itemtemp.cdReceivable = parseFloat(findreceivable.cdReceivable)
+							}
+							
+							const findIndex = newList.findIndex((ev) => {
+								return ev.bindingSubProjId === item.bindingSubProjId;
+							});
+							//开票金额相加
+							newList[findIndex].totalAmount =  parseFloat(newList[findIndex].totalAmount) + parseFloat(itemtemp.totalAmount);
+							
+							newList[findIndex].children.push(itemtemp)
+						}
+					}
+				});
+				
+				console.log('newList', newList)
+				
+				//循环newList 计算差值
+				newList.forEach((item, index, newList) =>{
+					newList[index].difference = parseFloat(newList[index].cdReceivable) -  parseFloat(newList[index].totalAmount)
+					if(newList[index].difference === 0){
+						newList[index].difference = '一致'
+					}
+				});
+				
+				this.receiptList = newList;
+				
+				//console.log('rTotal', rTotal)
+				
+				//对话框表单
+				this.receiptForm.subProjXSJE = rTotal.xs; //现收合计金额
+				this.receiptForm.subProjYSJE = rTotal.ys; //银收合计金额				
+				this.receiptForm.subProjFPJE = "开: " + rTotal.fp + " / 收: " + rTotal.fpok; //发票金额
+				this.receiptForm.subProjSJJE = "开: " + rTotal.sj + " / 收: " + rTotal.sjok; //收据金额
+				this.receiptForm.subProjWPJE = "开: " + rTotal.wp + " / 收: " + rTotal.wpok; //无凭证金额 = receiptForm;
+				
+			});
+		});
+	},	
+	//凭证列表信息
+	getReceiptListData(projId, successc) {
+	  //211101变动 新增: 多个公司切换
+		const listData = {
+			projId: projId,
+		}
+		getReceiptList(listData, this.companyId)
+	    .then(res => {
+			if (res.statusCode == 200) {
+				successc(res.data);
+			}
+	    })
+	    .catch(err => {
+	      console.log('凭证列表信息', err)
+	    })
+	},
+	
+	//项目登记列表信息
+	getRegisterListData(projId, successc) {
+	  //211101变动 新增: 多个公司切换
+		const listData = {
+			projId: projId,
+		}
+		getRegisterList(listData, this.companyId)
+	    .then(res => {
+			if (res.statusCode == 200) {
+				successc(res.data);
+			}
+	    })
+	    .catch(err => {
+	      console.log('项目登记列表信息', err)
+	    })
+	},
+	
+	editReceiptSubProj(projData) {
+		//this.$message("收费凭证处理")
+		this.receiptTitle = projData.projNum;
+				
+		//初始化表单
+		const receiptForm={
+			projId: projData.projId, //项目id
+			subProjId: '', //子项目id
+			
+			subProjXSJE: "", //现收合计金额
+			subProjYSJE: "", //银收合计金额
+			
+			subProjFPJE: "", //发票金额
+			subProjSJJE: "", //收据金额
+			subProjWPJE: "", //无凭证金额
+			
+			subProjSFQK: "", //收费情况 每笔收费情况
+		}
+		this.receiptForm = receiptForm;
+		
+		//读取对应发票列表
+		this.reflashReceiptList(projData.projId)
+		
+		
+		this.receiptVisible = true
+	},
+	
+	getSummaries(param) {
+		const { columns, data } = param;
+		const sums = [];
+		columns.forEach((column, index) => {
+		  if (index === 0) {
+			sums[index] = '合计';
+			return;
+		  }
+		  
+		  if(index === 3 || index === 4){
+			const values = data.map(item => Number(item[column.property]));
+			if (!values.every(value => isNaN(value))) {
+				sums[index] = values.reduce((prev, curr) => {
+				  const value = Number(curr);
+				  if (!isNaN(value)) {
+					return prev + curr;
+				  } else {
+					return prev;
+				  }
+				}, 0);
+				sums[index] = sums[index].toFixed(2) + '元';
+			}  
+		  }
+		});
+	
+		return sums;
+	},
+	expandSubChange(row,index,e){
+	  this.$refs.receipttable.toggleRowExpansion(row)
+	},
+	
+	//收费录入
 	editPaySubProj(subData) {
 		//this.$message("收费录入")
-		this.subPayInfoTitle = "".concat("计划编号:", subData.projId, subData.subProjNum?" 子报告号:"+subData.subProjNum:"");
+		this.subPayInfoTitle = "";
 		
 		//初始化表单
 		const subPayInfoForm={
-			subProjId: subData.projId, //子项目id
-			subProjNum: subData.subProjNum, //子项目报告号
-			subProjName: subData.subProjName, //项目名称
-			subProjScope: subData.subProjScope, //项目范围
-			
-			subProjXSJE: subData.subProjXSJE, //现收
-			subProjYSJE: subData.subProjYSJE, //银收
-			subProjSFQK: subData.subProjSFQK, //收费情况
-			subProjSFJL: subData.subProjSFJL, //收费记录
-			subProjSFHJ: subData.subProjSFHJ, //收费合计
-			
-			subProjFPJE: subData.subProjFPJE,//已开发票金额
+			receiptId: subData.receiptId, //凭证id
+			bindingSubProjNum: subData.bindingSubProjNum, //子项目号
+			receiptType:subData.receiptType, //收费凭证
+			invoiceTitle:subData.invoiceTitle, //开票抬头
+			dutyParagraph:subData.dutyParagraph, //开票税号
+			totalAmount:subData.totalAmount,  //开票金额
+			address: subData.address,//地址
+			telNum: subData.telNum,//电话
+			depositBank: subData.depositBank,//开户行
+			bankAccount: subData.bankAccount,//账号
+			quittanceNum:subData.quittanceNum, //收据号
+			quittanceDate:subData.quittanceDate, //收据日期
+			invoiceNum:subData.invoiceNum, //发票号
+			invoiceDate:subData.invoiceDate, //发票日期
+			paymentType: subData.paymentType, //现收或银收
 		}		
 		this.subPayInfoForm = subPayInfoForm;
 		
@@ -1202,18 +1451,21 @@ export default {
 	},
 	editBillSubProj(subData) {
 		//this.$message("发票开具")
-		this.subBillInfoTitle = "".concat("计划编号:", subData.projId, subData.subProjNum?" 子报告号:"+subData.subProjNum:"");
+		this.subBillInfoTitle = "";
 		
 		//初始化表单
 		const subBillInfoForm={
-			subProjId: subData.projId, //子项目id
-			subProjNum: subData.subProjNum, //子项目报告号
-			subProjName: subData.subProjName, //项目名称
-			subProjScope: subData.subProjScope, //项目范围
-			
-			subProjFPTT: subData.subProjFPTT, //归档发票抬头
-			subProjYSJE: subData.subProjYSJE, //已开发票金额
-			subProjSJJE: subData.subProjSJJE, //已开收据金额
+			receiptId: subData.receiptId, //凭证id
+			bindingSubProjNum: subData.bindingSubProjNum, //子项目号
+			receiptType:subData.receiptType, //收费凭证
+			invoiceTitle:subData.invoiceTitle, //开票抬头
+			dutyParagraph:subData.dutyParagraph, //开票税号
+			totalAmount:subData.totalAmount,  //开票金额
+			address: subData.address,//地址
+			telNum: subData.telNum,//电话
+			depositBank: subData.depositBank,//开户行
+			bankAccount: subData.bankAccount,//账号			
+			invoiceNum:subData.invoiceNum, //发票号
 		}		
 		this.subBillInfoForm = subBillInfoForm;
 		
@@ -1225,7 +1477,8 @@ export default {
 		
 		//初始化表单
 		const subProblemInfoForm={
-			subProjId: subData.projId, //子项目id
+			projId: subData.projId, //子项目id
+			subProjId: subData.subProjId, //子项目id
 			subProjNum: subData.subProjNum, //子项目报告号
 			subProjName: subData.subProjName, //项目名称
 			subProjScope: subData.subProjScope, //项目范围
@@ -1265,13 +1518,6 @@ export default {
 		})
 	},
 	subPayInfoEdit(){
-		/* 
-		if(!(this.subPayInfoForm.subProjXSJE || this.subPayInfoForm.subProjYSJE)){
-			this.$message('请填写现收或银收');
-			return;
-		}
-		 */
-		
 		this.$refs.subPayInfoForm.validate((valid) => {
 			if (valid) {
 				this.$message('可以提交');
@@ -1280,6 +1526,10 @@ export default {
 				this.$message('请填写必填信息或格式有误');
 			}
 		})
+	},
+	
+	copy(e) {
+	  this.$message.success('内容已复制到剪贴板')
 	},
 	
 	formatDate(now) {
