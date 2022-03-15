@@ -1169,7 +1169,56 @@
 	
 	
 	<div class="work-title">
-	  <span class="work-title-name">项目信息</span>
+	  <span class="work-title-name">项目信息 
+		<el-popover trigger="hover" placement="right" title="操作流程">
+			<span>
+				<strong>1. 项目:</strong>
+				<br>
+				有多个项目时, 先点"新增项目"
+				<br>
+				第一个项目需补充"子项目号"
+				<br>
+				<br>
+				<strong>2. 取报告号:</strong>
+				<br>
+				根据项目, 取初评/正评/函号
+				<br>
+				<br>
+				<strong>3. 取合同号:</strong>
+				<br>
+				根据项目, 取公司内部合同号, 录入外部合同号
+				<br>
+				<br>
+				<strong>4. 修改项目组成员:</strong>
+				<br>
+				根据项目, 点"修改", 勾选项目组成员,
+				<br>
+				<span style="color: #FF0000">
+				<strong>缺少人员时, 联系计划部门修改</strong>
+				</span>
+				<br>
+				<br>
+				<strong>5. 工作安排:</strong>
+				<br>
+				根据最新项目组成员, 安排工作
+				<br>
+				<br>
+				<strong>6. 登记录入:</strong>
+				<br>
+				完成前面5个步骤后, 方可登记信息
+				<br>
+				<br>
+				<strong>7. 批量导出:</strong>
+				<br>
+				批量导出正评, 一个工作表包含多个项目
+				<br>
+				批量导出底单, 每个项目独立工作表, 以子项目号命名
+			</span>
+			<span slot="reference">
+				<i class='el-icon-question'></i>
+			</span>
+		</el-popover>
+	  </span>
 	  <span class="work-title-button">
 		<!-- 变动20220214 改版-->
 		<el-button-group>
@@ -1529,7 +1578,37 @@
 				  slot="header"
 				  class="card-header"
 				>
-				  <span>凭证信息</span>
+				  <span>凭证信息
+					<el-popover trigger="hover" placement="right" title="操作流程">
+						<span>
+							1. 添加凭证:
+							<br>
+							点"凭证录入", 进入凭证录入页
+							<br>
+							项目登记信息录入后, 可以与"应收费用"作对比
+							<br>
+							判断开票和项目收费是否一致
+							<br>
+							<br>
+							2. 凭证错误处理:
+							<br>
+							凭证有错时, 可以点"修改"或删除
+							<br>
+							凭证发票已开后, 不能再处理, 只能联系财务部门
+							<br>
+							<br>
+							3. 凭证列表展示:
+							<br>
+							一张发票对应多个项目, 不折叠单行显示
+							<br>
+							单个项目对应多张发票, 折叠多行显示
+						</span>
+						<span slot="reference">
+							<i class='el-icon-question'></i>
+						</span>
+					</el-popover>
+				  
+				  </span>
 				  <span style="float: right">
 					<el-button-group>
 						<el-button
@@ -1550,8 +1629,9 @@
 						:tree-props="{children: 'children', hasChildren: 'hasChildren'}"
 						:summary-method="getSummaries"
 						@row-click="expandChange"
+						default-expand-all
+						max-height="500"
 						border>
-					  <el-table-column label="序号" width="50" type="index" align="center" ></el-table-column>
 					  <!-- 
 					  <el-table-column label="展开" width="50" prop="" ></el-table-column>
 					  -->
@@ -1561,9 +1641,9 @@
 					  
 					  <el-table-column label="开票抬头" prop="invoiceTitle" ></el-table-column>
 					  
-					  <el-table-column label="开票金额" width="120" prop="totalAmount" ></el-table-column>
+					  <el-table-column label="开票金额" width="100" prop="totalAmount" ></el-table-column>
 					  
-					  <el-table-column label="应收费用" prop="cdReceivable" ></el-table-column>
+					  <el-table-column label="应收费用" width="100" prop="cdReceivable" ></el-table-column>
 					  
 					  <el-table-column label="票费差额" width="80" prop="difference" >
 						  <template slot-scope="scope">
@@ -1590,30 +1670,41 @@
 						  <template slot-scope="scope">
 							<div
 							v-if="!isNaN(parseFloat(scope.row.receiptId))">
-						  	收款方式: {{scope.row.paymentType}}
-							<br>
-						  	发票编号: {{scope.row.invoiceNum}}
-							<br>
-							开票日期: {{scope.row.invoiceDate}}
-							<br>
-							收款日期: {{scope.row.collectionDate}}
+								<div
+								v-if="scope.row.receiptType.indexOf('发票')!=-1">
+								发票编号: {{scope.row.invoiceNum}}
+								<br>
+								发票日期: {{scope.row.invoiceDate}}
+								</div>
+								
+								<div
+								v-else-if="scope.row.receiptType == '开收据'">
+								收据编号: {{scope.row.quittanceNum}}
+								<br>
+								收据日期: {{scope.row.quittanceDate}}
+								</div>
+								
+								收款方式: {{scope.row.paymentType}}
+								<br>
+								收款日期: {{scope.row.collectionDate}}
 							</div>
 						  </template>
 					  </el-table-column>
 					
 					  <el-table-column label="操作" width="150">
 					    <template slot-scope="scope">
+							<!-- 已开发票或已收款, 不能再修改 -->
 							<div
 							v-if="!isNaN(parseFloat(scope.row.receiptId))">
 							<el-button
 							  type="primary"
 								size="mini"
-							  @click="jumpToSubReceipt(projDetail.projId, scope.row.receiptId)"
+							  @click="jumpToSubReceipt(projDetail.projId, scope.row.receiptId, scope.row.invoiceDate, scope.row.collectionDate)"
 							>修改</el-button>
 							<el-button
 							  type="danger"
 								size="mini"
-							  @click="handleDelSubReceipt(projDetail.projId, scope.row.receiptId)"
+							  @click="handleDelSubReceipt(projDetail.projId, scope.row.receiptId, scope.row.invoiceDate, scope.row.collectionDate)"
 							>删除</el-button>  
 							</div>
 							<div
@@ -4504,27 +4595,33 @@ export default {
 	    .catch(() => { })
 	},
 	
-	handleDelSubReceipt(projId, receiptId){
-		console.log(projId, receiptId)
-		this.$confirm('确定要删除吗？', '提示', { type: 'warning' })
-		.then(() => {
-		  //211101变动 新增: 多个公司切换
-		  const delSubData = {
-			  projId: projId, 
-			  receiptId: receiptId, 
-		  }
-		  delSubProjectReceipt(delSubData, this.companyId)
-		    .then(res => {
-		      this.$message.success('删除项目凭证成功')
-		      
-			  //刷新凭证列表
-			  this.reflashReceiptList(projId);
-			  
-		    })
-		    .catch(err => {
-			  console.log('项目凭证删除失败', err)
-		    })
-		})  
+	handleDelSubReceipt(projId, receiptId, isInvoice, isCollection) {
+		if(isCollection){
+			this.$message.warning("已收费, 如需删除, 联系财务部门")
+		}else if(isInvoice){
+			this.$message.warning("已开发票, 如需删除, 联系财务部门")
+		}else{
+			console.log(projId, receiptId)
+			this.$confirm('确定要删除吗？', '提示', { type: 'warning' })
+			.then(() => {
+			  //211101变动 新增: 多个公司切换
+			  const delSubData = {
+				  projId: projId, 
+				  receiptId: receiptId, 
+			  }
+			  delSubProjectReceipt(delSubData, this.companyId)
+				.then(res => {
+				  this.$message.success('删除项目凭证成功')
+				  
+				  //刷新凭证列表
+				  this.reflashReceiptList(projId);
+				  
+				})
+				.catch(err => {
+				  console.log('项目凭证删除失败', err)
+				})
+			})  
+		}
 	},
 	
 	getSummaries(param) {
@@ -4536,7 +4633,7 @@ export default {
 			return;
 		  }
 		  
-		  if(index === 4){
+		  if(index === 3 || index === 4){
 			const values = data.map(item => Number(item[column.property]));
 			if (!values.every(value => isNaN(value))) {
 				sums[index] = values.reduce((prev, curr) => {
@@ -4580,12 +4677,19 @@ export default {
 		
 	},
 		
-	jumpToSubReceipt(projId, receiptId) {
-		if(receiptId){
-			this.$router.push({ path: '/worksubreceipt', query: { projId: projId, data: receiptId } })
+	jumpToSubReceipt(projId, receiptId, isInvoice, isCollection) {
+		if(isCollection){
+			this.$message.warning("已收费, 如需修改, 联系财务部门")
+		}else if(isInvoice){
+			this.$message.warning("已开发票, 如需修改, 联系财务部门")
 		}else{
-			this.$router.push({ path: '/worksubreceipt', query: { projId: projId } })
+			if(receiptId){
+				this.$router.push({ path: '/worksubreceipt', query: { projId: projId, data: receiptId } })
+			}else{
+				this.$router.push({ path: '/worksubreceipt', query: { projId: projId } })
+			}
 		}
+		
 	},
 	
 	
@@ -4596,7 +4700,7 @@ export default {
 		if(exportType == '正评'){
 			const path = 'register/batchExportRegisterInfoExcel'
 			downloadExcel(formData, path, this.companyId)
-		}else{
+		}else if(exportType == '底单'){
 			const path = 'register/chargeDoc/batchExportExcel'
 			downloadExcel(formData, path, this.companyId)
 		}
@@ -4952,8 +5056,8 @@ export default {
 			this.getRegisterListData(projId, (relData)=>{
 				this.registerList = relData
 				
-				console.log('rlData', rlData)
-				console.log('relData', relData)
+				console.log('凭证Data', rlData)
+				console.log('已登记Data', relData)
 				
 				//循环得到项目应收费
 				var newList = [];
@@ -4991,9 +5095,14 @@ export default {
 							
 							newItem = Object.assign({}, itemtemp)
 							newItem.receiptId = 'new'+ newItem.receiptId;
+							
+							newItem.receiptType = '';
+							newItem.invoiceTitle = '';
 							newItem.paymentType = '';
 							newItem.invoiceNum = '';
 							newItem.invoiceDate = '';
+							newItem.quittanceNum = '';
+							newItem.quittanceDate = '';
 							newItem.collectionDate = '';
 							newItem.children = [];
 							
