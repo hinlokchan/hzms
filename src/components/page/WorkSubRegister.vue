@@ -1,6 +1,120 @@
 <template>
   <div class="container">
     <el-page-header @back="goBack"></el-page-header>
+	
+	<el-dialog title="修改委托方 (提交后需计划部门审核)" :visible.sync="clientNameVisible" :modal="false" v-dialogDrag width="800px"	  >
+		<el-form
+			ref="clientNameForm"
+			:model="clientNameForm"
+			:rules="clientNameRules"
+			label-width="125px"
+		>
+			<!-- 
+			<el-form-item label="委托方Id" prop="clientId">
+				<el-input v-model="clientNameForm.clientId" disabled
+					type="textarea" autosize maxlength="240" style="width: 100%;"
+				></el-input>
+			</el-form-item>
+			 -->
+			<el-form-item label="委托方简称" prop="clientName">
+				<el-input v-model="clientNameForm.clientName" disabled
+					type="textarea" autosize maxlength="240" style="width: 100%;"
+				></el-input>
+			</el-form-item>
+			<el-form-item label="委托方旧全称" prop="clientOldFullName">
+				<el-input v-model="clientNameForm.clientOldFullName" disabled
+					type="textarea" autosize maxlength="240" style="width: 100%;"
+				></el-input>
+			</el-form-item>
+			<el-form-item label="委托方全称" prop="toBeAuditName" class="red-item">
+				<el-input v-model="clientNameForm.toBeAuditName"
+					type="textarea" autosize maxlength="240" style="width: 100%;"
+					:disabled="clientNameForm.id==''||clientNameForm.canEdit?false:true"
+				></el-input>
+			</el-form-item>
+		</el-form>
+		<el-table
+			:data="clientChangeList"
+		>
+			<el-table-column label="序号" width="50"
+				type="index" align="center"
+			></el-table-column>
+			<el-table-column
+			  label="委托人"
+			  prop="clientName"
+			>
+			</el-table-column>
+			<el-table-column
+			  label="委托人全称"
+			  prop="clientFullName"
+			>
+			</el-table-column>
+			<el-table-column
+			  label="委托人新全称"
+			  prop="toBeAuditName"
+			>
+			</el-table-column>
+			<el-table-column
+			  label="申请人"
+			  prop="staffName"
+			  width="80px"
+			>
+			</el-table-column>
+			<el-table-column
+			  label="申请日期"
+			  prop="applicationTime"
+			  width="85px"
+			>
+				<template slot-scope="scope">
+					{{formatDate(scope.row.applicationTime)}}
+				</template>
+			</el-table-column>
+			<el-table-column
+			  label="状态"
+			  prop="status"
+			  width="80px"
+			>
+				<template slot-scope="scope">
+					<el-tag :type="newStatusType(scope.row.status)">
+						{{newStatusValue(scope.row.status)}}
+					</el-tag>
+				</template>
+			</el-table-column>
+		</el-table>
+		<div
+		  slot="footer"
+		  class="dialog-footer"
+		>
+		  <el-button @click="clientNameVisible = false">取 消</el-button>
+		  
+		  <span style="margin-left: 10px;" 
+		  v-if="clientNameForm.id && clientNameForm.canEdit">
+			<el-button
+				@click="clientNameEdit()"
+				type="primary"
+			>再次修改</el-button>
+			<el-button
+				@click="clientNameDel()"
+				type="warning"
+			>撤销修改</el-button>  
+		  </span>
+		  
+		  <span style="margin-left: 10px;"
+		  v-else-if="clientNameForm.id">
+			<el-button
+				type="warning"
+				@click="clientNameVisible = false"
+			>已有修改待审核</el-button>    
+		  </span>
+		  
+		  <el-button
+			@click="clientNameAdd()"
+			type="primary"
+		  v-else
+		  >提交</el-button>
+		</div>
+	</el-dialog>
+	
     <div class="work-title"
 	v-if="subInfoForm">
       <span class="work-title-name">子项目信息 <el-tag :type="newButtonType(registerStatus)" plain size="medium">{{newButtonValue(registerStatus)}}</el-tag></span>
@@ -13,6 +127,14 @@
 		    @click="importSubProj(projId,subProjId)"
 	    >导入</el-button>
 		 -->
+		<el-button
+		    size="medium"
+			icon="el-icon-download"
+			type="primary"
+		    @click="exportSubProj('三审', projId,subProjId)"
+			v-if="registerStatus>0"
+		>导出三审</el-button>
+		
 		<el-button
 		    size="medium"
 			icon="el-icon-download"
@@ -167,6 +289,11 @@
 			<el-col :span="12">
 				<el-form-item label="委托方" prop="regClientName" class="red-item">
 					<el-input v-model="subInfoForm.regClientName" disabled style="width: 100%" clearable></el-input>
+					<el-tooltip effect="dark" content="委托方全称不对, 可以提交修改申请, 由计划部门审核更新" placement="top-start">
+					<el-tag @click="editClientName(subInfoForm)">
+						修改
+					</el-tag>
+					</el-tooltip>
 				</el-form-item>
 			</el-col>
 			<el-col :span="12">
@@ -183,7 +310,9 @@
 						</el-option>
 					</el-select>
 				</el-form-item>
-			</el-col>			
+			</el-col>	
+		</el-row>
+		<el-row :gutter="20">
 			<el-col :span="12">
 				<el-form-item label="被评估单位" prop="regEvaluatedUnit" class="red-item">
 					<el-input v-model="subInfoForm.regEvaluatedUnit" style="width: 100%" clearable></el-input>
@@ -213,12 +342,15 @@
 				  </el-cascader>
 				</el-form-item>
 			</el-col>
-			<el-col :span="6">
+			<el-col :span="12">
 				<el-form-item label="数量" prop="regEvalObjCount" class="red-item">
+					<!-- 
 					<el-input v-model="subInfoForm.regEvalObjCount" style="width: 100%" clearable
 					oninput="value=value.replace(/[^\d]/g,'')"
 					:min="1"
 					type="number"></el-input>
+					 -->
+					<el-input v-model.trim="subInfoForm.regEvalObjCount" style="width: 100%" clearable></el-input>
 				</el-form-item>
 			</el-col>
 			<el-col :span="12">
@@ -809,7 +941,7 @@
 		
 	<el-divider></el-divider>
 	<div style="text-align: center;">
-		<el-tooltip class="item" effect="dark" content="临时保存时, 必填项可先不填" placement="top" :value="true"
+		<el-tooltip class="item" effect="dark" content="临时保存时, 必填项可先不填" placement="top"
 		v-if="parseInt(registerStatus) == 0">
 			<el-button type="warning" icon="el-icon-document" size="medium" @click.native="subInfoFormSave()">临时保存</el-button>
 		</el-tooltip>
@@ -825,14 +957,15 @@
 import cityOptions from '../../../public/city.json'
 import standardinfoOptions from '../../../public/standardinfo.json'
 //api
-import { getWorkAssignment, getDetailProjInfo } from '@/api/index'
+import { getWorkAssignment, getDetailProjInfo,
+		getClientNameChangeInfo, addClientNameChange, editClientNameChange, delClientNameChange} from '@/api/index'
 import { getSubProjectInfoList, editSubProject, getSubProjectInfo, 
 		addSubProjectRegister, editSubProjectRegister, getSubProjectRegisterInfo, getSubProjStatus, getSubProjectRegisterDraft, editSubProjectRegisterDraft, 
-		getInvoiceTitleList, addInvoiceTitle, editInvoiceTitle } from '@/api/subReport'
+		getInvoiceTitleList, addInvoiceTitle, editInvoiceTitle} from '@/api/subReport'
 import {downloadExcel} from '../../utils/download';
 
 export default {
-	name: 'subworkhandle',
+	name: 'worksubregister',
 	data() {
 		return {
 			projId:'',
@@ -1147,6 +1280,21 @@ export default {
 				invoiceTitle: [{ required: true, message: '请输入发票抬头', trigger: 'blur' }],
 				dutyParagraph: [{ required: true, message: '请输入发票税号', trigger: 'blur' }],
 			},
+						
+			//委托方修改对话框
+			clientNameVisible:false,
+			clientNameTitle:'',
+			clientNameForm:{
+				clientId: "", //委托方id
+				clientName: "", //委托方简称
+				clientOldFullName: "", //委托方旧全称
+				toBeAuditName: "", //委托方全称
+			},
+			clientNameRules:{
+				toBeAuditName: [{ required: true, message: '请输入新的委托方全称', trigger: 'blur' }],				
+			},
+			
+			clientChangeList:[],
 			
 			//211101变动 新增: 多个公司切换
 			companyRange:['HZ', 'ZM','HZKJ'],
@@ -1181,6 +1329,33 @@ export default {
 				}
 			}
 		},
+		
+		newStatusType(){
+			return (data)=>{
+				if(data == 0){
+					return "primary";
+				}else if(data == 1){
+					return "success";
+				}else if(data == 2){
+					return "warning";
+				}else{
+					return "info";
+				}				
+			}
+		},
+		newStatusValue(){
+			return (data)=>{
+				if(data == 0){
+					return "待审核";
+				}else if(data == 1){
+					return "已通过";
+				}else if(data == 2){
+					return "未通过";
+				}else{
+					return "info";
+				}				
+			}
+		},
 	},
 	created() {
 		//211028变动 新增: 多个公司切换
@@ -1197,7 +1372,7 @@ export default {
 		//读取传参
 		this.projId = this.$route.query.projId;
 		this.subProjId = this.$route.query.data;
-		console.log(this.projId, this.subProjId);
+		//console.log(this.projId, this.subProjId);
 		
 		this.regAdminRegionOption = cityOptions;
 						
@@ -1370,7 +1545,11 @@ export default {
 									//处理调用的计划数据
 									if(dpData){
 										//委托方
-										spFullData.regClientName = dpData.clientName;
+										spFullData.regClientName = dpData.clientFullName || dpData.clientName;
+										spFullData.regClientId = dpData.clientId;	
+										spFullData.regClientShortName = dpData.clientName;	
+										spFullData.regClientFullName = dpData.clientFullName;	
+										
 										//安排类型
 										if(dpData.arrgType == '1001'){
 											spFullData.regArrgType = "L";
@@ -1438,7 +1617,12 @@ export default {
 								//处理调用的计划数据
 								if(dpData){
 									//委托方
-									spFullData.regClientName = dpData.clientName;
+									spFullData.regClientName = dpData.clientFullName || dpData.clientName;
+									spFullData.regClientId = dpData.clientId;	
+									spFullData.regClientShortName = dpData.clientName;	
+									spFullData.regClientFullName = dpData.clientFullName;								
+									
+									
 									//安排类型
 									if(dpData.arrgType == '1001'){
 										spFullData.regArrgType = "L";
@@ -1484,6 +1668,10 @@ export default {
 											
 											//subSpecialInfo
 											regClientName:"",
+											regClientId:"", 
+											regClientShortName:"",
+											regClientFullName:"", 
+											
 											regClientType:"", //委托方性质
 											regEvaluatedUnit:"", //被评估单位
 											regEvalObject:[],  //评估对象
@@ -1544,7 +1732,10 @@ export default {
 										
 										if(dpData){
 											//委托方
-											this.subInfoForm.regClientName = dpData.clientName;
+											this.subInfoForm.regClientName = dpData.clientFullName || dpData.clientName;
+											this.subInfoForm.regClientId = dpData.clientId;	
+											this.subInfoForm.regClientShortName = dpData.clientName;
+											this.subInfoForm.regClientFullName = dpData.clientFullName;
 											
 											//安排类型
 											if(dpData.arrgType == '1001'){
@@ -1755,8 +1946,11 @@ export default {
 				if(exportType == '正评'){
 					const path = 'register/exportRegisterInfoExcel'
 					downloadExcel(formData, path, this.companyId)
-				}else{
+				}else if(exportType == '底单'){
 					const path = 'register/chargeDoc/exportExcel'
+					downloadExcel(formData, path, this.companyId)
+				}else if(exportType == '三审'){
+					const path = 'register/exportTriAuditFormExcel'
 					downloadExcel(formData, path, this.companyId)
 				}
 				
@@ -1783,7 +1977,7 @@ export default {
 				}
 				
 				if(chargeTypeIndex <= 2){
-					console.log(chargeTypeIndex)
+					//console.log(chargeTypeIndex)
 					const counterPrice = parseFloat(this.subInfoForm.regEvalConclusionValue / 10000)
 					
 					const counterInfo = standardinfoOptions[chargeTypeIndex].standard_info;
@@ -1810,11 +2004,9 @@ export default {
 					if(fees<2000){
 						fees = 2000;
 					}
-					if(handle != "nocopy"){
-						this.subInfoForm.cdStandardFee =  fees.toFixed(2);
-					}
+					this.subInfoForm.cdStandardFee =  fees.toFixed(2);
 				}else{
-					this.subInfoForm.cdStandardFee = 0
+					this.subInfoForm.cdStandardFee = "--"
 				}
 				
 				//改变折扣
@@ -1824,8 +2016,10 @@ export default {
 		
 		//改变折扣
 		handleChangeDiscount(){
-			if(this.subInfoForm.cdStandardFee){
+			if(this.subInfoForm.cdStandardFee != "--"){
 				this.subInfoForm.cdDiscount = Math.round(this.subInfoForm.cdReceivable / this.subInfoForm.cdStandardFee * 10000) / 100 + "%";
+			}else{
+				this.subInfoForm.cdDiscount = "--"
 			}
 		},
 		
@@ -1859,6 +2053,23 @@ export default {
 			
 			//改变标准收费
 			this.handleChangeStandardFee()
+		},
+		
+		//委托方修改信息
+		getClientNameChangeInfoData(clientId, successc) {
+		  //211101变动 新增: 多个公司切换
+			const ciData = {
+				clientId: clientId,
+			}
+			getClientNameChangeInfo(ciData, this.companyId)
+			.then(res => {
+				if (res.statusCode == 200) {
+					successc(res.data);
+				}
+			})
+			.catch(err => {
+			  console.log('委托方修改信息', err)
+			})
 		},
 		
 		//发票列表信息
@@ -2026,6 +2237,115 @@ export default {
 				}else{
 					this.$message('请填写必填信息或格式有误');
 				}
+			})
+		},
+		
+		editClientName(subData) {
+			//this.$message("问题记录")
+			
+			//1. 判断是否有修改没处理
+			this.getClientNameChangeInfoData(subData.regClientId, (ciData)=>{
+				console.log('ciData', ciData)
+				this.clientChangeList = ciData;
+				
+				var id = '';
+				var toBeAuditName= '';
+				var canEdit = false;
+				
+				if(ciData.length > 0){
+					//最后一个状态是否为0
+					const lastItem = ciData[ciData.length-1];
+					if(lastItem.status == 0){
+						//判断是本人
+						id = lastItem.id;
+						toBeAuditName = lastItem.toBeAuditName;
+						if(lastItem.staffId == localStorage.getItem('staffId')){
+							canEdit = true;
+						}						
+					}
+				}
+				
+				
+				//初始化表单
+				const clientNameForm={
+					projId: this.projId,
+					clientId:  parseInt(subData.regClientId), //委托方id
+					clientName: subData.regClientShortName, //委托方简称
+					clientOldFullName: subData.regClientFullName, //委托方旧全称
+					toBeAuditName: toBeAuditName, //委托方全称
+					id: id, //委托方修改Id
+					canEdit: canEdit
+				}		
+				this.clientNameForm = clientNameForm;
+				
+				//console.log('clientNameForm', clientNameForm)
+				
+				this.clientNameVisible = true
+			});
+			
+			
+		},
+		
+		clientNameAdd(){
+			this.$refs.clientNameForm.validate((valid) => {
+				if (valid) {
+					//console.log('clientName', this.clientNameForm);
+					/* 
+					const addData = {
+						clientId: this.clientNameForm.clientId,
+						toBeAuditName: this.clientNameForm.toBeAuditName,
+					};
+					 */
+					
+					const addData =this.clientNameForm; 					
+					
+					addClientNameChange(addData, this.companyId)
+					.then(res => {
+						this.$message.success('修改委托方提交成功');
+						
+						this.clientNameVisible = false;
+					})
+					.catch(err => {
+					})
+				}else{
+					this.$message('请填写必填信息或格式有误');
+				}
+			})
+		},
+				
+		clientNameEdit(){
+			this.$refs.clientNameForm.validate((valid) => {
+				if (valid) {
+					//console.log('clientName', this.clientNameForm);
+					
+					const editData =this.clientNameForm; 					
+					
+					editClientNameChange(editData, this.companyId)
+					.then(res => {
+						this.$message.success('修改委托方再次修改成功');
+						
+						this.clientNameVisible = false;
+					})
+					.catch(err => {
+					})
+				}else{
+					this.$message('请填写必填信息或格式有误');
+				}
+			})
+		},
+		
+		clientNameDel(){
+			//console.log('clientName', this.clientNameForm);
+			
+			const delData =this.clientNameForm;
+			
+			delClientNameChange(delData, this.companyId)
+			.then(res => {
+				this.$message.success('修改委托方撤销成功');
+				
+				this.clientNameVisible = false;
+			})
+			.catch(err => {
 			})
 		},
 				
