@@ -121,14 +121,18 @@
         ref="multipleTable"
         style="width: 100%"
         @row-dblclick="handleHandle"
+		@filter-change="projLeaderFilterChange"		
         stripe
       >
         <el-table-column
           prop="projState"
           label="项目状态"
-          width="80"
+          width="90"
           align="center"
-        >
+		  :filters="projStateFilter"
+		  :filtered-value="projStateFilterValue"
+		  column-key="projState"
+        >		
           <template slot-scope="props">
             <el-tag
                   :type="tagType(props.row.projState)"
@@ -175,7 +179,8 @@
           label="项目负责人"
           width="110"
           :filters="projLeaderFilter"
-          :filter-method="projLeaderFilterHandler"
+		  :filtered-value="projLeaderFilterValue"
+		  column-key="projLeader"
         >
         </el-table-column>
         <!-- <el-table-column
@@ -242,6 +247,7 @@ export default {
       pageSize: 50, // 每页的数据条数
       pageTotal: 0, // 数据数
       tableData: [],
+      tableFullData: [],
       missionData: {},
       onGoing: false,
       typeOptions: [
@@ -275,6 +281,39 @@ export default {
       projLeaderFilter: [{ text: '我负责的项目', value: '' }],
       timestamp: 0,
 	  
+	  projStateFilter:[
+		{
+			text:'进行中',
+			value:"0",
+		},  
+		{
+			text:'已完成',
+			value:"1",
+		},  
+		{
+			text:'中止',
+			value:"2",
+		},  
+	  ],
+	  /* 
+	  filtersitem:{
+	      'projLeader':{
+	        key: 'projLeader',
+	        value:'',
+	      },
+	      'projState':{
+	        key: 'projState',
+	        value:'',
+	      },
+	  },
+	  */
+	  filtersitem:{
+	  	projLeader:'',
+	  	projState:''
+	  },
+	  projLeaderFilterValue:[],
+	  projStateFilterValue:[],
+	  
 	  	  
 	  //211028变动 新增: 多个公司切换	  
 	  companyRange:['HZ', 'ZM','HZKJ'],
@@ -305,10 +344,34 @@ export default {
     this.projLeaderFilter[0].value = localStorage.getItem('staffName')
   },
   methods: {
+	/* 
     projLeaderFilterHandler(value, row, column) {
       const property = column['property'];
       return row[property] === value;
     },
+	 */
+	
+	projLeaderFilterChange(filters){
+		//更新过滤字段
+		Object.keys(this.filtersitem).forEach((item, index) =>{
+		  if(filters[item]){
+		    this.filtersitem[item] = filters[item].join(',');
+		  }
+		});
+		
+		var newList = this.tableFullData;
+		Object.keys(this.filtersitem).forEach((item, index) =>{
+		  if(this.filtersitem[item]){
+			//循环过滤多个不为空的条件
+		    newList = newList.filter(item2 => {
+				return this.filtersitem[item].indexOf(item2[item]) !=-1;
+			});
+		  }
+		});		
+		this.tableData = newList;
+		this.currentPage = 1;
+		this.pageTotal = this.tableData.length;
+	},
     // deleteReportNum(reportNum) {
     //   deleteReportNum({ reportNum: reportNum }).then(res => {
     //     this.$message.success('删除成功');
@@ -416,6 +479,11 @@ export default {
 	  this.currentPage = 1;
 	  this.tableData=[];
 	  this.pageTotal = 0;
+	  Object.keys(this.filtersitem).forEach(key => (this.filtersitem[key] = ''))
+	  this.projLeaderFilterValue = [];
+	  this.projStateFilterValue = [];
+	  
+	  
       searchMyProject(this.searchData, this.companyId)
         .then(res => {
 			
@@ -426,9 +494,11 @@ export default {
 			    arr.push(i)
 			  }
 			}
+			this.tableFullData = arr;
 			this.tableData = arr;
 			this.pageTotal = arr.length;  
 		  }else{
+			this.tableFullData = res.data;
 			this.tableData = res.data;
 			this.pageTotal = res.data.length;  
 		  }
@@ -482,10 +552,15 @@ export default {
 	  this.pageTotal = 0;
 	  this.onGoing = false;
 	  Object.keys(this.searchData).forEach(key => (this.searchData[key] = ''))
+	  Object.keys(this.filtersitem).forEach(key => (this.filtersitem[key] = ''))
+	  this.projLeaderFilterValue = [];
+	  this.projStateFilterValue = [];
+	  
 	  
       searchMyProject(this.searchData, this.companyId)
         .then(res => {
           console.log(res.data);
+		  this.tableFullData = res.data
           this.tableData = res.data;
           this.pageTotal = res.data.length;
         })
@@ -510,7 +585,6 @@ export default {
 	  this.$router.push({ path: '/workhandle', query: { data: key } })
     },
     changePage(val) {
-      console.log(val);
       this.currentPage = val;
     },
     tagType(val) {
@@ -558,6 +632,12 @@ export default {
 			this.searchData = workbranch_pageinfo.searchData;
 			
 			this.onGoing = workbranch_pageinfo.onGoing;
+			
+			this.filtersitem = workbranch_pageinfo.filtersitem;
+			this.projLeaderFilterValue = this.filtersitem.projLeader?this.filtersitem.projLeader.split(','):[];
+			this.projStateFilterValue = this.filtersitem.projState?this.filtersitem.projState.split(','):[];
+			
+			this.tableFullData = workbranch_pageinfo.fullData;	
 		  }
 		  //删除
 		  this.global.workbranch_pageinfo = null;
@@ -577,6 +657,8 @@ export default {
 		},
 		data: this.tableData,
 		onGoing: this.onGoing,
+		fullData: this.tableFullData,
+		filtersitem: this.filtersitem,
 	    status:0
 	  };
 	  //sessionStorage.setItem('workbranch_pageinfo', JSON.stringify(workbranch_pageinfo));
