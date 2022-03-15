@@ -72,20 +72,19 @@ export default new Router({
                 {
                     path: '/worksubregister',
                     component: () => import('../components/page/WorkSubRegister.vue'),
-                    meta: { title: '项目正评信息' }
+                    meta: { title: '项目登记信息' }
                 },
                 {
                     path: '/worksubreceipt',
                     component: () => import('../components/page/WorkSubReceipt.vue'),
                     meta: { title: '项目凭证信息' }
-                },
-				/* 
+                },				
                 {
                     path: '/worksubregistercheck',
                     component: () => import('../components/page/WorkSubRegisterCheck.vue'),
-                    meta: { title: '项目信息审核' }
+                    meta: { title: '项目登记信息审核' }
                 },
-				 */
+				
                 // {
                 //     path: '/subworkhandle',
                 //     component: () => import('../components/page/SubWorkHandle.vue'),
