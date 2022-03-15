@@ -252,6 +252,3 @@ export function getInvoiceTitleInfo(data, companyId) {
     data: qs.stringify(data)
   });
 }
-
-
-
