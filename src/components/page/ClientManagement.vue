@@ -24,16 +24,104 @@
 <!--      </el-collapse-item>-->
 <!--    </el-collapse>-->
 
+	<el-table
+		ref="clientNameTable"
+		:data="clientChangeList"
+		border
+		v-if="clientChangeList"
+	>
+		<el-table-column label="序号" width="50" 
+			type="index" align="center"
+		></el-table-column>
+		<el-table-column
+		  label="委托人"
+          prop="clientName"
+		>
+			<template slot-scope="scope">
+			  <el-tag type="primary">{{scope.row.clientId}}</el-tag>
+			  {{scope.row.clientName}}
+			</template>
+		</el-table-column>
+		<el-table-column
+		  label="委托人全称"
+          prop="clientFullName"
+		>
+		</el-table-column>
+		<el-table-column
+		  label="委托人新全称"
+          prop="toBeAuditName"
+		>
+		</el-table-column>
+		<el-table-column
+		  label="申请人"
+          prop="staffName"
+		  width="100px"
+		>
+		</el-table-column>
+		<el-table-column
+		  label="对应项目"
+          prop="projId"
+		  width="140px"
+		>
+			<template slot-scope="scope">
+				<el-button type="primary" plain size="mini" @click="jumpToReviewProj(scope.row)">
+					{{scope.row.projId}}
+				</el-button>
+			</template>
+		</el-table-column>
+		<el-table-column
+		  label="状态"
+		  width="80"
+          prop="status"
+		  align = "center"
+		>
+			<template slot-scope="scope">
+				<el-tag :type="newStatusType(scope.row.status)">
+					{{newStatusValue(scope.row.status)}}
+				</el-tag>
+			</template>
+		</el-table-column>
+		<el-table-column
+		  label="审核"
+		  width="200"
+		>
+			<template slot="header" slot-scope="scope">
+			  <el-switch
+			    v-model="clientChangeOption"
+			    active-text="显示审核"
+			    inactive-text="显示全部"
+				@change="handleChangeOption">
+			  </el-switch>
+			</template>
+			<template slot-scope="scope">
+			  <el-button
+			  	@click="clientNamePass(scope.row)"
+			  	type="primary"
+			  >审核通过</el-button>
+			  <el-button
+			  	@click="clientNameFail(scope.row)"
+			  	type="warning"
+			  >审核不过</el-button>
+			</template>
+		</el-table-column>
+	</el-table>
+
+	<div style="height: 10px;"></div>
+
+       <!-- :data="rawClientList.slice((currentPage-1)*pageSize,currentPage*pageSize)" -->
     <el-table
         ref="multipleTable"
         :data="rawClientList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
         tooltip-effect="dark"
-        style="width: 100%">
+        style="width: 100%"
+		border
+		@filter-change="clientTypeFilterChange">
       <el-table-column
+		prop="clientTypeName"
+		column-key="clientType"
           label="委托人类别"
           width="200"
           :filters="clientTypeFilters"
-          :filter-method="clientTypeFilterMethod"
       >
         <template slot-scope="scope">
           <el-tag type="info">{{scope.row.clientType}}-{{scope.row.clientTypeName}}</el-tag>
@@ -42,11 +130,17 @@
       </el-table-column>
       <el-table-column
           prop="clientName"
-          label="委托人"
-          width="">
+          label="委托人">
         <template slot-scope="scope">
           <el-tag type="primary">{{scope.row.clientId}}</el-tag>
           {{scope.row.clientName}}
+        </template>
+      </el-table-column>
+      <el-table-column
+          prop="toBeAuditName"
+          label="委托人全称">
+        <template slot-scope="scope">
+          {{scope.row.toBeAuditName}}
         </template>
       </el-table-column>
       <el-table-column
@@ -63,10 +157,10 @@
           <el-button
               @click="openChangeClientTypeDialog(scope.row)"><i class="el-icon-refresh"></i>更改类别</el-button>
           <el-button
-              @click="openEditDialog(scope.row)"><i class="el-icon-edit"></i>编辑</el-button>
+              @click="openEditDialog(scope.row)"><i class="el-icon-edit"></i>编辑委托</el-button>
           <el-button
               type="danger"
-              @click="handleDeleteClient(scope.row)"><i class="el-icon-delete"></i>删除</el-button>
+              @click="handleDeleteClient(scope.row)"><i class="el-icon-delete"></i>删除委托</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -151,8 +245,9 @@
 </template>
 
 <script>
-import { getClientList,getRawClientList,getClientTypeList,deleteClient,changeClientType,transferProj } from '@/api';
-import { editClientName } from '../../api';
+import { getClientList,getRawClientList,getClientTypeList,deleteClient,changeClientType,transferProj, editClientName,
+		getClientNameChangeList, auditClientNameChange} from '@/api';
+import CryptoJS from 'crypto-js'
 
 export default {
   name: 'ClientManagement',
@@ -293,7 +388,10 @@ export default {
         }
       ],
       clientList: [],
-      rawClientList: [],
+      rawClientList: [],	  
+	  
+	  rawClientFullList: [],
+	  
       form: {
         clientName: '',
         clientType: ''
@@ -312,10 +410,43 @@ export default {
       pickedClientType: undefined,
       editedClientName: '',
 	  
+	  //委托人修改
+	  clientChangeList:[],
+	  clientChangeFullList:[],
+	  clientChangeOption:true,
+	  
 	  //211028变动 新增: 多个公司切换
 	  companyId:'',
 	  companyRange:['HZ', 'ZM','HZKJ'],
     };
+  },
+  computed:{
+  	newStatusType(){
+  		return (data)=>{
+  			if(data == 0){
+  				return "primary";
+  			}else if(data == 1){
+  				return "success";
+  			}else if(data == 2){
+  				return "warning";
+  			}else{
+  				return "info";
+  			}				
+  		}
+  	},
+  	newStatusValue(){
+  		return (data)=>{
+  			if(data == 0){
+  				return "待审核";
+  			}else if(data == 1){
+  				return "已通过";
+  			}else if(data == 2){
+  				return "未通过";
+  			}else{
+  				return "info";
+  			}				
+  		}
+  	},
   },
   created() {
 	//211028变动 新增: 多个公司切换
@@ -331,8 +462,173 @@ export default {
 	
     this.getClientList()
     this.getClientTypeList()
+	
+	this.getClientChangeList()
   },
   methods: {
+	//委托人修改列表
+	getClientChangeList(){
+		this.getClientNameChangeListData(this.projId, (clData)=>{
+			/* 
+			var alist = [
+			  {
+			    clientId:"111000",
+			    clientName:"110",
+				clientFullName:"111000",
+				toBeAuditName:"110000",
+				staffName:"张三",
+				projId:"0",
+			    status:"2",
+			  },
+			  {
+			    clientId:"111001",
+			    clientName:"111",
+				clientFullName:"111111",
+				toBeAuditName:"new111",
+				staffName:"李四",
+				projId:"1",
+			    status:"1",
+			  },
+			  {
+			    clientId:"111001",
+			    clientName:"111",
+				clientFullName:"111111",
+				toBeAuditName:"new222",
+				staffName:"王五",
+				projId:"2",
+			    status:"0",
+			  },
+			  {
+			    clientId:"111002",
+			    clientName:"333",
+				clientFullName:"",
+				toBeAuditName:"new333",
+				staffName:"王五",
+				projId:"3",
+			    status:"0",
+			  },
+			];
+			 */
+			
+			
+			//完整列表
+			//this.clientChangeFullList = alist; //clData;
+			this.clientChangeFullList = clData;
+			
+			//待审核列表
+			this.clientChangeList = this.clientChangeFullList.filter(item => {
+				//条件匹配
+				return item.status == "0";
+			}); 
+			
+			//console.log('full', this.clientChangeFullList);
+			//console.log('short', this.clientChangeList);
+		});
+	},
+	getClientNameChangeListData(projId, successc) {
+		const listData = {
+			projId: projId,
+		}
+		getClientNameChangeList(listData, this.companyId)
+		.then(res => {
+			if (res.statusCode == 200) {
+				successc(res.data);
+			}
+		})
+		.catch(err => {
+		  console.log('委托人修改列表', err)
+		})
+	},  
+	clientNamePass(subData){
+		if(subData.status > 0){
+			this.$message.warning('当前申请已审批')
+		}else{
+			this.$confirm('确认通过该申请?', '提示', { type: 'success' })
+			.then(() => {
+				const passData = {
+					id: subData.id,
+					status: 1,
+				};				
+				
+				auditClientNameChange(passData, this.companyId)
+				.then(res => {
+					this.$message.success('修改委托方审核通过');
+					
+					//刷新列表
+					this.getClientChangeList()
+					this.clientChangeOption = true
+				})
+				.catch(err => {
+				})
+			})
+		}
+	},
+	clientNameFail(subData){
+		if(subData.status > 0){
+			this.$message.warning('当前申请已审批')
+		}else{
+			this.$confirm('确认该申请不通过?', '提示', { type: 'warning' })
+			.then(() => {
+				const failData = {
+					id: subData.id,
+					status: 2,
+				};	
+				auditClientNameChange(failData, this.companyId)
+				.then(res => {
+					this.$message.success('修改委托方审核不过');
+					
+					//刷新列表
+					this.getClientChangeList()
+					this.clientChangeOption = true
+				})
+				.catch(err => {
+				})
+			})
+		}
+	},
+	
+	
+	
+	handleChangeOption(val){
+		if(val == true){			
+			//待审核列表			
+			this.clientChangeList = this.clientChangeFullList.filter(item => {
+				//条件匹配
+				return item.status == "0";
+			}); 
+			
+		}else{
+			//完整列表
+			this.clientChangeList = this.clientChangeFullList
+		}
+	},
+	
+	jumpToReviewProj(val){
+		const key = this.newCode(val.projId);
+		this.$router.push({ path: '/projcheck', query: { data: key } })
+	},
+	
+	//211210变动 query加密
+	newCode(data){
+	  data = ""+data;
+	  if(data){
+	    const key = CryptoJS.enc.Utf8.parse('65201488');
+	    const iv = CryptoJS.enc.Utf8.parse('45872411');
+	
+	    const encrypted = CryptoJS.TripleDES.encrypt(
+	      data,
+	      key,
+	      {
+	        iv: iv,
+	        mode: CryptoJS.mode.CBC,
+	        padding: CryptoJS.pad.Pkcs7,
+	      },
+	    );
+	  	return encrypted.toString();
+	  }
+	},
+	  
+	  
     getClientTypeList() {
       getClientTypeList({}, this.companyId)
           .then(res => {
@@ -344,6 +640,8 @@ export default {
         getRawClientList({ searchContent: this.searchContent}, this.companyId)
             .then(
                 res => {
+				  this.rawClientFullList = res.data;
+				  
                   this.rawClientList = res.data;
                   this.totalCount = this.rawClientList.length
                 }
@@ -371,21 +669,61 @@ export default {
           .then(
               res => {
                 console.log(res)
+				this.rawClientFullList = res.data;			
+				
                 this.rawClientList = res.data;
                 this.totalCount = this.rawClientList.length
               }
           )
           .catch(err => {
-            console.log('getClientList ERROR', err);
+            console.log('getRawClientList', err);
           })
     },
+	/* 
     clientTypeFilterMethod(value, row, column) {
       if (value === 0) {
         return row.clientType < 1000
       } else {
+		console.log('筛选', value)
         return row.clientType === value;
       }
     },
+	 */
+	clientTypeFilterChange(filters){
+		if(filters['clientType'].length>0){
+			//过滤			
+			var isBank = false;
+			//是否为"银行"
+			if(filters['clientType'].length==1){
+				if(filters['clientType'][0] == 0){
+					isBank = true;
+				}
+			}	
+			
+			var newList = [];
+			if(isBank){
+				this.rawClientFullList.forEach((item, index) =>{
+					if(item.clientType < 1000){
+						newList.push(item);
+					}
+				});
+			}else{
+				this.rawClientFullList.forEach((item, index) =>{
+					if(filters['clientType'].indexOf(item.clientType) != -1){
+						newList.push(item);
+					}
+				});
+			}
+			this.rawClientList = newList;			
+		}else{
+			//重置
+			this.rawClientList = this.rawClientFullList;
+		}
+		this.currentPage = 1;
+		this.totalCount = this.rawClientList.length;
+		
+	},
+	
     handleTransfer(){
       this.$confirm('确认移交', '提示', { confirmButtonText: '确认提交', cancelButtonText: '取消', type: 'error' })
           .then(
