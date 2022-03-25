@@ -359,7 +359,7 @@
 				</el-col>
 				<el-col :span="8">	
 					<el-form-item label="无凭证金额" prop="subProjWPJE" >
-					  <el-input v-model="receiptForm.subProjSJJE" style="width: 100%" clearable
+					  <el-input v-model="receiptForm.subProjWPJE" style="width: 100%" clearable
 					  readonly
 					  oninput="value=value.replace(/[^\d.]/g,'')"></el-input>
 					</el-form-item>
@@ -405,11 +405,11 @@
 					  
 					  <el-table-column label="开票抬头" prop="invoiceTitle" ></el-table-column>
 					  
-					  <el-table-column label="开票金额" width="120" prop="totalAmount" ></el-table-column>
+					  <el-table-column label="开票金额" width="100" prop="totalAmount" ></el-table-column>
 					  
-					  <el-table-column label="应收费用" prop="cdReceivable" ></el-table-column>
+					  <el-table-column label="应收费用" width="100" prop="cdReceivable" ></el-table-column>
 					  
-					  <el-table-column label="票费差额" width="80" prop="difference" >
+					  <el-table-column label="票费差额" width="100" prop="difference" >
 						  <template slot-scope="scope">
 							  <el-tag :type="newButtonTypeDifference(scope.row.difference)"
 							  v-if="scope.row.difference">
@@ -1191,6 +1191,8 @@ export default {
 		
 	//刷新凭证
 	reflashReceiptList(projId){
+		//获取合同值
+		
 		this.getReceiptListData(projId, (rlData)=>{
 			//this.receiptList = rlData
 			this.getRegisterListData(projId, (relData)=>{
@@ -1225,7 +1227,7 @@ export default {
 						if(item.paymentType){
 							rTotal.sjok += parseFloat(item.totalAmount);
 						}
-					}else{
+					}else if(item.receiptType == '无'){
 						rTotal.wp += parseFloat(item.totalAmount);
 						if(item.paymentType){
 							rTotal.wpok += parseFloat(item.totalAmount);
@@ -1381,6 +1383,8 @@ export default {
 			subProjWPJE: "", //无凭证金额
 			
 			subProjSFQK: "", //收费情况 每笔收费情况
+			
+			contractPrice: projData.contractPrice,//合同价
 		}
 		this.receiptForm = receiptForm;
 		
@@ -1400,6 +1404,61 @@ export default {
 			return;
 		  }
 		  
+		  if(index ===2 || index === 3 || index === 4 || index === 5){
+			const values = data.map(item => Number(item[column.property]));
+			if (!values.every(value => isNaN(value))) {
+				sums[index] = values.reduce((prev, curr) => {
+				  const value = Number(curr);
+				  if (!isNaN(value)) {
+					return prev + curr;
+				  } else {
+					return prev;
+				  }
+				}, 0);
+				
+				if(index ===3 && this.receiptForm){
+					//跟开票列做对比
+					const invoicePrice = parseFloat(sums[index]);
+					const contractPrice = parseFloat(this.receiptForm.contractPrice);
+					if(contractPrice){
+						if(contractPrice-invoicePrice == 0){
+							sums[2] = '合同价: '+contractPrice.toFixed(2) + ', 合同价和开票一致';
+						}else{
+							sums[2] = '合同价: '+contractPrice.toFixed(2) + ', 开票差额: '+ (contractPrice-invoicePrice).toFixed(2) ;
+						}
+						
+					}else{
+						sums[2] = '未填报合同价';
+					}
+				}
+				
+				
+				if(index ===5){
+					const invoicePrice = parseFloat(sums[3]);
+					const receivablePrice = parseFloat(sums[4]);
+					sums[index] = (receivablePrice-invoicePrice).toFixed(2);
+				}
+				
+				if(index ===3||index ===4){
+					sums[index] = sums[index].toFixed(2);
+				}
+				
+				
+				/* 
+				if(index ===4){
+					const invoicePrice = parseFloat(sums[3]);
+					const receivablePrice = parseFloat(sums[4]);
+					sums[index] = sums[index].toFixed(2) + '元, 开票差额: '+ (receivablePrice-invoicePrice).toFixed(2) + '元';
+				}
+				
+				if(index ===3){
+					sums[index] = sums[index].toFixed(2) + '元';
+				}
+				 */
+				
+			}  
+		  }
+		  /* 
 		  if(index === 3 || index === 4){
 			const values = data.map(item => Number(item[column.property]));
 			if (!values.every(value => isNaN(value))) {
@@ -1414,6 +1473,7 @@ export default {
 				sums[index] = sums[index].toFixed(2) + '元';
 			}  
 		  }
+		  */
 		});
 	
 		return sums;
