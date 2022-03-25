@@ -20,12 +20,14 @@
 	      </el-form-item>
 		  </div>
 	    </el-form>
+		<!-- 
 	    <div class="demo-drawer__footer">
 		  <div style="text-align: center;">
 	      <el-button size="medium" @click="$refs.drawer.closeDrawer()">取消</el-button>
 	      <el-button size="medium" type="primary" @click="registerCheckSubmit">提交</el-button>
 		  </div>
 	    </div>
+		 -->
 	  </div>
 	</el-drawer>
 	
@@ -310,17 +312,7 @@
 		label-width="130px"
 		:rules="subInfoRules"
 		v-if="subInfoForm"
-	>
-		<el-divider>存在问题</el-divider>
-		<el-row :gutter="20">
-			<el-col :span="24">
-				<el-form-item label="问题清单">
-					<el-input v-model="registerCheckInfo" readonly type="textarea" autosize maxlength="2000" style="width: 100%;"
-					></el-input>
-				</el-form-item>
-			</el-col>
-		</el-row>
-	
+	>	
 		<el-divider>委托方信息</el-divider>
 		<el-row :gutter="20">
 			<el-col :span="12">
@@ -1072,9 +1064,25 @@
 				</el-form-item>
 			</el-col>
 		</el-row>
+		
+		<el-divider>存在问题</el-divider>
+		<el-row :gutter="20">
+			<el-col :span="24">
+				<el-form-item label="问题汇总">
+					<el-input v-model="registerCheckInfo" readonly placeholder="请点击便签, 输入对应问题" type="textarea" autosize maxlength="2000" style="width: 100%;"
+					></el-input>
+				</el-form-item>
+			</el-col>
+		</el-row>
 	</el-form>
 		
 	<el-divider></el-divider>
+	<div style="text-align: center;">
+			<el-button type="warning" icon="el-icon-close" size="medium" @click="failRegisterCheckSubmit()">审核不通过</el-button>
+			<el-button type="primary" icon="el-icon-check" size="medium" @click="passRegisterCheckSubmit()">审核通过</el-button>
+		
+	</div>
+	
 	<!-- 
 	<div style="text-align: center;">
 		<el-tooltip class="item" effect="dark" content="临时保存时, 必填项可先不填" placement="top"
@@ -2530,6 +2538,9 @@ export default {
 			
 			//重新排序
 			this.handleSortItem();
+			
+			//得到问题汇总
+			this.handleGetCheckInfo();
 		},
 		
 		handleSortItem(){
@@ -2539,27 +2550,40 @@ export default {
 			});
 		},
 		
-		registerCheckSubmit(){
-			this.$confirm('确认提交正评信息?', '提示', { type: 'info' })
+		handleGetCheckInfo(){			
+			//转换成逗号分隔, 英文逗号转中文逗号
+			var newItem=[];
+			this.registerCheckForm.forEach((item, index) =>{
+				const newItemValue = item.label + ":" + item[item.name].replace(/\,/g, "，");
+				newItem.push(newItemValue)
+			});
+			
+			this.registerCheckInfo =newItem?newItem.join(','):'';
+			
+		},
+		
+		failRegisterCheckSubmit(){
+			if(this.registerCheckInfo){
+				this.$confirm('确认不通过该登记信息?', '提示', { type: 'warning' })
+				.then(() => {
+					const registerCheckForm={
+						subProjId: this.subProjId,
+						checkInfo: this.registerCheckInfo,
+					}
+					
+					console.log(registerCheckForm);
+				})
+			}else{
+				this.$message.warning('请点击标签,输入对应问题')
+			}
+		},
+		
+		passRegisterCheckSubmit(){
+			this.$confirm('确认通过该登记信息?', '提示', { type: 'success' })
 			.then(() => {
-				//删除空值
-				this.handleDelItem();
-				
-				//转换成逗号分隔, 英文逗号转中文逗号
-				var newItem=[];
-				this.registerCheckForm.forEach((item, index) =>{
-					const newItemValue = item.label + ":" + item[item.name].replace(/\,/g, "，");
-					newItem.push(newItemValue)
-				});
-				
-				var registerCheckForm={
+				const registerCheckForm={
 					subProjId: this.subProjId,
-					checkInfo: newItem?newItem.join(','):'',
 				}
-				
-				this.registerCheckInfo = registerCheckForm.checkInfo;
-				
-				this.registerCheckVisible = false;
 				
 				console.log(registerCheckForm);
 			})

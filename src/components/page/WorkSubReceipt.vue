@@ -137,16 +137,36 @@
 	>
 		<el-divider>基本信息</el-divider>
 		<el-row :gutter="20">
-			<el-col :span="12">
+			<el-col :span="8">
 				<el-form-item label="凭证类型" prop="receiptType" class="red-item">
-					<el-tooltip class="item" effect="dark" content="请先选对凭证类型, 再往后操作" :value="true" placement="top">
+					<el-tooltip class="item" effect="dark" content="请先选对凭证类型, 再往后操作" placement="top">
 					<el-select
 					  v-model="subReceiptForm.receiptType"
 					  placeholder="请选择"
 					  @change="handleChangeReceiptType"
+					  style="width: 100%;"
 					>
 					  <el-option
 					    v-for="item, index in receiptTypeOptions"
+					    :key="index"
+					    :label="item"
+					    :value="item"
+					  ></el-option>
+					</el-select>
+					</el-tooltip>
+				</el-form-item>
+			</el-col>
+			
+			<el-col :span="8">
+				<el-form-item label="电子/纸质" prop="isElectronic" class="red-item"
+				v-if="subReceiptForm.receiptType=='普通发票'"
+				:rules="subReceiptForm.receiptType=='普通发票'?isElectronic:[]">
+					<el-select
+					  v-model="subReceiptForm.isElectronic"
+					  placeholder="请选择"
+					>
+					  <el-option
+					    v-for="item, index in isElectronicOptions"
 					    :key="index"
 					    :label="item"
 					    :value="item"
@@ -231,20 +251,11 @@
 		<el-row :gutter="20">
 			<el-col :span="12">
 				<el-form-item label="项目开票方式" prop="makeOutPattern" class="red-item">
-					<!-- 
-					<el-switch
-					  v-model="subReceiptForm.makeOutPattern"
-					  active-text="多个项目 (一张发票对应一个或多个项目)"
-					  inactive-text="单个项目 (一个项目对应一张或多张发票)"
-					  :active-value="1"
-					  :inactive-value="0"
-					  @change="handleChangeMakeOutPattern">
-					</el-switch>
-					 -->
 					<el-select
 					  v-model="subReceiptForm.makeOutPattern"
 					  placeholder="请正确选择"
 					  style="width: 100%;"
+					  @change="handleChangeMakeOutPattern"
 					>
 					  <el-option
 					    v-for="item, index in makeOutPatternOption"
@@ -253,6 +264,185 @@
 					    :value="item.value"
 					  ></el-option>
 					</el-select>
+				</el-form-item>
+			</el-col>
+			<el-col :span="12">
+				<el-form-item label="项目开票举例">
+					<span>
+						<el-popover trigger="hover" placement="top" title="单一项目 (预收款+尾款或多次进度款)">
+							<span>
+								举例: 合同价为50万, 预收款30% 15万, 尾款35万, 共两笔收费
+								<br>
+								<br>
+								1. 录入第一笔, 预收款:
+								<br>
+								1) 选择开票方式为"<span style="color: red"><strong>单一项目</strong></span>"
+								<br>
+								2) <strong>点选一个</strong>项目
+								<br>
+								3) 输入开票金额 150000, 提交
+								<br>
+								<br>
+								2. 录入第二笔, 尾款:
+								<br>
+								1) 选择开票方式为"<span style="color: red"><strong>单一项目</strong></span>"
+								<br>
+								2) <strong>点选一个</strong>项目
+								<br>
+								3) 输入开票金额 350000, 提交
+								<br>
+							</span>
+							<span slot="reference">
+								<el-tag>单项举例1</el-tag>
+							</span>
+						</el-popover>
+					</span>
+					<span>
+						<el-popover trigger="hover" placement="top" title="单一项目 (由多家公司付款)">
+							<span>
+								举例: 合同价为30万, A公司 支付10万, B公司支付20万, 共两笔收费
+								<br>
+								<br>
+								1. 录入第一笔, A公司收款:
+								<br>
+								1) 选择开票抬头为"A公司"
+								<br>
+								2) 选择开票方式为"<span style="color: red"><strong>单一项目</strong></span>"
+								<br>
+								3) <strong>点选一个</strong>项目
+								<br>
+								4) 输入开票金额 100000, 提交
+								<br>
+								<br>
+								2. 录入第二笔, B公司收款:
+								<br>
+								1) 选择开票抬头为"B公司"
+								<br>
+								2) 选择开票方式为"<span style="color: red"><strong>单一项目</strong></span>"
+								<br>
+								3) <strong>点选一个</strong>项目
+								<br>
+								4) 输入开票金额 200000, 提交
+								<br>
+							</span>
+							<span slot="reference">
+								<el-tag style="margin-left: 10px;">单项举例2</el-tag>
+							</span>
+						</el-popover>
+					</span>
+					
+					<span>
+						<el-popover trigger="hover" placement="top" title="可确定多子项目 (多笔收费, 每笔对应多个子项目)">
+							<span>
+								举例: 合同价为20万, 第一笔6万对应子项目 111和333, 
+								<br>								第二笔11万,对应子项目 222, 444 和 555, 
+								<br>
+								第三笔3万等以后建子项目 666 后再收, 共3笔收费
+								<br>
+								<br>
+								1. 录入第一笔收款:
+								<br>
+								1) 选择开票方式为"<span style="color: red"><strong>可确定多子项目</strong></span>"
+								<br>
+								2) <strong>点选1个或多个</strong>子项目 (111 和 333)
+								<br>
+								3) 输入开票金额 60000, 提交
+								<br>
+								<br>
+								2. 录入第二笔收款:
+								<br>
+								1) 选择开票方式为"<span style="color: red"><strong>可确定多子项目</strong></span>"
+								<br>
+								2) <strong>点选1个或多个</strong>子项目 (222, 444 和 555)
+								<br>
+								3) 输入开票金额 110000, 提交
+								<br>
+								<br>
+								3. 录入第三笔收款:
+								<br>
+								1) 选择开票方式为"<span style="color: red"><strong>可确定多子项目</strong></span>"
+								<br>
+								2) <strong>点选1个或多个</strong>子项目 (666)
+								<br>
+								3) 输入开票金额 30000, 提交
+								<br>
+							</span>
+							<span slot="reference">
+								<el-tag style="margin-left: 10px;" type="success">多项举例1</el-tag>
+							</span>
+						</el-popover>
+					</span>
+					
+					<span>
+						<el-popover trigger="hover" placement="top" title="不确定多子项目 (按比例收费)">
+							<span>
+								举例: 合同价为50万, 第一笔收30% 15万, 第二笔收50% 25万, 
+								<br>								    第三笔收20% 10万  共三笔收费
+								<br>
+								<br>
+								1. 录入第一笔收款, 30% 15万:
+								<br>
+								1) 选择开票方式为"<span style="color: red"><strong>不确定多子项目</strong></span>"
+								<br>
+								2) <strong>不点选</strong>子项目
+								<br>
+								3) 输入开票金额 150000, 提交
+								<br>
+								<br>
+								2. 录入第二笔收款, 50% 25万:
+								<br>
+								1) 选择开票方式为"<span style="color: red"><strong>不确定多子项目</strong></span>"
+								<br>
+								2) <strong>不点选</strong>子项目
+								<br>
+								3) 输入开票金额 250000, 提交
+								<br>
+								<br>
+								3. 录入第三笔收款, 10% 10万:
+								<br>
+								1) 选择开票方式为"<span style="color: red"><strong>不确定多子项目</strong></span>"
+								<br>
+								2) <strong>不点选</strong>子项目
+								<br>
+								3) 输入开票金额 100000, 提交
+								<br>
+							</span>
+							<span slot="reference">
+								<el-tag style="margin-left: 10px;" type="success">多项举例2</el-tag>
+							</span>
+						</el-popover>
+					</span>
+					<span>
+						<el-popover trigger="hover" placement="top" title="多子项目混合 (不能确认项目的预收款+能确认项目尾款">
+							<span>
+								举例: 合同价为4万, 第一笔预收款1.2万, 当时不能确定子项目数
+								<br>
+								第二笔尾款2.8万, 能确定3个子项目aaa,bbb,ccc, 共两笔收费
+								<br>
+								<br>
+								1. 录入第一笔收款, 预收款 1.2万:
+								<br>
+								1) 选择开票方式为"<span style="color: red"><strong>不确定多子项目</strong></span>"
+								<br>
+								2) <strong>不点选</strong>子项目
+								<br>
+								3) 输入开票金额 12000, 提交
+								<br>
+								<br>
+								2. 录入第二笔收款, 尾款 2.8万:
+								<br>
+								1) 选择开票方式为"<span style="color: red"><strong>可确定多子项目</strong></span>"
+								<br>
+								2) <strong>点选1个或多个</strong>子项目 (aaa, bbb 和 ccc)
+								<br>
+								3) 输入开票金额 28000, 提交
+								<br>
+							</span>
+							<span slot="reference">
+								<el-tag style="margin-left: 10px;" type="success">多项举例3</el-tag>
+							</span>
+						</el-popover>
+					</span>
 				</el-form-item>
 			</el-col>
 		</el-row>
@@ -273,9 +463,9 @@
 				</el-form-item>
 			</el-col>
 			<el-col :span="12">
-				<el-form-item label="参考应收费用" prop="totalReceivable" class="red-item">
+				<el-form-item label="参考应收费用" prop="totalReceivable">
 					<el-input v-model="subReceiptForm.totalReceivable" style="width: 100%" clearable
-					disabled
+					readonly
 					oninput="value=value.replace(/[^\d.]/g,'')"
 					></el-input>
 					<span>
@@ -287,13 +477,14 @@
 				</el-form-item>
 			</el-col>
 			<el-col :span="12">
-				<el-form-item label="子项目号" prop="bindingSubProjNum" class="red-item">
+				<el-form-item label="子项目号" prop="bindingSubProjNum">
 					<el-input v-model="subReceiptForm.bindingSubProjNum" style="width: 100%" clearable
-					type="textarea" autosize disabled></el-input>
+					type="textarea" autosize readonly></el-input>
 				</el-form-item>
 			</el-col>
 			<el-col :span="12">
-				<el-form-item label="子项目id" prop="bindingSubProjId" class="red-item">
+				<el-form-item label="子项目id" prop="bindingSubProjId"
+				:rules="subReceiptForm.makeOutPattern==2?[]:bindingSubProjId">
 					<el-input v-model="subReceiptForm.bindingSubProjId" style="width: 100%" clearable
 					type="textarea" autosize disabled></el-input>
 				</el-form-item>
@@ -407,13 +598,28 @@ export default {
 				makeOutPattern:[{ required: true, message: '请选择对应项目切换', trigger: 'blur' }],
 				invoiceTitle:[{ required: true, message: '请输入开票抬头', trigger: 'blur' }],
 				//bindingSubProjNum:[{ required: true, message: '请选择子项目号', trigger: 'blur' }],
-				bindingSubProjId:[{ required: true, message: '请选择子项目Id', trigger: 'blur' }],
+				//bindingSubProjId:[{ required: true, message: '请选择子项目Id', trigger: 'blur' }],
 			},
 			inputReq:[{ required: true, message: '请输入', trigger: 'blur' }],
 			invoiceTypeOptions:['专用发票','普通发票'],
 			
+			bindingSubProjId:[{ required: true, message: '请选择子项目', trigger: 'blur' }],
+			
 			//下拉选项
 			receiptTypeOptions:['专用发票','普通发票','开收据','无'],
+			isElectronicOptions:['纸质', '电子'],
+			/* 
+			isElectronicOptions:[
+			  {
+				value: 0,
+				label: '纸质'
+			  }, {
+				value: 1,
+				label: '电子'
+			  },
+			],
+			 */
+			isElectronic:[{ required: true, message: '请选择电子或纸质发票', trigger: 'blur' }],
 			
 			
 			//远程数据
@@ -455,13 +661,17 @@ export default {
 			
 			makeOutPatternOption:[
 				{
-					label:'单个项目 (一个项目对应一张或多张发票)',
+					label:'单一项目 (一个项目由多家公司付款 / 一个项目的预收款或多个进度的收费)',
 					value:0,
 				},
 				{
-					label:'多个项目 (一张发票对应一个或多个项目)',
+					label:'可确定多子项目 (一笔收费对应多个子项目)',
 					value:1,
-				},				
+				},
+				{
+					label:'不确定多子项目 (不指定对应子项目, 含预收款或按进度收费)',
+					value:2,
+				},
 			]
 		}
 	},
@@ -501,7 +711,7 @@ export default {
 					return "success";
 				}else if(data == '当前凭证' || data =='单项可开'){
 					return "primary";
-				}else if(data == '已开凭证'){
+				}else if(data == '多项已开'){
 					return "danger";
 				}else{
 					return "info";
@@ -536,6 +746,7 @@ export default {
 		//静态数据
 		var subReceiptForm = {
 			receiptType: '普通发票', //凭证类型
+			isElectronic:'电子', //电子或纸质
 			
 			totalAmount: '', //开票金额
 			totalReceivable: '', //应收金额
@@ -586,7 +797,9 @@ export default {
 					.then(() => {
 						//远程更新
 						var subData = {
+							projId: this.projId,
 							receiptType: this.subReceiptForm.receiptType,
+							isElectronic: this.subReceiptForm.isElectronic,
 							invoiceTitle: this.subReceiptForm.invoiceTitle,
 							dutyParagraph: this.subReceiptForm.dutyParagraph,
 							address: this.subReceiptForm.address,
@@ -693,14 +906,14 @@ export default {
 													const pzSubProjId = item3.bindingSubProjId?item3.bindingSubProjId.split(','):[];
 													if(pzSubProjId.indexOf(newItem.subProjId) != -1){
 														
-														newItem.receiptStatus =  "已开凭证"
+														newItem.receiptStatus =  "多项已开"
 														
 														//是否在当前凭证
 														const dqSubProjId = this.subReceiptForm.bindingSubProjId?this.subReceiptForm.bindingSubProjId.split(','):[];
 														if(dqSubProjId.indexOf(newItem.subProjId) != -1){
 															newItem.receiptStatus =  "当前凭证"
 														}else{
-															newItem.receiptStatus =  "已开凭证"
+															newItem.receiptStatus =  "多项已开"
 														}
 														
 														
@@ -758,7 +971,7 @@ export default {
 												//单项可以继续开票
 												newItem.receiptStatus =  "单项可开"
 											}else{
-												newItem.receiptStatus =  "已开凭证"
+												newItem.receiptStatus =  "多项已开"
 											}
 											
 										}
@@ -921,12 +1134,7 @@ export default {
 			this.$message.info('导出功能未完成')
 		},
 		
-		//切换单个或多个项目
-		handleChangeMakeOutPattern(){
-			//取消点击对应行
-			this.$refs.subTable.clearSelection()
-		},
-		
+		//切换单个或多个项目		
 		handleCopyTotalReceivable(){
 			this.subReceiptForm.totalAmount = this.subReceiptForm.totalReceivable;
 		},
@@ -945,6 +1153,12 @@ export default {
 				this.subReceiptForm.invoiceTitle = [];
 			}else{
 				this.subReceiptForm.invoiceTitle = '';
+			}
+			
+			if(val != '普通发票'){
+				this.subReceiptForm.isElectronic = '';
+			}else{
+				this.subReceiptForm.isElectronic = '电子';
 			}
 		},
 		
@@ -1061,6 +1275,7 @@ export default {
 							this.getInvoiceTitleListData(projId, (itData)=>{
 								this.invoiceTitleList = itData
 								
+								this.subReceiptForm.invoiceTitle = invoiceData.invoiceTitle;
 								this.subReceiptForm.dutyParagraph = invoiceData.dutyParagraph;
 								if(invoiceData.receiptType == '专用发票'){
 									this.subReceiptForm.address = invoiceData.address;
@@ -1085,13 +1300,13 @@ export default {
 		
 		selectInit(row,index){
 			if(this.subReceiptForm.makeOutPattern == 0){
-				if(row.receiptStatus=='已开凭证'){
+				if(row.receiptStatus=='多项已开'){
 					return false  //不可勾选
 				}else{    
 					return true  //可勾选
 				}
 			}else{
-				if(row.receiptStatus=='已开凭证' || row.receiptStatus=='单项可开'){
+				if(row.receiptStatus=='多项已开' || row.receiptStatus=='单项可开'){
 					return false  //不可勾选
 				}else{    
 					return true  //可勾选
@@ -1102,21 +1317,26 @@ export default {
 		},
 		
 		onSelect(row){//点击行选中复选框
-			if(row.receiptStatus=='已开凭证'){
-				
+			if(this.subReceiptForm.makeOutPattern == 2){
+				//不可勾选
+				this.$message.warning('当前项目开票方式, 不用勾选子项目')
 			}else{
-				if(this.subReceiptForm.makeOutPattern == 0){
-					//清空勾选
-					this.$refs.subTable.clearSelection()
-					this.$refs.subTable.toggleRowSelection(row);
+				if(row.receiptStatus=='多项已开'){
+					
 				}else{
-					if(row.receiptStatus=='单项可开'){
-						
-					}else{
+					if(this.subReceiptForm.makeOutPattern == 0){
+						//清空勾选
+						this.$refs.subTable.clearSelection()
 						this.$refs.subTable.toggleRowSelection(row);
+					}else{
+						if(row.receiptStatus=='单项可开'){
+							
+						}else{
+							this.$refs.subTable.toggleRowSelection(row);
+						}
 					}
+					
 				}
-				
 			}
 		},
 		onSelectsion(row){//选中复选框操作
@@ -1142,6 +1362,19 @@ export default {
 				this.subReceiptForm.bindingSubProjId = subProjId;
 				this.subReceiptForm.bindingSubProjNum = subProjNum;
 			//}
+		},
+		
+		handleChangeMakeOutPattern(val){
+			//取消点击对应行
+			console.log('???', val)
+			//清空勾选
+			this.$refs.subTable.clearSelection()
+			
+			this.subReceiptForm.totalAmount = '';
+			this.subReceiptForm.totalReceivable = '';
+			this.subReceiptForm.bindingSubProjNum = '';
+			this.subReceiptForm.bindingSubProjId = '';
+			
 		},
 				
 		changeMoneyToChinese(money){  

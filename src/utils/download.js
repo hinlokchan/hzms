@@ -61,3 +61,54 @@ export function downloadExcel(formData, path, companyId) {
         }
     };
 }
+
+export function downloadImageReview(formData, path, companyId, success) {
+    var imageUrl = '';
+	
+	
+    startLoading();
+    var oReq = new XMLHttpRequest()
+    // url参数为拿后台数据的接口
+    oReq.open('POST', ProManageAPIServer + path, true)
+	
+	//211101变动 新增: 多个公司切换
+	oReq.setRequestHeader('companyId',companyId)
+	
+    oReq.responseType = 'blob'
+    oReq.onload = function (oEvent) {
+        var content = oReq.response
+        var elink = document.createElement('a')
+        
+		var iamgeType = oReq.getResponseHeader('content-type')
+		var timestamp=new Date().getTime();  
+        elink.download = timestamp
+        elink.style.display = 'none'
+        var blob = new Blob([content], {type: iamgeType})
+        elink.href = URL.createObjectURL(blob)
+		document.body.appendChild(elink)
+		
+		imageUrl= elink.href
+    }
+	
+    oReq.send(formData)
+    oReq.onloadend = e => {
+		
+		
+        if (oReq.status === 200) {
+            setTimeout(function() {
+                endLoading()
+				success(imageUrl);
+                //Message.success('下载成功');
+            }, 300);
+        } else {
+            setTimeout(function() {
+                endLoading()
+                Message.error('下载失败');
+            }, 300);
+        }
+		
+		//console.log(e)
+		
+		
+    };
+}

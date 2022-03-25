@@ -119,37 +119,39 @@
 	v-if="subInfoForm">
       <span class="work-title-name">子项目信息 <el-tag :type="newButtonType(registerStatus)" plain size="medium">{{newButtonValue(registerStatus)}}</el-tag></span>
 	  <span class="work-title-button">
-		<!-- 
-	    <el-button
-	        size="medium"
-			icon="el-icon-upload2"
-			type="warning"
-		    @click="importSubProj(projId,subProjId)"
-	    >导入</el-button>
-		 -->
-		<el-button
-		    size="medium"
-			icon="el-icon-download"
-			type="primary"
-		    @click="exportSubProj('三审', projId,subProjId)"
-			v-if="registerStatus>0"
-		>导出三审</el-button>
 		
-		<el-button
-		    size="medium"
-			icon="el-icon-download"
-			type="primary"
-		    @click="exportSubProj('正评', projId,subProjId)"
-			v-if="registerStatus>0"
-		>导出正评</el-button>
+		<!-- icon="el-icon-download" 
+		<el-button-group style="margin-left: 10px;" v-if="registerStatus>0">
+			<el-button type="primary" size="medium" plain disabled>生成</el-button>
+			<el-button
+				size="medium"
+				type="success"
+				@click=""
+			>二维码</el-button>
+		</el-button-group>
+		-->
 		
-		<el-button
-		    size="medium"
-			icon="el-icon-download"
-			type="primary"
-		    @click="exportSubProj('底单', projId,subProjId)"
-			v-if="registerStatus>0"
-		>导出底单</el-button>
+		<el-button-group style="margin-left: 10px;" v-if="registerStatus>0">
+			<el-button type="primary" size="medium" plain disabled>导出</el-button>
+			
+			<el-button
+				size="medium"
+				type="primary"
+				@click="exportSubProj('三审', projId,subProjId)"
+			>三审</el-button>
+			
+			<el-button
+				size="medium"
+				type="primary"
+				@click="exportSubProj('正评', projId,subProjId)"
+			>正评</el-button>
+			
+			<el-button
+				size="medium"
+				type="primary"
+				@click="exportSubProj('底单', projId,subProjId)"
+			>底单</el-button>
+		</el-button-group>
 	  </span>
     </div>
 	
@@ -673,7 +675,7 @@
 		<el-divider>其他信息</el-divider>
 		<el-row :gutter="20">
 			<el-col :span="8">
-				<el-form-item label="备案号" prop="regRecordNum" class="red-item">
+				<el-form-item label="备案号" prop="regRecordNum">
 					<el-input v-model="subInfoForm.regRecordNum" style="width: 100%" clearable></el-input>
 				</el-form-item>
 			</el-col>
@@ -1054,7 +1056,7 @@ export default {
 				],
 				
 				//subOtherInfoRules其他信息
-				regRecordNum:[{ required: true, message: '请输入备案号', trigger: 'blur' }],
+				//regRecordNum:[{ required: true, message: '请输入备案号', trigger: 'blur' }],
 				regContractNum:[{ required: true, message: '请在前页面取合同号', trigger: 'blur' }],
 				regArrgType:[{ required: true, message: '请联系计划部门选择安排类型', trigger: 'blur' }],
 				
@@ -2225,6 +2227,8 @@ export default {
 							//刷新发票表单
 							this.getInvoiceTitleListData(projId, (itData)=>{
 								this.invoiceTitleList = itData
+								
+								this.subInfoForm.cdInvoiceTitle = invoiceData.invoiceTitle;
 							});
 						}
 					})
