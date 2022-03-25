@@ -85,7 +85,7 @@
 	
 	
     <el-dialog
-      title="新增项目"
+      title="新增子项目"
       :visible.sync="subProjVisible"
       width="800px"
 	  top="20px"
@@ -355,7 +355,7 @@
 	</el-dialog>
 	
 	<el-dialog
-	  title="新增项目前, 请先修改第一条项目的子项目号"
+	  title="新增子项目前, 请先修改第一条项目的子项目号"
 	  :visible.sync="subBasicInfoDialogVisible"
 	  width="800px"
 	  :close-on-click-modal = "false"
@@ -498,8 +498,50 @@
 <!--        ref="qrcode"-->
 <!--        style="margin-left:27%"-->
 <!--      ></div>-->
-      <img :src="qrCodeSrc" alt="">
+	  <div style="text-align: center;">
+		<img :src="qrCodeSrc" alt="">
+	  </div>
     </el-dialog>
+	
+	<!-- 取子项目二维码 -->
+	<el-dialog
+	  title="生成项目二维码"
+	  width="600px"
+	  :visible.sync="showSubQRCodeVisible"
+	>
+	  <el-form :model="showSubQRCodeForm" label-width="120px">
+	    <el-form-item label="项目报告号">{{showSubQRCodeForm.reportNum}}</el-form-item>
+	    <el-form-item label="项目名称">{{showSubQRCodeForm.subProjName}}</el-form-item>
+	    <el-form-item label="项目基准日">{{showSubQRCodeForm.subBaseDate}}</el-form-item>
+	    <el-form-item label="项目评估值(万元)">
+	      <el-input v-model="showSubQRCodeForm.accessedValue"></el-input>
+	    </el-form-item>
+	  </el-form>
+	  <div
+	    slot="footer"
+	    class="dialog-footer"
+	  >
+	    <el-button @click="showSubQRCodeVisible = false">取 消</el-button>
+	    <el-button
+	      @click="handleSubQRCode()"
+	      type="primary"
+	    >生成</el-button>
+	  </div>
+	</el-dialog>
+	
+	<!-- 
+	<el-dialog
+	      width="30%"
+	      @close="showSubQRCodeVisible = false"
+	      :visible.sync="showSubQRCodeVisible"
+	      append-to-body
+	    >
+	      <div>
+	        <span style="color: red">Tips: 右键二维码-图片另存为即可保存</span>
+	      </div>
+	      <img :src="qrCodeSrc" alt="">
+	</el-dialog>
+	 -->
     <el-dialog
       title="取往月报告号"
       :visible.sync="getOldNumVisible"
@@ -622,13 +664,6 @@
 				  size="medium"
 				  @click="openContractNumDialog"
 			  ><i class="el-icon-edit"></i>修改</el-button>
-			 
-			  <!-- 
-			  <el-tag
-			    type="primary"
-				@click="openContractNumDialog"
-			  >修改</el-tag>
-			  -->
 			  
 			  <el-tag
 			    style="margin-left: 10px;"
@@ -638,7 +673,16 @@
 				v-if="projDetail.contractNum.externalContractNum"
 			  >复制</el-tag>
 			  
-			  <br><br> 
+			  <br><br>
+			  <span>合同价(元)：</span>{{projDetail.contractNum.contractPrice}} 
+			  <el-button
+				type="text"
+				size="medium"
+				@click="updateContractPrice"  
+			  ><i class="el-icon-edit"></i></el-button>
+			  <br>
+			  ({{changeMoneyToChinese(projDetail.contractNum.contractPrice)}})
+			  <br><br>
 			</div>
 		</div>
 	</el-dialog>
@@ -1174,7 +1218,7 @@
 			<span>
 				<strong>1. 项目:</strong>
 				<br>
-				有多个项目时, 先点"新增项目"
+				有多个项目时, 先点"新增子项目"
 				<br>
 				第一个项目需补充"子项目号"
 				<br>
@@ -1281,7 +1325,7 @@
 			  @click="handleAddSubProj(projDetail.projId)"
 			  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
 			  style="margin-left: 20px;"
-			>新增项目</el-button>
+			>新增子项目</el-button>
 		</el-tooltip>
 	  </span>
 	</div>
@@ -1478,6 +1522,15 @@
 	        @click="delSubProj(scope.row)"
 			v-if="scope.row.isDefault != 1"
 	      >删除</el-button>
+		  
+		  <div style="height: 10px;"></div>
+		  <el-button
+		  	v-if="projDetail.projType == 1010 || projDetail.projType == 1030 || projDetail.projType == 1041 || projDetail.projType == 1042"
+		  	icon="el-icon-lx-qrcode"
+		  	size="mini"
+		  	@click="setSubQRCode(scope.row)"
+		  	:disabled="projDetail.projState == 2 ? true : false"
+		  >取二维码</el-button>
 	    </template>
 	  </el-table-column>
 	  
@@ -1645,7 +1698,7 @@
 					  
 					  <el-table-column label="应收费用" width="100" prop="cdReceivable" ></el-table-column>
 					  
-					  <el-table-column label="票费差额" width="80" prop="difference" >
+					  <el-table-column label="票费差额" width="100" prop="difference" >
 						  <template slot-scope="scope">
 							  <el-tag :type="newButtonTypeDifference(scope.row.difference)"
 							  v-if="scope.row.difference">
@@ -2149,15 +2202,23 @@
             </div>
             <div class="text item">
               <div class="item">
-                <span v-if="this.contractNum == ''">未取号</span>
+                <span v-if="contractNum == ''">未取号</span>
                 <div v-else>
-                  <span>公司合同号：</span>{{this.contractNum}}<br>
-                  <span>外部合同号：</span>{{this.projDetail.contractNum.externalContractNum}}
+                  <span>公司合同号：</span>{{contractNum}}<br>
+                  <span>外部合同号：</span>{{projDetail.contractNum.externalContractNum}}
                   <el-button
                       type="text"
                       size="medium"
                       @click="openContractNumDialog"
                   ><i class="el-icon-edit"></i></el-button>
+				  <br>
+				  <span>合同价(元)：</span>{{projDetail.contractNum.contractPrice}}
+				  <el-button
+				      type="text"
+				      size="medium"
+				      @click="updateContractPrice"
+				  ><i class="el-icon-edit"></i></el-button>
+				  <br>
                 </div>
               </div>
             </div>
@@ -2713,15 +2774,23 @@
             </div>
             <div class="text item">
               <div class="item">
-                <span v-if="this.contractNum == ''">未取号</span>
+                <span v-if="contractNum == ''">未取号</span>
                 <div v-else>
-                  <span>公司合同号：</span>{{this.contractNum}}<br>
-                  <span>外部合同号：</span>{{this.projDetail.contractNum.externalContractNum}}
+                  <span>公司合同号：</span>{{contractNum}}<br>
+                  <span>外部合同号：</span>{{projDetail.contractNum.externalContractNum}}
                   <el-button
                       type="text"
                       size="medium"
                       @click="openContractNumDialog"
                   ><i class="el-icon-edit"></i></el-button>
+				  <br>
+				  <span>合同价(元)：</span>{{projDetail.contractNum.contractPrice}}
+				  <el-button
+				      type="text"
+				      size="medium"
+				      @click="updateContractPrice"
+				  ><i class="el-icon-edit"></i></el-button>
+				  <br>
                 </div>
               </div>
             </div>
@@ -2941,7 +3010,7 @@ import { host } from '@/config'
 import { createReportQrCode,editProject, getDetailProjInfo,
   getWorkAssignment, delWorkAssignment, setWorkAssignment, createReportNum,
   deleteReportNum, alterProjType, getProjInfoTable, getOldReportNum,
-  createContractNum, deleteContractNum, setProjState ,updateExternalContractNum} from '@/api/index'
+  createContractNum, deleteContractNum, setProjState ,updateExternalContractNum, updateContractInfo} from '@/api/index'
 import { addSubProject, getSubProjectInfoList, editSubProject, delSubProject , removeSubProjNum, getReceiptList, delSubProjectReceipt, getRegisterList } from '@/api/subReport'
 import { getEvalObjDetail } from '@/api/assemobjdetail'
 import { checkFaRegister, submitFaRegister, editFaRegister } from '@/api/formalreg'
@@ -2956,7 +3025,7 @@ import OpRecord from './OpRecord'
 import { getToken } from '../../api/cfs';
 var ProManageAPIServer = `${host.baseUrl}/${host.ProManageAPIServer}`
 
-import {downloadExcel} from '../../utils/download';
+import {downloadExcel, downloadImageReview} from '../../utils/download';
 
 export default {
   name: 'workhandle',
@@ -3269,12 +3338,19 @@ export default {
 	  		  
 	  },
 	  
+	  //取子二维码
+	  showSubQRCodeVisible:false,
+	  showSubQRCodeForm:{},
+	  
 	  //发票信息
 	  receiptList:[],
 	  registerList:[],
 	  
 	  //合同号查看弹出框
 	  contractNumReviewDialogVisible:false,
+	  
+	  //凭证信息
+	  //invoicePrice:0,
 	  
     };
   },
@@ -3965,6 +4041,7 @@ export default {
       // }
     },
 
+	//取二维码 通过projId
     setQRCode() {
       this.setQRCodeVisible = true
     },
@@ -4004,9 +4081,60 @@ export default {
       })
     },
     closeQRCode() {
-      this.$refs.qrcode.innerHTML = ''
+      //this.$refs.qrcode.innerHTML = ''
       this.qrCodeSrc = ''
     },
+	
+	//取二维码, 通过subProjId
+	setSubQRCode(subData){
+		
+		const showSubQRCodeForm={
+			subProjId: subData.subProjId,
+			accessedValue:subData.regEvalConclusionValue?subData.regEvalConclusionValue/10000:'',
+			reportNum: this.handleShowSubNum(this.reportNum.zph?this.reportNum.zph:this.reportNum.hhh?this.reportNum.hhh:this.reportNum.cph, subData.subProjNum),
+			subProjName: subData.subProjName,
+			subBaseDate: subData.subBaseDate,
+		}
+		
+		this.showSubQRCodeForm = showSubQRCodeForm
+		
+		this.showSubQRCodeVisible = true;
+	},
+	handleSubQRCode() {
+	  if (this.showSubQRCodeForm.assessedValue == '') {
+	    this.$message.warning('请填写项目评估值')
+	  }else{
+		var timestamp=new Date().getTime();  
+		
+		var formData = new FormData()
+		formData.append('subProjId', this.showSubQRCodeForm.subProjId)
+		formData.append('accessedValue', this.showSubQRCodeForm.accessedValue)		
+		const path = "qrCode/createReportQrCode?s="+timestamp
+		downloadImageReview(formData, path, this.companyId, (res)=>{
+			this.qrCodeSrc = res
+			this.qrcodeVisible = true;
+		});
+		
+		/* 
+		createReportQrCode(this.showSubQRCodeForm, this.companyId)
+		.then(res => {
+			var timestamp=new Date().getTime();  
+					  
+			this.qrCodeSrc = `${ProManageAPIServer}qrCode/readReportQrCode/`+this.showSubQRCodeForm.subProjId+"?s="+timestamp;
+			
+			this.qrCodeSrc = `${ProManageAPIServer}qrCode/readReportQrCode/`+this.showSubQRCodeForm.subProjId+"?s="+timestamp;
+			
+			this.qrcodeVisible = true
+		})
+		.catch(err => {
+			console.log(err)
+			this.$message.error('二维码生成失败');
+		});
+		 */
+	  }
+	},
+	
+	
     handleCreateContractNum() {
 
         if (this.projDetail.projContactType === '定点采购' || this.projDetail.projContactType === '中介超市') {
@@ -4017,6 +4145,40 @@ export default {
 
     },
     createContractNumBasic(){
+		if (this.contractNum) {
+		  this.$message.warning('已存在合同号！');
+		}else{			
+			this.$prompt('请输入合同价(元)', '即将获取合同号', {
+			  confirmButtonText: '确定',
+			  cancelButtonText: '取消',
+			  inputPattern: /^(([1-9]{1}\d*)|(0{1}))(\.\d{0,2})?$/,
+			  inputErrorMessage: '金额格式不正确'
+			}).then(({ value }) => {
+				//211101变动 新增: 多个公司切换
+				const createData = {
+					projId: this.projDetail.projId, 
+					externalContractNum: this.preExternalContractNum,
+					contractPrice: value
+				}
+				createContractNum(createData, this.companyId)
+				.then(res => {
+				
+					//211207变动 刷新整页改成局部刷新
+					//this.reload();
+					this.getDetail()
+					  
+					//211207变动 修改projid刷新操作记录
+					this.opRefresh();
+				})
+				.catch(err => {
+					this.$message.error(err.errorMsg);
+				});
+			});
+		
+		}
+		
+		
+	  /* 
       this.$confirm('即将获取合同号', '提示', { type: 'info' })
           .then(() => {
             if (this.contractNum) {
@@ -4045,7 +4207,36 @@ export default {
           .catch(() => {
 
           });
+	  */  
     },
+	updateContractPrice(){		
+		this.$prompt('请输入新的合同价(元)', '修改合同价', {
+		  confirmButtonText: '确定',
+		  cancelButtonText: '取消',
+		  inputValue: this.projDetail.contractNum.contractPrice,
+		  inputPattern: /^(([1-9]{1}\d*)|(0{1}))(\.\d{0,2})?$/,
+		  inputErrorMessage: '金额格式不正确'
+		}).then(({ value }) => {
+			//211101变动 新增: 多个公司切换
+			const updateData = {
+				contractNum: this.contractNum, 
+				contractPrice: value
+			}
+			updateContractInfo(updateData, this.companyId)
+			.then(res => {
+			
+				//211207变动 刷新整页改成局部刷新
+				//this.reload();
+				this.getDetail()
+				  
+				//211207变动 修改projid刷新操作记录
+				this.opRefresh();
+			})
+			.catch(err => {
+				this.$message.error(err.errorMsg);
+			});
+		});
+	},
     createContractNumWithExternal() {
         if (this.preExternalContractNum === '') {
             this.$message.error('请输入外部合同号')
@@ -4328,7 +4519,7 @@ export default {
 					
 			this.subProjVisible = true
 		}else{
-			this.$message.warning('新增项目前, 请先修改第一条项目的子项目号')
+			this.$message.warning('新增子项目前, 请先修改第一条项目的子项目号')
 			
 			const subBasicInfoForm = {
 				subProjId:this.subTableData[0].subProjId,
@@ -4549,27 +4740,31 @@ export default {
 	},	
 	
     delSubProj(row) {
-      this.$confirm('确定要删除吗？', '提示', { type: 'warning' })
-        .then(() => {
+      if(row.subProjStatus.mainStatus>0){
+		this.$message.warning('已登记的项目不能删除, 如有问题请联系信息部');
+	  }else{
+		this.$confirm('确定要删除吗？', '提示', { type: 'warning' })
+		.then(() => {
 		  //211101变动 新增: 多个公司切换
 		  const delSubData = {
-		  	subProjId: row.subProjId
+			subProjId: row.subProjId
 		  }
-          delSubProject(delSubData, this.companyId)
-            .then(res => {
-              this.$message.success('删除子项目成功')
+		  delSubProject(delSubData, this.companyId)
+			.then(res => {
+			  this.$message.success('删除子项目成功')
 			  
-              this.reloadSubTableData()
-            })
-            .catch(err => {
+			  this.reloadSubTableData()
+			})
+			.catch(err => {
 				if(err.statusCode == 500){
 					this.$message.warning('删除失败，至少保留一个项目')
 				}else{
 					this.$message.warning('删除失败，请稍后重试')
 				}              
-            })
-        })
-        .catch(() => { })
+			})
+		})
+		.catch(() => { })  
+	  }
     },
 	
 	removeSubProjNum(subProjId) {
@@ -4633,7 +4828,7 @@ export default {
 			return;
 		  }
 		  
-		  if(index === 3 || index === 4){
+		  if(index ===2 || index === 3 || index === 4 || index === 5){
 			const values = data.map(item => Number(item[column.property]));
 			if (!values.every(value => isNaN(value))) {
 				sums[index] = values.reduce((prev, curr) => {
@@ -4644,9 +4839,61 @@ export default {
 					return prev;
 				  }
 				}, 0);
-				sums[index] = sums[index].toFixed(2) + '元';
+				
+				if(index ===3 && this.projDetail.contractNum){
+					//跟开票列做对比
+					const invoicePrice = parseFloat(sums[index]);
+					const contractPrice = parseFloat(this.projDetail.contractNum.contractPrice);
+					if(contractPrice){
+						if(contractPrice-invoicePrice == 0){
+							sums[2] = '合同价: '+contractPrice.toFixed(2) + ', 合同价和开票一致';
+						}else{
+							sums[2] = '合同价: '+contractPrice.toFixed(2) + ', 开票差额: '+ (contractPrice-invoicePrice).toFixed(2) ;
+						}
+						
+					}else{
+						sums[2] = '未填报合同价';
+					}
+				}
+				
+				
+				if(index ===5){
+					const invoicePrice = parseFloat(sums[3]);
+					const receivablePrice = parseFloat(sums[4]);
+					sums[index] = (receivablePrice-invoicePrice).toFixed(2);
+				}
+				
+				if(index ===3||index ===4){
+					sums[index] = sums[index].toFixed(2);
+				}
+				
+				
+				/* 
+				if(index ===4){
+					const invoicePrice = parseFloat(sums[3]);
+					const receivablePrice = parseFloat(sums[4]);
+					sums[index] = sums[index].toFixed(2) + '元, 开票差额: '+ (receivablePrice-invoicePrice).toFixed(2) + '元';
+				}
+				
+				if(index ===3){
+					sums[index] = sums[index].toFixed(2) + '元';
+				}
+				 */
+				
 			}  
 		  }
+		  
+		  /* 
+		  if(index ===2){
+			if(this.projDetail.contractNum){
+				const contractPrice = parseFloat(this.projDetail.contractNum.contractPrice);
+				if(contractPrice){
+					sums[index] = '合同价: '+contractPrice.toFixed(2) + '元, 开票差额: '+ (contractPrice-this.invoicePrice).toFixed(2) + '元';
+					return;
+				}
+			}	
+		  }
+		  */
 		});
 
 		return sums;
@@ -5182,6 +5429,78 @@ export default {
 	    })
 	},
 	
+	changeMoneyToChinese(money){
+		var cnNums = new Array("零","壹","贰","叁","肆","伍","陆","柒","捌","玖"); //汉字的数字  
+		var cnIntRadice = new Array("","拾","佰","仟"); //基本单位  
+		var cnIntUnits = new Array("","万","亿","兆"); //对应整数部分扩展单位  
+		var cnDecUnits = new Array("角","分","毫","厘"); //对应小数部分单位  
+		//var cnInteger = "整"; //整数金额时后面跟的字符  
+		var cnIntLast = "元"; //整型完以后的单位  
+		var maxNum = 999999999999999.9999; //最大处理的数字  
+		  
+		var IntegerNum; //金额整数部分  
+		var DecimalNum; //金额小数部分  
+		var ChineseStr=""; //输出的中文金额字符串  
+		var parts; //分离金额后用的数组，预定义  
+		if( money == "" ){  
+			return "";  
+		}  
+		money = parseFloat(money);  
+		if( money >= maxNum ){  
+			$.alert('超出最大处理数字');  
+			return "";  
+		}  
+		if( money == 0 ){  
+			ChineseStr = cnNums[0]+cnIntLast  
+			return ChineseStr;  
+		}  
+		money = money.toString(); //转换为字符串  
+		if( money.indexOf(".") == -1 ){  
+			IntegerNum = money;  
+			DecimalNum = '';  
+		}else{  
+			parts = money.split(".");  
+			IntegerNum = parts[0];  
+			DecimalNum = parts[1].substr(0,4);  
+		}  
+		if( parseInt(IntegerNum,10) > 0 ){//获取整型部分转换  
+			var zeroCount = 0;  
+			var IntLen = IntegerNum.length;  
+			for(var i=0;i<IntLen;i++ ){  
+				var n = IntegerNum.substr(i,1);  
+				var p = IntLen - i - 1;  
+				var q = p / 4;  
+				var m = p % 4;  
+				if( n == "0" ){  
+					zeroCount++;  
+				}else{  
+					if( zeroCount > 0 ){  
+						ChineseStr += cnNums[0];  
+					}  
+					zeroCount = 0; //归零  
+					ChineseStr += cnNums[parseInt(n)]+cnIntRadice[m];  
+				}  
+				if( m==0 && zeroCount<4 ){  
+					ChineseStr += cnIntUnits[q];  
+				}  
+			}  
+			ChineseStr += cnIntLast;  
+			//整型部分处理完毕  
+		}  
+		if( DecimalNum!= '' ){//小数部分  
+			var decLen = DecimalNum.length;  
+			for(var i=0; i<decLen; i++ ){  
+				var n = DecimalNum.substr(i,1);  
+				if( n != '0' ){  
+					ChineseStr += cnNums[Number(n)]+cnDecUnits[i];  
+				}  
+			}  
+		}  
+		if( ChineseStr == '' ){  
+			ChineseStr += cnNums[0]+cnIntLast;  
+		} 
+		return ChineseStr;  
+	}
   },
 }
 </script>
