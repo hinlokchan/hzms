@@ -330,12 +330,7 @@ export default {
             {
               index: 'workbranch',
               title: '工作台'
-            },
-			{
-			  index: 'workbranchcheck',
-			  icon: 'el-icon-s-check',
-			  title: '工作台处理'
-			},
+            }
           ]
         },
         {
@@ -347,7 +342,6 @@ export default {
           index: 'casesearchdock',
           icon: 'el-icon-discover',
           title: '案例数据库',
-          isNew: true
         },
         {
           index: 'systeminterface',
