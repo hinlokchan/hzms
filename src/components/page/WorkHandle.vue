@@ -279,6 +279,11 @@
 		</el-form-item>
 		
 		<el-divider><strong>项目组成员信息</strong></el-divider>
+		<el-button
+		  type="primary"
+		  size="mini"
+		  @click="handleDefaultTeam"
+		>使用计划成员安排</el-button>
 	    <el-form-item
 	      label="项目负责人"
 	      prop="subProjLeader"
@@ -1538,7 +1543,7 @@
 	    label="登记录入"
 	    width="90"
 	  	fixed="right"
-      v-if=" projDetail.projType === 1020"
+		v-if=" projDetail.projType === 1020"
 	  >
 	    <template slot-scope="scope">
 			  <el-button type="primary" size="mini"
@@ -4551,6 +4556,7 @@ export default {
 	
 	//修改子项目
 	handleEditSubProj(subData) {
+		console.log()
 		
 		//提取项目组成员		
 		const leader = subData.subProjLeader?subData.subProjLeader.split(','):[];
@@ -4573,6 +4579,13 @@ export default {
 			subProjProReviewer:projReviewer,
 			subProjAsst:asst,
 			subFieldSrvy:srvy,
+			
+			//计划成员安排
+			planProjLeader:this.projDetail.projLeader?this.projDetail.projLeader.split(','):[],
+			planProjReviewer:this.projDetail.projReviewer?this.projDetail.projReviewer.split(','):[],
+			planProjProReviewer:this.projDetail.projProReviewer?this.projDetail.projProReviewer.split(','):[],
+			planProjAsst:this.projDetail.projAsst?this.projDetail.projAsst.split(','):[],
+			planFieldSrvy:this.projDetail.fieldSrvy?this.projDetail.fieldSrvy.split(','):[],
 		}
 		this.editSubProjForm = editSubProjForm
 		
@@ -4624,6 +4637,15 @@ export default {
 				this.$message('请填写必填信息或格式有误');
 			}
 		})
+	},
+	handleDefaultTeam(){
+		//console.log('使用计划成员安排', this.editSubProjForm)
+		
+		this.editSubProjForm.subProjLeader = this.editSubProjForm.planProjLeader;
+		this.editSubProjForm.subProjReviewer = this.editSubProjForm.planProjReviewer;
+		this.editSubProjForm.subProjAsst = this.editSubProjForm.planProjAsst;
+		this.editSubProjForm.subProjProReviewer = this.editSubProjForm.planProjProReviewer;
+		this.editSubProjForm.subFieldSrvy = this.editSubProjForm.planFieldSrvy;
 	},
 	
 	
@@ -5011,36 +5033,44 @@ export default {
     isWorkArrgDialog(subData) {	
 	  //220221 新增子项目 惠正,打开前获取
 	  if(subData){
-		//有子项目时, 使用子项目成员信息
-		this.projDetail.subProjId = subData.subProjId;
-		
-		//修改 projMember
-		//提取项目组成员
-		const leader = subData.subProjLeader?subData.subProjLeader.split(','):[];
-		const reviewer = subData.subProjReviewer?subData.subProjReviewer.split(','):[];
-		const projReviewer = subData.subProjProReviewer?subData.subProjProReviewer.split(','):[];
-		const asst = subData.subProjAsst?subData.subProjAsst.split(','):[];
-		const srvy = subData.subFieldSrvy?subData.subFieldSrvy.split(','):[];
-		//this.workArrgmidMember.push(...leader, ...reviewer, ...projReviewer, ...asst, ...srvy)
-		//const mid2 = Array.from(new Set(this.workArrgmidMember))
-		//this.workArrgProjMember = mid2.filter(item => item)
-		
-		//console.log("项目组备选", leader, reviewer, projReviewer, asst, srvy)
-		//console.log(subData.baseDate)
-		var arr = new Array;
-		this.workArrgProjMember = Array.from(new Set(arr.concat(leader, reviewer, projReviewer, asst, srvy)));
-		this.workArrgProjMemberInfo={
-			//baseDate:this.formatDate(subData.baseDate),
-			baseDate:new Date(subData.subBaseDate).getTime(),
-			projLeader:subData.subProjLeader,
-			projReviewer:subData.subProjReviewer,
-			projProReviewer:subData.subProjProReviewer,
-			projAsst:subData.subProjAsst,
-			fieldSrvy:subData.subFieldSrvy,
-		}					
-		//console.log("workArrgProjMember", this.workArrgProjMember);
+		//判断项目组成员是否为空
+		if(subData.subFieldSrvy||subData.subProjAsst||subData.subProjLeader||subData.subProjProReviewer||subData.subProjReviewer){
+		  
+			//有子项目时, 使用子项目成员信息
+			this.projDetail.subProjId = subData.subProjId;
 			
-		this.getWorkAssignmentData("edit")
+			//修改 projMember
+			//提取项目组成员
+			const leader = subData.subProjLeader?subData.subProjLeader.split(','):[];
+			const reviewer = subData.subProjReviewer?subData.subProjReviewer.split(','):[];
+			const projReviewer = subData.subProjProReviewer?subData.subProjProReviewer.split(','):[];
+			const asst = subData.subProjAsst?subData.subProjAsst.split(','):[];
+			const srvy = subData.subFieldSrvy?subData.subFieldSrvy.split(','):[];
+			//this.workArrgmidMember.push(...leader, ...reviewer, ...projReviewer, ...asst, ...srvy)
+			//const mid2 = Array.from(new Set(this.workArrgmidMember))
+			//this.workArrgProjMember = mid2.filter(item => item)
+			
+			//console.log("项目组备选", leader, reviewer, projReviewer, asst, srvy)
+			//console.log(subData.baseDate)
+			var arr = new Array;
+			this.workArrgProjMember = Array.from(new Set(arr.concat(leader, reviewer, projReviewer, asst, srvy)));
+			this.workArrgProjMemberInfo={
+				//baseDate:this.formatDate(subData.baseDate),
+				baseDate:new Date(subData.subBaseDate).getTime(),
+				projLeader:subData.subProjLeader,
+				projReviewer:subData.subProjReviewer,
+				projProReviewer:subData.subProjProReviewer,
+				projAsst:subData.subProjAsst,
+				fieldSrvy:subData.subFieldSrvy,
+			}					
+			//console.log("workArrgProjMember", this.workArrgProjMember);
+				
+			this.getWorkAssignmentData("edit")
+		
+		}else{
+			this.$message.warning('请点击右侧"修改"按钮, 勾选项目组成员, 再进行"安排');
+		}
+		
 	  }else{
 		//没子项目时, 使用计划项目组成员信息
 		this.workArrgProjMember = this.projMember;
