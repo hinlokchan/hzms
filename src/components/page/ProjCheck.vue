@@ -146,6 +146,22 @@
                   <span class="detail-content">{{this.formatDate(detailData.baseDate)}}</span>
                 </el-form-item>
               </el-col>
+			  <el-col :span="8">
+			    <el-form-item
+			      label="创新类型"
+			      class="label"
+			    >
+			      <span class="detail-content">{{detailData.innovationType}}</span>
+			    </el-form-item>
+			  </el-col>
+			  <el-col :span="8">
+			    <el-form-item
+			      label="银行业务类型"
+			      class="label"
+			    >
+			      <span class="detail-content">{{detailData.bankBusinessType}}</span>
+			    </el-form-item>
+			  </el-col>
             </el-row>
             <el-row>
               <el-col :span="24">
@@ -155,7 +171,7 @@
                 >
                   <span class="detail-content">{{detailData.projScope}}</span>
                 </el-form-item>
-              </el-col>
+              </el-col>			  
               <el-col :span="24">
                 <el-form-item
                   label="补充说明"
