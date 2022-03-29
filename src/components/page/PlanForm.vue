@@ -529,6 +529,39 @@
                 ></el-input>
               </el-form-item>
             </el-col>
+			
+			<el-col :span="6">
+			  <el-form-item label="创新类型">
+				<el-select
+				  class="select-width-100"
+				  v-model="form.innovationType"
+				  placeholder="请选择"
+				>
+				  <el-option
+				    v-for="item, index in innovationTypeOptions"
+				    :key="index"
+				    :label="item"
+				    :value="item"
+				  ></el-option>
+				</el-select>
+			  </el-form-item>
+			</el-col>
+			<el-col :span="6">
+			  <el-form-item label="银行业务类型">
+				<el-select
+				  class="select-width-100"
+				  v-model="form.bankBusinessType"
+				  placeholder="请选择"
+				>
+				  <el-option
+					v-for="item, index in bankBusinessTypeOptions"
+					:key="index"
+					:label="item"
+					:value="item"
+				  ></el-option>
+				</el-select>
+			  </el-form-item>
+			</el-col>
             <el-col :span="12">
               <el-form-item label="补充说明">
                 <el-input
@@ -2364,6 +2397,10 @@ export default {
         projTypeOption: [],
         evalObjArray:[],
 		
+		//惠正
+		innovationType:'常规',
+		bankBusinessType:'',
+		
 		//智明
 		mappingObjLocation:'',
 		
@@ -2373,7 +2410,7 @@ export default {
 		auditPeriodEnd:'',
       },
       backupForm: {},
-	  
+	  /* 
 	  //原始form
 	  initform: {
 	    projType: '',
@@ -2411,6 +2448,10 @@ export default {
 	    //lendingBank: [],
 	    projTypeOption: [],
 	    evalObjArray:[],
+		
+		//惠正
+		innovationType:'常规',
+		bankBusinessType:'',
 	  		
 		//智明
 		mappingObjLocation:'',
@@ -2420,7 +2461,7 @@ export default {
 		auditPeriodStart:'',
 		auditPeriodEnd:'',
 	  },
-	  
+	  */
 	  //211214变动 新增: 汇正审计期间
 	  pickerOptions: {
 	  	/* disabledDate(time) {
@@ -2600,6 +2641,9 @@ export default {
         label: 'label'
       },
 	  
+	  innovationTypeOptions:['常规','技术创新型','新型业务'],
+	  bankBusinessTypeOptions:['对公','对私','普惠金融'],
+	  
 	  //211130新增 项目名称和项目范围本地搜索
 	  tableData:[],
 	  projNameOptions:[],
@@ -2646,19 +2690,19 @@ export default {
 	  if(this.companyTabsId == 0){
 		//惠正计划完成天数默认3
 		this.form.compSchedule = 3;
-		this.initform.compSchedule = 3;
 		this.form.arrgType = '1001';
-		this.initform.arrgType = '1001';
+		//this.initform.compSchedule = 3;
+		//this.initform.arrgType = '1001';
 	  }else if(this.companyTabsId == 1){
 		//智明计划完成天数默认10
 		this.form.compSchedule = 10;
-		this.initform.compSchedule = 10;
 		this.form.arrgType = '1002';
-		this.initform.arrgType = '1002';
+		//this.initform.compSchedule = 10;
+		//this.initform.arrgType = '1002';
 	  }else if(this.companyTabsId == 2){
 		//汇正计划完成天数默认15
 		this.form.compSchedule = 15;
-		this.initform.compSchedule = 15;
+		//this.initform.compSchedule = 15;
 	  }
 	  
     } else {
