@@ -5068,7 +5068,7 @@ export default {
 			this.getWorkAssignmentData("edit")
 		
 		}else{
-			this.$message.warning('请点击右侧"修改"按钮, 勾选项目组成员, 再进行"安排');
+			this.$message.warning('请点击右侧"修改"按钮, 勾选项目组成员, 再进行"安排"');
 		}
 		
 	  }else{
