@@ -255,6 +255,11 @@ export default {
           icon: 'el-icon-receiving',
           title: '工作台'
         },
+		{
+		  index: 'workbranchcheck',
+		  icon: 'el-icon-s-check',
+		  title: '工作台处理'
+		},
         // {
         //   index: 'oldplanform',
         //   icon: 'el-icon-document-add',
@@ -330,7 +335,7 @@ export default {
             {
               index: 'workbranch',
               title: '工作台'
-            }
+            },
           ]
         },
         {
