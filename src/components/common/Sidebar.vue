@@ -347,7 +347,6 @@ export default {
           index: 'casesearchdock',
           icon: 'el-icon-discover',
           title: '案例数据库',
-          isNew: true
         },
         {
           index: 'systeminterface',

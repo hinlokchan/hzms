@@ -411,7 +411,7 @@ export default {
       this.takenDate = ''
       this.selectedNode = undefined
       this.options[0].disabled = this.isPostMonth
-      this.options[2].disabled = this.isPostMonth
+      // this.options[2].disabled = this.isPostMonth
     },
     handleCreateReportNum() {
 
