@@ -1367,13 +1367,9 @@ export default {
 		},
 		
 		onSelectAll(row,param){
-			//console.log(row,param)
-			
 			if(this.subReceiptForm.makeOutPattern === "" 
 			|| (this.subReceiptForm.makeOutPattern === 0 && this.subProjectInfoList.length > 1) 
 			|| this.subReceiptForm.makeOutPattern == 2 ){
-				console.log('长度', this.subProjectInfoList.length, this.subReceiptForm.makeOutPattern === 0 && this.subProjectInfoList.length > 1)
-				
 				this.$message.warning('当前开票方式, 不能全选')
 				this.$refs.subTable.clearSelection()
 			}
