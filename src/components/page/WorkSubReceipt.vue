@@ -486,12 +486,12 @@
 				<el-form-item label="子项目id" prop="bindingSubProjId"
 				:rules="subReceiptForm.makeOutPattern==2?[]:bindingSubProjId">
 					<el-input v-model="subReceiptForm.bindingSubProjId" style="width: 100%" clearable
-					type="textarea" autosize disabled></el-input>
+					type="textarea" autosize readonly></el-input>
 				</el-form-item>
 			</el-col>			
 		</el-row>
 	</el-form>
-	
+	<el-divider>项目开票方式为单一项目或可确定多子项目时, 请勾选下方项目</el-divider>
 	<el-table
 	  ref="subTable"
 	  :data="subProjectInfoList"
@@ -500,14 +500,16 @@
 	  max-height="500"
 	  style="width: 100%; margin-top: 20px"
 	  @row-click="onSelect"
-	  @selection-change="onSelectsion"
+	  @selection-change="onSelection"
+	  @select-all="onSelectAll"
 	  v-if="subProjectInfoList">
 	  
+	  <!-- v-if="subReceiptForm.makeOutPattern == 1" -->
 	  <el-table-column
 	  	type="selection"
 	    :selectable='selectInit'
 	  	width="55"
-		v-if="subReceiptForm.makeOutPattern == 1">
+		>
 	  </el-table-column>	  
 	  <el-table-column
 	    label="序号"
@@ -603,7 +605,7 @@ export default {
 			inputReq:[{ required: true, message: '请输入', trigger: 'blur' }],
 			invoiceTypeOptions:['专用发票','普通发票'],
 			
-			bindingSubProjId:[{ required: true, message: '请选择子项目', trigger: 'blur' }],
+			bindingSubProjId:[{ required: true, message: '请在下方表格选择子项目', trigger: 'blur' }],
 			
 			//下拉选项
 			receiptTypeOptions:['专用发票','普通发票','开收据','无'],
@@ -1339,7 +1341,7 @@ export default {
 				}
 			}
 		},
-		onSelectsion(row){//选中复选框操作
+		onSelection(row){//选中复选框操作
 			//console.log(row)
 			//if(row.length > 0){
 				var totalAmount = 0;
@@ -1364,9 +1366,21 @@ export default {
 			//}
 		},
 		
+		onSelectAll(row,param){
+			//console.log(row,param)
+			
+			if(this.subReceiptForm.makeOutPattern === "" 
+			|| (this.subReceiptForm.makeOutPattern === 0 && this.subProjectInfoList.length > 1) 
+			|| this.subReceiptForm.makeOutPattern == 2 ){
+				console.log('长度', this.subProjectInfoList.length, this.subReceiptForm.makeOutPattern === 0 && this.subProjectInfoList.length > 1)
+				
+				this.$message.warning('当前开票方式, 不能全选')
+				this.$refs.subTable.clearSelection()
+			}
+		},
+		
 		handleChangeMakeOutPattern(val){
 			//取消点击对应行
-			console.log('???', val)
 			//清空勾选
 			this.$refs.subTable.clearSelection()
 			
