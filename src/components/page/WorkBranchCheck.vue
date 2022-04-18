@@ -28,7 +28,8 @@
 	  			</el-col>
 	  			<el-col :span="12">		
 	  				<el-form-item label="收费凭证" prop="receiptType">
-	  					<el-input v-model="subBillInfoForm.receiptType" style="width: 100%" readonly></el-input>
+	  					<el-input v-model="subBillInfoForm.receiptType" style="width: 50%" readonly></el-input>
+						<el-input v-model="subBillInfoForm.isElectronic" style="width: 50%" readonly></el-input>
 	  				</el-form-item>
 	  			</el-col>
 			</el-row>
@@ -190,7 +191,8 @@
 			</el-col>
 			<el-col :span="12">		
 				<el-form-item label="收费凭证" prop="receiptType">
-					<el-input v-model="subPayInfoForm.receiptType" style="width: 100%" readonly></el-input>
+					<el-input v-model="subPayInfoForm.receiptType" style="width: 50%" readonly></el-input>
+					<el-input v-model="subPayInfoForm.isElectronic" style="width: 50%" readonly></el-input>
 				</el-form-item>
 			</el-col>
 		</el-row>
@@ -706,7 +708,7 @@
         <el-table-column
           label="操作"
           align="center"
-          width="150"
+          width="220"
         >
           <template slot-scope="scope">
 			<el-button
@@ -715,6 +717,13 @@
 			  @click=""
 			  size="medium"
 			>登记</el-button>
+						
+			<el-button
+			  type="text"
+			  icon="el-icon-download"
+			  @click="exportSubProj('正评', scope.row.projId)"
+			  size="medium"
+			>导出</el-button>
 			
 			<!-- @click.native.stop="editReceiptSubProj(scope.row)" -->
 			
@@ -745,6 +754,7 @@ import CryptoJS from 'crypto-js'
 import {
   getAllAbstractProject, searchMyProject, getReportNum, createReportNum, alterProjType, getSubReportNum, addSubReportNum, deleteReportNum} from '@/api/index'
 import { getSubProjectInfoList, getManageRegisterList, getReceiptList, getRegisterList } from '@/api/subReport'
+import {downloadExcel, downloadImageReview} from '../../utils/download';
 export default {
   name: 'workbranchcheck',
   data() {
@@ -799,6 +809,7 @@ export default {
 		receiptId: '', //凭证id
 		bindingSubProjNum: '', //子项目号
 		receiptType:'', //收费凭证
+		isElectronic:'', //电子/纸质
 		invoiceTitle:'', //开票抬头
 		dutyParagraph:'', //开票税号
 		totalAmount:'',  //开票金额
@@ -840,6 +851,7 @@ export default {
 		receiptId: '', //凭证id
 		bindingSubProjNum: '', //子项目号
 		receiptType:'', //收费凭证
+		isElectronic:'', //收费凭证
 		invoiceTitle:'', //开票抬头
 		dutyParagraph:'', //开票税号
 		totalAmount:'',  //开票金额
@@ -1492,6 +1504,7 @@ export default {
 			receiptId: subData.receiptId, //凭证id
 			bindingSubProjNum: subData.bindingSubProjNum, //子项目号
 			receiptType:subData.receiptType, //收费凭证
+			isElectronic:subData.isElectronic, //电子/纸质
 			invoiceTitle:subData.invoiceTitle, //开票抬头
 			dutyParagraph:subData.dutyParagraph, //开票税号
 			totalAmount:subData.totalAmount,  //开票金额
@@ -1518,6 +1531,7 @@ export default {
 			receiptId: subData.receiptId, //凭证id
 			bindingSubProjNum: subData.bindingSubProjNum, //子项目号
 			receiptType:subData.receiptType, //收费凭证
+			isElectronic:subData.isElectronic, //电子/纸质
 			invoiceTitle:subData.invoiceTitle, //开票抬头
 			dutyParagraph:subData.dutyParagraph, //开票税号
 			totalAmount:subData.totalAmount,  //开票金额
@@ -1586,6 +1600,19 @@ export default {
 				this.$message('请填写必填信息或格式有误');
 			}
 		})
+	},
+	
+	exportSubProj(exportType, projId){
+		var formData = new FormData()
+		formData.append('projId', projId)
+		
+		if(exportType == '正评'){
+			const path = 'register/batchExportRegisterInfoExcel'
+			downloadExcel(formData, path, this.companyId)
+		}else if(exportType == '底单'){
+			const path = 'register/chargeDoc/batchExportExcel'
+			downloadExcel(formData, path, this.companyId)
+		}
 	},
 	
 	copy(e) {
