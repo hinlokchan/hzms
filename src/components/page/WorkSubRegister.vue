@@ -1559,7 +1559,9 @@ export default {
 											spFullData.regArrgType = "A";
 										}										
 										//合同号
-										spFullData.regContractNum = dpData.contractNum.contractNum;
+										//更新: 220418 处理合同号为空时
+										//spFullData.regContractNum = dpData.contractNum.contractNum;
+										spFullData.regContractNum = dpData.contractNum?dpData.contractNum.contractNum:null;
 										//接洽人
 										spFullData.cdProjContact = dpData.projContact											
 										//项目类型
@@ -1632,7 +1634,9 @@ export default {
 										spFullData.regArrgType = "A";
 									}										
 									//合同号
-									spFullData.regContractNum = dpData.contractNum.contractNum;
+									//更新: 220418 处理合同号为空时
+									//spFullData.regContractNum = dpData.contractNum.contractNum;
+									spFullData.regContractNum = dpData.contractNum?dpData.contractNum.contractNum:null;
 									//接洽人
 									spFullData.cdProjContact = dpData.projContact											
 									//项目类型
@@ -1747,7 +1751,9 @@ export default {
 											}
 											
 											//合同号
-											this.subInfoForm.regContractNum = dpData.contractNum.contractNum;
+											//更新: 220418 处理合同号为空时
+											//this.subInfoForm.regContractNum = dpData.contractNum.contractNum;
+											this.subInfoForm.regContractNumm = dpData.contractNum?dpData.contractNum.contractNum:null;
 											
 											//接洽人
 											this.subInfoForm.cdProjContact = dpData.projContact											
