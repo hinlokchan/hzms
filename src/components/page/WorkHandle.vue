@@ -4924,11 +4924,14 @@ export default {
 	jumpToSubHandle(subData) {
 		if(this.projDetail.reportNumList.length > 0){
 			if(subData.workAssignment){
+				this.$router.push({ path: '/worksubregister', query: { projId: subData.projId, data: subData.subProjId } })
+				/* 更新: 220418不用取合同号也能录入信息
 				if(this.contractNum){
 					this.$router.push({ path: '/worksubregister', query: { projId: subData.projId, data: subData.subProjId } })
 				}else{
 					this.$message.warning('请先取合同号')
 				}
+				 */
 			}else{
 				this.$message.warning('请先完成项目安排')
 			}
