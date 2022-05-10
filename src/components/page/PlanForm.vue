@@ -538,8 +538,8 @@
 				  placeholder="请选择"
 				>
 				  <el-option
-				    v-for="item, index in innovationTypeOptions"
-				    :key="index"
+				    v-for="item in innovationTypeOptions"
+				    :key="item.index"
 				    :label="item"
 				    :value="item"
 				  ></el-option>
@@ -554,10 +554,10 @@
 				  placeholder="请选择"
 				>
 				  <el-option
-					v-for="item, index in bankBusinessTypeOptions"
-					:key="index"
-					:label="item"
-					:value="item"
+					v-for="item in bankBusinessTypeOptions"
+					:key="item.index"
+					:label="item.label"
+					:value="item.value"
 				  ></el-option>
 				</el-select>
 			  </el-form-item>
@@ -2642,7 +2642,24 @@ export default {
       },
 	  
 	  innovationTypeOptions:['常规','技术创新型','新型业务'],
-	  bankBusinessTypeOptions:['对公','对私','普惠金融'],
+	  bankBusinessTypeOptions:[
+      {
+        label:'无',
+        value:''
+      },
+      {
+        label:'对公',
+        value:'对公'
+      },
+      {
+        label:'对私',
+        value:'对私'
+      },
+      {
+        label:'普惠金融',
+        value:'普惠金融'
+      }
+    ],
 	  
 	  //211130新增 项目名称和项目范围本地搜索
 	  tableData:[],
