@@ -236,7 +236,7 @@ export default {
         },
         {
           value: 3102,
-          label: '税务咨询(税咨字)/KS',
+          label: '税务咨询(税咨字)/KSZ',
           disabled: true
         },
         {
@@ -246,7 +246,7 @@ export default {
         },
         {
           value: 3006,
-          label: '税务审计/KSZ',
+          label: '税务审计/KSS',
           disabled: true
         },
       ],
