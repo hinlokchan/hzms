@@ -2625,7 +2625,8 @@ export default {
             { value: '123', label: '东莞银行' },
             { value: '124', label: '华夏银行' },
             { value: '125', label: '农业发展银行' },
-            { value: '126', label: '浙商银行' }
+            { value: '126', label: '浙商银行' },
+            { value: '127', label: '渤海银行' }
           ]
         },
         { value: '1001', label: '自然资源局' },
