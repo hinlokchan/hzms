@@ -838,7 +838,7 @@ export default {
   data() {
     return {		
       currentPage: 1, // 当前页码
-      pageSize: 5, // 每页的数据条数
+      pageSize: 50, // 每页的数据条数
       pageTotal: 0, // 数据数
       tableData: [],
       tableDataTemp: [],
@@ -1089,7 +1089,7 @@ export default {
 	  this.pageTotal = 0;
 	  
 	  //刷新项目处理列表
-	  this.getManageRegisterListData(this.searchData, (mrRes)=>{
+	  this.getManageRegisterListData({}, (mrRes)=>{
 	  	this.tableData = mrRes.data;
 	  	this.tableDataTemp = mrRes.data;
 	  	this.pageTotal = mrRes.data.length;
