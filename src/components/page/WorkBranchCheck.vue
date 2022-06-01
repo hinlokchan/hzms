@@ -508,13 +508,83 @@
 		</el-form>
 	  </el-dialog>
 	  
-	  
 	  <!-- 211028变动 新增: 多个公司切换 -->
 	  <el-tabs v-model="companyId" type="card" @tab-click="handleTabsClick">
 	    <el-tab-pane label="惠正公司" name="HZ"></el-tab-pane>
 	    <el-tab-pane label="智明公司" name="ZM" disabled></el-tab-pane>
 	    <el-tab-pane label="汇正公司" name="HZKJ" disabled></el-tab-pane>
 	  </el-tabs>
+	  
+	  <div>
+	    <el-row :gutter="4">
+		  <el-col  :xs="24" :sm="24" :lg="15" >
+			<el-row :gutter="4">
+			  <el-col :lg="4" :span="4">
+				<el-input
+				  v-model.trim="searchData.reportNum"
+				  placeholder="报告号"
+				  @keyup.enter.native="getLocalData"
+				  oninput="value=value.toUpperCase()"
+				></el-input>
+			  </el-col>
+			  <el-col :lg="4" :span="4">
+				<el-input
+				  v-model.trim="searchData.projNum"
+				  placeholder="计划编号"
+				  @keyup.enter.native="getLocalData"
+				></el-input>
+			  </el-col>
+			  <el-col :lg="5" :span="5">
+				<el-input
+				  v-model.trim="searchData.projName"
+				  placeholder="项目名称"
+				  @keyup.enter.native="getLocalData"
+				></el-input>
+			  </el-col>
+			  <el-col :lg="5" :span="5">
+				<el-input
+				  v-model.trim="searchData.projScope"
+				  placeholder="项目范围"
+				  @keyup.enter.native="getLocalData"
+				></el-input>
+			  </el-col>
+			  <el-col :lg="6" :span="6">
+				<el-button-group>
+					<el-button type="primary" size="small" @click="getLocalData">查找</el-button>
+					<el-button type="warning" size="small" @click="resetSearchData">重置</el-button>
+				</el-button-group>
+			  </el-col>
+			</el-row>
+		  </el-col>
+		  <el-col :xs="24" :sm="24" :lg="9">
+			<div style="text-align: right; ">
+				<el-form
+					ref="exportSubListForm"
+					:model="exportSubListForm"
+					:rules="exportSubListFormRules"
+					label-width="0px"
+				>  
+					<el-form-item>
+						<el-date-picker
+							v-model="exportSubListForm.multiDate"
+							value-format="yyyy-MM-dd"
+							type="daterange"
+							unlink-panels
+							range-separator="至"
+							start-placeholder="开始日期"
+							end-placeholder="结束日期"
+							:picker-options="multiDateOptions"
+							style="width: 220px;">
+						</el-date-picker>
+						<el-button type="primary" style="margin-left: 4px; height: 31px;" @click="exportSubProj('正评列表', '')" size="small">批导出</el-button>
+					</el-form-item>
+				</el-form>
+			</div>  
+		  </el-col>
+	    </el-row>
+	  </div>
+	  
+	  
 	  
       <el-table
         ref="table"
@@ -547,7 +617,7 @@
 				type="index"
 				align="center"
 			></el-table-column>
-	        <el-table-column label="子项目号" width="80">
+	        <el-table-column label="子项目号" width="100">
 	          <template slot-scope="scope">
 				{{ scope.row.subProjNum }}
 	          </template>
@@ -628,10 +698,18 @@
           sortable
         >
         </el-table-column>
+		<el-table-column
+		  prop="reportNum"
+		  label="报告号"
+		  width="120"
+          sortable
+		>
+        </el-table-column>
         <el-table-column
           prop="projNum"
           label="计划编号"
           width="120"
+          sortable
         >
         </el-table-column>
         <el-table-column
@@ -760,9 +838,10 @@ export default {
   data() {
     return {		
       currentPage: 1, // 当前页码
-      pageSize: 50, // 每页的数据条数
+      pageSize: 5, // 每页的数据条数
       pageTotal: 0, // 数据数
       tableData: [],
+      tableDataTemp: [],
       missionData: {},
       onGoing: false,
       typeOptions: [
@@ -893,6 +972,26 @@ export default {
 	  },
 	  receiptFormRules:{},
 	  
+	  //批导出表单	  
+	  exportSubListForm:{
+		multiDate:'',
+	  },
+	  exportSubListFormRules:{
+	  		multiDate:[{ required: true, message: '请选择导出的日期范围',trigger: 'blur'}],
+	  },	  
+	  multiDateOptions: {
+	  		disabledDate(time) {
+	  		  return time.getTime() > Date.now()
+	    },
+	  },
+	  
+	  //本地查找列表
+	  searchData:{
+		reportNum:'', //报告号
+		projNum:'', //计划号
+		projName:'', //项目名称
+		projScope:'', //项目范围
+	  }
 	  
     };
   },
@@ -990,11 +1089,28 @@ export default {
 	  this.pageTotal = 0;
 	  
 	  //刷新项目处理列表
-	  this.getManageRegisterListData({}, (mrRes)=>{
+	  this.getManageRegisterListData(this.searchData, (mrRes)=>{
 	  	this.tableData = mrRes.data;
-	  	this.pageTotal = mrRes.length;
+	  	this.tableDataTemp = mrRes.data;
+	  	this.pageTotal = mrRes.data.length;
 	  });
     },
+	
+	getLocalData(){
+		this.tableData = this.tableDataTemp.filter(item =>{
+			return  (((item.reportNum||'').indexOf(this.searchData.reportNum)!=-1 ) || this.searchData.reportNum == '') 
+					&& (((item.projNum||'').indexOf(this.searchData.projNum)!=-1 ) || this.searchData.projNum == '')
+					&& (((item.projName||'').indexOf(this.searchData.projName)!=-1 ) || this.searchData.projName == '')
+					&& (((item.projScope||'').indexOf(this.searchData.projScope)!=-1 ) || this.searchData.projScope == '')
+		})
+		this.currentPage = 1;
+		this.pageTotal = this.tableData.length;
+	},
+	
+	resetSearchData(){
+		Object.keys(this.searchData).forEach(key => (this.searchData[key] = ''));
+		this.getLocalData();
+	},
 	
 	getManageRegisterListData(searchData, successc) {
 		
@@ -1604,12 +1720,26 @@ export default {
 	
 	exportSubProj(exportType, projId){
 		var formData = new FormData()
-		formData.append('projId', projId)
-		
-		if(exportType == '正评'){
+		if(exportType == '正评列表'){
+			this.$refs.exportSubListForm.validate((valid) => {
+				if (valid) {
+					const startData = this.exportSubListForm.multiDate[0] + ' 00:00:00';
+					const endDate = this.exportSubListForm.multiDate[1] + ' 23:59:59';
+					formData.append('startDate', startData);
+					formData.append('endDate', endDate);
+					
+					const path = '/registerManage/batchExportRegisterInfoListExcel'
+					downloadExcel(formData, path, this.companyId)
+				}else{
+					this.$message('请填写必填信息或格式有误');
+				}
+			})
+		}else if(exportType == '正评'){
+			formData.append('projId', projId)
 			const path = 'register/batchExportRegisterInfoExcel'
 			downloadExcel(formData, path, this.companyId)
 		}else if(exportType == '底单'){
+			formData.append('projId', projId)
 			const path = 'register/chargeDoc/batchExportExcel'
 			downloadExcel(formData, path, this.companyId)
 		}
