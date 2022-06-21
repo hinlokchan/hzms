@@ -211,7 +211,7 @@
             </el-col>
           </el-row>
           <el-row :gutter="20">
-            <el-col :span="12">
+            <el-col :span="6">
               <el-form-item
                 label="委托人"
                 prop="clientName"
@@ -272,6 +272,26 @@
               </el-form-item> -->
 
             </el-col>
+            <el-col :span="6">
+              <el-form-item
+                label="产权持有人  "
+                prop="incumbrancer"
+              >
+                <el-input v-model="form.incumbrancer" clearable></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="委托人联系人">
+                <el-input v-model="form.clientContact" clearable></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="委托人联系电话">
+                <el-input v-model="form.clientContactInfo" clearable></el-input>
+              </el-form-item>
+            </el-col>		
+		</el-row>
+		<el-row :gutter="20">
 			<el-col :span="12">
 			  <el-form-item
 				v-for="(item, index) in form.coClientList"
@@ -307,26 +327,6 @@
 			    添加
 			  </el-form-item>
 			</el-col>
-		</el-row>
-		<el-row :gutter="20">
-            <el-col :span="6">
-              <el-form-item
-                label="产权持有人  "
-                prop="incumbrancer"
-              >
-                <el-input v-model="form.incumbrancer" clearable></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="委托人联系人">
-                <el-input v-model="form.clientContact" clearable></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="委托人联系电话">
-                <el-input v-model="form.clientContactInfo" clearable></el-input>
-              </el-form-item>
-            </el-col>
           </el-row>
           <el-row :gutter="20">
             <el-col :span="12">
