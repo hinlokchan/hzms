@@ -217,6 +217,24 @@
                   <span class="detail-content">{{detailData.incumbrancer}}</span>
                 </el-form-item>
               </el-col>
+              <el-col :span="16">
+                <el-form-item
+                  label="共同委托人"
+                  class="label"
+                >
+                  <span class="detail-content">{{detailData.coClientName}}</span>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="8">
+                <el-form-item
+                  label="引荐人"
+                  class="label"
+                >
+                  <span class="detail-content">{{detailData.projReferer}} {{detailData.projRefererInfo}}</span>
+                </el-form-item>
+              </el-col>
               <el-col :span="8">
                 <el-form-item
                   label="计划现勘日"
@@ -231,16 +249,6 @@
                   class="label"
                 >
                   <span class="detail-content">{{detailData.fldSrvyContact}} {{detailData.fldSrvyContactInfo}}</span>
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row>
-              <el-col :span="8">
-                <el-form-item
-                  label="引荐人"
-                  class="label"
-                >
-                  <span class="detail-content">{{detailData.projReferer}} {{detailData.projRefererInfo}}</span>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -1052,6 +1060,19 @@ export default {
 				}
 			}
 		})
+				
+		//共同委托人
+		if(this.detailData.coClientList){
+			var coClientNameArr = [];
+			this.detailData.coClientList.forEach((item, index) =>{
+				if(item.clientType<1000){
+					coClientNameArr.push(item.clientTypeName + item.clientName)
+				}else{
+					coClientNameArr.push(item.clientName)
+				}
+			});
+			this.detailData.coClientName = coClientNameArr.join(', ');
+		}
 		
       }).catch(error =>{
 		this.$message.error('计划系统内无该项目数据');
@@ -1125,6 +1146,7 @@ export default {
 	  } else {
 	    var clientName = this.$refs['cascaderAddr'].getCheckedNodes()[0].label;
 	  }
+	  
 	  //格式化时间戳
 	  let fldSrvySchedule = '';
 	  if(this.detailData.fldSrvySchedule){
