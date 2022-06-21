@@ -211,7 +211,7 @@
             </el-col>
           </el-row>
           <el-row :gutter="20">
-            <el-col :span="6">
+            <el-col :span="12">
               <el-form-item
                 label="委托人"
                 prop="clientName"
@@ -224,7 +224,7 @@
                   v-model="form.clientId"
                   :options="clientList"
                   :props="{ expandTrigger: 'hover' }"
-                  style="width: 85%"
+                  style="width: 90%"
                   filterable
                 >
                 </el-cascader>
@@ -272,6 +272,43 @@
               </el-form-item> -->
 
             </el-col>
+			<el-col :span="12">
+			  <el-form-item
+				v-for="(item, index) in form.coClientList"
+				:label="'共同委托人' + (index + 1)"
+				:key="index"
+			    prop="coClientList"
+			  >
+				<div class="flexBox">
+			      <el-cascader
+			        :disabled="clientInputTypeChange || userRole>2"
+			        :show-all-levels="false"
+			        v-model="item.clientId"
+			        :options="clientList"
+			        :props="{ expandTrigger: 'hover',emitPath:false }"
+			        style="width: 96%"
+			        filterable
+			        clearable
+			      >
+			      </el-cascader>
+				  <i
+				    class="el-icon-lx-roundclose"
+				    style="margin: 6px 0 0 0;font-size: 20px;color:#b5b5b5"
+				    @click.prevent="removeDomain(index, 7)"
+				    v-if="userRole<3"
+				  ></i>
+				</div>
+			  </el-form-item>
+			  <el-form-item v-if="userRole<3">
+			    <el-button type="primary" icon="el-icon-plus" circle
+			        @click="addDomain(7)"
+			    >
+			    </el-button>
+			    添加
+			  </el-form-item>
+			</el-col>
+		</el-row>
+		<el-row :gutter="20">
             <el-col :span="6">
               <el-form-item
                 label="产权持有人  "
@@ -965,7 +1002,7 @@
                   v-model="form.clientId"
                   :options="clientList"
                   :props="{ expandTrigger: 'hover' }"
-                  style="width: 100%"
+                  style="width: 90%"
                   filterable
 				  clearable
                 >
@@ -973,10 +1010,9 @@
                 <el-input
                   v-if="clientInputTypeChange || userRole>2"
                   :disabled="true"
-                  style="width: 100%"
+                  style="width: 90%"
                   v-model="form.clientName"
-                ></el-input>
-				<!-- 
+                ></el-input>				
                 <el-button
                   type="text"
                   icon="el-icon-refresh-right"
@@ -984,7 +1020,6 @@
                   v-if="userRole<3"
                   @click="resetClientName()"
                 ></el-button>
-				 -->
                 <el-button
                   type="text"
                   @click="showAddClientDialog"
@@ -2396,10 +2431,11 @@ export default {
         //lendingBank: [],
         projTypeOption: [],
         evalObjArray:[],
-		
 		//惠正
 		innovationType:'常规',
 		bankBusinessType:'',
+		coClientId:'', //多个委托人, 逗号分隔
+		coClientList:[{ clientId: '' }], //多个委托人信息, 数组
 		
 		//智明
 		mappingObjLocation:'',
@@ -2746,6 +2782,8 @@ export default {
 	
 	//211130新增 项目名称和项目范围本地搜索
 	this.getAllAbstractProjectData();
+	
+	console.log(this.form);
   },
   
   //211026变动 新增: 克隆功能 计算属性调整提交按钮样色文字
@@ -3030,6 +3068,11 @@ export default {
 	  }else{
 		data.baseDate = this.formatDate(data.baseDate)  
 	  }
+	  	  
+	  //处理共同委托人
+	  if(!data.coClientList){
+		data.coClientList=[{ clientId: '' }];
+	  }
       
       //211103变动 修复:克隆功能 新增估价对象bug
       data.evalObjArray = [];	  
@@ -3044,6 +3087,7 @@ export default {
       }
       // this.searchJsonTree(this.clientList, value)
       //this.form = data
+	  
     },
     //遍历clientList
     searchJsonTree(jsonObj, value) {
@@ -3085,6 +3129,11 @@ export default {
         this.form.evalObjArray.push({
           evalObjName : ''
         });
+      } else if (type === 7) {		
+		//委托人
+        this.form.coClientList.push({
+          clientId : ''
+        });
       }
     },
     removeDomain(index, type) {
@@ -3112,6 +3161,11 @@ export default {
         if (this.form.evalObjArray.length !== 0) {
           this.form.evalObjArray.splice(index, 1)
         }
+      } else if (type === 7) {
+		//委托人
+        if (this.form.coClientList.length >1) {
+          this.form.coClientList.splice(index, 1)
+        }
       }
     },
     //委托人待处理
@@ -3132,8 +3186,19 @@ export default {
 	  //备份已填表格（数组未处理）
 	  this.backupForm = this.form
 	  
+	  //委托人与共同委托人是否重复
+	  var checkClientId = true
+	  this.form.coClientList.forEach((item, index) =>{
+	    if(item.clientId == this.form.clientId){
+	  		checkClientId = false
+	  	}
+	  });
+	  
 	  if (this.form.clientName == '' && this.form.clientId == '') {
 		this.$message.warning('请填写委托人！')
+		return 0
+	  }else if(!checkClientId){
+		this.$message.warning('委托人与共同委托人重复！')
 		return 0
 	  }else if(this.companyTabsId == 2 && this.form.auditPeriod == '' && this.form.baseDate == ''){
 	    this.$message.warning('请选择审计期间或基准日！')
@@ -3322,6 +3387,17 @@ export default {
         //   that.form.lendingBank = lendingBankNew
         // }
         //}
+		
+		//共同委托人 从列表得到数组再转逗号字符串
+		var clientIdArr = [];
+		that.form.coClientList.forEach((item, index) =>{
+		    if(item.clientId){
+				clientIdArr.push(item.clientId)	
+			}
+		});
+		that.form.coClientId= clientIdArr.join(',');
+		
+		
         //  接洽人
         let projContact = that.form.projContact
         let projContactNew = ''
