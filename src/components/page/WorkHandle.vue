@@ -1140,6 +1140,7 @@
               <div class="item"><span>接洽人：</span>{{projDetail.projContactType}} {{projDetail.projContact}}</div>
               <div class="item"><span>委托方：</span>{{projDetail.clientName}}</div>
               <div class="item"><span>委托方联系人：</span>{{projDetail.clientContact}} {{projDetail.clientContactInfo}}</div>
+              <div class="item"><span>共同委托方：</span>{{projDetail.coClientName}}</div>
               <div class="item"><span>产权持有人：</span>{{projDetail.incumbrancer}}</div>
               <div class="item"><span>计划现勘日：</span>{{formatDate(projDetail.fldSrvySchedule)}}</div>
 			  <div class="item"><span>现勘联系人：</span>{{projDetail.fldSrvyContact}} {{projDetail.fldSrvyContactInfo}}</div>
@@ -1517,6 +1518,7 @@
 	        type="primary"
 			size="mini"
 	        @click="handleEditSubProj(scope.row)"
+			:disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
 	      >修改</el-button>
 		  <!-- 
 		  <div style="height: 10px;"></div>
@@ -1525,6 +1527,7 @@
 	        type="danger"
 			size="mini"
 	        @click="delSubProj(scope.row)"
+			:disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
 			v-if="scope.row.isDefault != 1"
 	      >删除</el-button>
 		  
@@ -1543,11 +1546,11 @@
 	    label="登记录入"
 	    width="90"
 	  	fixed="right"
-		v-if=" projDetail.projType === 1020"
 	  >
 	    <template slot-scope="scope">
 			  <el-button type="primary" size="mini"
-				@click="jumpToSubHandle(scope.row)"
+				@click="jumpToSubHandle(scope.row)"				
+				:disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
 			  >录信息</el-button>
 			  <div style="height: 1px;"></div>
 			  <el-button plain size="mini" disabled :type="newButtonTypeRegister(scope.row.subProjStatus)">{{newButtonValueRegister(scope.row.subProjStatus)}}</el-button>
@@ -1675,6 +1678,7 @@
 						  type="primary"
 						  size="medium"
 						  @click="jumpToSubReceipt(projDetail.projId, '')"
+						  :disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
 						>凭证录入</el-button>
 					</el-button-group>
 				  </span>
@@ -1693,7 +1697,12 @@
 						border>
 					  <!-- 
 					  <el-table-column label="展开" width="50" prop="" ></el-table-column>
-					  -->
+					  -->					  
+					  <el-table-column label="ID" align="center" width="60">
+					    <template slot-scope="scope">
+					  	{{ scope.row.id }}
+					    </template>
+					  </el-table-column>					 
 					  <el-table-column label="子项目号" prop="bindingSubProjNum" ></el-table-column>
 					  
 					  <el-table-column label="收费凭证" width="80" prop="receiptType" ></el-table-column>
@@ -1725,7 +1734,7 @@
 						  </template>
 					  </el-table-column>
 					  
-					  <el-table-column label="其他信息"  width="150" prop="" >
+					  <el-table-column label="其他信息"  width="200" prop="" >
 						  <template slot-scope="scope">
 							<div
 							v-if="!isNaN(parseFloat(scope.row.receiptId))">
@@ -1754,25 +1763,34 @@
 					    <template slot-scope="scope">
 							<!-- 已开发票或已收款, 不能再修改 -->
 							<div
-							v-if="!isNaN(parseFloat(scope.row.receiptId))">
-							<el-button
-							  type="primary"
-								size="mini"
-							  @click="jumpToSubReceipt(projDetail.projId, scope.row.receiptId, scope.row.invoiceDate, scope.row.collectionDate)"
-							>修改</el-button>
-							<el-button
-							  type="danger"
-								size="mini"
-							  @click="handleDelSubReceipt(projDetail.projId, scope.row.receiptId, scope.row.invoiceDate, scope.row.collectionDate)"
-							>删除</el-button>  
+							v-if="scope.row.receiptStatus == 9">
+								<el-button type="danger" size="mini">已作废</el-button>
 							</div>
 							<div
 							v-else>
+								<div
+								v-if="!isNaN(parseFloat(scope.row.receiptId))">
 								<el-button
-								  type="success"
+								  type="primary"
 									size="mini"
-								  @click=""
-								>点击展合</el-button>
+								  @click="jumpToSubReceipt(projDetail.projId, scope.row.receiptId, scope.row.invoiceDate, scope.row.collectionDate)"
+								  :disabled="(projDetail.projState == 2 || projDetail.projState == 1 || scope.row.invoiceDate || scope.row.collectionDate)?true:false"
+								>修改</el-button>
+								<el-button
+								  type="danger"
+									size="mini"
+								  @click="handleDelSubReceipt(projDetail.projId, scope.row.receiptId, scope.row.invoiceDate, scope.row.collectionDate)"
+								  :disabled="(projDetail.projState == 2 || projDetail.projState == 1  || scope.row.quittanceDate || scope.row.invoiceDate || scope.row.collectionDate)?true:false"
+								>删除</el-button>  
+								</div>
+								<div
+								v-else>
+									<el-button
+									  type="success"
+										size="mini"
+									  @click=""
+									>点击展合</el-button>
+								</div>
 							</div>
 					    </template>
 					  </el-table-column>
@@ -3551,6 +3569,19 @@ export default {
               this.externalContractNum = res.data.contractNum.externalContractNum
             }
 			
+			//共同委托人
+			if(this.projDetail.coClientList){
+				var coClientNameArr = [];
+				this.projDetail.coClientList.forEach((item, index) =>{
+					if(item.clientType<1000){
+						coClientNameArr.push(item.clientTypeName + item.clientName)
+					}else{
+						coClientNameArr.push(item.clientName)
+					}
+				});
+				this.projDetail.coClientName = coClientNameArr.join(', ');
+			}
+			
             //提取项目组成员
             const leader = this.projDetail.projLeader.split(',')
             const reviewer = this.projDetail.projReviewer.split(',')
@@ -4846,13 +4877,13 @@ export default {
 		const { columns, data } = param;
 		const sums = [];
 		columns.forEach((column, index) => {
-		  if (index === 0) {
+		  if (index === 1) {
 			sums[index] = '合计';
 			return;
 		  }
 		  
-		  if(index ===2 || index === 3 || index === 4 || index === 5){
-			const values = data.map(item => Number(item[column.property]));
+		  if(index ===6 || index === 3 || index === 4 || index === 5){
+			const values = data.filter(item=>item['receiptStatus']!=9).map(item => Number(item[column.property]));
 			if (!values.every(value => isNaN(value))) {
 				sums[index] = values.reduce((prev, curr) => {
 				  const value = Number(curr);
@@ -4863,42 +4894,42 @@ export default {
 				  }
 				}, 0);
 				
-				if(index ===3 && this.projDetail.contractNum){
+				if(index ===4 && this.projDetail.contractNum){
 					//跟开票列做对比
 					const invoicePrice = parseFloat(sums[index]);
 					const contractPrice = parseFloat(this.projDetail.contractNum.contractPrice);
 					if(contractPrice){
 						if(contractPrice-invoicePrice == 0){
-							sums[2] = '合同价: '+contractPrice.toFixed(2) + ', 合同价和开票一致';
+							sums[3] = '合同价: '+contractPrice.toFixed(2) + ', 合同价和开票一致';
 						}else{
-							sums[2] = '合同价: '+contractPrice.toFixed(2) + ', 开票差额: '+ (contractPrice-invoicePrice).toFixed(2) ;
+							sums[3] = '合同价: '+contractPrice.toFixed(2) + ', 开票差额: '+ (contractPrice-invoicePrice).toFixed(2) ;
 						}
 						
 					}else{
-						sums[2] = '未填报合同价';
+						sums[3] = '未填报合同价';
 					}
 				}
 				
 				
-				if(index ===5){
-					const invoicePrice = parseFloat(sums[3]);
-					const receivablePrice = parseFloat(sums[4]);
+				if(index ===6){
+					const invoicePrice = parseFloat(sums[4]);
+					const receivablePrice = parseFloat(sums[5]);
 					sums[index] = (receivablePrice-invoicePrice).toFixed(2);
 				}
 				
-				if(index ===3||index ===4){
+				if(index ===5||index ===4){
 					sums[index] = sums[index].toFixed(2);
 				}
 				
 				
 				/* 
-				if(index ===4){
-					const invoicePrice = parseFloat(sums[3]);
-					const receivablePrice = parseFloat(sums[4]);
+				if(index ===5){
+					const invoicePrice = parseFloat(sums[4]);
+					const receivablePrice = parseFloat(sums[5]);
 					sums[index] = sums[index].toFixed(2) + '元, 开票差额: '+ (receivablePrice-invoicePrice).toFixed(2) + '元';
 				}
 				
-				if(index ===3){
+				if(index ===4){
 					sums[index] = sums[index].toFixed(2) + '元';
 				}
 				 */
@@ -4922,9 +4953,26 @@ export default {
 		return sums;
 	},
 	jumpToSubHandle(subData) {
+		console.log(this.projDetail.projType);
+		
 		if(this.projDetail.reportNumList.length > 0){
 			if(subData.workAssignment){
-				this.$router.push({ path: '/worksubregister', query: { projId: subData.projId, data: subData.subProjId } })
+				
+				//跳转不同页面				
+				if(this.projDetail.projType==1020 || this.projDetail.projType==1042){
+					//资产
+					this.$router.push({ path: '/worksubregisterz', query: { projId: subData.projId, data: subData.subProjId } })
+				// }else if(this.projDetail.projType==1010 || this.projDetail.projType==1041){
+				// 	//房产
+				// 	this.$router.push({ path: '/worksubregisterf', query: { projId: subData.projId, data: subData.subProjId } })
+				// }else if(this.projDetail.projType==1030 || this.projDetail.projType==1043){
+				// 	//土地
+				// 	this.$router.push({ path: '/worksubregisterd', query: { projId: subData.projId, data: subData.subProjId } })
+				}else{
+					this.$message.warning('该项目类型还没开放信息录入');
+				}
+				
+				//this.$router.push({ path: '/worksubregister', query: { projId: subData.projId, data: subData.subProjId } })
 				/* 更新: 220418不用取合同号也能录入信息
 				if(this.contractNum){
 					this.$router.push({ path: '/worksubregister', query: { projId: subData.projId, data: subData.subProjId } })
@@ -5420,6 +5468,9 @@ export default {
 					if(newList[index].difference === 0){
 						newList[index].difference = '一致'
 					}
+					
+					//增加id
+					newList[index].id = (index+1);
 				});
 				
 				this.receiptList = newList;
