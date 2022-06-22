@@ -34,6 +34,13 @@ module.exports = {
               '^/api': ''
             }
           },
+          '/tyshxydm': {
+            target: 'https://public.creditchina.gov.cn',
+            changeOrigin: true,
+            pathRewrite: {
+              '^/tyshxydm': ''
+            }
+          },
           [process.env.VUE_APP_PROXY_API]: {
             target: `http://127.0.0.1:${port}/mock`,
             changeOrigin: true,
