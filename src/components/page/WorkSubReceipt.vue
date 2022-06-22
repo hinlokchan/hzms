@@ -256,6 +256,7 @@
 					  placeholder="请正确选择"
 					  style="width: 100%;"
 					  @change="handleChangeMakeOutPattern"
+					  :disabled = "subReceiptForm.quittanceDate?true:false"
 					>
 					  <el-option
 					    v-for="item, index in makeOutPatternOption"
@@ -452,12 +453,14 @@
 					<el-input v-model="subReceiptForm.totalAmount" style="width: 100%" clearable
 					oninput="value=value.replace(/[^\d.]/g,'')"
 					placeholder="请输入发票金额"
+					:disabled = "subReceiptForm.quittanceDate?true:false"
 					></el-input>
 					<span>
 						大写: {{changeMoneyToChinese(subReceiptForm.totalAmount)}}
 					</span>
 					<el-tag style="margin-left: 10px;"
-					@click="handleCopyTotalReceivable">
+					@click="handleCopyTotalReceivable"
+					v-if="!subReceiptForm.quittanceDate">
 						使用应收费用作为开票金额
 					</el-tag>
 				</el-form-item>
@@ -467,6 +470,7 @@
 					<el-input v-model="subReceiptForm.totalReceivable" style="width: 100%" clearable
 					readonly
 					oninput="value=value.replace(/[^\d.]/g,'')"
+					:disabled = "subReceiptForm.quittanceDate?true:false"
 					></el-input>
 					<span>
 						大写: {{changeMoneyToChinese(subReceiptForm.totalReceivable)}} 
@@ -479,14 +483,14 @@
 			<el-col :span="12">
 				<el-form-item label="子项目号" prop="bindingSubProjNum">
 					<el-input v-model="subReceiptForm.bindingSubProjNum" style="width: 100%" clearable
-					type="textarea" autosize readonly></el-input>
+					type="textarea" autosize readonly :disabled = "subReceiptForm.quittanceDate?true:false"></el-input>
 				</el-form-item>
 			</el-col>
 			<el-col :span="12">
 				<el-form-item label="子项目id" prop="bindingSubProjId"
 				:rules="subReceiptForm.makeOutPattern==2?[]:bindingSubProjId">
 					<el-input v-model="subReceiptForm.bindingSubProjId" style="width: 100%" clearable
-					type="textarea" autosize readonly></el-input>
+					type="textarea" autosize readonly :disabled = "subReceiptForm.quittanceDate?true:false"></el-input>
 				</el-form-item>
 			</el-col>			
 		</el-row>
@@ -552,7 +556,8 @@
 	<div style="text-align: center;">
 		<el-button-group>
 			<el-button :type="newButtonType(isEdit)" plain size="medium" disabled>{{newButtonValue(isEdit)}}</el-button>
-			<el-button type="primary" icon="el-icon-edit-outline" size="medium" @click.native="subReceiptFormSubmit()">确认提交</el-button>
+			<el-button type="primary" icon="el-icon-edit-outline" size="medium" @click.native="subReceiptFormSubmit()" 
+			:disabled = "(subReceiptForm.quittanceDate && subReceiptForm.receiptType == '开收据') || subReceiptForm.invoiceDate?true:false">确认提交</el-button>
 		</el-button-group>
 	</div>
   </div>
@@ -608,7 +613,8 @@ export default {
 			bindingSubProjId:[{ required: true, message: '请在下方表格选择子项目', trigger: 'blur' }],
 			
 			//下拉选项
-			receiptTypeOptions:['专用发票','普通发票','开收据','无'],
+			//receiptTypeOptions:['专用发票','普通发票','开收据','无'],
+			receiptTypeOptions:['专用发票','普通发票','开收据'],
 			isElectronicOptions:['纸质', '电子'],
 			/* 
 			isElectronicOptions:[
@@ -690,7 +696,13 @@ export default {
 		newButtonValue(){
 			return (data)=>{
 				if(data){
-					return "修改";
+					if(this.subReceiptForm.invoiceDate){
+						return "查看开发票信息";
+					}else if(this.subReceiptForm.quittanceDate){
+						return "收据换开发票";
+					}else{
+						return "修改";
+					}
 				}else{
 					return "新增";
 				}
@@ -860,6 +872,8 @@ export default {
 					this.subProjectInfoList = silData
 					this.getReceiptListData(projId, (rlData)=>{
 						//凭证列表
+						//处理凭证作废
+						rlData = rlData.filter(item=>item['receiptStatus']!=9);
 						this.receiptList = rlData
 						this.getRegisterListData(projId, (relData)=>{
 							//console.log('发票列表', itlData)
@@ -1300,7 +1314,12 @@ export default {
 			})
 		},
 		
-		selectInit(row,index){
+		selectInit(row,index){			
+			if(this.subReceiptForm.quittanceDate || this.subReceiptForm.invoiceDate){
+				//已开收据或已开发票不能修改
+				return false;
+			}			
+			
 			if(this.subReceiptForm.makeOutPattern == 0){
 				if(row.receiptStatus=='多项已开'){
 					return false  //不可勾选
@@ -1319,6 +1338,11 @@ export default {
 		},
 		
 		onSelect(row){//点击行选中复选框
+			if(this.subReceiptForm.quittanceDate || this.subReceiptForm.invoiceDate){
+				//已开收据或已开发票不能修改
+				return;
+			}
+		
 			if(this.subReceiptForm.makeOutPattern == 2){
 				//不可勾选
 				this.$message.warning('当前项目开票方式, 不用勾选子项目')
@@ -1367,6 +1391,12 @@ export default {
 		},
 		
 		onSelectAll(row,param){
+			if(this.subReceiptForm.quittanceDate || this.subReceiptForm.invoiceDate){
+				//已开收据或已开发票不能修改
+				return;
+			}
+			
+			
 			if(this.subReceiptForm.makeOutPattern === "" 
 			|| (this.subReceiptForm.makeOutPattern === 0 && this.subProjectInfoList.length > 1) 
 			|| this.subReceiptForm.makeOutPattern == 2 ){
