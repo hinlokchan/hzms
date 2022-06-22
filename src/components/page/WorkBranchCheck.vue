@@ -131,17 +131,46 @@
 	  			</el-col>
 				<el-col :span="12">	
 					<el-form-item label="收据号" prop="quittanceNum"
+					:class="subBillInfoForm.receiptType=='开收据'?'red-item':''"
 					:rules="subBillInfoForm.receiptType=='开收据'?quittanceNumRules:{}">
-						<el-input v-model="subBillInfoForm.quittanceNum" style="width: 100%" 
+						<el-input v-model="subBillInfoForm.quittanceNum" type="textarea" autosize style="width: 100%" 
 						:readonly="subBillInfoForm.receiptType=='开收据'?false:true"></el-input>
 					</el-form-item>
 				</el-col>
-				<el-col :span="12"
-				v-if="subBillInfoForm.receiptType != '开收据'">	
-					<el-form-item label="收据日期" prop="quittanceDate">
-						<el-input v-model="subBillInfoForm.quittanceDate" style="width: 100%" readonly></el-input>
+				<el-col :span="12">	
+					<el-form-item label="收据日期" prop="quittanceDate"
+					:class="subBillInfoForm.receiptType=='开收据'?'red-item':''"
+					:rules="subBillInfoForm.receiptType=='开收据'?quittanceDateRules:{}">
+						<el-date-picker
+						  type="date"
+						  value-format="yyyy-MM-dd"
+						  style="width: 100%"
+						  v-model="subBillInfoForm.quittanceDate"
+						  :readonly="subBillInfoForm.receiptType != '开收据'?true:false"
+						></el-date-picker>
 					</el-form-item>
 				</el-col>
+	  			<el-col :span="12"
+				v-if="subBillInfoForm.receiptType == '普通发票' || subBillInfoForm.receiptType == '专用发票'">	
+	  				<el-form-item label="发票号" prop="invoiceNum"  class="red-item">
+	  					<el-input v-model.trim="subBillInfoForm.invoiceNum" type="textarea" autosize style="width: 100%"
+						oninput="value=value.replace('，',',').replace('（','(').replace('）',')').replace(' ','')"></el-input>
+	  				</el-form-item>
+	  			</el-col>
+				<el-col :span="12"
+				v-if="subBillInfoForm.receiptType == '普通发票' || subBillInfoForm.receiptType == '专用发票'">	
+					<el-form-item label="发票日期" prop="invoiceDate" class="red-item">
+						<el-date-picker
+						  type="date"
+						  value-format="yyyy-MM-dd"
+						  style="width: 100%"
+						  v-model="subBillInfoForm.invoiceDate"
+						  :readonly="(subBillInfoForm.receiptType != '普通发票' && subBillInfoForm.receiptType != '专用发票')?true:false"
+						></el-date-picker>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row :gutter="20">
 	  			<el-col :span="12">	
 	  				<el-form-item label="开票金额" prop="totalAmount">
 	  					<el-input v-model="subBillInfoForm.totalAmount" style="width: 100%" readonly></el-input>
@@ -154,12 +183,6 @@
 						>复制</el-button>
 	  				</el-form-item>
 	  			</el-col>
-	  			<el-col :span="12"
-				v-if="subBillInfoForm.receiptType == '普通发票' || subBillInfoForm.receiptType == '专用发票'">	
-	  				<el-form-item label="发票号" prop="invoiceNum" class="red-item">
-	  					<el-input v-model.trim="subBillInfoForm.invoiceNum" style="width: 100%"></el-input>
-	  				</el-form-item>
-	  			</el-col>
 	  		</el-row>
 	  		</el-form>
 	  		<div
@@ -168,7 +191,12 @@
 	  		>
 	  		  <el-button @click="subBillInfoVisible = false">取 消</el-button>
 	  		  <el-button
-	  			@click="subBillInfoEdit()"
+	  			@click="subBillInfoInvalidate(subBillInfoForm)"
+	  			type="warning"
+	  		  >开票作废</el-button>
+			  
+	  		  <el-button
+	  			@click="subBillInfoEdit(subBillInfoForm)"
 	  			type="primary"
 	  		  >确认开票</el-button>
 	  		</div>
@@ -235,7 +263,7 @@
 			</el-col>
 			<el-col :span="12">	
 				<el-form-item label="收据号" prop="quittanceNum">
-					<el-input v-model="subPayInfoForm.quittanceNum" style="width: 100%" readonly></el-input>
+					<el-input v-model="subPayInfoForm.quittanceNum" type="textarea" autosize  style="width: 100%" readonly></el-input>
 				</el-form-item>
 			</el-col>
 			<el-col :span="12">	
@@ -245,7 +273,7 @@
 			</el-col>
 			<el-col :span="12">	
 				<el-form-item label="发票号" prop="invoiceNum">
-					<el-input v-model="subPayInfoForm.invoiceNum" style="width: 100%" readonly></el-input>
+					<el-input v-model="subPayInfoForm.invoiceNum" type="textarea" autosize style="width: 100%" readonly></el-input>
 				</el-form-item>
 			</el-col>
 			<el-col :span="12">	
@@ -253,15 +281,19 @@
 					<el-input v-model="subPayInfoForm.invoiceDate" style="width: 100%" readonly></el-input>
 				</el-form-item>
 			</el-col>
+		</el-row>
+		<el-row :gutter="20">
 			<el-col :span="12">	
 				<el-form-item label="开票金额" prop="totalAmount">
 					<el-input v-model="subPayInfoForm.totalAmount" style="width: 100%" readonly></el-input>
 				</el-form-item>
 			</el-col>
+		</el-row>
+		<el-row :gutter="20">
 			<el-col :span="12">	
 				<el-form-item label="收费方式" prop="paymentType" class="red-item">
 					<el-select
-						v-model="subPayInfoForm.paymentType"
+						v-model="subPayInfoForm.paymentType" style="width: 100%" 
 					>
 						<el-option
 							v-for="item, index in paymentTypeOption"
@@ -273,6 +305,16 @@
 					</el-select>
 				</el-form-item>
 			</el-col>
+			<el-col :span="12">	
+				<el-form-item label="收费日期" prop="collectionDate" class="red-item">
+					<el-date-picker
+					  type="date"
+					  value-format="yyyy-MM-dd"
+					  style="width: 100%"
+					  v-model="subPayInfoForm.collectionDate"
+					></el-date-picker>
+				</el-form-item>
+			</el-col>
 		</el-row>
 		</el-form>
 		<div
@@ -281,8 +323,9 @@
 		>
 		  <el-button @click="subPayInfoVisible = false">取 消</el-button>
 		  <el-button
-			@click="subPayInfoEdit()"
+			@click="subPayInfoEdit(subPayInfoForm)"
 			type="primary"
+			:disabled="subPayInfoForm.invoiceDate?false:true"
 		  >确认收款</el-button>
 		</div>
 	  </el-dialog>
@@ -336,7 +379,7 @@
 	  		</div>
 	  </el-dialog>
 	  
-	  <el-dialog :title="`凭证处理 ${receiptTitle}`" :visible.sync="receiptVisible" width="1100px" top="20px">
+	  <el-dialog :title="`凭证处理 ${receiptTitle}`" :visible.sync="receiptVisible" width="1200px" top="20px">
 		<el-form
 			ref="receiptForm"
 			:model="receiptForm"
@@ -401,6 +444,12 @@
 						@row-click="expandSubChange"
 						default-expand-all
 						border>
+					  <el-table-column label="ID" align="center" width="60">
+					    <template slot-scope="scope">
+					  	{{ scope.row.id }}
+					    </template>
+					  </el-table-column>	
+						
 					  <el-table-column label="子项目号" prop="bindingSubProjNum" ></el-table-column>
 					  
 					  <el-table-column label="收费凭证" width="80" prop="receiptType" ></el-table-column>
@@ -432,7 +481,7 @@
 						  </template>
 					  </el-table-column>
 					  
-					  <el-table-column label="其他信息"  width="150" prop="" >
+					  <el-table-column label="其他信息" width="200" prop="" >
 						  <template slot-scope="scope">
 							<div
 							v-if="!isNaN(parseFloat(scope.row.receiptId))">
@@ -477,28 +526,36 @@
 						  </template>
 					  </el-table-column>
 					
-					  <el-table-column label="操作" width="150">
+					  <el-table-column label="操作" width="150" align="center">
 						<template slot-scope="scope">
 							<div
-							v-if="!isNaN(parseFloat(scope.row.receiptId))">
-							<el-button
-							  type="primary"
-								size="mini"
-							  @click="editBillSubProj(scope.row)"
-							>开票</el-button>
-							<el-button
-							  type="success"
-								size="mini"
-							  @click="editPaySubProj(scope.row)"
-							>收款</el-button>  
+							v-if="scope.row.receiptStatus == 9">
+								<el-button type="danger" size="mini">已作废</el-button>
 							</div>
 							<div
 							v-else>
+								<div
+								v-if="!isNaN(parseFloat(scope.row.receiptId))">
+								<el-button
+								  type="primary"
+									size="mini"
+								  @click="editBillSubProj(scope.row)"
+								  :disabled="scope.row.collectionDate?true:false"
+								>开票</el-button>
 								<el-button
 								  type="success"
 									size="mini"
-								  @click=""
-								>点击展合</el-button>
+								  @click="editPaySubProj(scope.row)"
+								>收款</el-button>  
+								</div>
+								<div
+								v-else>
+									<el-button
+									  type="success"
+										size="mini"
+									  @click=""
+									>点击展合</el-button>
+								</div>
 							</div>
 						</template>
 					  </el-table-column>
@@ -831,7 +888,7 @@
 import CryptoJS from 'crypto-js'
 import {
   getAllAbstractProject, searchMyProject, getReportNum, createReportNum, alterProjType, getSubReportNum, addSubReportNum, deleteReportNum} from '@/api/index'
-import { getSubProjectInfoList, getManageRegisterList, getReceiptList, getRegisterList } from '@/api/subReport'
+import { getSubProjectInfoList, getManageRegisterList, getReceiptList, getRegisterList, editSubProjectReceiptIssue, editSubProjectReceiptInvalidate, editSubProjectReceiptPay} from '@/api/subReport'
 import {downloadExcel, downloadImageReview} from '../../utils/download';
 export default {
   name: 'workbranchcheck',
@@ -899,11 +956,14 @@ export default {
 		quittanceNum: '', //收据号
 		quittanceDate: '', //收据日期		
 		invoiceNum:'', //发票号
+		invoiceDate: '', //发票日期
 	  },
 	  subBillInfoRules:{
 		invoiceNum: [{ required: true, message: '请输入发票号', trigger: 'blur' }],
+		invoiceDate: [{ required: true, message: '请输入发票日期', trigger: 'blur' }],
 	  },
 	  quittanceNumRules: [{ required: true, message: '请输入收据号', trigger: 'blur' }],
+	  quittanceDateRules: [{ required: true, message: '请输入收据日期', trigger: 'blur' }],
 	  
 	  //问题记录
 	  subProblemInfoVisible:false,
@@ -942,10 +1002,12 @@ export default {
 		quittanceDate:'', //收据日期
 		invoiceNum:'', //发票号
 		invoiceDate:'', //发票日期
-		paymentType: '', //现收或银收
+		paymentType: '', //收费方式  现收或银收
+		collectionDate: '', //收费日期
 	  },
 	  subPayInfoRules:{
 		paymentType:[{ required: true, message: '请选择',trigger: 'blur'}],
+		collectionDate:[{ required: true, message: '请选择',trigger: 'blur'}],
 	  },
 	  paymentTypeOption:['现收', '银收', '待定'],
 	  
@@ -1444,6 +1506,9 @@ export default {
 					if(newList[index].difference === 0){
 						newList[index].difference = '一致'
 					}
+					
+					//增加id
+					newList[index].id = (index+1);
 				});
 				
 				this.receiptList = newList;
@@ -1494,9 +1559,54 @@ export default {
 	    })
 	},
 	
+	//开票
+	editSubProjectReceiptIssueData(receiptData, successc) {
+	  //211101变动 新增: 多个公司切换
+		editSubProjectReceiptIssue(receiptData, this.companyId)
+	    .then(res => {
+			if (res.statusCode == 200) {
+				successc(res.data);
+			}
+			
+	    })
+	    .catch(err => {
+	      console.log('开具凭证', err)
+	    })
+	},
+	
+	//作废
+	editSubProjectReceiptInvalidateData(receiptData, successc) {
+	  //211101变动 新增: 多个公司切换
+		editSubProjectReceiptInvalidate(receiptData, this.companyId)
+	    .then(res => {
+			if (res.statusCode == 200) {
+				successc(res.data);
+			}
+			
+	    })
+	    .catch(err => {
+	      console.log('开具凭证', err)
+	    })
+	},
+	
+	//收费
+	editSubProjectReceiptPayData(payData, successc) {
+	  //211101变动 新增: 多个公司切换
+		editSubProjectReceiptPay(payData, this.companyId)
+	    .then(res => {
+			if (res.statusCode == 200) {
+				successc(res.data);
+			}
+			
+	    })
+	    .catch(err => {
+	      console.log('收费', err)
+	    })
+	},
+	
 	editReceiptSubProj(projData) {
 		//this.$message("收费凭证处理")
-		this.receiptTitle = projData.projNum;
+		this.receiptTitle = projData.reportNum + ' ' + projData.projNum;
 				
 		//初始化表单
 		const receiptForm={
@@ -1527,13 +1637,13 @@ export default {
 		const { columns, data } = param;
 		const sums = [];
 		columns.forEach((column, index) => {
-		  if (index === 0) {
+		  if (index === 1) {
 			sums[index] = '合计';
 			return;
 		  }
 		  
-		  if(index ===2 || index === 3 || index === 4 || index === 5){
-			const values = data.map(item => Number(item[column.property]));
+		  if(index ===6 || index === 3 || index === 4 || index === 5){
+			const values = data.filter(item=>item['receiptStatus']!=9).map(item => Number(item[column.property]));
 			if (!values.every(value => isNaN(value))) {
 				sums[index] = values.reduce((prev, curr) => {
 				  const value = Number(curr);
@@ -1544,42 +1654,42 @@ export default {
 				  }
 				}, 0);
 				
-				if(index ===3 && this.receiptForm){
+				if(index ===4 && this.receiptForm){
 					//跟开票列做对比
 					const invoicePrice = parseFloat(sums[index]);
 					const contractPrice = parseFloat(this.receiptForm.contractPrice);
 					if(contractPrice){
 						if(contractPrice-invoicePrice == 0){
-							sums[2] = '合同价: '+contractPrice.toFixed(2) + ', 合同价和开票一致';
+							sums[3] = '合同价: '+contractPrice.toFixed(2) + ', 合同价和开票一致';
 						}else{
-							sums[2] = '合同价: '+contractPrice.toFixed(2) + ', 开票差额: '+ (contractPrice-invoicePrice).toFixed(2) ;
+							sums[3] = '合同价: '+contractPrice.toFixed(2) + ', 开票差额: '+ (contractPrice-invoicePrice).toFixed(2) ;
 						}
 						
 					}else{
-						sums[2] = '未填报合同价';
+						sums[3] = '未填报合同价';
 					}
 				}
 				
 				
-				if(index ===5){
-					const invoicePrice = parseFloat(sums[3]);
-					const receivablePrice = parseFloat(sums[4]);
+				if(index ===6){
+					const invoicePrice = parseFloat(sums[4]);
+					const receivablePrice = parseFloat(sums[5]);
 					sums[index] = (receivablePrice-invoicePrice).toFixed(2);
 				}
 				
-				if(index ===3||index ===4){
+				if(index ===5||index ===4){
 					sums[index] = sums[index].toFixed(2);
 				}
 				
 				
 				/* 
-				if(index ===4){
-					const invoicePrice = parseFloat(sums[3]);
-					const receivablePrice = parseFloat(sums[4]);
+				if(index ===5){
+					const invoicePrice = parseFloat(sums[4]);
+					const receivablePrice = parseFloat(sums[5]);
 					sums[index] = sums[index].toFixed(2) + '元, 开票差额: '+ (receivablePrice-invoicePrice).toFixed(2) + '元';
 				}
 				
-				if(index ===3){
+				if(index ===4){
 					sums[index] = sums[index].toFixed(2) + '元';
 				}
 				 */
@@ -1632,7 +1742,8 @@ export default {
 			quittanceDate:subData.quittanceDate, //收据日期
 			invoiceNum:subData.invoiceNum, //发票号
 			invoiceDate:subData.invoiceDate, //发票日期
-			paymentType: subData.paymentType, //现收或银收
+			paymentType: subData.paymentType, //收费方式  现收或银收
+			collectionDate: subData.collectionDate, //收款日期
 		}		
 		this.subPayInfoForm = subPayInfoForm;
 		
@@ -1655,7 +1766,10 @@ export default {
 			telNum: subData.telNum,//电话
 			depositBank: subData.depositBank,//开户行
 			bankAccount: subData.bankAccount,//账号			
-			invoiceNum:subData.invoiceNum, //发票号
+			quittanceNum:subData.quittanceNum, //收据号		
+			quittanceDate:subData.quittanceDate, //收据日期
+			invoiceNum:subData.invoiceNum, //发票号		
+			invoiceDate:subData.invoiceDate, //发票日期
 		}		
 		this.subBillInfoForm = subBillInfoForm;
 		
@@ -1687,15 +1801,66 @@ export default {
 	},
 	
 	//弹出框提交
-	subBillInfoEdit(){
+	subBillInfoEdit(billform){
 		this.$refs.subBillInfoForm.validate((valid) => {
 			if (valid) {
-				this.$message('可以提交');
-				console.log('subBillInfo', this.subBillInfoForm);
+				this.$confirm('确认提交该凭证信息?', '开票提示', { type: 'success' })
+				.then(() => {
+					var receiptData = {};
+					if(billform.receiptType == '开收据'){
+						receiptData={
+							receiptId:billform.receiptId,
+							quittanceNum:billform.quittanceNum,
+							quittanceDate:billform.quittanceDate,
+						}
+						
+					}else if(billform.receiptType == '普通发票' || billform.receiptType == '专用发票'){
+						receiptData={
+							receiptId:billform.receiptId,
+							invoiceNum:billform.invoiceNum,
+							invoiceDate:billform.invoiceDate,
+						}
+					}
+					
+					this.editSubProjectReceiptIssueData(receiptData, (rData)=>{
+						this.$message.success('开票成功');
+						this.subBillInfoVisible = false;
+						
+						//读取对应发票列表
+						this.reflashReceiptList(this.receiptForm.projId)
+					})
+				
+				})
+				
+				
+				//this.$message(this.subBillInfoForm.receiptType+'可以提交');
+				//console.log('subBillInfo', this.subBillInfoForm);
 			}else{
 				this.$message('请填写必填信息或格式有误');
 			}
 		})
+	},
+	subBillInfoInvalidate(billform){
+		if(billform.quittanceDate || billform.invoiceDate){
+			//已开收据或发票
+			this.$confirm('确认作废该凭证信息?', '作废提示', { type: 'warning' })
+			.then(() => {
+				const receiptData ={
+					receiptId: billform.receiptId,
+				}
+				this.editSubProjectReceiptInvalidateData(receiptData, (rData)=>{
+					this.$message.success('作废成功');
+					this.subBillInfoVisible = false;
+					
+					//读取对应发票列表
+					this.reflashReceiptList(this.receiptForm.projId)
+				})
+			})
+		}else{
+			this.$message.warning('当前还没开票, 不需要作废, 让助理自行修改或删除');
+		}
+		
+		
 	},
 	subProblemInfoEdit(){
 		this.$refs.subProblemInfoForm.validate((valid) => {
@@ -1707,11 +1872,29 @@ export default {
 			}
 		})
 	},
-	subPayInfoEdit(){
+	subPayInfoEdit(payform){
 		this.$refs.subPayInfoForm.validate((valid) => {
 			if (valid) {
-				this.$message('可以提交');
-				console.log('subPayInfo', this.subPayInfoForm);
+				this.$confirm('确认提交收款信息?', '收款提示', { type: 'success' })
+				.then(() => {
+					var payData={
+						receiptId:payform.receiptId,
+						paymentType:payform.paymentType,
+						collectionDate:payform.collectionDate,
+					}
+					
+					this.editSubProjectReceiptPayData()(payData, (pData)=>{
+						this.$message.success('收费成功');
+						this.subPayInfoVisible = false;
+						
+						//读取对应发票列表
+						this.reflashReceiptList(this.receiptForm.projId)
+					})
+				
+				})
+				
+				// this.$message('可以提交');
+				// console.log('subPayInfo', this.subPayInfoForm);
 			}else{
 				this.$message('请填写必填信息或格式有误');
 			}
