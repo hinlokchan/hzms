@@ -105,6 +105,35 @@ export function getManageRegisterList(data, companyId) {
   });
 }
 
+//开具凭证
+export function editSubProjectReceiptIssue(data, companyId) {
+  return request({
+    url: `${ProManageAPIServer}registerManage/receipt/issue`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+//作废凭证
+export function editSubProjectReceiptInvalidate(data, companyId) {
+  return request({
+    url: `${ProManageAPIServer}registerManage/receipt/invalidate`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
+//收费
+export function editSubProjectReceiptPay(data, companyId) {
+  return request({
+    url: `${ProManageAPIServer}registerManage/receipt/pay`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
 export function getRegisterList(data, companyId) {
   return request({
     url: `${ProManageAPIServer}register/getRegisterList`,
