@@ -417,6 +417,14 @@ export function auditClientNameChange(data, companyId) {
   });
 }
 
+//第三方统一社会信用代码
+export function getTyshxydm(query) {
+  return request({
+    url: `/tyshxydm/private-api/catalogSearch`,
+    method: 'get',
+	params: query
+  });
+}
 
 export function delWorkAssignment(data, companyId) {
   return request({
