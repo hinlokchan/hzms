@@ -99,6 +99,8 @@
 						</span>
 	  				</el-form-item>
 	  			</el-col>
+			</el-row>
+			<el-row :gutter="20">
 	  			<el-col :span="12">	
 	  				<el-form-item label="开户行" prop="depositBank">
 	  					<el-input v-model="subBillInfoForm.depositBank" style="width: 100%" readonly></el-input>
@@ -150,6 +152,8 @@
 						></el-date-picker>
 					</el-form-item>
 				</el-col>
+			</el-row>
+			<el-row :gutter="20">
 	  			<el-col :span="12"
 				v-if="subBillInfoForm.receiptType == '普通发票' || subBillInfoForm.receiptType == '专用发票'">	
 	  				<el-form-item label="发票号" prop="invoiceNum"  class="red-item">
@@ -716,7 +720,7 @@
 				<el-button
 				  type="primary"
 				  size="mini"
-				  @click="jumpToSubHandleCheck(scope.row)"
+				  @click="jumpToSubHandleCheck(scope.row, projType)"
 				  :disabled="scope.row.subProjStatus.mainStatus>0?false:true"
 				>审核</el-button>
 				<!-- 
@@ -1053,7 +1057,9 @@ export default {
 		projNum:'', //计划号
 		projName:'', //项目名称
 		projScope:'', //项目范围
-	  }
+	  },
+	  
+	  projType:'',
 	  
     };
   },
@@ -1303,6 +1309,9 @@ export default {
 		  
 		  //读取数据...
 		  this.getTableInfo(row.projId);
+		  
+		  //保存类型, 跳转审核模板
+		  this.projType = row.projType;
 	    }
 	  } else {
 	    this.expands = []// 默认不展开
@@ -1366,9 +1375,23 @@ export default {
 		this.$router.push({ path: '/worksubregister', query: { projId: subData.projId, data: subData.subProjId } })
 	},
 	//跳转正评审核页
-	jumpToSubHandleCheck(subData) {
+	jumpToSubHandleCheck(subData, projType) {
 		if(subData.subProjStatus.mainStatus == "1"){
-			this.$router.push({ path: '/worksubregistercheck', query: { projId: subData.projId, data: subData.subProjId } })
+			//跳转不同页面
+			if(projType==1020 || projType==1042){
+				//资产
+				this.$router.push({ path: '/worksubregistercheckz', query: { projId: subData.projId, data: subData.subProjId } })
+			// }else if(projType==1010 || projType==1041){
+			// 	//房产
+			// 	this.$router.push({ path: '/worksubregistercheckf', query: { projId: subData.projId, data: subData.subProjId } })
+			// }else if(projType==1030 || projType==1043){
+			// 	//土地
+			// 	this.$router.push({ path: '/worksubregistercheckd', query: { projId: subData.projId, data: subData.subProjId } })
+			}else{
+				this.$message.warning('该项目类型还没开放信息录入');
+			}
+			
+			//this.$router.push({ path: '/worksubregistercheck', query: { projId: subData.projId, data: subData.subProjId } })
 		}else{
 			this.$message.warning("请等待子项目正评提交后再审核")
 		}
