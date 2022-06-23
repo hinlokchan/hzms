@@ -75,6 +75,21 @@ export default new Router({
                     meta: { title: '项目登记信息' }
                 },
                 {
+                    path: '/worksubregisterf',
+                    component: () => import('../components/page/WorkSubRegisterF.vue'),
+                    meta: { title: '房地产项目登记信息' }
+                },
+                {
+                    path: '/worksubregisterz',
+                    component: () => import('../components/page/WorkSubRegisterZ.vue'),
+                    meta: { title: '资产项目登记信息' }
+                },
+                {
+                    path: '/worksubregisterd',
+                    component: () => import('../components/page/WorkSubRegisterD.vue'),
+                    meta: { title: '土地项目登记信息' }
+                },
+                {
                     path: '/worksubreceipt',
                     component: () => import('../components/page/WorkSubReceipt.vue'),
                     meta: { title: '项目凭证信息' }
@@ -83,6 +98,21 @@ export default new Router({
                     path: '/worksubregistercheck',
                     component: () => import('../components/page/WorkSubRegisterCheck.vue'),
                     meta: { title: '项目登记信息审核' }
+                },
+                // {
+                //     path: '/worksubregistercheckf',
+                //     component: () => import('../components/page/WorkSubRegisterCheckF.vue'),
+                //     meta: { title: '房地产项目登记审核' }
+                // },
+                // {
+                //     path: '/worksubregistercheckd',
+                //     component: () => import('../components/page/WorkSubRegisterCheckD.vue'),
+                //     meta: { title: '土地项目登记审核' }
+                // },
+                {
+                    path: '/worksubregistercheckz',
+                    component: () => import('../components/page/WorkSubRegisterCheckZ.vue'),
+                    meta: { title: '资产项目登记审核' }
                 },
 				
                 // {
