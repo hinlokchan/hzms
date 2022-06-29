@@ -1,29 +1,6 @@
 <template>
   <div class="container">
-<!--    <el-collapse v-model="activeName" accordion>-->
-<!--      <el-collapse-item v-for="(item,index) in this.clientList" :key="item.value" :title="item.label" :name="index">-->
-<!--        <el-collapse style="margin-left: 10px" v-if="item.value < 1000">-->
-<!--          <el-collapse-item v-for="(itemChild,indexChild) in item.children" :key="itemChild.value" :title="itemChild.label" :name="indexChild">-->
-<!--            <template slot="title" v-if="item.value > 1000"> <el-tag>{{itemChild.value}}</el-tag>&nbsp;{{itemChild.label}}</template>-->
-<!--            <div  style="margin-left: 20px" v-if="item.value < 1000">-->
-<!--              <el-divider></el-divider>-->
-<!--              <div v-for="(itemGrandChild,indexGrandChild) in itemChild.children" :key="itemGrandChild.value">-->
-<!--                <el-tag>{{itemGrandChild.value}}</el-tag>&nbsp;{{itemGrandChild.label}}-->
-<!--                <el-divider></el-divider>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </el-collapse-item>-->
-<!--        </el-collapse>-->
-<!--        <div  style="margin-left: 20px" v-if="item.value > 1000">-->
-<!--          <el-divider></el-divider>-->
-<!--          <div v-for="(itemChild,indexChild) in item.children" :key="itemChild.value">-->
-<!--            <el-tag>{{itemChild.value}}</el-tag>&nbsp;{{itemChild.label}}-->
-<!--            <el-divider></el-divider>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </el-collapse-item>-->
-<!--    </el-collapse>-->
-
+<!-- 助理提交->计划部门审核, 改为助理直接生效
 	<el-table
 		ref="clientNameTable"
 		:data="clientChangeList"
@@ -105,8 +82,8 @@
 			</template>
 		</el-table-column>
 	</el-table>
-
 	<div style="height: 10px;"></div>
+ -->
 
        <!-- :data="rawClientList.slice((currentPage-1)*pageSize,currentPage*pageSize)" -->
     <el-table
@@ -410,10 +387,12 @@ export default {
       pickedClientType: undefined,
       editedClientName: '',
 	  
+	  /* 
 	  //委托人修改
 	  clientChangeList:[],
 	  clientChangeFullList:[],
 	  clientChangeOption:true,
+	  */
 	  
 	  //211028变动 新增: 多个公司切换
 	  companyId:'',
@@ -463,53 +442,13 @@ export default {
     this.getClientList()
     this.getClientTypeList()
 	
-	this.getClientChangeList()
+	//this.getClientChangeList()
   },
   methods: {
+	/* 委托人相关
 	//委托人修改列表
 	getClientChangeList(){
-		this.getClientNameChangeListData(this.projId, (clData)=>{
-			/* 
-			var alist = [
-			  {
-			    clientId:"111000",
-			    clientName:"110",
-				clientFullName:"111000",
-				toBeAuditName:"110000",
-				staffName:"张三",
-				projId:"0",
-			    status:"2",
-			  },
-			  {
-			    clientId:"111001",
-			    clientName:"111",
-				clientFullName:"111111",
-				toBeAuditName:"new111",
-				staffName:"李四",
-				projId:"1",
-			    status:"1",
-			  },
-			  {
-			    clientId:"111001",
-			    clientName:"111",
-				clientFullName:"111111",
-				toBeAuditName:"new222",
-				staffName:"王五",
-				projId:"2",
-			    status:"0",
-			  },
-			  {
-			    clientId:"111002",
-			    clientName:"333",
-				clientFullName:"",
-				toBeAuditName:"new333",
-				staffName:"王五",
-				projId:"3",
-			    status:"0",
-			  },
-			];
-			 */
-			
+		this.getClientNameChangeListData(this.projId, (clData)=>{			
 			
 			//完整列表
 			//this.clientChangeFullList = alist; //clData;
@@ -607,6 +546,7 @@ export default {
 		const key = this.newCode(val.projId);
 		this.$router.push({ path: '/projcheck', query: { data: key } })
 	},
+	 */
 	
 	//211210变动 query加密
 	newCode(data){
