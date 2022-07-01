@@ -2403,12 +2403,14 @@ export default {
 					regClientId: clientData.clientId,
 					regClientShortName:clientData.clientType<1000?clientData.clientTypeName+clientData.clientName:clientData.clientName,
 					regClientFullName:clientData.clientFullName,
+					regClientType:clientData.regClientType,
 				}
 			}else{
 				subData = {
 					regClientId: clientData.regClientId,
 					regClientShortName:clientData.regClientShortName,
 					regClientFullName:clientData.regClientFullName,
+					regClientType:clientData.regClientType,
 				}
 			}
 			
@@ -2418,11 +2420,12 @@ export default {
 				this.clientChangeList = ciData;
 				
 				var id = '';
+				var canEdit = false;
+				/*已改为直接通过审核, 不用对待审核信息处理
 				//var toBeAuditName= '';
 				var toBeAuditClientFullName= '';
 				var toBeAuditClientProperty= '';
 				var toBeAuditClientPropertyTemp= '';
-				var canEdit = false;
 				
 				if(ciData.length > 0){
 					//最后一个状态是否为0
@@ -2442,6 +2445,7 @@ export default {
 						toBeAuditClientPropertyTemp = toBeAuditClientProperty;
 					}
 				}
+				 */
 				
 				
 				//初始化表单
@@ -2450,9 +2454,9 @@ export default {
 					clientId:  parseInt(subData.regClientId), //委托方id
 					clientName: subData.regClientShortName, //委托方简称
 					clientOldFullName: subData.regClientFullName, //委托方旧全称
-					toBeAuditClientFullName: toBeAuditClientFullName||subData.regClientShortName.replace('分行','').replace(/[ `~!@#$%^&*()_\-+=<>?:"{}|,.\/;'\\[\]·~！@#￥%……&*（）——\-+={}|《》？：“”【】、；‘'，。、]/g,''), //待审核名称
-					toBeAuditClientProperty: toBeAuditClientProperty, //待审核委托人性质
-					toBeAuditClientPropertyTemp: toBeAuditClientPropertyTemp, //待审核委托人性质旧
+					toBeAuditClientFullName: subData.regClientFullName||subData.regClientShortName.replace('分行','').replace(/[ `~!@#$%^&*()_\-+=<>?:"{}|,.\/;'\\[\]·~！@#￥%……&*（）——\-+={}|《》？：“”【】、；‘'，。、]/g,''), //待审核名称
+					toBeAuditClientProperty: subData.regClientType, //待审核委托人性质
+					toBeAuditClientPropertyTemp: subData.regClientType, //待审核委托人性质旧
 					id: id, //委托方修改Id
 					canEdit: canEdit
 				}		
