@@ -67,7 +67,6 @@
 			  prop="clientName"
 			>
 			</el-table-column>
-			</el-table-column>
 			<el-table-column
 			  label="待审核名称"
 			  prop="toBeAuditClientInfo.toBeAuditClientFullName"
@@ -1735,6 +1734,7 @@ export default {
 								if(dpData){
 									//委托方
 									spFullData.regClientName = dpData.clientFullName || dpData.clientName;
+									spFullData.regClientType = dpData.clientProperty;
 									spFullData.regClientId = dpData.clientId;	
 									spFullData.regClientShortName = dpData.clientName;	
 									spFullData.regClientFullName = dpData.clientFullName;								
@@ -2480,6 +2480,22 @@ export default {
 								this.$message.success('修改委托方提交成功');
 								
 								this.clientNameVisible = false;
+								
+								//刷新表单委托方和共同委托方信息
+								this.getDetailProjData(this.projId, (dpData)=>{
+									if(dpData){										
+										//更新委托方
+										this.subInfoForm.regClientName = dpData.clientFullName || dpData.clientName;
+										this.subInfoForm.regClientType = dpData.clientProperty;
+										this.subInfoForm.regClientId = dpData.clientId;	
+										this.subInfoForm.regClientShortName = dpData.clientName;
+										this.subInfoForm.regClientFullName = dpData.clientFullName;
+										
+										//更新共同委托方
+										this.subInfoForm.coClientList = dpData.coClientList||[];
+									}
+								});
+								
 							})
 							.catch(err => {
 							})
