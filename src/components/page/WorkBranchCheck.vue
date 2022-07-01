@@ -850,28 +850,29 @@
           width="220"
         >
           <template slot-scope="scope">
+			<el-badge :value="newRegisterBadge(scope.row)" :type="newRegisterBadgeType(scope.row)" class="badgeitem">              
 			<el-button
-			  type="text"
-			  icon="el-icon-s-claim"
+			  type="primary" 
 			  @click=""
-			  size="medium"
+			  size="small"
 			>登记</el-button>
-						
-			<el-button
-			  type="text"
-			  icon="el-icon-download"
-			  @click="exportSubProj('正评', scope.row.projId)"
-			  size="medium"
-			>导出</el-button>
+			</el-badge>						
 			
-			<!-- @click.native.stop="editReceiptSubProj(scope.row)" -->
-			
+			<el-badge :value="newReceiptBadge(scope.row)" :type="newReceiptBadgeType(scope.row)" class="badgeitem">
             <el-button
-              type="text"
-              icon="el-icon-bank-card"
+              type="primary" 
               @click="editReceiptSubProj(scope.row)"
-              size="medium"
+              size="small"
             >凭证</el-button>
+			</el-badge>
+			
+			<el-badge value="" class="badgenull">
+			<el-button
+			  type="success" 
+			  @click="exportSubProj('正评', scope.row.projId)"
+			  size="small"
+			>导出</el-button>
+			</el-badge>
           </template>
         </el-table-column>
 		
@@ -1122,6 +1123,78 @@ export default {
 			}
 		}
 	},
+	
+	//角标	
+	newReceiptBadge(){
+		return (data)=>{
+			if(data.receiptTotalCount){
+				const bargeCount = data.receiptTotalCount - data.receiptIssuedCount||0;
+				if(bargeCount == 0){
+					//全审核, 返回审核总数
+					return data.receiptIssuedCount;
+				}else{
+					//有审核, 返回待审核数
+					return bargeCount;
+				}				
+			}else{
+				return "";
+			}
+		}
+	},
+	
+	
+	newReceiptBadgeType(){
+		return (data)=>{
+			if(data.receiptTotalCount){
+				const bargeCount = data.receiptTotalCount - data.receiptIssuedCount||0;
+				if(bargeCount == 0){
+					//全审核, 返回审核总数, (绿色)
+					return "success";
+				}else{
+					//有审核, 返回待审核数 (红色)
+					return "danger";
+				}				
+			}else{
+				return "danger";
+			}
+		}
+	},
+	
+	newRegisterBadge(){
+		return (data)=>{
+			if(data.registerSubmitedCount){
+				const bargeCount = data.registerSubmitedCount - data.registerAuditedPassCount||0;
+				if(bargeCount == 0){
+					//全审核, 返回审核总数
+					return data.registerAuditedPassCount;
+				}else{
+					//有审核, 返回待审核数
+					return bargeCount;
+				}				
+			}else{
+				return "";
+			}
+		}
+	},
+	
+	
+	newRegisterBadgeType(){
+		return (data)=>{
+			if(data.registerSubmitedCount){
+				const bargeCount = data.registerSubmitedCount - data.registerAuditedPassCount||0;
+				if(bargeCount == 0){
+					//全审核, 返回审核总数, (绿色)
+					return "success";
+				}else{
+					//有审核, 返回待审核数 (红色)
+					return "danger";
+				}					
+			}else{
+				return "danger";
+			}
+		}
+	},
+	
   },
   created() {
 	//211028变动 新增: 多个公司切换
@@ -1204,10 +1277,19 @@ export default {
       //刷新项目处理列表
       this.getManageRegisterListData({}, (mrRes)=>{
       	this.tableData = mrRes.data;
-      	this.pageTotal = mrRes.length;
+		this.tableDataTemp = mrRes.data;
+      	this.pageTotal = mrRes.data.length;
       });
 		
     },
+	
+	refresh(){
+		this.getManageRegisterListData({}, (mrRes)=>{
+			this.tableData = mrRes.data;
+			this.tableDataTemp = mrRes.data;
+			this.pageTotal = mrRes.data.length;
+		});
+	},
 	
 	//分页
     changePage(val) {
@@ -1851,6 +1933,9 @@ export default {
 						
 						//读取对应发票列表
 						this.reflashReceiptList(this.receiptForm.projId)
+						
+						//刷新项目处理列表
+						this.refresh();
 					})
 				
 				})
@@ -1877,6 +1962,9 @@ export default {
 					
 					//读取对应发票列表
 					this.reflashReceiptList(this.receiptForm.projId)
+					
+					//刷新项目处理列表
+					this.refresh();
 				})
 			})
 		}else{
@@ -2044,6 +2132,14 @@ export default {
 
 /deep/ .red-item .el-form-item__label {
   color: #ed1941;
+}
+
+.badgeitem {
+  margin-top: 10px;
+  margin-right: 15px;
+}
+.badgenull {
+  margin-top: 10px;
 }
 
 </style>
