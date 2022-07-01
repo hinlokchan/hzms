@@ -2,7 +2,7 @@
   <div class="container">
     <el-page-header @back="goBack"></el-page-header>
 	
-	<el-dialog title="修改委托方 (提交后需计划部门审核)" :visible.sync="clientNameVisible" :modal="false" v-dialogDrag width="800px"	  >
+	<el-dialog title="修改委托方" :visible.sync="clientNameVisible" :modal="false" v-dialogDrag width="800px"	  >
 		<el-form
 			ref="clientNameForm"
 			:model="clientNameForm"
@@ -26,7 +26,7 @@
 					type="textarea" autosize maxlength="240" style="width: 100%;"
 				></el-input>
 			</el-form-item>
-			<el-form-item label="待审核名称" prop="toBeAuditClientFullName" class="red-item">
+			<el-form-item label="委托方新全称" prop="toBeAuditClientFullName" class="red-item">
 				<el-autocomplete
 				  class="input-select"
 				  type="textarea"
@@ -41,7 +41,7 @@
 				
 				
 			</el-form-item>
-			<el-form-item label="待审核性质" prop="toBeAuditClientProperty" class="red-item">
+			<el-form-item label="委托方新性质" prop="toBeAuditClientProperty" class="red-item">
 				<el-select
 					v-model="clientNameForm.toBeAuditClientProperty"
 				:disabled="clientNameForm.id==''||clientNameForm.canEdit?false:true"
@@ -68,12 +68,12 @@
 			>
 			</el-table-column>
 			<el-table-column
-			  label="待审核名称"
+			  label="委托方新全称"
 			  prop="toBeAuditClientInfo.toBeAuditClientFullName"
 			>
 			</el-table-column>
 			<el-table-column
-			  label="待审核性质"
+			  label="委托方新性质"
 			  prop="toBeAuditClientInfo.toBeAuditClientProperty"
 			>
 			</el-table-column>
@@ -1863,6 +1863,7 @@ export default {
 											this.subInfoForm.regClientId = dpData.clientId;	
 											this.subInfoForm.regClientShortName = dpData.clientName;
 											this.subInfoForm.regClientFullName = dpData.clientFullName;
+											this.subInfoForm.regClientType = dpData.clientProperty;
 											
 											
 											this.subInfoForm.coClientList = dpData.coClientList||[];
@@ -2465,48 +2466,102 @@ export default {
 			
 		},
 		
+		checkClientNameSimilar(oldName, newName){
+			//1.拆解旧名
+			//2.过滤掉常见词
+			oldName =oldName?oldName.replace(/[ `~!@#$%^&*()_\-+=<>?:"{}|,.\/;'\\[\]·~！@#￥%……&*（）——\-+={}|《》？：“”【】、；‘'，。、]/g,'').replace('分行',''):'';
+			
+			var strArr = ['中国','广东','广州','深圳','佛山','东莞','中山','珠海','江门','肇庆','惠州','汕头','潮州','揭阳','汕尾','湛江','茂名','阳江','云浮','韶关','清远','梅州','股份有限公司','分行'];
+			strArr.forEach((item, index) =>{
+				oldName = oldName.replace(item,'')
+				newName = newName.replace(item,'')
+			});
+			var res=[];			
+			var similarnum = 0;
+			var similarlength = newName.length;
+			
+			for(var i=0 ; i<=oldName.length ;i++){
+			  const newvalue = oldName.slice(i,i+1); 
+			  if(newvalue.length != 0){
+				if(res.indexOf(newvalue)==-1){
+				  res.push(newvalue);
+				  if(newName.indexOf(""+newvalue) != -1){
+					similarnum++;
+				  }
+				}                
+			  }
+			}
+			return (similarnum*100/similarlength).toFixed(0);
+			
+		},
+		
 		clientNameAdd(){
 			this.$refs.clientNameForm.validate((valid) => {
 				if(this.clientNameForm.clientOldFullName == this.clientNameForm.toBeAuditClientFullName && this.clientNameForm.toBeAuditClientProperty == this.clientNameForm.toBeAuditClientPropertyTemp ){
 					this.$message.warning('新的名称和性质跟之前一样, 请确认后再提交');
 				}else{
 					if (valid) {	
-						this.$confirm('确认提交修改?', '提示', { type: 'info' })
-						.then(() => {
-							const addData =this.clientNameForm; 					
+						//提示相识度
+						const clientNameSimilar = this.checkClientNameSimilar(this.clientNameForm.clientName, this.clientNameForm.toBeAuditClientFullName);
+						
+						if(clientNameSimilar<30){
 							
-							addClientNameChange(addData, this.companyId)
-							.then(res => {
-								this.$message.success('修改委托方提交成功');
-								
-								this.clientNameVisible = false;
-								
-								//刷新表单委托方和共同委托方信息
-								this.getDetailProjData(this.projId, (dpData)=>{
-									if(dpData){										
-										//更新委托方
-										this.subInfoForm.regClientName = dpData.clientFullName || dpData.clientName;
-										this.subInfoForm.regClientType = dpData.clientProperty;
-										this.subInfoForm.regClientId = dpData.clientId;	
-										this.subInfoForm.regClientShortName = dpData.clientName;
-										this.subInfoForm.regClientFullName = dpData.clientFullName;
-										
-										//更新共同委托方
-										this.subInfoForm.coClientList = dpData.coClientList||[];
-									}
-								});
-								
+							this.$confirm('委托方和委托方全称相似度有点低, 确认他们是同一个主体?', '提示', { type: 'warning' })
+							.then(() => {
+								this.clientNameConfirmAdd();
+							}).catch(err => {
 							})
-							.catch(err => {
-							})
-						})
+						}else{
+							this.clientNameConfirmAdd();
+						}						
 					}else{
 						this.$message('请填写必填信息或格式有误');
 					}
 				}
 			})
 		},
+		clientNameConfirmAdd(){
+			//提示是否同一主体
+			const h = this.$createElement
+			this.$confirm('提交确认提示', {
+				title: '提交确认提示',
+				message: h('div', [h('p', '确认是同一主体的委托方信息, 只是修改其全称或性质?'), h('p', '_______________________________________________'), h('p', '(注意:不是同一主体, 请先联系计划部门更换委托方)'), h('p', '将"惠正公司"改成"惠州市智明管理咨询与测绘技术有限公司"'), h('p', '要先联系计划部门, 将委托方换成 "智明公司", 再录入全称')]),
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+			})
+			.then(() => {
+				const addData =this.clientNameForm; 					
 				
+				addClientNameChange(addData, this.companyId)
+				.then(res => {
+					this.$message.success('修改委托方提交成功');
+					
+					this.clientNameVisible = false;
+					
+					//刷新表单委托方和共同委托方信息
+					this.getDetailProjData(this.projId, (dpData)=>{
+						if(dpData){										
+							//更新委托方
+							this.subInfoForm.regClientName = dpData.clientFullName || dpData.clientName;
+							this.subInfoForm.regClientType = dpData.clientProperty;
+							this.subInfoForm.regClientId = dpData.clientId;	
+							this.subInfoForm.regClientShortName = dpData.clientName;
+							this.subInfoForm.regClientFullName = dpData.clientFullName;
+							
+							//更新共同委托方
+							this.subInfoForm.coClientList = dpData.coClientList||[];
+						}
+					});
+					
+				})
+				.catch(err => {
+				})
+			}).catch(err => {
+			})
+		},
+		
+		
+		//编辑和撤销接口已被移除, 助理提交直接生效
 		clientNameEdit(){
 			if(this.clientNameForm.clientOldFullName == this.clientNameForm.toBeAuditClientFullName && this.clientNameForm.toBeAuditClientProperty == this.clientNameForm.toBeAuditClientPropertyTemp ){
 				this.$message.warning('新的名称和性质跟之前一样, 请确认后再提交');
