@@ -1312,7 +1312,7 @@
 			  v-if="contractNum"
 			>删号</el-button>
 		</el-button-group>
-			
+				
 		<el-button-group style="margin-left: 10px;" v-if="projDetail.projType === 1020">
 			<el-button type="primary" size="medium" plain disabled>批导</el-button>
 			<el-button type="primary" size="medium"

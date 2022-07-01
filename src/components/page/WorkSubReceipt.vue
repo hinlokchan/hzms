@@ -336,7 +336,8 @@
 						<el-popover trigger="hover" placement="top" title="可确定多子项目 (多笔收费, 每笔对应多个子项目)">
 							<span>
 								举例: 合同价为20万, 第一笔6万对应子项目 111和333, 
-								<br>								第二笔11万,对应子项目 222, 444 和 555, 
+								<br>
+								第二笔11万,对应子项目 222, 444 和 555, 
 								<br>
 								第三笔3万等以后建子项目 666 后再收, 共3笔收费
 								<br>
@@ -378,7 +379,8 @@
 						<el-popover trigger="hover" placement="top" title="不确定多子项目 (按比例收费)">
 							<span>
 								举例: 合同价为50万, 第一笔收30% 15万, 第二笔收50% 25万, 
-								<br>								    第三笔收20% 10万  共三笔收费
+								<br>
+								    第三笔收20% 10万  共三笔收费
 								<br>
 								<br>
 								1. 录入第一笔收款, 30% 15万:
@@ -556,7 +558,7 @@
 	<div style="text-align: center;">
 		<el-button-group>
 			<el-button :type="newButtonType(isEdit)" plain size="medium" disabled>{{newButtonValue(isEdit)}}</el-button>
-			<el-button type="primary" icon="el-icon-edit-outline" size="medium" @click.native="subReceiptFormSubmit()" 
+			<el-button type="primary" icon="el-icon-edit-outline" size="medium" @click.native="subReceiptFormSubmit()"
 			:disabled = "(subReceiptForm.quittanceDate && subReceiptForm.receiptType == '开收据') || subReceiptForm.invoiceDate?true:false">确认提交</el-button>
 		</el-button-group>
 	</div>
@@ -1314,12 +1316,12 @@ export default {
 			})
 		},
 		
-		selectInit(row,index){			
+		selectInit(row,index){
 			if(this.subReceiptForm.quittanceDate || this.subReceiptForm.invoiceDate){
 				//已开收据或已开发票不能修改
 				return false;
-			}			
-			
+			}
+
 			if(this.subReceiptForm.makeOutPattern == 0){
 				if(row.receiptStatus=='多项已开'){
 					return false  //不可勾选
@@ -1342,7 +1344,7 @@ export default {
 				//已开收据或已开发票不能修改
 				return;
 			}
-		
+
 			if(this.subReceiptForm.makeOutPattern == 2){
 				//不可勾选
 				this.$message.warning('当前项目开票方式, 不用勾选子项目')
@@ -1395,9 +1397,9 @@ export default {
 				//已开收据或已开发票不能修改
 				return;
 			}
-			
-			
-			if(this.subReceiptForm.makeOutPattern === "" 
+
+
+			if(this.subReceiptForm.makeOutPattern === ""
 			|| (this.subReceiptForm.makeOutPattern === 0 && this.subProjectInfoList.length > 1) 
 			|| this.subReceiptForm.makeOutPattern == 2 ){
 				this.$message.warning('当前开票方式, 不能全选')
