@@ -175,6 +175,15 @@
 				@click="exportSubProj('底单', projId,subProjId)"
 			>底单</el-button>
 		</el-button-group>
+		<el-button-group style="margin-left: 10px;" v-else-if="draftData">
+			<el-button type="primary" size="medium" plain disabled>导出</el-button>
+			
+			<el-button
+				size="medium"
+				type="primary"
+				@click="exportSubProj('临时三审', projId,subProjId)"
+			>临时三审</el-button>
+		</el-button-group>
 	  </span>
     </div>
 	
@@ -1401,6 +1410,9 @@ export default {
 			
 			clientChangeList:[],
 			
+			//临时数据
+			draftData: false,
+			
 			//211101变动 新增: 多个公司切换
 			companyRange:['HZ', 'ZM','HZKJ'],
 			companyId:'',
@@ -1705,6 +1717,9 @@ export default {
 						if(ddData){
 							this.isEdit = false;
 							console.log("有临时数据", ddData);
+							
+							this.draftData = true;
+							
 							this.$message.success("已成功加载临时数据")
 							
 							//调用计划信息
@@ -2087,12 +2102,11 @@ export default {
 		},
 		
 		exportSubProj(exportType, projId,subProjId){
+			var formData = new FormData()
+			formData.append('projId', projId)
+			formData.append('subProjId', subProjId)
+				
 			if(this.registerStatus>0){
-				
-				var formData = new FormData()
-				formData.append('projId', projId)
-				formData.append('subProjId', subProjId)
-				
 				if(exportType == '正评'){
 					const path = 'register/exportRegisterInfoExcel'
 					downloadExcel(formData, path, this.companyId)
@@ -2103,7 +2117,9 @@ export default {
 					const path = 'register/exportTriAuditFormExcel'
 					downloadExcel(formData, path, this.companyId)
 				}
-				
+			}else if(exportType == '临时三审'){
+				const path = 'register/exportTriAuditFormExcel'
+				downloadExcel(formData, path, this.companyId)
 			}else{
 				this.$message.warning('请提交后, 再导出')
 			}
