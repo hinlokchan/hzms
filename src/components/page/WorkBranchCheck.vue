@@ -103,7 +103,7 @@
 			<el-row :gutter="20">
 	  			<el-col :span="12">	
 	  				<el-form-item label="开户行" prop="depositBank">
-	  					<el-input v-model="subBillInfoForm.depositBank" style="width: 100%" readonly></el-input>
+	  					<el-input v-model="subBillInfoForm.depositBank" type="textarea" autosize maxlength="240" style="width: 100%" readonly></el-input>
 						<span style="font-size: 14px;"
 						v-if="subBillInfoForm.depositBank">
 						  <el-button
@@ -118,7 +118,7 @@
 	  			</el-col>
 	  			<el-col :span="12">	
 	  				<el-form-item label="账号" prop="bankAccount">
-	  					<el-input v-model="subBillInfoForm.bankAccount" style="width: 100%" readonly></el-input>
+	  					<el-input v-model="subBillInfoForm.bankAccount" type="textarea" autosize maxlength="240" style="width: 100%" readonly></el-input>
 						<span style="font-size: 14px;"
 						v-if="subBillInfoForm.bankAccount">
 						  <el-button
@@ -131,6 +131,28 @@
 						</span>
 	  				</el-form-item>
 	  			</el-col>
+			</el-row>
+			<el-row :gutter="20">
+				<el-col :span="12">	
+					<el-form-item label="开票金额" prop="totalAmount">
+						<el-input v-model="subBillInfoForm.totalAmount" style="width: 100%" readonly></el-input>
+						<el-button
+						  type="text"
+						  icon="el-icon-document-copy"
+						  size="medium"
+						  v-clipboard:copy="subBillInfoForm.totalAmount"
+						  v-clipboard:success="copy"
+						>复制</el-button>
+					</el-form-item>
+				</el-col>
+				<el-col :span="12">	
+					<el-form-item label="开票备注" prop="receiptRemark">
+						<el-input v-model="subBillInfoForm.receiptRemark" type="textarea" autosize maxlength="240" style="width: 100%" readonly></el-input>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-divider>开票处理</el-divider>
+			<el-row :gutter="20">
 				<el-col :span="12">	
 					<el-form-item label="收据号" prop="quittanceNum"
 					:class="subBillInfoForm.receiptType=='开收据'?'red-item':''"
@@ -174,20 +196,6 @@
 					</el-form-item>
 				</el-col>
 			</el-row>
-			<el-row :gutter="20">
-	  			<el-col :span="12">	
-	  				<el-form-item label="开票金额" prop="totalAmount">
-	  					<el-input v-model="subBillInfoForm.totalAmount" style="width: 100%" readonly></el-input>
-						<el-button
-						  type="text"
-						  icon="el-icon-document-copy"
-						  size="medium"
-						  v-clipboard:copy="subBillInfoForm.totalAmount"
-						  v-clipboard:success="copy"
-						>复制</el-button>
-	  				</el-form-item>
-	  			</el-col>
-	  		</el-row>
 	  		</el-form>
 	  		<div
 	  		  slot="footer"
@@ -625,7 +633,7 @@
 					:rules="exportSubListFormRules"
 					label-width="0px"
 				>  
-					<el-form-item>
+					<el-form-item >
 						<el-date-picker
 							v-model="exportSubListForm.multiDate"
 							value-format="yyyy-MM-dd"
@@ -637,7 +645,10 @@
 							:picker-options="multiDateOptions"
 							style="width: 220px;">
 						</el-date-picker>
-						<el-button type="primary" style="margin-left: 4px; height: 31px;" @click="exportSubProj('正评列表', '')" size="small">批导出</el-button>
+						<el-button-group>
+							<el-button type="success" style="margin-left: 4px; height: 31px;" @click="exportSubProj('正评列表', '')" size="small">导正评</el-button>
+							<el-button type="primary" style="height: 31px;" @click="exportSubProj('发票列表', '')" size="small">导发票</el-button>
+						</el-button-group>
 					</el-form-item>
 				</el-form>
 			</div>  
@@ -699,7 +710,7 @@
 	          </template>
 	        </el-table-column>
 			<el-table-column
-			  label="操作"
+			  label="操作2"
 			  width="150"
 			  align="center"
 			>
@@ -962,6 +973,7 @@ export default {
 		quittanceDate: '', //收据日期		
 		invoiceNum:'', //发票号
 		invoiceDate: '', //发票日期
+		receiptRemark: '', //凭证备注
 	  },
 	  subBillInfoRules:{
 		invoiceNum: [{ required: true, message: '请输入发票号', trigger: 'blur' }],
@@ -1009,6 +1021,7 @@ export default {
 		invoiceDate:'', //发票日期
 		paymentType: '', //收费方式  现收或银收
 		collectionDate: '', //收费日期
+		receiptRemark: '', //凭证备注
 	  },
 	  subPayInfoRules:{
 		paymentType:[{ required: true, message: '请选择',trigger: 'blur'}],
@@ -1075,6 +1088,8 @@ export default {
   				return "warning";
   			}else if(data == "3"){
   				return "success";
+  			}else if(data == "4"){
+  				return "danger";
   			}else{
 				return "info";
 			}
@@ -1087,25 +1102,11 @@ export default {
 			}else if(data == "1"){
 				return "待审核";
 			}else if(data == "2"){
-				return "待修改";
+				return "未通过";
 			}else if(data == "3"){
 				return "已通过";
-			}else{
-				return "未提交";
-			}
-		}
-	},
-	
-	newTagValue(){
-		return (data)=>{
-			if(data == "0"){
-				return "未提交";
-			}else if(data == "1"){
-				return "待审核";
-			}else if(data == "2"){
-				return "待修改";
-			}else if(data == "3"){
-				return "已通过";
+			}else if(data == "4"){
+				return "已撤回";
 			}else{
 				return "未提交";
 			}
@@ -1162,15 +1163,15 @@ export default {
 	
 	newRegisterBadge(){
 		return (data)=>{
-			if(data.registerSubmitedCount){
-				const bargeCount = data.registerSubmitedCount - data.registerAuditedPassCount||0;
-				if(bargeCount == 0){
-					//全审核, 返回审核总数
-					return data.registerAuditedPassCount;
-				}else{
-					//有审核, 返回待审核数
-					return bargeCount;
-				}				
+			//1.有待审核, 红色显示待审核  registerToBeAuditCount
+			//2.有已通过, 绿色显示已通过  registerAuditedPassCount
+			//3.有未通过或已撤回, 黄色显示他们总和  registerRejectedCount+registerWithdrawCount
+			if(data.registerToBeAuditCount){
+				return data.registerToBeAuditCount;
+			}else if(data.registerAuditedPassCount){
+				return data.registerAuditedPassCount;
+			}else if(data.registerRejectedCount || data.registerWithdrawCount){
+				return (data.registerRejectedCount||0 + data.registerWithdrawCount||0)
 			}else{
 				return "";
 			}
@@ -1179,16 +1180,14 @@ export default {
 	
 	
 	newRegisterBadgeType(){
+		
 		return (data)=>{
-			if(data.registerSubmitedCount){
-				const bargeCount = data.registerSubmitedCount - data.registerAuditedPassCount||0;
-				if(bargeCount == 0){
-					//全审核, 返回审核总数, (绿色)
-					return "success";
-				}else{
-					//有审核, 返回待审核数 (红色)
-					return "danger";
-				}					
+			if(data.registerToBeAuditCount){
+				return "danger";
+			}else if(data.registerAuditedPassCount){
+				return "success";
+			}else if(data.registerRejectedCount || data.registerWithdrawCount){
+				return "warning";
 			}else{
 				return "danger";
 			}
@@ -1458,7 +1457,7 @@ export default {
 	},
 	//跳转正评审核页
 	jumpToSubHandleCheck(subData, projType) {
-		if(subData.subProjStatus.mainStatus == "1"){
+		if(subData.subProjStatus.mainStatus >= 1){
 			//跳转不同页面
 			if(projType==1020 || projType==1042){
 				//资产
@@ -1875,6 +1874,7 @@ export default {
 			quittanceDate:subData.quittanceDate, //收据日期
 			invoiceNum:subData.invoiceNum, //发票号		
 			invoiceDate:subData.invoiceDate, //发票日期
+			receiptRemark:subData.receiptRemark, //凭证备注
 		}		
 		this.subBillInfoForm = subBillInfoForm;
 		
@@ -2015,19 +2015,29 @@ export default {
 	exportSubProj(exportType, projId){
 		var formData = new FormData()
 		if(exportType == '正评列表'){
-			this.$refs.exportSubListForm.validate((valid) => {
-				if (valid) {
-					const startData = this.exportSubListForm.multiDate[0] + ' 00:00:00';
-					const endDate = this.exportSubListForm.multiDate[1] + ' 23:59:59';
-					formData.append('startDate', startData);
-					formData.append('endDate', endDate);
-					
-					const path = '/registerManage/batchExportRegisterInfoListExcel'
-					downloadExcel(formData, path, this.companyId)
-				}else{
-					this.$message('请填写必填信息或格式有误');
-				}
-			})
+			if(this.exportSubListForm.multiDate){
+				const startData = this.exportSubListForm.multiDate[0] + ' 00:00:00';
+				const endDate = this.exportSubListForm.multiDate[1] + ' 23:59:59';
+				formData.append('startDate', startData);
+				formData.append('endDate', endDate);
+				
+				const path = 'registerManage/batchExportRegisterInfoListExcel'
+				downloadExcel(formData, path, this.companyId)
+			}else{
+				this.$message.warning('请选择导出的日期范围');
+			}
+		}else if(exportType == '发票列表'){
+			if(this.exportSubListForm.multiDate){
+				const startData = this.exportSubListForm.multiDate[0] + ' 00:00:00';
+				const endDate = this.exportSubListForm.multiDate[1] + ' 23:59:59';
+				formData.append('startDate', startData);
+				formData.append('endDate', endDate);
+				
+				const path = 'registerManage/batchExportReceiptInfoListExcel'
+				downloadExcel(formData, path, this.companyId)
+			}else{
+				this.$message.warning('请选择导出的日期范围');
+			}
 		}else if(exportType == '正评'){
 			formData.append('projId', projId)
 			const path = 'register/batchExportRegisterInfoExcel'
