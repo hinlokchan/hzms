@@ -164,6 +164,7 @@
 					<el-select
 					  v-model="subReceiptForm.isElectronic"
 					  placeholder="请选择"
+					  style="width: 100%;"
 					>
 					  <el-option
 					    v-for="item, index in isElectronicOptions"
@@ -173,6 +174,12 @@
 					  ></el-option>
 					</el-select>
 					</el-tooltip>
+				</el-form-item>
+			</el-col>
+			
+			<el-col :span="8">
+				<el-form-item label="开票备注" prop="receiptRemark">
+					<el-input type="textarea" autosize maxlength="240" v-model="subReceiptForm.receiptRemark" style="width: 100%" clearable></el-input>
 				</el-form-item>
 			</el-col>
 		</el-row>
@@ -223,7 +230,7 @@
 			<el-col :span="8">
 				<el-form-item label="地址" prop="address"
 				:rules="subReceiptForm.receiptType=='专用发票'?inputReq:[]">
-					<el-input v-model="subReceiptForm.address" style="width: 100%" clearable></el-input>
+					<el-input v-model="subReceiptForm.address" type="textarea" autosize maxlength="240" style="width: 100%" clearable></el-input>
 				</el-form-item>
 			</el-col>
 		</el-row>
@@ -237,13 +244,13 @@
 			<el-col :span="8">
 				<el-form-item label="开户行" prop="depositBank"
 				:rules="subReceiptForm.receiptType=='专用发票'?inputReq:[]">
-					<el-input v-model="subReceiptForm.depositBank" style="width: 100%" clearable></el-input>
+					<el-input v-model="subReceiptForm.depositBank" type="textarea" autosize maxlength="240" style="width: 100%" clearable></el-input>
 				</el-form-item>
 			</el-col>
 			<el-col :span="8">
 				<el-form-item label="账号" prop="bankAccount"
 				:rules="subReceiptForm.receiptType=='专用发票'?inputReq:[]">
-					<el-input v-model="subReceiptForm.bankAccount" style="width: 100%" clearable></el-input>
+					<el-input v-model="subReceiptForm.bankAccount" type="textarea" autosize maxlength="240" style="width: 100%" clearable></el-input>
 				</el-form-item>
 			</el-col>
 		</el-row>
@@ -782,6 +789,7 @@ export default {
 			bindingSubProjIdList:[], //对应子项目id列表
 			bindingSubProjNumList:[], //对应子项目号列表
 			makeOutPattern: '',
+			receiptRemark: '',
 		};
 		
 		this.subReceiptForm = subReceiptForm;
@@ -826,6 +834,7 @@ export default {
 							bindingSubProjId: this.subReceiptForm.bindingSubProjId,
 							bindingSubProjNum: this.subReceiptForm.bindingSubProjNum,
 							makeOutPattern:this.subReceiptForm.makeOutPattern,
+							receiptRemark:this.subReceiptForm.receiptRemark,
 						}
 						
 						console.log(subData)
