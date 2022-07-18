@@ -1425,9 +1425,11 @@ export default {
 				if(data == 1){
 					return "primary";
 				}else if(data == 2){
-					return "success";
-				}else if(data == 3){
 					return "warning";
+				}else if(data == 3){
+					return "success";
+				}else if(data == 4){
+					return "danger";
 				}else{
 					return "info";
 				}				
@@ -1438,9 +1440,11 @@ export default {
 				if(data == 1){
 					return "待审核";
 				}else if(data == 2){
-					return "已通过";
+					return "未通过";
 				}else if(data == 3){
-					return "待修改";
+					return "已通过";
+				}else if(data == 4){
+					return "已撤回";
 				}else{
 					return "未提交";
 				}
@@ -1893,7 +1897,7 @@ export default {
 											//合同号
 											//更新: 220418 处理合同号为空时
 											//this.subInfoForm.regContractNum = dpData.contractNum.contractNum;
-											this.subInfoForm.regContractNumm = dpData.contractNum?dpData.contractNum.contractNum:null;
+											this.subInfoForm.regContractNum = dpData.contractNum?dpData.contractNum.contractNum:null;
 											
 											//接洽人
 											this.subInfoForm.cdProjContact = dpData.projContact											
@@ -2419,14 +2423,14 @@ export default {
 					regClientId: clientData.clientId,
 					regClientShortName:clientData.clientType<1000?clientData.clientTypeName+clientData.clientName:clientData.clientName,
 					regClientFullName:clientData.clientFullName,
-					regClientType:clientData.regClientType,
+					regClientType:clientData.regClientType||clientData.clientProperty,
 				}
 			}else{
 				subData = {
 					regClientId: clientData.regClientId,
 					regClientShortName:clientData.regClientShortName,
 					regClientFullName:clientData.regClientFullName,
-					regClientType:clientData.regClientType,
+					regClientType:clientData.regClientType||clientData.clientProperty,
 				}
 			}
 			
