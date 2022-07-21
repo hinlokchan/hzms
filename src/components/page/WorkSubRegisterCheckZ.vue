@@ -31,7 +31,7 @@
 	  </div>
 	</el-drawer>
 	
-	<el-dialog title="修改委托方 (提交后需计划部门审核)" :visible.sync="clientNameVisible" :modal="false" v-dialogDrag width="800px"	  >
+	<el-dialog title="修改委托方" :visible.sync="clientNameVisible" :modal="false" v-dialogDrag width="800px"	  >
 		<el-form
 			ref="clientNameForm"
 			:model="clientNameForm"
@@ -55,7 +55,7 @@
 						type="textarea" autosize maxlength="240" style="width: 100%;"
 					></el-input>
 				</el-form-item>
-				<el-form-item label="待审核名称" prop="toBeAuditClientFullName" class="red-item">
+				<el-form-item label="委托方新全称" prop="toBeAuditClientFullName" class="red-item">
 					<el-autocomplete
 					  class="input-select"
 					  type="textarea"
@@ -70,7 +70,7 @@
 					
 					
 				</el-form-item>
-				<el-form-item label="待审核性质" prop="toBeAuditClientProperty" class="red-item">
+				<el-form-item label="委托方新性质" prop="toBeAuditClientProperty" class="red-item">
 					<el-select
 						v-model="clientNameForm.toBeAuditClientProperty"
 					:disabled="clientNameForm.id==''||clientNameForm.canEdit?false:true"
@@ -97,12 +97,12 @@
 			>
 			</el-table-column>
 			<el-table-column
-			  label="待审核名称"
+			  label="委托方新全称"
 			  prop="toBeAuditClientInfo.toBeAuditClientFullName"
 			>
 			</el-table-column>
 			<el-table-column
-			  label="待审核性质"
+			  label="委托方新性质"
 			  prop="toBeAuditClientInfo.toBeAuditClientProperty"
 			>
 			</el-table-column>
@@ -402,6 +402,7 @@
 						<el-col :span="12">
 							<el-input v-model="subInfoForm.regClientType" readonly style="width: 100%" placeholder="请点修改按钮, 修改委托方信息"></el-input>
 						</el-col>
+						<!-- 
 						<el-col :offset="1" :span="6">
 							<el-tooltip effect="dark" placement="top">
 							<el-button type="primary" size="small" @click="editClientName(subInfoForm)">
@@ -410,6 +411,7 @@
 							<div slot="content">1. 修改委托方全称和性质: <br>委托方全称不对, 可以提交修改申请, 由计划部门审核更新<br><br> 2. 缺少共同委托方: <br>如有多个共同委托方, 请联系计划部门添加对应委托方</div>
 							</el-tooltip>
 						</el-col>
+						 -->
 					</el-row>
 				</el-form-item>
 			</el-col>	
@@ -432,11 +434,13 @@
 						<el-col :span="12">
 							<el-input v-model="item.clientProperty" readonly style="width: 100%" placeholder="请点修改按钮, 修改委托方信息"></el-input>
 						</el-col>
+						<!-- 
 						<el-col :offset="1" :span="6">
 							<el-button type="primary" @click="editClientName(item, '共同委托方')">
 								修 改
 							</el-button>
 						</el-col>
+						 -->
 					</el-row>
 				</el-form-item>
 			</el-col>
@@ -860,7 +864,7 @@
 		<el-divider>其他信息</el-divider>
 		<el-row :gutter="20">
 			<el-col :span="8">
-				<el-form-item label="备案号" prop="regRecordNum" class="red-item">
+				<el-form-item label="备案号" prop="regRecordNum">
 					<span slot="label" @click="handleAddItem('regRecordNum', '备案号')">备案号</span>
 					
 					<el-input v-model="subInfoForm.regRecordNum" style="width: 100%" clearable></el-input>
@@ -1162,21 +1166,90 @@
 		</el-row>
 		
 		<el-divider>存在问题</el-divider>
-		<el-row :gutter="20">
+		<el-row :gutter="20" style="margin-bottom: 20px;"
+		v-if="workOrderFullList.length">
+			<el-col :span="24">
+				<el-table
+				  :data="workOrderList"
+				  element-loading-text="Loading"
+				  empty-text='所有问题已处理, 请再次审核, 可点击"全部/待处理"切换查看历史问题'
+				  border
+				  fit
+				  highlight-current-row
+				>
+				  <el-table-column align="center" label="ID" width="60">
+					<template slot-scope="scope">
+					  {{ scope.$index+1 }}
+					</template>
+				  </el-table-column>
+				  <el-table-column label="审核日期"  width="100" align="center" prop="woCreationTime">
+					<template slot-scope="scope">
+					  {{ formatDate(scope.row.woCreationTime) }}
+					</template>
+				  </el-table-column>
+				  <el-table-column label="存在问题" align="center" prop="woOrderContent">
+					<template slot-scope="scope">
+					  {{ scope.row.woOrderContent }}
+					</template>
+				  </el-table-column>
+				  <el-table-column label="问题状态"  width="100" align="center" prop="woStatus">
+					<template slot-scope="scope">
+					  <el-tag :type="newWoStatusType(scope.row.woStatus)">
+					  	{{newWoStatusValue(scope.row.woStatus)}}
+					  </el-tag>
+					</template>
+				  </el-table-column>
+				  <el-table-column
+					label="操作"
+					width="200"
+					align="center">
+					<template slot="header" slot-scope="scope">
+					  <el-switch
+					    v-model="woChangeOption"
+					    active-text="待处理"
+					    inactive-text="显示全部"
+						@change="handleChangeOption">
+					  </el-switch>
+					</template>
+					<template slot-scope="scope">
+					  <el-button @click="handleUpdateWorkOrderInfo(scope.row)" type="primary" size="small"
+					  :disabled="scope.row.woStatus == 0?false:true">修改</el-button>
+					  <el-button @click="handleDelWorkOrderInfo(scope.row)" type="danger" size="small"
+					  :disabled="scope.row.woStatus == 0?false:true">撤销</el-button>
+					</template>
+				  </el-table-column>
+				</el-table>
+			</el-col>
+		</el-row>
+		<el-row :gutter="20"
+		v-if="!showWorkOrderList">
 			<el-col :span="24">
 				<el-form-item label="问题汇总">
-					<el-input v-model="registerCheckInfo" readonly placeholder="请点击便签, 输入对应问题" type="textarea" autosize maxlength="2000" style="width: 100%;"
+					<el-input v-model="registerCheckInfo" placeholder="请点击栏目名然后输入对应问题; 或直接输入所有问题" type="textarea" autosize maxlength="2000" style="width: 100%;"
 					></el-input>
 				</el-form-item>
 			</el-col>
 		</el-row>
 	</el-form>
+	
+	
 		
 	<el-divider></el-divider>
-	<div style="text-align: center;">
-			<el-button type="warning" icon="el-icon-close" size="medium" @click="failRegisterCheckSubmit()">审核不通过</el-button>
-			<el-button type="primary" icon="el-icon-check" size="medium" @click="passRegisterCheckSubmit()">审核通过</el-button>
-		
+	<div style="text-align: center;"
+	v-if="registerStatus == 1">
+		<div v-if="!showWorkOrderList">
+		<el-button type="warning" icon="el-icon-close" size="medium" @click="failRegisterCheckSubmit()">审核不通过</el-button>
+		<el-button type="primary" icon="el-icon-check" size="medium" @click="passRegisterCheckSubmit()">审核通过</el-button>
+		</div>
+	</div>
+	<div style="text-align: center;"
+	v-else-if="registerStatus == 3">
+		<el-button type="danger" icon="el-icon-refresh-left" size="medium" @click="returnRegisterCheckSubmit()">审核撤回</el-button>
+	</div>
+	<div style="text-align: center;"
+	v-else>
+		<el-button type="primary" disabled icon="el-icon-loading" size="medium" >{{newButtonValue(registerStatus)}}</el-button>
+		<el-button icon="el-icon-arrow-left" size="medium" @click="goBack" >返回</el-button>
 	</div>
 	
 	<!-- 
@@ -1201,9 +1274,10 @@ import standardinfoOptions from '../../../public/standardinfo.json'
 import { getWorkAssignment, getDetailProjInfo,
 		getClientNameChangeInfo, addClientNameChange, editClientNameChange, delClientNameChange} from '@/api/index'
 import { getTyshxydm} from '@/api/third'
-import { getSubProjectInfoList, editSubProject, getSubProjectInfo, 
+import { getSubProjectInfoList, editSubProject, getSubProjectInfo, auditSubProjectRegister,
 		addSubProjectRegister, editSubProjectRegister, getSubProjectRegisterInfo, getSubProjStatus, getSubProjectRegisterDraft, editSubProjectRegisterDraft, 
-		getInvoiceTitleList, addInvoiceTitle, editInvoiceTitle} from '@/api/subReport'
+		getInvoiceTitleList, addInvoiceTitle, editInvoiceTitle,
+		getWorkOrderList, getWorkOrderInfo, updateWorkOrderInfo, delWorkOrderInfo} from '@/api/subReport'
 import {downloadExcel} from '../../utils/download';
 
 export default {
@@ -1296,7 +1370,7 @@ export default {
 				],
 				
 				//subOtherInfoRules其他信息
-				regRecordNum:[{ required: true, message: '请输入备案号', trigger: 'blur' }],
+				//regRecordNum:[{ required: true, message: '请输入备案号', trigger: 'blur' }],
 				regContractNum:[{ required: true, message: '请在前页面取合同号', trigger: 'blur' }],
 				regArrgType:[{ required: true, message: '请联系计划部门选择安排类型', trigger: 'blur' }],
 				
@@ -1552,6 +1626,13 @@ export default {
 			},
 			registerCheckInfo:'',
 			
+						
+			//工单列表
+			workOrderList:[],
+			workOrderFullList:[],
+			showWorkOrderList:false,
+			woChangeOption:true,
+			
 			//211101变动 新增: 多个公司切换
 			companyRange:['HZ', 'ZM','HZKJ'],
 			companyId:'',
@@ -1564,12 +1645,14 @@ export default {
 				if(data == 1){
 					return "primary";
 				}else if(data == 2){
-					return "success";
-				}else if(data == 3){
 					return "warning";
+				}else if(data == 3){
+					return "success";
+				}else if(data == 4){
+					return "danger";
 				}else{
 					return "info";
-				}				
+				}
 			}
 		},
 		newButtonValue(){
@@ -1577,9 +1660,11 @@ export default {
 				if(data == 1){
 					return "待审核";
 				}else if(data == 2){
-					return "已通过";
+					return "未通过";
 				}else if(data == 3){
-					return "待修改";
+					return "已通过";
+				}else if(data == 4){
+					return "已撤回";
 				}else{
 					return "未提交";
 				}
@@ -1612,6 +1697,29 @@ export default {
 				}				
 			}
 		},
+		
+		newWoStatusType(){
+			return (data)=>{
+				if(data == 0){
+					return "primary";
+				}else if(data == 1){
+					return "success";
+				}else if(data == 2){
+					return "info";
+				}				
+			}
+		},
+		newWoStatusValue(){
+			return (data)=>{
+				if(data == 0){
+					return "待处理";
+				}else if(data == 1){
+					return "已处理";
+				}else if(data == 2){
+					return "已撤销";
+				}				
+			}
+		},
 	},
 	created() {
 		//211028变动 新增: 多个公司切换
@@ -1639,6 +1747,9 @@ export default {
 		this.getInvoiceTitleListData(this.projId, (itData)=>{
 			this.invoiceTitleList = itData
 		});
+		
+		//读取工单列表
+		this.handleRefreshWorkOrderList();
 	},
 	methods: {
 		goBack() {
@@ -1856,6 +1967,9 @@ export default {
 						if(ddData){
 							this.isEdit = false;
 							console.log("有临时数据", ddData);
+							
+							this.draftData = true;
+							
 							this.$message.success("已成功加载临时数据")
 							
 							//调用计划信息
@@ -1885,6 +1999,7 @@ export default {
 								if(dpData){
 									//委托方
 									spFullData.regClientName = dpData.clientFullName || dpData.clientName;
+									spFullData.regClientType = dpData.clientProperty;
 									spFullData.regClientId = dpData.clientId;	
 									spFullData.regClientShortName = dpData.clientName;	
 									spFullData.regClientFullName = dpData.clientFullName;								
@@ -2013,6 +2128,7 @@ export default {
 											this.subInfoForm.regClientId = dpData.clientId;	
 											this.subInfoForm.regClientShortName = dpData.clientName;
 											this.subInfoForm.regClientFullName = dpData.clientFullName;
+											this.subInfoForm.regClientType = dpData.clientProperty;
 											
 											
 											this.subInfoForm.coClientList = dpData.coClientList||[];
@@ -2027,7 +2143,7 @@ export default {
 											//合同号
 											//更新: 220418 处理合同号为空时
 											//this.subInfoForm.regContractNum = dpData.contractNum.contractNum;
-											this.subInfoForm.regContractNumm = dpData.contractNum?dpData.contractNum.contractNum:null;
+											this.subInfoForm.regContractNum = dpData.contractNum?dpData.contractNum.contractNum:null;
 																						
 											//接洽人
 											this.subInfoForm.cdProjContact = dpData.projContact											
@@ -2542,7 +2658,8 @@ export default {
 					this.$message('请填写必填信息或格式有误');
 				}
 			})
-		},
+		},		
+		
 		
 		editClientName(clientData, handle) {
 			//this.$message("问题记录")
@@ -2552,12 +2669,14 @@ export default {
 					regClientId: clientData.clientId,
 					regClientShortName:clientData.clientType<1000?clientData.clientTypeName+clientData.clientName:clientData.clientName,
 					regClientFullName:clientData.clientFullName,
+					regClientType:clientData.regClientType||clientData.clientProperty,
 				}
 			}else{
 				subData = {
 					regClientId: clientData.regClientId,
 					regClientShortName:clientData.regClientShortName,
 					regClientFullName:clientData.regClientFullName,
+					regClientType:clientData.regClientType||clientData.clientProperty,
 				}
 			}
 			
@@ -2567,11 +2686,12 @@ export default {
 				this.clientChangeList = ciData;
 				
 				var id = '';
+				var canEdit = false;
+				/*已改为直接通过审核, 不用对待审核信息处理
 				//var toBeAuditName= '';
 				var toBeAuditClientFullName= '';
 				var toBeAuditClientProperty= '';
 				var toBeAuditClientPropertyTemp= '';
-				var canEdit = false;
 				
 				if(ciData.length > 0){
 					//最后一个状态是否为0
@@ -2591,6 +2711,7 @@ export default {
 						toBeAuditClientPropertyTemp = toBeAuditClientProperty;
 					}
 				}
+				*/
 				
 				
 				//初始化表单
@@ -2599,9 +2720,9 @@ export default {
 					clientId:  parseInt(subData.regClientId), //委托方id
 					clientName: subData.regClientShortName, //委托方简称
 					clientOldFullName: subData.regClientFullName, //委托方旧全称
-					toBeAuditClientFullName: toBeAuditClientFullName||subData.regClientShortName.replace('分行','').replace(/[ `~!@#$%^&*()_\-+=<>?:"{}|,.\/;'\\[\]·~！@#￥%……&*（）——\-+={}|《》？：“”【】、；‘'，。、]/g,''), //待审核名称
-					toBeAuditClientProperty: toBeAuditClientProperty, //待审核委托人性质
-					toBeAuditClientPropertyTemp: toBeAuditClientPropertyTemp, //待审核委托人性质旧
+					toBeAuditClientFullName: subData.regClientFullName||subData.regClientShortName.replace('分行','').replace(/[ `~!@#$%^&*()_\-+=<>?:"{}|,.\/;'\\[\]·~！@#￥%……&*（）——\-+={}|《》？：“”【】、；‘'，。、]/g,''), //待审核名称
+					toBeAuditClientProperty: subData.regClientType, //待审核委托人性质
+					toBeAuditClientPropertyTemp: subData.regClientType, //待审核委托人性质旧
 					id: id, //委托方修改Id
 					canEdit: canEdit
 				}		
@@ -2614,33 +2735,103 @@ export default {
 			
 			
 		},
-				
+			
+		checkClientNameSimilar(oldName, newName){
+			//1.拆解旧名
+			//2.过滤掉常见词
+			oldName =oldName?oldName.replace(/[ `~!@#$%^&*()_\-+=<>?:"{}|,.\/;'\\[\]·~！@#￥%……&*（）——\-+={}|《》？：“”【】、；‘'，。、]/g,'').replace('分行',''):'';
+			
+			var strArr = ['中国','广东','广州','深圳','佛山','东莞','中山','珠海','江门','肇庆','惠州','汕头','潮州','揭阳','汕尾','湛江','茂名','阳江','云浮','韶关','清远','梅州','股份有限公司','分行'];
+			strArr.forEach((item, index) =>{
+				oldName = oldName.replace(item,'')
+				newName = newName.replace(item,'')
+			});
+			var res=[];			
+			var similarnum = 0;
+			var similarlength = newName.length;
+			
+			for(var i=0 ; i<=oldName.length ;i++){
+			  const newvalue = oldName.slice(i,i+1); 
+			  if(newvalue.length != 0){
+				if(res.indexOf(newvalue)==-1){
+				  res.push(newvalue);
+				  if(newName.indexOf(""+newvalue) != -1){
+					similarnum++;
+				  }
+				}                
+			  }
+			}
+			return (similarnum*100/similarlength).toFixed(0);
+			
+		},
+			
 		clientNameAdd(){
 			this.$refs.clientNameForm.validate((valid) => {
 				if(this.clientNameForm.clientOldFullName == this.clientNameForm.toBeAuditClientFullName && this.clientNameForm.toBeAuditClientProperty == this.clientNameForm.toBeAuditClientPropertyTemp ){
 					this.$message.warning('新的名称和性质跟之前一样, 请确认后再提交');
 				}else{
 					if (valid) {	
-						this.$confirm('确认提交修改?', '提示', { type: 'info' })
-						.then(() => {
-							const addData =this.clientNameForm; 					
+						//提示相识度
+						const clientNameSimilar = this.checkClientNameSimilar(this.clientNameForm.clientName, this.clientNameForm.toBeAuditClientFullName);
+						
+						if(clientNameSimilar<30){
 							
-							addClientNameChange(addData, this.companyId)
-							.then(res => {
-								this.$message.success('修改委托方提交成功');
-								
-								this.clientNameVisible = false;
+							this.$confirm('委托方和委托方全称相似度有点低, 确认他们是同一个主体?', '提示', { type: 'warning' })
+							.then(() => {
+								this.clientNameConfirmAdd();
+							}).catch(err => {
 							})
-							.catch(err => {
-							})
-						})
+						}else{
+							this.clientNameConfirmAdd();
+						}						
 					}else{
 						this.$message('请填写必填信息或格式有误');
 					}
 				}
 			})
 		},
+		clientNameConfirmAdd(){
+			//提示是否同一主体
+			const h = this.$createElement
+			this.$confirm('提交确认提示', {
+				title: '提交确认提示',
+				message: h('div', [h('p', '确认是同一主体的委托方信息, 只是修改其全称或性质?'), h('p', '_______________________________________________'), h('p', '(注意:不是同一主体, 请先联系计划部门更换委托方)'), h('p', '将"惠正公司"改成"惠州市智明管理咨询与测绘技术有限公司"'), h('p', '要先联系计划部门, 将委托方换成 "智明公司", 再录入全称')]),
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+			})
+			.then(() => {
+				const addData =this.clientNameForm; 					
 				
+				addClientNameChange(addData, this.companyId)
+				.then(res => {
+					this.$message.success('修改委托方提交成功');
+					
+					this.clientNameVisible = false;
+					
+					//刷新表单委托方和共同委托方信息
+					this.getDetailProjData(this.projId, (dpData)=>{
+						if(dpData){										
+							//更新委托方
+							this.subInfoForm.regClientName = dpData.clientFullName || dpData.clientName;
+							this.subInfoForm.regClientType = dpData.clientProperty;
+							this.subInfoForm.regClientId = dpData.clientId;	
+							this.subInfoForm.regClientShortName = dpData.clientName;
+							this.subInfoForm.regClientFullName = dpData.clientFullName;
+							
+							//更新共同委托方
+							this.subInfoForm.coClientList = dpData.coClientList||[];
+						}
+					});
+					
+				})
+				.catch(err => {
+				})
+			}).catch(err => {
+			})
+		},
+		
+		
+		//编辑和撤销接口已被移除, 助理提交直接生效
 		clientNameEdit(){
 			if(this.clientNameForm.clientOldFullName == this.clientNameForm.toBeAuditClientFullName && this.clientNameForm.toBeAuditClientProperty == this.clientNameForm.toBeAuditClientPropertyTemp ){
 				this.$message.warning('新的名称和性质跟之前一样, 请确认后再提交');
@@ -2804,11 +2995,20 @@ export default {
 				this.$confirm('确认不通过该登记信息?', '提示', { type: 'warning' })
 				.then(() => {
 					const registerCheckForm={
-						subProjId: this.subProjId,
-						checkInfo: this.registerCheckInfo,
-					}
-					
+						subProjIdArray: this.subProjId,
+						mainStatus:2,
+						woOrderContent: this.registerCheckInfo,
+					}					
 					console.log(registerCheckForm);
+					this.auditSubProjectRegisterData( registerCheckForm, (auditData)=>{
+						//提交成功
+						
+						//刷新表单
+						this.getSubProjData(this.projId, this.subProjId);
+						
+						//刷新工单列表
+						this.handleRefreshWorkOrderList();
+					});
 				})
 			}else{
 				this.$message.warning('请点击标签,输入对应问题')
@@ -2818,11 +3018,34 @@ export default {
 		passRegisterCheckSubmit(){
 			this.$confirm('确认通过该登记信息?', '提示', { type: 'success' })
 			.then(() => {
-				const registerCheckForm={
-					subProjId: this.subProjId,
+				const registerCheckForm = {
+					subProjIdArray: this.subProjId,
+					mainStatus:3,
 				}
-				
 				console.log(registerCheckForm);
+				this.auditSubProjectRegisterData( registerCheckForm, (auditData)=>{
+					//提交成功
+					
+					//刷新表单
+					this.getSubProjData(this.projId, this.subProjId);
+				});
+			})
+		},
+		
+		returnRegisterCheckSubmit(){
+			this.$confirm('确认撤回该登记审核?', '提示', { type: 'warning' })
+			.then(() => {
+				const registerCheckForm = {
+					subProjIdArray: this.subProjId,
+					mainStatus:4,
+				}
+				console.log(registerCheckForm);
+				this.auditSubProjectRegisterData( registerCheckForm, (auditData)=>{
+					//提交成功
+					
+					//刷新表单
+					this.getSubProjData(this.projId, this.subProjId);
+				});
 			})
 		},
 				
@@ -3139,6 +3362,169 @@ export default {
 				this.$message.warning('请输入或选择正确的税号')
 			}
 		},		
+		
+		
+		//财务审核正评信息
+		auditSubProjectRegisterData(auditData, successc) {
+		  //211101变动 新增: 多个公司切换
+			
+			auditSubProjectRegister(auditData, this.companyId)
+			.then(res => {
+				if (res.statusCode == 200) {
+					successc(res.data);
+				}
+			})
+			.catch(err => {
+			  console.log('审核正评信息', err)
+			})
+		},
+		
+		
+		//工单列表信息
+		getWorkOrderListData(subProjId, successc) {
+		  //211101变动 新增: 多个公司切换
+			const listData = {
+				subProjId: subProjId,
+			}
+			getWorkOrderList(listData, this.companyId)
+			.then(res => {
+				if (res.statusCode == 200) {
+					successc(res.data);
+				}
+			})
+			.catch(err => {
+			  console.log('工单列表信息', err)
+			})
+		},
+		
+		handleRefreshWorkOrderList(){
+			this.getWorkOrderListData(this.subProjId, (woData)=>{
+				this.workOrderFullList = woData;
+				this.handleChangeOption(true);
+				
+				this.showWorkOrderList = false;
+				//判断是否为空, 或woStatus不为0
+				if(woData){
+					woData.forEach((item, index) =>{
+						if(item.woStatus == 0){
+							this.showWorkOrderList = true;
+						}
+					});
+				}
+				
+				console.log('woData', woData)
+			});
+		},
+		
+		handleChangeOption(val){
+			if(val == true){			
+				//待审核列表			
+				this.workOrderList = this.workOrderFullList.filter(item => {
+					//条件匹配
+					return item.woStatus == "0";
+				}); 
+				
+			}else{
+				//完整列表
+				this.workOrderList = this.workOrderFullList
+			}
+		},
+		
+		//财务修改审核不通过工单内容
+		updateWorkOrderInfoData(updateData, successc) {
+		  //211101变动 新增: 多个公司切换
+			
+			updateWorkOrderInfo(updateData, this.companyId)
+			.then(res => {
+				if (res.statusCode == 200) {
+					successc(res.data);
+				}
+			})
+			.catch(err => {
+			  console.log('修改审核内容', err)
+			})
+		},
+		//财务删除审核不通过工单内容
+		delWorkOrderInfoData(delData, successc) {
+		  //211101变动 新增: 多个公司切换
+			
+			delWorkOrderInfo(delData, this.companyId)
+			.then(res => {
+				if (res.statusCode == 200) {
+					successc(res.data);
+				}
+			})
+			.catch(err => {
+			  console.log('删除审核内容', err)
+			})
+		},
+		
+		//财务修改审核内容
+		handleUpdateWorkOrderInfo(item){
+			//待处理时, 弹出输入框自行输入
+			const oldContent = item.woOrderContent;
+			
+			this.$prompt('请输入新的审核问题', '提示', {
+			  customClass:'prompt-style',
+			  closeOnClickModal:false,
+			  confirmButtonText: '确定',
+			  cancelButtonText: '取消',
+			  inputType: 'textarea',
+			  inputValue: item.woOrderContent,
+			  inputErrorMessage: '输入不能为空',
+			  inputValidator: (value) => {  
+				if(!value) {
+				  return '输入不能为空';
+				}else if(value == oldContent){
+				  return '内容没变化, 请修改内容';
+				}
+			  },
+			}).then(({ value }) => {
+			  //1. 提交修改
+			  const updateData = {
+				woId: item.woId,
+				woOrderContent : value,
+			  }
+			  
+			  this.updateWorkOrderInfoData(updateData, (updateData)=>{
+			  	//刷新工单列表
+			  	this.handleRefreshWorkOrderList();
+			  });
+			  
+			  
+			}).catch((err) => {
+			  console.log('修改审核内容', err)      
+			});
+		},
+		
+		//财务撤销该审核
+		handleDelWorkOrderInfo(item){
+			//待处理时, 弹出输入框自行输入
+			
+			this.$confirm('确认撤销该审核问题?', '提示', {
+			  confirmButtonText: '确定',
+			  cancelButtonText: '取消',
+			  type:'warning'
+			}).then(({ value }) => {				
+			  //1. 提交修改
+			  const delData = {
+				woId: item.woId,
+			  }
+			  
+			  this.delWorkOrderInfoData(delData, (delData)=>{
+			  	//提交成功
+				
+			  	//刷新表单
+			  	this.getSubProjData(this.projId, this.subProjId);
+			  	
+			  	//刷新工单列表
+			  	this.handleRefreshWorkOrderList();
+			  });
+			  
+			}).catch((err) => {
+			  console.log('撤销审核内容', err)      
+			});
+		},
 	}
 }
 </script>
@@ -3215,5 +3601,12 @@ export default {
 	
 	/deep/ .red-item .el-form-item__label {
 	  color: #ed1941;
+	}	
+		
+</style>
+
+<style>
+	.prompt-style .el-textarea__inner {
+	  height: 150px;
 	}	
 </style>
