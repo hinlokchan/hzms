@@ -381,7 +381,8 @@
 						</el-col>
 						<el-col :offset="1" :span="6">
 							<el-tooltip effect="dark" placement="top">
-							<el-button type="primary" size="small" @click="editClientName(subInfoForm)">
+							<el-button type="primary" size="small" @click="editClientName(subInfoForm)"
+							v-if="registerStatus!=3">
 								修改全称和性质
 							</el-button>
 							<div slot="content">1. 修改委托方全称和性质: <br>委托方全称不对, 可以提交修改申请, 由计划部门审核更新<br><br> 2. 缺少共同委托方: <br>如有多个共同委托方, 请联系计划部门添加对应委托方</div>
@@ -410,7 +411,8 @@
 							<el-input v-model="item.clientProperty" readonly style="width: 100%" placeholder="请点修改按钮, 修改委托方信息"></el-input>
 						</el-col>
 						<el-col :offset="1" :span="6">
-							<el-button type="primary" @click="editClientName(item, '共同委托方')">
+							<el-button type="primary" @click="editClientName(item, '共同委托方')"
+							v-if="registerStatus!=3">
 								修 改
 							</el-button>
 						</el-col>
@@ -565,7 +567,7 @@
 					oninput="value=value.replace(/[^\-\d.]/g,'')"
 					@change="handleChangeStandardFee"
 					disabled></el-input>		
-					<span v-if="subInfoForm.regTotalAssets && subInfoForm.regOwnersEquity">
+					<span v-if="subInfoForm.regTotalAssets && subInfoForm.regOwnersEquity && registerStatus!=3">
 					<el-tag @click="handleCopyEvalConclusionValue('资产总值', subInfoForm.regTotalAssets)">
 						资产总值
 					</el-tag>
@@ -625,6 +627,7 @@
 					  ></el-option>
 					</el-select>
 					</el-tooltip>
+					<div v-if="registerStatus!=3">
 					<el-tag @click="handleAddInvoice">
 						新增
 					</el-tag>
@@ -632,6 +635,7 @@
 					v-if="subInfoForm.cdInvoiceTitle != ''">
 						修改
 					</el-tag>
+					</div>
 				</el-form-item>
 			</el-col>
 			<el-col :span="16"
@@ -1045,6 +1049,52 @@
 				</el-form-item>
 			</el-col>
 		</el-row>
+				
+		<el-row :gutter="20"
+		v-if="workOrderFullList.length">
+			<el-col :span="24">
+				<el-divider>存在问题</el-divider>
+				<el-table
+				  :data="workOrderList"
+				  element-loading-text="Loading"
+				  empty-text='所有问题已处理, 请等待审核, 可点击"全部/待处理"切换查看历史问题'
+				  border
+				  fit
+				  highlight-current-row
+				>
+				  <el-table-column align="center" label="ID" width="60">
+					<template slot-scope="scope">
+					  {{ scope.$index+1 }}
+					</template>
+				  </el-table-column>
+				  <el-table-column label="审核日期"  width="100" align="center" prop="woCreationTime">
+					<template slot-scope="scope">
+					  {{ formatDate(scope.row.woCreationTime) }}
+					</template>
+				  </el-table-column>
+				  <el-table-column label="存在问题" align="center" prop="woOrderContent">
+					<template slot-scope="scope">
+					  {{ scope.row.woOrderContent }}
+					</template>
+				  </el-table-column>
+				  <el-table-column label="问题状态"  width="160" align="center" prop="woStatus">
+					<template slot="header" slot-scope="scope">
+					  <el-switch
+					    v-model="woChangeOption"
+					    active-text="待处理"
+					    inactive-text="全部"
+						@change="handleChangeOption">
+					  </el-switch>
+					</template>
+					<template slot-scope="scope">
+					  <el-tag :type="newWoStatusType(scope.row.woStatus)">
+					  	{{newWoStatusValue(scope.row.woStatus)}}
+					  </el-tag>
+					</template>
+				  </el-table-column>
+				</el-table>
+			</el-col>
+		</el-row>
 	</el-form>
 		
 	<el-divider></el-divider>
@@ -1055,7 +1105,8 @@
 		</el-tooltip>
 		<el-button-group style="margin-left: 20px;">
 			<el-button :type="newButtonType(registerStatus)" plain size="medium" disabled>{{newButtonValue(registerStatus)}}</el-button>
-			<el-button type="primary" icon="el-icon-edit-outline" size="medium" @click.native="subInfoFormSubmit()">确认提交</el-button>
+			<el-button type="primary" icon="el-icon-edit-outline" size="medium" @click.native="subInfoFormSubmit()"
+			v-if="registerStatus!=3">确认提交</el-button>
 		</el-button-group>
 	</div>
   </div>
@@ -1070,7 +1121,8 @@ import { getWorkAssignment, getDetailProjInfo,
 import { getTyshxydm} from '@/api/third'
 import { getSubProjectInfoList, editSubProject, getSubProjectInfo, 
 		addSubProjectRegister, editSubProjectRegister, getSubProjectRegisterInfo, getSubProjStatus, getSubProjectRegisterDraft, editSubProjectRegisterDraft, 
-		getInvoiceTitleList, addInvoiceTitle, editInvoiceTitle} from '@/api/subReport'
+		getInvoiceTitleList, addInvoiceTitle, editInvoiceTitle,
+		getWorkOrderList, getWorkOrderInfo, updateWorkOrderInfo} from '@/api/subReport'
 import {downloadExcel} from '../../utils/download';
 
 export default {
@@ -1391,7 +1443,7 @@ export default {
 				invoiceTitle: [{ required: true, message: '请输入发票抬头', trigger: 'blur' }],
 				dutyParagraph: [{ required: true, message: '请输入发票税号', trigger: 'blur' }],
 			},
-						
+			
 			//委托方修改对话框
 			clientNameVisible:false,
 			clientNameTitle:'',
@@ -1412,6 +1464,12 @@ export default {
 			
 			//临时数据
 			draftData: false,
+						
+			//工单列表
+			workOrderList:[],
+			workOrderFullList:[],
+			showWorkOrderList:false,
+			woChangeOption:true,
 			
 			//211101变动 新增: 多个公司切换
 			companyRange:['HZ', 'ZM','HZKJ'],
@@ -1477,6 +1535,29 @@ export default {
 				}				
 			}
 		},
+		
+		newWoStatusType(){
+			return (data)=>{
+				if(data == 0){
+					return "primary";
+				}else if(data == 1){
+					return "success";
+				}else if(data == 2){
+					return "info";
+				}				
+			}
+		},
+		newWoStatusValue(){
+			return (data)=>{
+				if(data == 0){
+					return "待处理";
+				}else if(data == 1){
+					return "已处理";
+				}else if(data == 2){
+					return "已撤销";
+				}				
+			}
+		},
 	},
 	created() {
 		//211028变动 新增: 多个公司切换
@@ -1504,6 +1585,9 @@ export default {
 		this.getInvoiceTitleListData(this.projId, (itData)=>{
 			this.invoiceTitleList = itData
 		});
+		
+		//读取工单列表
+		this.handleRefreshWorkOrderList();
 	},
 	methods: {
 		goBack() {
@@ -1561,9 +1645,12 @@ export default {
 		},
 		//提交		
 		subInfoFormSubmit(){
+			const confirmText = this.registerStatus==2?'审核不通过的问题已处理, 确认再次提交?':'确认提交正评信息?';
+			const confirmType = this.registerStatus==2?'warning':'info';
+			
 			this.$refs.subInfoForm.validate((valid) => {
 				if (valid) {
-					this.$confirm('确认提交正评信息?', '提示', { type: 'info' })
+					this.$confirm(confirmText, '提示', { type: confirmType })
 					.then(() => {
 						//远程更新
 						var subData = Object.assign({}, this.subInfoForm);
@@ -1594,6 +1681,9 @@ export default {
 								
 								//刷新表单
 								this.getSubProjData(this.projId, this.subProjId);
+								
+								//刷新工单列表
+								this.handleRefreshWorkOrderList();
 							})
 							.catch(err => {
 							})
@@ -2414,6 +2504,7 @@ export default {
 				}
 			})
 		},
+	
 		
 		editClientName(clientData, handle) {
 			//this.$message("问题记录")
@@ -2944,6 +3035,58 @@ export default {
 				this.$message.warning('请输入或选择正确的税号')
 			}
 		},
+		
+		
+		//财务审核正评信息
+		//工单列表信息
+		getWorkOrderListData(subProjId, successc) {
+		  //211101变动 新增: 多个公司切换
+			const listData = {
+				subProjId: subProjId,
+			}
+			getWorkOrderList(listData, this.companyId)
+			.then(res => {
+				if (res.statusCode == 200) {
+					successc(res.data);
+				}
+			})
+			.catch(err => {
+			  console.log('工单列表信息', err)
+			})
+		},
+		
+		handleRefreshWorkOrderList(){
+			this.getWorkOrderListData(this.subProjId, (woData)=>{
+				this.workOrderFullList = woData;
+				this.handleChangeOption(true);
+				
+				this.showWorkOrderList = false;
+				//判断是否为空, 或woStatus不为0
+				if(woData){
+					woData.forEach((item, index) =>{
+						if(item.woStatus == 0){
+							this.showWorkOrderList = true;
+						}
+					});
+				}
+				
+				console.log('woData', woData)
+			});
+		},
+		
+		handleChangeOption(val){
+			if(val == true){			
+				//待审核列表			
+				this.workOrderList = this.workOrderFullList.filter(item => {
+					//条件匹配
+					return item.woStatus == "0";
+				}); 
+				
+			}else{
+				//完整列表
+				this.workOrderList = this.workOrderFullList
+			}
+		},
 	}
 }
 </script>
@@ -3021,4 +3164,11 @@ export default {
 	/deep/ .red-item .el-form-item__label {
 	  color: #ed1941;
 	}
+	
+</style>
+
+<style>
+	.prompt-style .el-textarea__inner {
+	  height: 150px;
+	}	
 </style>

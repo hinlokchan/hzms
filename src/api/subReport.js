@@ -78,6 +78,7 @@ export function getSubProjectRegisterInfo(data, companyId) {
   });
 }
 
+//新增正评信息
 export function addSubProjectRegister(data, companyId) {
   return request({
     url: `${ProManageAPIServer}register/submit`,
@@ -87,6 +88,7 @@ export function addSubProjectRegister(data, companyId) {
   });
 }
 
+//修改正评信息
 export function editSubProjectRegister(data, companyId) {
   return request({
     url: `${ProManageAPIServer}register/edit`,
@@ -96,9 +98,64 @@ export function editSubProjectRegister(data, companyId) {
   });
 }
 
+//财务待审核正评列表
 export function getManageRegisterList(data, companyId) {
   return request({
     url: `${ProManageAPIServer}registerManage/getRegisterList`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
+//财务审核正评信息
+export function auditSubProjectRegister(data, companyId) {
+  return request({
+    url: `${ProManageAPIServer}registerManage/audit`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
+//财务审核不通过工单列表
+//subProjId
+export function getWorkOrderList(data, companyId) {
+  return request({
+    url: `${ProManageAPIServer}workOrder/getWorkOrderList`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
+//财务审核不通过工单内容
+//woId
+export function getWorkOrderInfo(data, companyId) {
+  return request({
+    url: `${ProManageAPIServer}workOrder/getWorkOrderInfo`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
+//财务修改审核不通过工单内容
+//woId woOrderContent
+export function updateWorkOrderInfo(data, companyId) {
+  return request({
+    url: `${ProManageAPIServer}workOrder/updateWoContent`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
+//财务修改审核不通过工单内容
+//woId
+export function delWorkOrderInfo(data, companyId) {
+  return request({
+    url: `${ProManageAPIServer}workOrder/withdraw`,
     headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)
