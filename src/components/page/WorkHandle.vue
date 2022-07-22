@@ -516,7 +516,9 @@
 	>
 	  <el-form :model="showSubQRCodeForm" label-width="120px">
 	    <el-form-item label="项目报告号">{{showSubQRCodeForm.reportNum}}</el-form-item>
-	    <el-form-item label="项目名称">{{showSubQRCodeForm.subProjName}}</el-form-item>
+		<el-form-item label="产权持有人">{{showSubQRCodeForm.incumbrancer}}</el-form-item>
+	    <!-- <el-form-item label="项目名称">{{showSubQRCodeForm.subProjName}}</el-form-item> -->
+	    <el-form-item label="项目范围">{{showSubQRCodeForm.subProjScope}}</el-form-item>
 	    <el-form-item label="项目基准日">{{showSubQRCodeForm.subBaseDate}}</el-form-item>
 	    <el-form-item label="项目评估值(万元)">
 	      <el-input v-model="showSubQRCodeForm.accessedValue"></el-input>
@@ -1533,7 +1535,7 @@
 		  
 		  <div style="height: 10px;"></div>
 		  <el-button
-		  	v-if="projDetail.projType == 1010 || projDetail.projType == 1030 || projDetail.projType == 1041 || projDetail.projType == 1042"
+		  	v-if="projDetail.projType == 1010 || projDetail.projType == 1030 || projDetail.projType == 1041 || projDetail.projType == 1042 || projDetail.projType == 1070"
 		  	icon="el-icon-lx-qrcode"
 		  	size="mini"
 		  	@click="setSubQRCode(scope.row)"
@@ -4124,13 +4126,16 @@ export default {
 	
 	//取二维码, 通过subProjId
 	setSubQRCode(subData){
+		console.log('subData', subData)
 		
 		const showSubQRCodeForm={
 			subProjId: subData.subProjId,
 			accessedValue:subData.regEvalConclusionValue?subData.regEvalConclusionValue/10000:'',
 			reportNum: this.handleShowSubNum(this.reportNum.zph?this.reportNum.zph:this.reportNum.hhh?this.reportNum.hhh:this.reportNum.cph, subData.subProjNum),
 			subProjName: subData.subProjName,
+			subProjScope: subData.subProjScope,
 			subBaseDate: subData.subBaseDate,
+			incumbrancer: this.projDetail.incumbrancer||'',
 		}
 		
 		this.showSubQRCodeForm = showSubQRCodeForm
