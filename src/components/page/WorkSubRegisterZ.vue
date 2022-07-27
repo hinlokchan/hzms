@@ -140,7 +140,7 @@
 	
     <div class="work-title"
 	v-if="subInfoForm">
-      <span class="work-title-name">资产子项目信息 <el-tag :type="newButtonType(registerStatus)" plain size="medium">{{newButtonValue(registerStatus)}}</el-tag></span>
+      <span class="work-title-name">{{newTitleValue(projType)}} <el-tag :type="newButtonType(registerStatus)" plain size="medium">{{newButtonValue(registerStatus)}}</el-tag></span>
 	  <span class="work-title-button">
 		
 		<!-- icon="el-icon-download" 
@@ -512,10 +512,10 @@
 		<el-row :gutter="20">
 			<el-col :span="8">
 				<el-form-item label="资产总值(元)" prop="regTotalAssets"
-				:rules="subInfoForm.regOwnersEquity?subProjRuleNoReq:subProjRuleReq">
-					<el-input v-model="subInfoForm.regTotalAssets" style="width: 100%" clearable
+				:rules="projType=='非咨询'?(subInfoForm.regOwnersEquity?subProjRuleNoReq:subProjRuleReq):[]">
+					<el-input v-model.trim="subInfoForm.regTotalAssets" style="width: 100%" clearable
 					placeholder="资产总值和所有者权益二者不能同时为空"
-					oninput="value=value.replace(/[^\-\d.]/g,'')"
+					@input="handleInputRegTotalAssets"
 					@change="handleChangeEvalConclusionValue"></el-input>
 					<span v-if="subInfoForm.regTotalAssets">
 						{{changeMoneyToChinese(subInfoForm.regTotalAssets)}}
@@ -546,10 +546,14 @@
 		</el-row>
 		<el-row :gutter="20">
 			<el-col :span="8">
-				<el-form-item label="评估结论" prop="regEvalConclusion" class="red-item">
+				<el-form-item label="评估结论" prop="regEvalConclusion" :class="projType=='非咨询'?'red-item':''"
+				:rules="projType=='非咨询'?inputReq:[]">
 					<el-select
 						v-model="subInfoForm.regEvalConclusion"
 						style="width: 100%;"
+						:filterable="projType=='非咨询'?false:true"
+						:allow-create="projType=='非咨询'?false:true"
+						:placeholder="projType=='非咨询'?'':'请选择或自行输入'"
 					>
 						<el-option
 							v-for="item, index in regEvalConclusionOption"
@@ -562,7 +566,8 @@
 				</el-form-item>
 			</el-col>
 			<el-col :span="8">
-				<el-form-item label="评估值(元)" prop="regEvalConclusionValue" class="red-item">
+				<el-form-item label="评估值(元)" prop="regEvalConclusionValue" class="red-item"
+				:rules="projType=='非咨询'?inputReq:[]">
 					<el-input v-model="subInfoForm.regEvalConclusionValue" style="width: 100%" clearable
 					oninput="value=value.replace(/[^\-\d.]/g,'')"
 					@change="handleChangeStandardFee"
@@ -759,7 +764,7 @@
 					<el-input v-model="subInfoForm.cdStandardFee" style="width: 100%" clearable
 					oninput="value=value.replace(/[^\d.]/g,'')"
 					@change="handleChangeDiscount"
-					disabled></el-input>
+					:disabled="projType=='非咨询'?true:(isNaN(subInfoForm.regEvalConclusionValue)?false:true)"></el-input>
 					<span v-if="subInfoForm.cdStandardFee">
 						{{changeMoneyToChinese(subInfoForm.cdStandardFee)}}
 					</span>
@@ -1132,6 +1137,7 @@ export default {
 			projId:'',
 			subProjId:'',
 			registerStatus:0,
+			projType:'',
 						
 			subInfoForm:"",
 			isEdit:false,
@@ -1557,6 +1563,15 @@ export default {
 					return "已撤销";
 				}				
 			}
+		},	
+		newTitleValue(){
+			return (data)=>{
+				if(data == '非咨询'){
+					return "资产子项目信息";
+				}else{
+					return "资产咨询子项目信息";
+				}
+			}
 		},
 	},
 	created() {
@@ -1733,6 +1748,8 @@ export default {
 								this.getDetailProjData(projId, (dpData)=>{
 									console.log('dpData', dpData);
 									
+									this.projType = dpData.projType==1020?'非咨询':'资产咨询';
+									
 									//1. 传值
 									//var spFullData = Object.assign({}, res.data)
 									var spFullData = res.data
@@ -1819,6 +1836,8 @@ export default {
 							//调用计划信息
 							this.getDetailProjData(projId, (dpData)=>{
 								console.log('dpData', dpData);
+								
+								this.projType = dpData.projType==1020?'非咨询':'资产咨询';
 							
 								//1. 传值
 								var spFullData = ddData
@@ -1892,6 +1911,8 @@ export default {
 										console.log('dpData', dpData);
 										console.log('spData', spData);
 										console.log('waData', waData);
+										
+										this.projType = dpData.projType==1020?'非咨询':'资产咨询';
 										
 										//初始化表单
 										this.subInfoForm={
@@ -1993,7 +2014,7 @@ export default {
 											this.subInfoForm.cdProjContact = dpData.projContact											
 											
 											//项目类型
-											this.subInfoForm.cdChargeType = '资产类'
+											this.subInfoForm.cdChargeType = this.projType=='非咨询'?'资产类':'咨询评价'
 											
 										}
 										
@@ -2232,8 +2253,15 @@ export default {
 					chargeTypeIndex = 2;
 				}else if(chargeType == "会计审计"){
 					chargeTypeIndex = 3;
-				}else if(chargeType == "咨询评价"){
-					chargeTypeIndex = 4;
+				}else if(chargeType == "咨询评价"){					
+					//处理咨询
+					if(this.projType == '资产咨询'){
+						chargeTypeIndex = 0;						
+					}else if(this.projType == '房产咨询'){
+						chargeTypeIndex = 1;						
+					}else if(this.projType == '土地咨询'){
+						chargeTypeIndex = 2;
+					}						
 				}
 				
 				if(chargeTypeIndex <= 2){
@@ -2276,10 +2304,16 @@ export default {
 		
 		//改变折扣
 		handleChangeDiscount(){
-			if(this.subInfoForm.cdStandardFee != "--"){
+			if(this.subInfoForm.cdStandardFee != "--" && this.subInfoForm.cdStandardFee != 0){
 				this.subInfoForm.cdDiscount = Math.round(this.subInfoForm.cdReceivable / this.subInfoForm.cdStandardFee * 10000) / 100 + "%";
 			}else{
 				this.subInfoForm.cdDiscount = "--"
+			}
+		},
+		
+		handleInputRegTotalAssets(val){
+			if(this.projType=='非咨询'){
+				this.subInfoForm.regTotalAssets = val.replace(/[^\-\d.]/g,'')
 			}
 		},
 		
@@ -2735,7 +2769,7 @@ export default {
 			var DecimalNum; //金额小数部分  
 			var ChineseStr=""; //输出的中文金额字符串  
 			var parts; //分离金额后用的数组，预定义  
-			if( money == "" || money == "-"){  
+			if( money == "" || money == "-" || isNaN(money)){  
 				return "";  
 			}  
 			money = parseFloat(money);  

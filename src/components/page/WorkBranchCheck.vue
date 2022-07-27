@@ -1462,9 +1462,9 @@ export default {
 			if(projType==1020 || projType==1042){
 				//资产
 				this.$router.push({ path: '/worksubregistercheckz', query: { projId: subData.projId, data: subData.subProjId } })
-			// }else if(projType==1010 || projType==1041){
-			// 	//房产
-			// 	this.$router.push({ path: '/worksubregistercheckf', query: { projId: subData.projId, data: subData.subProjId } })
+			}else if(projType==1010 || projType==1041){
+				//房产
+				this.$router.push({ path: '/worksubregistercheckf', query: { projId: subData.projId, data: subData.subProjId } })
 			// }else if(projType==1030 || projType==1043){
 			// 	//土地
 			// 	this.$router.push({ path: '/worksubregistercheckd', query: { projId: subData.projId, data: subData.subProjId } })

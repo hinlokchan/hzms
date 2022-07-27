@@ -4967,13 +4967,13 @@ export default {
 		if(this.projDetail.reportNumList.length > 0){
 			if(subData.workAssignment){
 				
-				//跳转不同页面				
+				//跳转不同页面
 				if(this.projDetail.projType==1020 || this.projDetail.projType==1042){
 					//资产
 					this.$router.push({ path: '/worksubregisterz', query: { projId: subData.projId, data: subData.subProjId } })
-				// }else if(this.projDetail.projType==1010 || this.projDetail.projType==1041){
-				// 	//房产
-				// 	this.$router.push({ path: '/worksubregisterf', query: { projId: subData.projId, data: subData.subProjId } })
+				}else if(this.projDetail.projType==1010 || this.projDetail.projType==1041){
+					//房产
+					this.$router.push({ path: '/worksubregisterf', query: { projId: subData.projId, data: subData.subProjId } })
 				// }else if(this.projDetail.projType==1030 || this.projDetail.projType==1043){
 				// 	//土地
 				// 	this.$router.push({ path: '/worksubregisterd', query: { projId: subData.projId, data: subData.subProjId } })
