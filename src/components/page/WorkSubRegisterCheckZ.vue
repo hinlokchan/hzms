@@ -169,7 +169,7 @@
 	
     <div class="work-title"
 	v-if="subInfoForm">
-      <span class="work-title-name">资产子项目信息 <el-tag :type="newButtonType(registerStatus)" plain size="medium">{{newButtonValue(registerStatus)}}</el-tag></span>
+      <span class="work-title-name">{{newTitleValue(projType)}} <el-tag :type="newButtonType(registerStatus)" plain size="medium">{{newButtonValue(registerStatus)}}</el-tag></span>
 	  <span class="work-title-button">
 		
 		<!-- icon="el-icon-download" 
@@ -203,7 +203,18 @@
 				type="primary"
 				@click="exportSubProj('底单', projId,subProjId)"
 			>底单</el-button>
+		</el-button-group>		
+		<!-- 
+		<el-button-group style="margin-left: 10px;" v-else-if="draftData">
+			<el-button type="primary" size="medium" plain disabled>导出</el-button>
+			
+			<el-button
+				size="medium"
+				type="primary"
+				@click="exportSubProj('临时三审', projId,subProjId)"
+			>临时三审</el-button>
 		</el-button-group>
+		 -->
 	  </span>
     </div>
 	
@@ -370,7 +381,7 @@
 	  </div>
 	</el-dialog>
 	
-	<!-- :rules="subInfoRules" -->	
+	
 	<el-form
 		ref="subInfoForm"
 		:model="subInfoForm"
@@ -394,6 +405,7 @@
 					 -->
 				</el-form-item>
 			</el-col>
+			
 			<el-col :span="12">
 				<el-form-item label="委托方性质" prop="regClientType" class="red-item">
 					<span slot="label" @click="handleAddItem('regClientType', '委托方性质')">委托方性质</span>
@@ -402,10 +414,11 @@
 						<el-col :span="12">
 							<el-input v-model="subInfoForm.regClientType" readonly style="width: 100%" placeholder="请点修改按钮, 修改委托方信息"></el-input>
 						</el-col>
-						<!-- 
+						<!-- 不能修改全称和性质
 						<el-col :offset="1" :span="6">
 							<el-tooltip effect="dark" placement="top">
-							<el-button type="primary" size="small" @click="editClientName(subInfoForm)">
+							<el-button type="primary" size="small" @click="editClientName(subInfoForm)"
+							v-if="registerStatus!=3">
 								修改全称和性质
 							</el-button>
 							<div slot="content">1. 修改委托方全称和性质: <br>委托方全称不对, 可以提交修改申请, 由计划部门审核更新<br><br> 2. 缺少共同委托方: <br>如有多个共同委托方, 请联系计划部门添加对应委托方</div>
@@ -436,7 +449,8 @@
 						</el-col>
 						<!-- 
 						<el-col :offset="1" :span="6">
-							<el-button type="primary" @click="editClientName(item, '共同委托方')">
+							<el-button type="primary" @click="editClientName(item, '共同委托方')"
+							v-if="registerStatus!=3">
 								修 改
 							</el-button>
 						</el-col>
@@ -611,14 +625,15 @@
 				</el-form-item>
 			</el-col>
 			<el-col :span="8">
-				<el-form-item label="评估值(元)" prop="regEvalConclusionValue" class="red-item">
+				<el-form-item label="评估值(元)" prop="regEvalConclusionValue" class="red-item"
+				:rules="projType=='非咨询'?inputReq:[]">
 					<span slot="label" @click="handleAddItem('regEvalConclusionValue', '评估值(元)')">评估值(元)</span>
 					
 					<el-input v-model="subInfoForm.regEvalConclusionValue" style="width: 100%" clearable
 					oninput="value=value.replace(/[^\-\d.]/g,'')"
 					@change="handleChangeStandardFee"
 					disabled></el-input>		
-					<span v-if="subInfoForm.regTotalAssets && subInfoForm.regOwnersEquity">
+					<span v-if="subInfoForm.regTotalAssets && subInfoForm.regOwnersEquity && registerStatus!=3">
 					<!-- 
 					<el-tag @click="handleCopyEvalConclusionValue('资产总值', subInfoForm.regTotalAssets)">
 						资产总值
@@ -687,6 +702,7 @@
 					</el-select>
 					</el-tooltip>
 					<!-- 
+					<div v-if="registerStatus!=3">
 					<el-tag @click="handleAddInvoice">
 						新增
 					</el-tag>
@@ -694,6 +710,7 @@
 					v-if="subInfoForm.cdInvoiceTitle != ''">
 						修改
 					</el-tag>
+					</div>
 					 -->
 				</el-form-item>
 			</el-col>
@@ -834,7 +851,7 @@
 					<el-input v-model="subInfoForm.cdStandardFee" style="width: 100%" clearable
 					oninput="value=value.replace(/[^\d.]/g,'')"
 					@change="handleChangeDiscount"
-					disabled></el-input>
+					:disabled="projType=='非咨询'?true:(isNaN(subInfoForm.regEvalConclusionValue)?false:true)"></el-input>
 					<span v-if="subInfoForm.cdStandardFee">
 						{{changeMoneyToChinese(subInfoForm.cdStandardFee)}}
 					</span>
@@ -1260,7 +1277,8 @@
 		</el-tooltip>
 		<el-button-group style="margin-left: 20px;">
 			<el-button :type="newButtonType(registerStatus)" plain size="medium" disabled>{{newButtonValue(registerStatus)}}</el-button>
-			<el-button type="primary" icon="el-icon-edit-outline" size="medium" @click.native="subInfoFormSubmit()">确认提交</el-button>
+			<el-button type="primary" icon="el-icon-edit-outline" size="medium" @click.native="subInfoFormSubmit()"
+			v-if="registerStatus!=3">确认提交</el-button>
 		</el-button-group>
 	</div>
 	 -->
@@ -1617,6 +1635,9 @@ export default {
 			
 			clientChangeList:[],
 			
+			//临时数据
+			draftData: false,
+			
 			//登记审核对话框
 			registerCheckVisible:false,
 			//registerCheckTitle:'',
@@ -1720,6 +1741,15 @@ export default {
 				}				
 			}
 		},
+		newTitleValue(){
+			return (data)=>{
+				if(data == '非咨询'){
+					return "资产子项目信息";
+				}else{
+					return "资产咨询子项目信息";
+				}
+			}
+		},
 	},
 	created() {
 		//211028变动 新增: 多个公司切换
@@ -1807,9 +1837,12 @@ export default {
 		},
 		//提交		
 		subInfoFormSubmit(){
+			const confirmText = this.registerStatus==2?'审核不通过的问题已处理, 确认再次提交?':'确认提交正评信息?';
+			const confirmType = this.registerStatus==2?'warning':'info';
+			
 			this.$refs.subInfoForm.validate((valid) => {
 				if (valid) {
-					this.$confirm('确认提交正评信息?', '提示', { type: 'info' })
+					this.$confirm(confirmText, '提示', { type: confirmType })
 					.then(() => {
 						//远程更新
 						var subData = Object.assign({}, this.subInfoForm);
@@ -1840,6 +1873,9 @@ export default {
 								
 								//刷新表单
 								this.getSubProjData(this.projId, this.subProjId);
+								
+								//刷新工单列表
+								this.handleRefreshWorkOrderList();
 							})
 							.catch(err => {
 							})
@@ -1888,6 +1924,8 @@ export default {
 								//调用计划信息
 								this.getDetailProjData(projId, (dpData)=>{
 									console.log('dpData', dpData);
+									
+									this.projType = dpData.projType==1020?'非咨询':'资产咨询';
 									
 									//1. 传值
 									//var spFullData = Object.assign({}, res.data)
@@ -1976,6 +2014,8 @@ export default {
 							this.getDetailProjData(projId, (dpData)=>{
 								console.log('dpData', dpData);
 							
+								this.projType = dpData.projType==1020?'非咨询':'资产咨询';
+														
 								//1. 传值
 								var spFullData = ddData
 								
@@ -2048,6 +2088,8 @@ export default {
 										console.log('dpData', dpData);
 										console.log('spData', spData);
 										console.log('waData', waData);
+										
+										this.projType = dpData.projType==1020?'非咨询':'资产咨询';
 										
 										//初始化表单
 										this.subInfoForm={
@@ -2149,7 +2191,7 @@ export default {
 											this.subInfoForm.cdProjContact = dpData.projContact											
 											
 											//项目类型
-											this.subInfoForm.cdChargeType = '资产类'
+											this.subInfoForm.cdChargeType = this.projType=='非咨询'?'资产类':'咨询评价'
 											
 										}
 										
@@ -2352,12 +2394,11 @@ export default {
 		},
 		
 		exportSubProj(exportType, projId,subProjId){
+			var formData = new FormData()
+			formData.append('projId', projId)
+			formData.append('subProjId', subProjId)
+				
 			if(this.registerStatus>0){
-				
-				var formData = new FormData()
-				formData.append('projId', projId)
-				formData.append('subProjId', subProjId)
-				
 				if(exportType == '正评'){
 					const path = 'register/exportRegisterInfoExcel'
 					downloadExcel(formData, path, this.companyId)
@@ -2368,7 +2409,9 @@ export default {
 					const path = 'register/exportTriAuditFormExcel'
 					downloadExcel(formData, path, this.companyId)
 				}
-				
+			}else if(exportType == '临时三审'){
+				const path = 'register/exportTriAuditFormExcel'
+				downloadExcel(formData, path, this.companyId)
 			}else{
 				this.$message.warning('请提交后, 再导出')
 			}
@@ -2388,7 +2431,14 @@ export default {
 				}else if(chargeType == "会计审计"){
 					chargeTypeIndex = 3;
 				}else if(chargeType == "咨询评价"){
-					chargeTypeIndex = 4;
+					//处理咨询
+					if(this.projType == '资产咨询'){
+						chargeTypeIndex = 0;						
+					}else if(this.projType == '房地产咨询'){
+						chargeTypeIndex = 1;						
+					}else if(this.projType == '土地咨询'){
+						chargeTypeIndex = 2;
+					}
 				}
 				
 				if(chargeTypeIndex <= 2){
@@ -2431,10 +2481,16 @@ export default {
 		
 		//改变折扣
 		handleChangeDiscount(){
-			if(this.subInfoForm.cdStandardFee != "--"){
+			if(this.subInfoForm.cdStandardFee != "--" && this.subInfoForm.cdStandardFee != 0){
 				this.subInfoForm.cdDiscount = Math.round(this.subInfoForm.cdReceivable / this.subInfoForm.cdStandardFee * 10000) / 100 + "%";
 			}else{
 				this.subInfoForm.cdDiscount = "--"
+			}
+		},
+		
+		handleInputRegTotalAssets(val){
+			if(this.projType=='非咨询'){
+				this.subInfoForm.regTotalAssets = val.replace(/[^\-\d.]/g,'')
 			}
 		},
 		
@@ -3062,7 +3118,7 @@ export default {
 			var DecimalNum; //金额小数部分  
 			var ChineseStr=""; //输出的中文金额字符串  
 			var parts; //分离金额后用的数组，预定义  
-			if( money == "" || money == "-"){  
+			if( money == "" || money == "-" || isNaN(money)){
 				return "";  
 			}  
 			money = parseFloat(money);  
