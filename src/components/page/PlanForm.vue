@@ -433,17 +433,19 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="计划完成天数">
-                <el-input
-				  type="number"
-				  clearable
-                  v-model="form.compSchedule"
-                  :min="1"
-                  label="完成天数"
-                  :disabled="userRole>2"
-                  oninput="value=value.replace(/[^\d.]/g,'')"
-				  
-                ></el-input>
+              <el-form-item label="银行业务类型">
+                <el-select
+                    class="select-width-100"
+                    v-model="form.bankBusinessType"
+                    placeholder="请选择"
+                >
+                  <el-option
+                      v-for="item in bankBusinessTypeOptions"
+                      :key="item.index"
+                      :label="item.label"
+                      :value="item.value"
+                  ></el-option>
+                </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -584,21 +586,19 @@
 			  </el-form-item>
 			</el-col>
 			<el-col :span="6">
-			  <el-form-item label="银行业务类型">
-				<el-select
-				  class="select-width-100"
-				  v-model="form.bankBusinessType"
-				  placeholder="请选择"
-				>
-				  <el-option
-					v-for="item in bankBusinessTypeOptions"
-					:key="item.index"
-					:label="item.label"
-					:value="item.value"
-				  ></el-option>
-				</el-select>
-			  </el-form-item>
-			</el-col>
+        <el-form-item label="计划完成天数">
+          <el-input
+              type="number"
+              clearable
+              v-model="form.compSchedule"
+              :min="1"
+              label="完成天数"
+              :disabled="userRole>2"
+              oninput="value=value.replace(/[^\d.]/g,'')"
+
+          ></el-input>
+        </el-form-item>
+      </el-col>
             <el-col :span="12">
               <el-form-item label="补充说明">
                 <el-input
@@ -2695,7 +2695,23 @@ export default {
       {
         label:'普惠金融',
         value:'普惠金融'
-      }
+      },
+      {
+        label:'农行小微企业普惠贷款',
+        value:'农行小微企业普惠贷款'
+      },
+      {
+        label:'农行其他法人贷款',
+        value:'农行其他法人贷款'
+      },
+      {
+        label:'农行二手房贷款',
+        value:'农行二手房贷款'
+      },
+      {
+        label:'农行个人非住房贷款',
+        value:'农行个人非住房贷款'
+      },
     ],
 	  
 	  //211130新增 项目名称和项目范围本地搜索
