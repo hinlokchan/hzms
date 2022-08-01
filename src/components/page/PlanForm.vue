@@ -610,7 +610,7 @@
             </el-col>
           </el-row>
           <el-row :gutter="20"
-                  v-if="this.form.projType === '1010' && !this.isEdit "
+                  v-if="(this.form.projType === '1010' || this.form.projType === '1041' ) && !this.isEdit "
           >
             <el-col>
               <div class="form-item-title">
