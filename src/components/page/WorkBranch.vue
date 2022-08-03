@@ -25,7 +25,7 @@
               <i class="el-icon-lx-edit grid-con-icon"></i>
               <div class="grid-cont-right">
                 <div class="grid-num">{{missionData.onGoing}}</div>
-                <div>待完成项目</div>
+                <div @click="projMissionChange('projState')">待完成项目</div>
               </div>
             </div>
           </el-card>
@@ -36,7 +36,7 @@
               <i class="el-icon-lx-warn grid-con-icon"></i>
               <div class="grid-cont-right">
                 <div class="grid-num">{{missionData.urgent}}</div>
-                <div>紧急项目</div>
+                <div @click="projMissionChange('projDegree')">紧急项目</div>
               </div>
             </div>
           </el-card>
@@ -47,13 +47,53 @@
               <i class="el-icon-bell grid-con-icon"></i>
               <div class="grid-cont-right">
                 <div class="grid-num">{{missionData.new}}</div>
-                <div>本日新项目</div>
+                <div @click="projMissionChange('projNew')">本日新项目</div>
               </div>
             </div>
           </el-card>
         </el-col>
       </el-row>
       <div class="search">
+		<el-row :gutter="20" style="margin-bottom: 20px;">
+		  <!-- 远程调用改为本地过滤
+		  <el-col :span="6">
+		    <el-switch
+		      v-model="onGoing"
+		      active-text="进行中项目"
+		      inactive-text="所有项目"
+		      @change="getData"
+		    ></el-switch>
+		  </el-col>
+		  -->
+		  
+		  <el-col :span="8">
+		    <el-switch
+		      v-model="searchData.projState"
+		      active-text="待完成项目"
+		      inactive-text="所有项目"
+		      @change="projFilterSwitch"
+		    ></el-switch>
+		  </el-col>
+		  
+		  <el-col :span="8">
+		    <el-switch
+		      v-model="searchData.projDegree"
+		      active-text="紧急项目"
+		      inactive-text="所有项目"
+		      @change="projFilterSwitch"
+		    ></el-switch>
+		  </el-col>
+		  
+		  <el-col :span="8">
+		    <el-switch
+		      v-model="searchData.projNew"
+		      active-text="本人新项目"
+		      inactive-text="所有项目"
+		      @change="projFilterSwitch"
+		    ></el-switch>
+		  </el-col>
+		</el-row>  
+		  
         <el-row :gutter="10">
           <el-col :span="4">
             <el-input
@@ -98,16 +138,6 @@
               icon="el-icon-refresh-right"
               size="medium"
             >重 置</el-button>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col>
-            <el-switch
-              v-model="onGoing"
-              active-text="进行中项目"
-              inactive-text="所有项目"
-              @change="getData"
-            ></el-switch>
           </el-col>
         </el-row>
       </div>
@@ -270,7 +300,11 @@ export default {
 		projNum: '',
 		reportNum: '',
 		projName: '',
-		projScope: '',  
+		projScope: '',
+		
+		projState: false,
+		projDegree: false,
+		projNew: false,
 	  },
 	  
       midNum: 0,
@@ -371,7 +405,58 @@ export default {
 		this.tableData = newList;
 		this.currentPage = 1;
 		this.pageTotal = this.tableData.length;
+		
+		//重置其他过滤
+		this.searchData.projState = false;
+		this.searchData.projDegree = false;
+		this.searchData.projNew = false;
 	},
+	
+	projFilterSwitch(){		
+		var newList = this.tableFullData;
+				
+		//1. 过滤字段的
+		Object.keys(this.filtersitem).forEach((item, index) =>{
+		  if(this.filtersitem[item]){
+			//循环过滤多个不为空的条件
+		    newList = newList.filter(item2 => {
+				return this.filtersitem[item].indexOf(item2[item]) !=-1;
+			});
+		  }
+		});
+		//1. 过滤进行中
+		if(this.searchData.projState){
+			newList = newList.filter(item => {
+				return item.projState=='0'
+			});
+		}			
+		//2. 过滤紧急
+		if(this.searchData.projDegree){
+			newList = newList.filter(item => {
+				return item.projDegree=='1002' && item.projState=='0'
+			});
+		}		
+		//3. 过滤新旧
+		if(this.searchData.projNew){
+			newList = newList.filter(item => {
+				return item.projDate > this.timestamp
+			});
+		}
+		
+		this.tableData = newList;
+		this.currentPage = 1;
+		this.pageTotal = this.tableData.length;
+	},
+	projMissionChange(type){
+		this.searchData[type] = true;
+		
+		//清除table过滤
+		this.$refs.multipleTable.clearFilter();
+		
+		this.projFilterSwitch();
+	},
+	
+	
     // deleteReportNum(reportNum) {
     //   deleteReportNum({ reportNum: reportNum }).then(res => {
     //     this.$message.success('删除成功');
@@ -479,9 +564,6 @@ export default {
 	  this.currentPage = 1;
 	  this.tableData=[];
 	  this.pageTotal = 0;
-	  Object.keys(this.filtersitem).forEach(key => (this.filtersitem[key] = ''))
-	  this.projLeaderFilterValue = [];
-	  this.projStateFilterValue = [];
 	  
 	  
       searchMyProject(this.searchData, this.companyId)
@@ -502,6 +584,9 @@ export default {
 			this.tableData = res.data;
 			this.pageTotal = res.data.length;  
 		  }
+		  		  
+		  //清除table过滤
+		  this.$refs.multipleTable.clearFilter();
         })
         .catch(err => {
           console.log('field to search myproject');
@@ -551,11 +636,16 @@ export default {
 	  this.tableData=[];
 	  this.pageTotal = 0;
 	  this.onGoing = false;
-	  Object.keys(this.searchData).forEach(key => (this.searchData[key] = ''))
-	  Object.keys(this.filtersitem).forEach(key => (this.filtersitem[key] = ''))
-	  this.projLeaderFilterValue = [];
-	  this.projStateFilterValue = [];
 	  
+	  this.searchData = {
+		projNum: '',
+		reportNum: '',
+		projName: '',
+		projScope: '',		
+		projState: false,
+		projDegree: false,
+		projNew: false,
+	  }
 	  
       searchMyProject(this.searchData, this.companyId)
         .then(res => {
@@ -563,6 +653,9 @@ export default {
 		  this.tableFullData = res.data
           this.tableData = res.data;
           this.pageTotal = res.data.length;
+		  
+		  //清除table过滤
+		  this.$refs.multipleTable.clearFilter();
         })
         .catch(err => {
           console.log('field to search');
