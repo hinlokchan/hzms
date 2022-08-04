@@ -23,9 +23,9 @@
           <el-card :body-style="{ padding: '0px' }">
             <div class="grid-content grid-con-1">
               <i class="el-icon-lx-edit grid-con-icon"></i>
-              <div class="grid-cont-right">
+              <div class="grid-cont-right" @click="projMissionChange('projState')">
                 <div class="grid-num">{{missionData.onGoing}}</div>
-                <div @click="projMissionChange('projState')">待完成项目</div>
+                <div>待完成项目</div>
               </div>
             </div>
           </el-card>
@@ -34,9 +34,9 @@
           <el-card :body-style="{ padding: '0px' }">
             <div class="grid-content grid-con-3">
               <i class="el-icon-lx-warn grid-con-icon"></i>
-              <div class="grid-cont-right">
+              <div class="grid-cont-right" @click="projMissionChange('projDegree')">
                 <div class="grid-num">{{missionData.urgent}}</div>
-                <div @click="projMissionChange('projDegree')">紧急项目</div>
+                <div>紧急项目</div>
               </div>
             </div>
           </el-card>
@@ -45,9 +45,9 @@
           <el-card :body-style="{ padding: '0px' }">
             <div class="grid-content grid-con-2">
               <i class="el-icon-bell grid-con-icon"></i>
-              <div class="grid-cont-right">
+              <div class="grid-cont-right"  @click="projMissionChange('projNew')">
                 <div class="grid-num">{{missionData.new}}</div>
-                <div @click="projMissionChange('projNew')">本日新项目</div>
+                <div>本日新项目</div>
               </div>
             </div>
           </el-card>
