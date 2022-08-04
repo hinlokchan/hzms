@@ -87,7 +87,7 @@
 		  <el-col :span="8">
 		    <el-switch
 		      v-model="searchData.projNew"
-		      active-text="本人新项目"
+		      active-text="本日新项目"
 		      inactive-text="所有项目"
 		      @change="projFilterSwitch"
 		    ></el-switch>
