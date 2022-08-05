@@ -14,9 +14,29 @@
         </el-breadcrumb>
       </div>
       <div>
-        <el-input placeholder="请输入搜索关键字" v-model="keyword" @change="doSearch" class="input-with-select" size="large">
-          <el-button slot="append" type="primary" icon="el-icon-search" @click="doSearch" ></el-button>
-        </el-input>
+		<el-form :inline="true" label-width="100px">
+		  <el-form-item label="类型">
+		    <el-select
+		      v-model="projType"
+		      placeholder="选择类型"
+			  @change="doSearch"
+			  size="large"
+		    >
+		      <el-option
+		        v-for="item in projTypeOptions"
+		        :key="item.value"
+		        :label="item.label"
+		        :value="item.value"
+		      >
+		      </el-option>
+		    </el-select>
+		  </el-form-item>
+		  <el-form-item label="关键字">
+		    <el-input placeholder="请输入搜索关键字" v-model="keyword" @change="doSearch" style="width: 400px;" size="large">
+		      <el-button slot="append" type="primary" icon="el-icon-search" @click="doSearch" ></el-button>
+		    </el-input>
+		  </el-form-item>
+		</el-form>
         <el-table
             class="main-table"
             :data="tableData.list"
@@ -83,6 +103,21 @@ export default {
 
         ]
       },
+	  
+	  projType:'',
+	  projTypeOptions: [{
+		label: '全部',
+		value: '',
+	  }, {
+		label: '房产',
+		value: '1010',
+	  }, {
+		label: '资产',
+		value: '1020',
+	  }, {
+		label: '土地',
+		value: '1030',
+	  }],
     }
   },  
   created() {
@@ -104,7 +139,12 @@ export default {
         this.$message.warning('关键词不能为空')
         return;
       }
-      caseSearch({ keyword: this.keyword }).then(res => {
+	  
+	  const searchData={
+		projType:this.projType,
+		keyword: this.keyword
+	  }
+      caseSearch(searchData).then(res => {
         if (res.data.length === 0) {
           this.$message.warning('未查询到数据');
           return;
@@ -180,7 +220,6 @@ export default {
 <style scoped>
 .input-with-select {
   width: 50%;
-  margin-left: 25%;
   margin-bottom: 5px;
 }
 
@@ -208,5 +247,11 @@ export default {
 
 .el-footer span {
   color: #989898;
+}
+
+/deep/ .el-form-item__label {
+  color: #000;
+  font-size: 16px;
+  line-height: 40px;
 }
 </style>
