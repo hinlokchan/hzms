@@ -47,6 +47,7 @@
             </div>
             <div class="text">
               <div class="item"><span>计划编号：</span>{{this.caseDetail.projNum}}</div>
+              <div class="item"><span>报告号：</span>{{this.caseDetail.fgNum}}</div>
               <div class="item"><span>项目名称：</span>{{this.caseDetail.projName}}</div>
               <div class="item"><span>项目范围：</span>{{this.caseDetail.projScope}}</div>
 <!--              <div class="item"><span>项目类型：</span>{{this.transedProjType.projType}}</div>-->
