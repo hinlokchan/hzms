@@ -37,16 +37,32 @@
           @click="printWeekReport(week)"
         >导出</el-button>
       </div>
-      <div>
-        <el-date-picker
-          v-model="week"
-          type="week"
-          placeholder="请选择日期"
-          :editable="false"
-          format="yyyy 第 WW 周"
-        >
-        </el-date-picker>
-      </div>
+	  <el-form label-width="100px">
+		<el-form-item label="选择公司">
+		  <el-select
+			v-model="company"
+			placeholder="选择公司"
+		  >
+			<el-option
+			  v-for="item in companyOptions"
+			  :key="item.value"
+			  :label="item.label"
+			  :value="item.value"
+			>
+			</el-option>
+		  </el-select>
+		</el-form-item>
+	    <el-form-item label="编制日期">
+		  <el-date-picker
+		    v-model="week"
+		    type="week"
+		    placeholder="请选择日期"
+		    :editable="false"
+		    format="yyyy 第 WW 周"
+		  >
+		  </el-date-picker>
+	    </el-form-item>
+	  </el-form>
     </el-card>
     <el-card style="width:50%; min-width: 600px; margin-top: 20px">
       <div slot="header"
@@ -58,7 +74,21 @@
             @click="exportPlan"
         >导出</el-button>
       </div>
-	  <el-form label-width="auto">
+	  <el-form label-width="100px">
+		<el-form-item label="选择公司">
+		  <el-select
+		    v-model="company"
+		    placeholder="选择公司"
+		  >
+		    <el-option
+		      v-for="item in companyOptions"
+		      :key="item.value"
+		      :label="item.label"
+		      :value="item.value"
+		    >
+		    </el-option>
+		  </el-select>
+		</el-form-item>
 	    <el-form-item label="编制日期">
 		  <el-date-picker
 			v-model="multiConProjDate"
@@ -254,6 +284,18 @@ export default {
       multiConClientType:'',
       multiConStaffName: '',
 	  
+	  company:'HZ',
+	  companyOptions: [{
+	  		label: '惠正',
+	  		value: 'HZ',
+	  }, {
+	  		label: '智明',
+	  		value: 'ZM',
+	  }, {
+	  		label: '汇正',
+	  		value: 'HZKJ',
+	  }],
+	  
 	  //211028变动 新增: 多个公司切换
 	  companyId:'',
 	  companyRange:['HZ', 'ZM','HZKJ'],
@@ -357,6 +399,8 @@ export default {
       const formData = new FormData()
       formData.append('week', week)
       formData.append('year', year)
+	  formData.append('companyId', this.company)
+		
       downloadExcel(formData, path, this.companyId)
     },
     formatDate(now) {
@@ -384,6 +428,7 @@ export default {
 		formData.append('projTypeArrStr', this.parseArray(this.multiConProjType))
 		formData.append('projMemberStr', this.multiConStaffName)
 		formData.append('clientTypeStr', this.multiConClientType)
+		formData.append('companyId', this.company)
 		
 		downloadExcel(formData, path, this.companyId)
 		
