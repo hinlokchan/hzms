@@ -424,7 +424,8 @@
 		
 		<el-row :gutter="20">
 			<el-col :span="12">
-				<el-form-item label="被评估单位" prop="regEvaluatedUnit" class="red-item">
+				<el-form-item label="被评估单位" prop="regEvaluatedUnit" :class="projType=='非咨询'?'red-item':''"
+				:rules="projType=='非咨询'?inputReq:[]">
 					<el-input v-model="subInfoForm.regEvaluatedUnit" style="width: 100%" clearable></el-input>
 				</el-form-item>
 			</el-col>
@@ -1145,7 +1146,7 @@ export default {
 			//表单验证规则
 			subInfoRules:{
 				//subSpecialInfoRules特有信息
-				regEvaluatedUnit:[{ required: true, message: '请输入被评估单位', trigger: 'blur' }],
+				//regEvaluatedUnit:[{ required: true, message: '请输入被评估单位', trigger: 'blur' }],
 				regEvalObject:[{ required: true, message: '请选择评估对象', trigger: 'blur' }],
 				regClientName:[{ required: true, message: '请输入委托方', trigger: 'blur' }],
 				regClientType:[{ required: true, message: '请点修改按钮, 修改委托方信息', trigger: 'blur' }],
