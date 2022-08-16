@@ -396,6 +396,7 @@
 					<span slot="label" @click="handleAddItem('regClientName','委托方')">委托方</span>
 					
 					<el-input v-model="subInfoForm.regClientName" readonly style="width: 100%" clearable></el-input>
+					<el-tag>计划: {{subInfoForm.regClientShortName}}</el-tag>
 					<!-- 
 					<el-tooltip effect="dark" content="委托方全称不对, 可以提交修改申请, 由计划部门审核更新" placement="top-start">
 					<el-tag @click="editClientName(subInfoForm)">
@@ -414,7 +415,7 @@
 						<el-col :span="12">
 							<el-input v-model="subInfoForm.regClientType" readonly style="width: 100%" placeholder="请点修改按钮, 修改委托方信息"></el-input>
 						</el-col>
-						<!-- 不能修改全称和性质
+						
 						<el-col :offset="1" :span="6">
 							<el-tooltip effect="dark" placement="top">
 							<el-button type="primary" size="small" @click="editClientName(subInfoForm)"
@@ -424,7 +425,7 @@
 							<div slot="content">1. 修改委托方全称和性质: <br>委托方全称不对, 可以提交修改申请, 由计划部门审核更新<br><br> 2. 缺少共同委托方: <br>如有多个共同委托方, 请联系计划部门添加对应委托方</div>
 							</el-tooltip>
 						</el-col>
-						 -->
+						
 					</el-row>
 				</el-form-item>
 			</el-col>	
@@ -437,6 +438,7 @@
 			<el-col :span="12">
 				<el-form-item :label="'共同委托方' + (index + 1)" class="red-item">
 					<el-input :value="item.clientFullName?item.clientFullName:(item.clientType<1000?item.clientTypeName+item.clientName:item.clientName)" readonly style="width: 100%"></el-input>
+					<el-tag>计划: {{item.clientType<1000? item.clientTypeName + item.clientName:item.clientName}}</el-tag>
 				</el-form-item>
 			</el-col>
 			
@@ -447,14 +449,14 @@
 						<el-col :span="12">
 							<el-input v-model="item.clientProperty" readonly style="width: 100%" placeholder="请点修改按钮, 修改委托方信息"></el-input>
 						</el-col>
-						<!-- 
+						
 						<el-col :offset="1" :span="6">
 							<el-button type="primary" @click="editClientName(item, '共同委托方')"
 							v-if="registerStatus!=3">
 								修 改
 							</el-button>
 						</el-col>
-						 -->
+						
 					</el-row>
 				</el-form-item>
 			</el-col>
@@ -504,6 +506,9 @@
 				    :options="regAdminRegionOption"
 				  >
 				  </el-cascader>
+				  <el-tag>
+				  	注意:惠州仲恺、大亚湾请选市辖区
+				  </el-tag>
 				</el-form-item>
 			</el-col>
 			<el-col :span="12">
@@ -591,7 +596,8 @@
 				</el-form-item>
 			</el-col>
 			<el-col :span="12">
-				<el-form-item label="估价方法说明" prop="evalMethodExp">
+				<el-form-item label="估价方法说明" prop="evalMethodExp" :class="subInfoForm.regEvalMethod.length === 1?'red-item':''"
+				:rules="subInfoForm.regEvalMethod.length === 1?inputReq:[]">
 					<span slot="label" @click="handleAddItem('evalMethodExp', '估价方法说明')">估价方法说明</span>
 					
 					<el-input v-model="subInfoForm.evalMethodExp" style="width: 100%" clearable
@@ -606,7 +612,7 @@
 			<el-col :span="8">
 				<el-form-item label="房屋用途" prop="unitUsage" class="red-item">
 					<span slot="label" @click="handleAddItem('unitUsage', '房屋用途')">房屋用途</span>
-					<el-select	v-model="subInfoForm.unitUsage"  style="width: 100%;">
+					<el-select	v-model="subInfoForm.unitUsage" filterable style="width: 100%;">
 						<el-option
 							v-for="item, index in unitUsageOption"
 							:key="index"
@@ -620,7 +626,7 @@
 			<el-col :span="8">
 				<el-form-item label="房屋类型" prop="unitType" class="red-item">
 					<span slot="label" @click="handleAddItem('unitType', '房屋类型')">房屋类型</span>
-					<el-select	v-model="subInfoForm.unitType"  style="width: 100%;">
+					<el-select	v-model="subInfoForm.unitType" filterable style="width: 100%;">
 						<el-option
 							v-for="item, index in unitTypeOption"
 							:key="index"
@@ -634,7 +640,7 @@
 			<el-col :span="8">
 				<el-form-item label="房屋性质" prop="unitProperty" class="red-item">
 					<span slot="label" @click="handleAddItem('unitProperty', '房屋性质')">房屋性质</span>
-					<el-select	v-model="subInfoForm.unitProperty"  style="width: 100%;">
+					<el-select	v-model="subInfoForm.unitProperty" filterable style="width: 100%;">
 						<el-option
 							v-for="item, index in unitPropertyOption"
 							:key="index"
@@ -676,7 +682,7 @@
 			<el-col :span="8">
 				<el-form-item label="朝向" prop="towards" class="red-item">
 					<span slot="label" @click="handleAddItem('towards', '朝向')">朝向</span>
-					<el-select	v-model="subInfoForm.towards"  style="width: 100%;">
+					<el-select	v-model="subInfoForm.towards" filterable style="width: 100%;">
 						<el-option
 							v-for="item, index in towardsOption"
 							:key="index"
@@ -711,7 +717,7 @@
 				</el-form-item>
 			</el-col>
 			<el-col :span="8">
-				<el-form-item label="剩余使用年限" prop="remainTerm" class="red-item">
+				<el-form-item label="房屋剩余使用年限" prop="remainTerm" class="red-item longtext">
 					<span slot="label" @click="handleAddItem('remainTerm', '剩余使用年限')">剩余使用年限</span>
 					<el-input v-model="subInfoForm.remainTerm" style="width: 100%" clearable
 					oninput="value=value.replace(/[^\d.]/g,'')"
@@ -784,6 +790,7 @@
 			</el-col>			
 		</el-row>
 		<!-- 房产end -->
+		
 		<el-row :gutter="20">
 			<!-- 
 			<el-col :span="8">
@@ -813,7 +820,26 @@
 					oninput="value=value.replace(/[^\-\d.]/g,'')"
 					disabled></el-input>		
 					<span v-if="subInfoForm.regEvalConclusionValue">
+						<!-- 
+						<el-tag @click="handleCopyEvalConclusionValue('还原', parseFloat(subInfoForm.landTotalValue||0)+parseFloat(subInfoForm.buildingTotalValue||0))">
+							还原
+						</el-tag>
+						<el-tag style="margin-left: 10px;" @click="handleCopyEvalConclusionValue('个位', parseFloat(subInfoForm.landTotalValue||0)+parseFloat(subInfoForm.buildingTotalValue||0))">
+							取个
+						</el-tag>
+						<el-tag style="margin-left: 10px;" @click="handleCopyEvalConclusionValue('十位', parseFloat(subInfoForm.landTotalValue||0)+parseFloat(subInfoForm.buildingTotalValue||0))">
+							取十
+						</el-tag>
+						<el-tag style="margin-left: 10px;" @click="handleCopyEvalConclusionValue('百位', parseFloat(subInfoForm.landTotalValue||0)+parseFloat(subInfoForm.buildingTotalValue||0))">
+							取百
+						</el-tag>
+						<el-tag style="margin-left: 10px;" @click="handleCopyEvalConclusionValue('千位', parseFloat(subInfoForm.landTotalValue||0)+parseFloat(subInfoForm.buildingTotalValue||0))">
+							取千
+						</el-tag>
+						 -->
+						<div>
 						{{changeMoneyToChinese(subInfoForm.regEvalConclusionValue)}}
+						</div>
 					</span>
 				</el-form-item>
 			</el-col>
@@ -1060,7 +1086,7 @@
 				</el-form-item>
 			</el-col>
 			<el-col :span="8">
-				<el-form-item label="合同号" prop="regContractNum" class="red-item">
+				<el-form-item label="合同号" prop="regContractNum">
 					<span slot="label" @click="handleAddItem('regContractNum', '合同号')">合同号</span>
 					
 					<div
@@ -1477,6 +1503,7 @@ export default {
 			projId:'',
 			subProjId:'',
 			registerStatus:0,
+			projType:'',
 						
 			subInfoForm:"",
 			isEdit:false,
@@ -1484,7 +1511,7 @@ export default {
 			//表单验证规则
 			subInfoRules:{
 				//subSpecialInfoRules特有信息
-				regEvaluatedUnit:[{ required: true, message: '请输入被评估单位', trigger: 'blur' }],
+				//regEvaluatedUnit:[{ required: true, message: '请输入被评估单位', trigger: 'blur' }],
 				regEvalObject:[{ required: true, message: '请选择评估对象', trigger: 'blur' }],
 				regClientName:[{ required: true, message: '请输入委托方', trigger: 'blur' }],
 				regClientType:[{ required: true, message: '请点修改按钮, 修改委托方信息', trigger: 'blur' }],
@@ -1561,7 +1588,7 @@ export default {
 				
 				//subOtherInfoRules其他信息
 				//regRecordNum:[{ required: true, message: '请输入备案号', trigger: 'blur' }],
-				regContractNum:[{ required: true, message: '请在前页面取合同号', trigger: 'blur' }],
+				//regContractNum:[{ required: true, message: '请在前页面取合同号', trigger: 'blur' }],
 				regArrgType:[{ required: true, message: '请联系计划部门选择安排类型', trigger: 'blur' }],
 				
 				//subTeamInfoRules项目组信息
@@ -2799,29 +2826,6 @@ export default {
 			}
 		},
 		
-		//改变评估值
-		handleChangeEvalConclusionValue(val){
-			if(this.subInfoForm.regTotalAssets && this.subInfoForm.regOwnersEquity){
-				//两个值都有时, 清空值, 自行选择
-				this.subInfoForm.regEvalConclusionValue = ''
-				this.subInfoForm.cdStandardFee = ''
-				this.subInfoForm.cdDiscount = ''
-			}else if(this.subInfoForm.regTotalAssets){
-				this.subInfoForm.regEvalConclusionValue = this.subInfoForm.regTotalAssets;
-				//改变标准收费
-				this.handleChangeStandardFee();
-			}else if(this.subInfoForm.regOwnersEquity){
-				this.subInfoForm.regEvalConclusionValue = this.subInfoForm.regOwnersEquity;
-				//改变标准收费
-				this.handleChangeStandardFee();
-			}else{
-				this.subInfoForm.regEvalConclusionValue = ''
-				this.subInfoForm.cdStandardFee = ''
-				this.subInfoForm.cdDiscount = ''
-			}		
-			
-		},
-					
 		//改变土地总价值
 		handleChangeLandTotalValue(){
 			if(this.subInfoForm.projTotalAcreage && this.subInfoForm.landAssemUnitPrice){
@@ -2833,12 +2837,17 @@ export default {
 				this.subInfoForm.landTotalValue = ''
 			}
 			
-			
+			/*
 			//改变评估值
 			this.subInfoForm.regEvalConclusionValue = (parseFloat(this.subInfoForm.landTotalValue||0) + parseFloat(this.subInfoForm.buildingTotalValue||0)).toFixed(2);
-			
+						
 			//改变标准收费
 			this.handleChangeStandardFee();
+			 */
+			
+			//默认取百位
+			this.handleCopyEvalConclusionValue('百位',parseFloat(this.subInfoForm.landTotalValue||0) + parseFloat(this.subInfoForm.buildingTotalValue||0));
+			
 		},
 		
 		//改变建筑总价值
@@ -2852,17 +2861,34 @@ export default {
 				this.subInfoForm.buildingTotalValue = ''
 			}
 			
+			/* 
 			//改变评估值
 			this.subInfoForm.regEvalConclusionValue = (parseFloat(this.subInfoForm.landTotalValue||0) + parseFloat(this.subInfoForm.buildingTotalValue||0)).toFixed(2);
 			
 			//改变标准收费
 			this.handleChangeStandardFee();
+			 */
+			
+			//默认取百位
+			this.handleCopyEvalConclusionValue('百位',parseFloat(this.subInfoForm.landTotalValue||0) + parseFloat(this.subInfoForm.buildingTotalValue||0));
+			
 		},
 		
 		handleCopyEvalConclusionValue(title, val){
-			this.subInfoForm.regEvalConclusionValue = val
-			this.$message.success("使用"+title+"作为评估值")
-			
+			if(title =='还原'){
+				this.subInfoForm.regEvalConclusionValue = val.toFixed(2);
+				this.$message.success("已恢复默认评估值")
+			}else{
+				var upto={
+					'个位':1,
+					'十位':2,
+					'百位':3,
+					'千位':4,
+				}[title];
+				this.subInfoForm.regEvalConclusionValue = Math.round(Math.round(val)/Math.pow(10,upto-1))*Math.pow(10,upto-1)
+				
+				this.$message.warning("已取"+title+"作为评估值, 如需修改自行选择")
+			}
 			//改变标准收费
 			this.handleChangeStandardFee()
 		},
@@ -4021,6 +4047,10 @@ export default {
 	  color: #ed1941;
 	}	
 		
+	/deep/ .longtext .el-form-item__label {
+	  line-height: 20px;
+	  white-space: pre-line;
+	}
 </style>
 
 <style>
