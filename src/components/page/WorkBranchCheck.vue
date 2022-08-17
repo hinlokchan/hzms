@@ -694,24 +694,29 @@
 				{{ scope.row.subProjNum }}
 	          </template>
 	        </el-table-column>
+	        <el-table-column label="登记日期" width="90">
+	          <template slot-scope="scope">
+				{{formatDate(scope.row.submitRegisterTime)}}
+	          </template>
+	        </el-table-column>
 			<el-table-column label="基准日" width="90">
 			  <template slot-scope="scope">
 				{{formatDate(scope.row.subBaseDate)}}
 			  </template>	
 			</el-table-column>
-	        <el-table-column label="项目名称" min-width="200px">
+	        <el-table-column label="项目名称" min-width="180px">
 	          <template slot-scope="scope">
 				{{ scope.row.subProjName }}
 	          </template>
 	        </el-table-column>
-	        <el-table-column label="项目范围" min-width="200px">
+	        <el-table-column label="项目范围" min-width="180px">
 	          <template slot-scope="scope">
 				{{ scope.row.subProjScope }}
 	          </template>
 	        </el-table-column>
 			<el-table-column
 			  label="操作2"
-			  width="150"
+			  width="210"
 			  align="center"
 			>
 			  <template slot-scope="scope"> 
@@ -728,24 +733,36 @@
 			      @click="editBillSubProj(scope.row)"
 			    >发票</el-button>
 				 -->
-				<el-button
-				  type="primary"
-				  size="mini"
-				  @click="jumpToSubHandleCheck(scope.row, projType)"
-				  :disabled="scope.row.subProjStatus.mainStatus>0?false:true"
-				>审核</el-button>
+				<el-button-group>
+					<el-button
+					  type="primary"
+					  size="mini"
+					  @click="jumpToSubHandleCheck(scope.row, projType)"
+					  :disabled="scope.row.subProjStatus.mainStatus>0?false:true"
+					>审核</el-button>
+					
+					
+					<el-button
+					  type="success"
+					  size="mini"
+					  @click="passRegisterCheckSubmit(scope.row, projType)"
+					  :disabled="scope.row.subProjStatus.mainStatus==1?false:true"
+					>通过</el-button>
+				</el-button-group>
 				<!-- 
 			    <el-button
 			      type="warning"
 				  size="mini"
 			      @click="jumpToSubHandle(scope.row)"
 			    >修改</el-button>
-				 -->				
-			    <el-button
-			      type="primary"
-				  size="mini"
-			      @click="editProblemSubProj(scope.row)"
-			    >记录</el-button>
+				 -->	
+				<el-button-group style="margin-left: 10px;">
+					<el-button
+					  type="primary"
+					  size="mini"
+					  @click="editProblemSubProj(scope.row)"
+					>记录</el-button>
+				</el-button-group>
 				
 			  </template>
 			</el-table-column>
@@ -753,6 +770,7 @@
 			<el-table-column
 			  label="进度"
 			  width="80"
+			  align="center"
 			>
 			  <template slot-scope="scope">
 			    <el-tag :type="newTagType(scope.row.subProjStatus.mainStatus)">{{newTagValue(scope.row.subProjStatus.mainStatus)}}</el-tag>
@@ -872,7 +890,7 @@
 			<el-badge :value="newReceiptBadge(scope.row)" :type="newReceiptBadgeType(scope.row)" class="badgeitem">
             <el-button
               type="primary" 
-              @click="editReceiptSubProj(scope.row)"
+              @click.native.stop="editReceiptSubProj(scope.row)"
               size="small"
             >凭证</el-button>
 			</el-badge>
@@ -880,7 +898,7 @@
 			<el-badge value="" class="badgenull">
 			<el-button
 			  type="success" 
-			  @click="exportSubProj('正评', scope.row.projId)"
+			  @click.native.stop="exportSubProj('正评', scope.row.projId)"
 			  size="small"
 			>导出</el-button>
 			</el-badge>
@@ -904,7 +922,7 @@
 import CryptoJS from 'crypto-js'
 import {
   getAllAbstractProject, searchMyProject, getReportNum, createReportNum, alterProjType, getSubReportNum, addSubReportNum, deleteReportNum} from '@/api/index'
-import { getSubProjectInfoList, getManageRegisterList, getReceiptList, getRegisterList, editSubProjectReceiptIssue, editSubProjectReceiptInvalidate, editSubProjectReceiptPay} from '@/api/subReport'
+import { getSubProjectInfoList, getManageRegisterList, getReceiptList, getRegisterList, editSubProjectReceiptIssue, editSubProjectReceiptInvalidate, editSubProjectReceiptPay, auditSubProjectRegister} from '@/api/subReport'
 import {downloadExcel, downloadImageReview} from '../../utils/download';
 export default {
   name: 'workbranchcheck',
@@ -1481,6 +1499,41 @@ export default {
 	},
 	
 	
+	passRegisterCheckSubmit(subData, type){
+		//console.log(subData, type);
+		
+		this.$confirm('确认通过该登记信息?', '提示: '.concat("计划编号:", subData.projId, subData.subProjNum?"-"+subData.subProjNum:""), { type: 'success' })
+		.then(() => {
+			const registerCheckForm = {
+				subProjIdArray: subData.subProjId,
+				mainStatus:3,
+			}
+			this.auditSubProjectRegisterData( registerCheckForm, (auditData)=>{
+				//提交成功
+				
+				//刷新表单
+				this.getTableInfo(subData.projId);
+			});
+		})
+		
+	},
+	
+	//财务审核正评信息
+	auditSubProjectRegisterData(auditData, successc) {
+	  //211101变动 新增: 多个公司切换
+		
+		auditSubProjectRegister(auditData, this.companyId)
+		.then(res => {
+			if (res.statusCode == 200) {
+				successc(res.data);
+			}
+		})
+		.catch(err => {
+		  console.log('审核正评信息', err)
+		})
+	},
+	
+	
 	//子表格 处理凭证信息审核
 		
 	//刷新凭证
@@ -2054,12 +2107,16 @@ export default {
 	},
 	
 	formatDate(now) {
-	  const time = new Date(now)
-	  var year = time.getFullYear();  //取得4位数的年份
-	  var month = time.getMonth() + 1;  //取得日期中的月份，其中0表示1月，11表示12月
-	  var date = time.getDate();      //返回日期月份中的天数（1到31）
-	  var hour = time.getHours();     //返回日期中的小时数（0到23）
-	  return year + "-" + month + "-" + date
+	  if(now){
+		const time = new Date(now)
+		var year = time.getFullYear();  //取得4位数的年份
+		var month = time.getMonth() + 1;  //取得日期中的月份，其中0表示1月，11表示12月
+		var date = time.getDate();      //返回日期月份中的天数（1到31）
+		var hour = time.getHours();     //返回日期中的小时数（0到23）
+		return year + "-" + month + "-" + date  
+	  }else{
+		return '';
+	  }
 	},
   }
 }
