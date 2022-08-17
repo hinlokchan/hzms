@@ -396,6 +396,7 @@
 					<span slot="label" @click="handleAddItem('regClientName','委托方')">委托方</span>
 					
 					<el-input v-model="subInfoForm.regClientName" readonly style="width: 100%" clearable></el-input>
+					<el-tag>计划: {{subInfoForm.regClientShortName}}</el-tag>
 					<!-- 
 					<el-tooltip effect="dark" content="委托方全称不对, 可以提交修改申请, 由计划部门审核更新" placement="top-start">
 					<el-tag @click="editClientName(subInfoForm)">
@@ -414,7 +415,7 @@
 						<el-col :span="12">
 							<el-input v-model="subInfoForm.regClientType" readonly style="width: 100%" placeholder="请点修改按钮, 修改委托方信息"></el-input>
 						</el-col>
-						<!-- 不能修改全称和性质
+						
 						<el-col :offset="1" :span="6">
 							<el-tooltip effect="dark" placement="top">
 							<el-button type="primary" size="small" @click="editClientName(subInfoForm)"
@@ -424,7 +425,7 @@
 							<div slot="content">1. 修改委托方全称和性质: <br>委托方全称不对, 可以提交修改申请, 由计划部门审核更新<br><br> 2. 缺少共同委托方: <br>如有多个共同委托方, 请联系计划部门添加对应委托方</div>
 							</el-tooltip>
 						</el-col>
-						 -->
+						
 					</el-row>
 				</el-form-item>
 			</el-col>	
@@ -437,6 +438,7 @@
 			<el-col :span="12">
 				<el-form-item :label="'共同委托方' + (index + 1)" class="red-item">
 					<el-input :value="item.clientFullName?item.clientFullName:(item.clientType<1000?item.clientTypeName+item.clientName:item.clientName)" readonly style="width: 100%"></el-input>
+					<el-tag>计划: {{item.clientType<1000? item.clientTypeName + item.clientName:item.clientName}}</el-tag>
 				</el-form-item>
 			</el-col>
 			
@@ -447,14 +449,14 @@
 						<el-col :span="12">
 							<el-input v-model="item.clientProperty" readonly style="width: 100%" placeholder="请点修改按钮, 修改委托方信息"></el-input>
 						</el-col>
-						<!-- 
+						
 						<el-col :offset="1" :span="6">
 							<el-button type="primary" @click="editClientName(item, '共同委托方')"
 							v-if="registerStatus!=3">
 								修 改
 							</el-button>
 						</el-col>
-						 -->
+						
 					</el-row>
 				</el-form-item>
 			</el-col>
