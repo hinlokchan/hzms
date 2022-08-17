@@ -39,7 +39,8 @@
         v-if="companyId === 'HZ'"
         :options="options"
         ref="selector"
-        v-model="selectedNode">
+        v-model="selectedNode"
+		class="train-tree-cascader">
     </el-cascader-panel>
     <el-cascader-panel
         v-if="companyId === 'ZM'"
@@ -51,7 +52,8 @@
 	    v-if="companyId === 'HZKJ'"
 	    :options="hzkjOptions"
 	    ref="selector"
-	    v-model="selectedNode">
+	    v-model="selectedNode"
+		class="train-tree-cascader">
 	</el-cascader-panel>
     <span slot="footer" class="dialog-footer">
     <el-button @click="onClose">取 消</el-button>
@@ -484,4 +486,17 @@ export default {
 
 <style scoped>
 
+</style>
+
+<style>
+	.train-tree-cascader{
+		height: auto !important;
+		min-height: 300px;
+	}
+	.train-tree-cascader .el-cascader-panel{
+		height: 100%;
+	}
+	.train-tree-cascader .el-cascader-menu__wrap{
+		height: 104%;
+	}
 </style>
