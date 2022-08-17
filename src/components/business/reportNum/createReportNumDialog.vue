@@ -46,7 +46,8 @@
         v-if="companyId === 'ZM'"
         :options="zmOptions"
         ref="selector"
-        v-model="selectedNode">
+        v-model="selectedNode"
+		class="train-tree-cascader">
     </el-cascader-panel>	
 	<el-cascader-panel
 	    v-if="companyId === 'HZKJ'"
