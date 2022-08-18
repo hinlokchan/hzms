@@ -696,7 +696,7 @@
 	        </el-table-column>
 	        <el-table-column label="登记日期" width="90">
 	          <template slot-scope="scope">
-				{{formatDate(scope.row.submitRegisterTime)}}
+				{{formatDate(scope.row.creationTime)}}
 	          </template>
 	        </el-table-column>
 			<el-table-column label="基准日" width="90">
