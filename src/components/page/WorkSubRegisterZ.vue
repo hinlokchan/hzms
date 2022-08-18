@@ -796,15 +796,8 @@
 				</el-form-item>
 			</el-col>
 			<el-col :span="8">
-				<el-form-item label="合同号" prop="regContractNum" class="red-item">
-					<div
-					v-if="subInfoForm.regContractNum">
-						<el-input v-model="subInfoForm.regContractNum" disabled style="width: 100%" clearable></el-input>
-					</div>
-					<el-tooltip class="item" effect="dark" content="请先返回, 取合同号" placement="top-end"
-					v-else>
-						<el-input v-model="subInfoForm.regContractNum" disabled style="width: 100%" clearable></el-input>
-					</el-tooltip>
+				<el-form-item label="合同号" prop="regContractNum">
+					<el-input v-model="subInfoForm.regContractNum" disabled style="width: 100%" clearable></el-input>
 				</el-form-item>
 			</el-col>		
 			<el-col :span="8">
@@ -1223,7 +1216,7 @@ export default {
 				
 				//subOtherInfoRules其他信息
 				//regRecordNum:[{ required: true, message: '请输入备案号', trigger: 'blur' }],
-				regContractNum:[{ required: true, message: '请在前页面取合同号', trigger: 'blur' }],
+				//regContractNum:[{ required: true, message: '请在前页面取合同号', trigger: 'blur' }],
 				regArrgType:[{ required: true, message: '请联系计划部门选择安排类型', trigger: 'blur' }],
 				
 				//subTeamInfoRules项目组信息
