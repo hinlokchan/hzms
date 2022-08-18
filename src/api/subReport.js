@@ -98,7 +98,17 @@ export function editSubProjectRegister(data, companyId) {
   });
 }
 
-//财务待审核正评列表
+//所有正评列表
+export function getRawRegisterList(data, companyId) {
+  return request({
+    url: `${ProManageAPIServer}registerManage/getRawRegisterList`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
+//财务待审核正评列表(包括开票的一级列表)
 export function getManageRegisterList(data, companyId) {
   return request({
     url: `${ProManageAPIServer}registerManage/getRegisterList`,
