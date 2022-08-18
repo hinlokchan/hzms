@@ -671,6 +671,7 @@
 		
 		@row-click="rowClick"
 		row-key="projId"
+		:default-sort = "{prop: 'creationTime', order: 'descending'}"
       >	  
 	  <!-- 展开行  v-loading="expandLoading"element-loading-text="Loading"-->
 	  <el-table-column type="expand" width="20">
@@ -783,9 +784,27 @@
         <el-table-column
           prop="projDate"
           label="编制日期"
-          width="120"
+          width="100"
           :formatter="this.$formatDate"
           sortable
+        >
+        </el-table-column>
+        <el-table-column
+          prop="creationTime"
+          label="更新日期"
+          width="100"
+          sortable
+        >
+			<template slot-scope="scope">
+				{{formatDate(scope.row.creationTime)}}
+			</template>
+        </el-table-column>
+        <el-table-column
+          prop="checkNum"
+          label="待审"
+          width="70"
+          sortable
+		  align="center"
         >
         </el-table-column>
 		<el-table-column
@@ -922,7 +941,7 @@
 import CryptoJS from 'crypto-js'
 import {
   getAllAbstractProject, searchMyProject, getReportNum, createReportNum, alterProjType, getSubReportNum, addSubReportNum, deleteReportNum} from '@/api/index'
-import { getSubProjectInfoList, getManageRegisterList, getReceiptList, getRegisterList, editSubProjectReceiptIssue, editSubProjectReceiptInvalidate, editSubProjectReceiptPay, auditSubProjectRegister} from '@/api/subReport'
+import { getSubProjectInfoList, getRawRegisterList, getManageRegisterList, getReceiptList, getRegisterList, editSubProjectReceiptIssue, editSubProjectReceiptInvalidate, editSubProjectReceiptPay, auditSubProjectRegister} from '@/api/subReport'
 import {downloadExcel, downloadImageReview} from '../../utils/download';
 export default {
   name: 'workbranchcheck',
@@ -1248,10 +1267,54 @@ export default {
 	  
 	  //刷新项目处理列表
 	  this.getManageRegisterListData({}, (mrRes)=>{
-	  	this.tableData = mrRes.data;
-	  	this.tableDataTemp = mrRes.data;
-	  	this.pageTotal = mrRes.data.length;
+	  				
+	  	this.getRawRegisterListData({}, (rawRes)=>{
+	  		//console.log('正评登记列表', rawRes);
+			
+			var rawProjIdList = {};
+			rawRes.forEach((item, index) =>{
+				//item
+				//1.循环获取projId列表获取该projId列表下最新的subProjId的日期 和 总的待审核数
+				if(typeof(rawProjIdList[item.projId]) == "undefined"){
+					//不存在时, 添加
+					//console.log('添加', item.projId, item.creationTime);					
+					const newItem = {
+						creationTime: item.creationTime,
+						checkNum: item.mainStatus===1?1:0,
+					}
+					
+					rawProjIdList[item.projId] = newItem;
+				}else{
+					//存在时, 更新
+					//更新 更新日期
+					if(rawProjIdList[item.projId].creationTime < item.creationTime){
+						rawProjIdList[item.projId].creationTime = item.creationTime
+					}					
+					//更新 待审核数
+					if(item.mainStatus===1){
+						rawProjIdList[item.projId].checkNum += 1
+					}
+				}
+			});
+			
+			//console.log(rawProjIdList);
+			//2. 循环项目列表 增加更新日期到项目列表
+			mrRes.forEach((item, index) =>{
+				if(typeof(rawProjIdList[item.projId]) == "undefined"){
+					
+				}else{
+					mrRes[index].creationTime = rawProjIdList[item.projId].creationTime;
+					mrRes[index].checkNum = rawProjIdList[item.projId].checkNum;
+				}
+			});
+		
+			this.tableData = mrRes;
+			this.tableDataTemp = mrRes;
+			this.pageTotal = mrRes.length;
+	  	});
+	  	
 	  });
+		
     },
 	
 	getLocalData(){
@@ -1270,12 +1333,25 @@ export default {
 		this.getLocalData();
 	},
 	
+	getRawRegisterListData(rawData, successc) {
+		
+		getRawRegisterList(rawData, this.companyId)
+		.then(res => {
+			if (res.statusCode == 200) {
+				successc(res.data);
+			}
+		})
+		.catch(err => {
+		  console.log('正评登记列表', err)
+		})
+	},
+	
 	getManageRegisterListData(searchData, successc) {
 		
 		getManageRegisterList(searchData, this.companyId)
 		.then(res => {
 			if (res.statusCode == 200) {
-				successc(res);
+				successc(res.data);
 			}
 		})
 		.catch(err => {
