@@ -672,6 +672,7 @@
 		@row-click="rowClick"
 		row-key="projId"
 		:default-sort = "{prop: 'creationTime', order: 'descending'}"
+		@sort-change="sortChange"
       >	  
 	  <!-- 展开行  v-loading="expandLoading"element-loading-text="Loading"-->
 	  <el-table-column type="expand" width="20">
@@ -786,14 +787,14 @@
           label="编制日期"
           width="100"
           :formatter="this.$formatDate"
-          sortable
+          sortable="custom"
         >
         </el-table-column>
         <el-table-column
           prop="creationTime"
           label="更新日期"
           width="100"
-          sortable
+          sortable="custom"
         >
 			<template slot-scope="scope">
 				{{formatDate(scope.row.creationTime)}}
@@ -803,7 +804,7 @@
           prop="checkNum"
           label="待审"
           width="70"
-          sortable
+          sortable="custom"
 		  align="center"
         >
         </el-table-column>
@@ -811,14 +812,14 @@
 		  prop="reportNum"
 		  label="报告号"
 		  width="120"
-          sortable
+          sortable="custom"
 		>
         </el-table-column>
         <el-table-column
           prop="projNum"
           label="计划编号"
           width="120"
-          sortable
+          sortable="custom"
         >
         </el-table-column>
         <el-table-column
@@ -948,7 +949,7 @@ export default {
   data() {
     return {		
       currentPage: 1, // 当前页码
-      pageSize: 50, // 每页的数据条数
+      pageSize: 3, // 每页的数据条数
       pageTotal: 0, // 数据数
       tableData: [],
       tableDataTemp: [],
@@ -1311,6 +1312,8 @@ export default {
 			this.tableData = mrRes;
 			this.tableDataTemp = mrRes;
 			this.pageTotal = mrRes.length;
+			
+			this.$refs.table.sort('creationTime','descending')
 	  	});
 	  	
 	  });
@@ -1326,6 +1329,8 @@ export default {
 		})
 		this.currentPage = 1;
 		this.pageTotal = this.tableData.length;
+		
+		this.$refs.table.sort('creationTime','descending')
 	},
 	
 	resetSearchData(){
@@ -1470,6 +1475,22 @@ export default {
 	  }
 	},
 	
+	//排序变动
+	sortChange({column,prop,order}){
+		if(order == 'ascending'){
+			this.tableData = this.tableData.sort((a, b)=>{
+				return (""+a[prop]).localeCompare((""+b[prop]), "zh-Hans-CN", {sensitivity: "accent",})
+			});
+		}else if(order == 'descending'){
+			this.tableData = this.tableData.sort((a, b)=>{
+				return (""+b[prop]).localeCompare((""+a[prop]), "zh-Hans-CN", {sensitivity: "accent",})
+			});
+		}else{
+			this.tableData = this.tableData.sort((a, b)=>{
+				return (""+b['creationTime']).localeCompare((""+a['creationTime']), "zh-Hans-CN", {sensitivity: "accent",})
+			});
+		}
+	},
 	
 	//展开行	
 	rowClick(row,index) {
