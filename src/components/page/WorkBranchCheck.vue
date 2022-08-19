@@ -949,7 +949,7 @@ export default {
   data() {
     return {		
       currentPage: 1, // 当前页码
-      pageSize: 3, // 每页的数据条数
+      pageSize: 20, // 每页的数据条数
       pageTotal: 0, // 数据数
       tableData: [],
       tableDataTemp: [],
