@@ -189,7 +189,7 @@
 	
 	
 	<el-dialog
-	  title="新增发票信息"
+	  title="新增发票抬头"
 	  :visible.sync="addInvoiceDialogVisible"
 	  width="800px"
 	  :close-on-click-modal = "false"
@@ -449,7 +449,7 @@
 				</el-form-item>
 			</el-col>
 			<el-col :span="12">
-				<el-form-item label="行政区域" prop="regAdminRegion" class="red-item">
+				<el-form-item :label="`估价对象\n行政区域`" prop="regAdminRegion" class="red-item longtext">
 				  <el-cascader
 				    v-model="subInfoForm.regAdminRegion"
 				    style="width: 100%"
@@ -2325,6 +2325,11 @@ export default {
 											//项目类型
 											this.subInfoForm.cdChargeType =this.projType=='非咨询'?'房地产类':'咨询评价'
 											
+											//项目目的为抵押
+											if(dpData.assemGoal == '抵押'){
+												this.subInfoForm.regEvalGoal = '房地产抵押价值评估';
+												this.subInfoForm.valueType = '抵押价值';
+											}
 										}
 										
 										if(spData){
@@ -2358,8 +2363,9 @@ export default {
 													regFieldSrvy:spData.subFieldSrvy?spData.subFieldSrvy.split(','):[], //"现勘"
 													regInfoVerification:waData.fldSrvyPic?waData.fldSrvyPic.split(','):[], //"资料收集及验证",
 													regMarketEnquiry:waData.mktSrvyPic?waData.mktSrvyPic.split(','):[], //"市场询价调查"
-													//regTechExpDrafter:waData.assemEstPic?waData.assemEstPic.split(','):[], //"技术说明",
-													regTechExpDrafter:spData.subProjLeader?spData.subProjLeader.split(','):[], //"技术说明",
+													//regTechExpDrafter:waData.assemEstPic?waData.assemEstPic.split(','):[], //"技术说明___旧",
+													//regTechExpDrafter:spData.subProjLeader?spData.subProjLeader.split(','):[], //"技术说明___旧",
+													regTechExpDrafter:spData.subProjAsst?spData.subProjAsst.split(','):[], //"技术说明___使用助理",
 													regReportDrafter:waData.issueValPic?waData.issueValPic.split(','):[], //"报告拟稿",
 													regProjArchive:spData.subProjAsst?spData.subProjAsst.split(','):[], //"助理(归档)",
 													regFeeFollowUp: waData.assemChargePic?waData.assemChargePic.split(','):[], //"收费跟进"
@@ -2372,13 +2378,13 @@ export default {
 												this.subInfoForm.regInfoVerification = newSubTeamInfo.regInfoVerification;
 												this.subInfoForm.regMarketEnquiry = newSubTeamInfo.regMarketEnquiry;
 												this.subInfoForm.regTechExpDrafter = newSubTeamInfo.regTechExpDrafter;
-												this.subInfoForm.regReportDrafter = newSubTeamInfo.regProjLeader;
+												this.subInfoForm.regReportDrafter = newSubTeamInfo.regReportDrafter;
 												this.subInfoForm.regProjArchive = newSubTeamInfo.regProjArchive;
 												this.subInfoForm.regFeeFollowUp = newSubTeamInfo.regFeeFollowUp;
 												this.subInfoForm.regFinalReview = newSubTeamInfo.regFinalReview;
 											}else{
 												//console.log('未安排');
-												//使用项目组成员, 生成subTeamInfo
+												//使用项目组成员, 生成subTeamInfo												
 												const newSubTeamInfo={
 													regProjLeader: spData.subProjLeader?spData.subProjLeader.split(','):[], //项目负责人
 													regSignedAppraiser: regSignedAppraiser, //签字估价师
@@ -2387,12 +2393,14 @@ export default {
 													regInfoVerification:[], //"资料收集及验证",
 													regMarketEnquiry:[], //"市场询价调查"
 													//regTechExpDrafter:[], //"技术说明",
-													regTechExpDrafter:spData.subProjLeader?spData.subProjLeader.split(','):[], //"技术说明",
+													//regTechExpDrafter:spData.subProjLeader?spData.subProjLeader.split(','):[], //"技术说明___旧", 
+													regTechExpDrafter:spData.subProjAsst?spData.subProjAsst.split(','):[], //"技术说明",
 													regReportDrafter:[], //"报告拟稿",
 													regProjArchive:spData.subProjAsst?spData.subProjAsst.split(','):[], //"助理(归档)",
 													regFeeFollowUp: [], //"收费跟进"
 													regFinalReview: "", //"总审"
 												}
+												
 												this.subInfoForm.regProjLeader = newSubTeamInfo.regProjLeader;
 												this.subInfoForm.regSignedAppraiser = newSubTeamInfo.regSignedAppraiser;
 												this.subInfoForm.regProjProReviewer = newSubTeamInfo.regProjProReviewer;
@@ -2400,7 +2408,7 @@ export default {
 												this.subInfoForm.regInfoVerification = newSubTeamInfo.regInfoVerification;
 												this.subInfoForm.regMarketEnquiry = newSubTeamInfo.regMarketEnquiry;
 												this.subInfoForm.regTechExpDrafter = newSubTeamInfo.regTechExpDrafter;
-												this.subInfoForm.regReportDrafter = newSubTeamInfo.regProjLeader;
+												this.subInfoForm.regReportDrafter = newSubTeamInfo.regReportDrafter;
 												this.subInfoForm.regProjArchive = newSubTeamInfo.regProjArchive;
 												this.subInfoForm.regFeeFollowUp = newSubTeamInfo.regFeeFollowUp;
 												this.subInfoForm.regFinalReview = newSubTeamInfo.regFinalReview;
