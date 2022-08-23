@@ -189,7 +189,7 @@
 	
 	
 	<el-dialog
-	  title="新增发票信息"
+	  title="新增发票抬头"
 	  :visible.sync="addInvoiceDialogVisible"
 	  width="800px"
 	  :close-on-click-modal = "false"
@@ -442,7 +442,7 @@
 				</el-form-item>
 			</el-col>
 			<el-col :span="12">
-				<el-form-item label="行政区域" prop="regAdminRegion" class="red-item">
+				<el-form-item :label="`估价对象\n行政区域`" prop="regAdminRegion" class="red-item">
 				  <el-cascader
 				    v-model="subInfoForm.regAdminRegion"
 				    style="width: 100%"
@@ -451,6 +451,9 @@
 				    :options="regAdminRegionOption"
 				  >
 				  </el-cascader>
+				  <el-tag>
+				  	注意:惠州仲恺、大亚湾请选市辖区
+				  </el-tag>
 				</el-form-item>
 			</el-col>
 			<el-col :span="12">
@@ -2044,7 +2047,8 @@ export default {
 													regInfoVerification:waData.fldSrvyPic?waData.fldSrvyPic.split(','):[], //"资料收集及验证",
 													regMarketEnquiry:waData.mktSrvyPic?waData.mktSrvyPic.split(','):[], //"市场询价调查"
 													//regTechExpDrafter:waData.assemEstPic?waData.assemEstPic.split(','):[], //"技术说明",
-													regTechExpDrafter:spData.subProjLeader?spData.subProjLeader.split(','):[], //"技术说明",
+													//regTechExpDrafter:spData.subProjLeader?spData.subProjLeader.split(','):[], //"技术说明___旧",
+													regTechExpDrafter:spData.subProjAsst?spData.subProjAsst.split(','):[], //"技术说明___使用助理",
 													regReportDrafter:waData.issueValPic?waData.issueValPic.split(','):[], //"报告拟稿",
 													regProjArchive:spData.subProjAsst?spData.subProjAsst.split(','):[], //"助理(归档)",
 													regFeeFollowUp: waData.assemChargePic?waData.assemChargePic.split(','):[], //"收费跟进"
@@ -2057,7 +2061,7 @@ export default {
 												this.subInfoForm.regInfoVerification = newSubTeamInfo.regInfoVerification;
 												this.subInfoForm.regMarketEnquiry = newSubTeamInfo.regMarketEnquiry;
 												this.subInfoForm.regTechExpDrafter = newSubTeamInfo.regTechExpDrafter;
-												this.subInfoForm.regReportDrafter = newSubTeamInfo.regProjLeader;
+												this.subInfoForm.regReportDrafter = newSubTeamInfo.regReportDrafter;
 												this.subInfoForm.regProjArchive = newSubTeamInfo.regProjArchive;
 												this.subInfoForm.regFeeFollowUp = newSubTeamInfo.regFeeFollowUp;
 												this.subInfoForm.regFinalReview = newSubTeamInfo.regFinalReview;
@@ -2072,7 +2076,8 @@ export default {
 													regInfoVerification:[], //"资料收集及验证",
 													regMarketEnquiry:[], //"市场询价调查"
 													//regTechExpDrafter:[], //"技术说明",
-													regTechExpDrafter:spData.subProjLeader?spData.subProjLeader.split(','):[], //"技术说明",
+													//regTechExpDrafter:spData.subProjLeader?spData.subProjLeader.split(','):[], //"技术说明",
+													regTechExpDrafter:spData.subProjAsst?spData.subProjAsst.split(','):[], //"技术说明",
 													regReportDrafter:[], //"报告拟稿",
 													regProjArchive:spData.subProjAsst?spData.subProjAsst.split(','):[], //"助理(归档)",
 													regFeeFollowUp: [], //"收费跟进"
@@ -2085,7 +2090,7 @@ export default {
 												this.subInfoForm.regInfoVerification = newSubTeamInfo.regInfoVerification;
 												this.subInfoForm.regMarketEnquiry = newSubTeamInfo.regMarketEnquiry;
 												this.subInfoForm.regTechExpDrafter = newSubTeamInfo.regTechExpDrafter;
-												this.subInfoForm.regReportDrafter = newSubTeamInfo.regProjLeader;
+												this.subInfoForm.regReportDrafter = newSubTeamInfo.regReportDrafter;
 												this.subInfoForm.regProjArchive = newSubTeamInfo.regProjArchive;
 												this.subInfoForm.regFeeFollowUp = newSubTeamInfo.regFeeFollowUp;
 												this.subInfoForm.regFinalReview = newSubTeamInfo.regFinalReview;
@@ -3193,6 +3198,14 @@ export default {
 	  color: #ed1941;
 	}
 	
+	/deep/ .blue-item .el-form-item__label {
+	  color: #0055ff;
+	}
+	
+	/deep/ .longtext .el-form-item__label {
+	  line-height: 20px;
+	  white-space: pre-line;
+	}
 </style>
 
 <style>
