@@ -671,7 +671,7 @@
 		
 		@row-click="rowClick"
 		row-key="projId"
-		:default-sort = "{prop: 'creationTime', order: 'descending'}"
+		:default-sort = "{prop: 'checkNum', order: 'descending'}"
 		@sort-change="sortChange"
       >	  
 	  <!-- 展开行  v-loading="expandLoading"element-loading-text="Loading"-->
@@ -1302,7 +1302,8 @@ export default {
 			//2. 循环项目列表 增加更新日期到项目列表
 			mrRes.forEach((item, index) =>{
 				if(typeof(rawProjIdList[item.projId]) == "undefined"){
-					
+					mrRes[index].creationTime = '';
+					mrRes[index].checkNum = '';
 				}else{
 					mrRes[index].creationTime = rawProjIdList[item.projId].creationTime;
 					mrRes[index].checkNum = rawProjIdList[item.projId].checkNum;
@@ -1313,7 +1314,7 @@ export default {
 			this.tableDataTemp = mrRes;
 			this.pageTotal = mrRes.length;
 			
-			this.$refs.table.sort('creationTime','descending')
+			this.$refs.table.sort('checkNum','descending')
 	  	});
 	  	
 	  });
@@ -1330,7 +1331,7 @@ export default {
 		this.currentPage = 1;
 		this.pageTotal = this.tableData.length;
 		
-		this.$refs.table.sort('creationTime','descending')
+		this.$refs.table.sort('checkNum','descending')
 	},
 	
 	resetSearchData(){
@@ -1487,7 +1488,7 @@ export default {
 			});
 		}else{
 			this.tableData = this.tableData.sort((a, b)=>{
-				return (""+b['creationTime']).localeCompare((""+a['creationTime']), "zh-Hans-CN", {sensitivity: "accent",})
+				return (""+b['checkNum']).localeCompare((""+a['checkNum']), "zh-Hans-CN", {sensitivity: "accent",})
 			});
 		}
 	},
