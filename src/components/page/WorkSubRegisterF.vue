@@ -1225,6 +1225,15 @@
 			</el-col>
 		</el-row>
 		
+		<el-divider>登记内容说明</el-divider>
+		<el-row :gutter="20">
+			<el-col :span="24">
+				<el-form-item label="登记内容说明" prop="regExplanation">
+					<el-input v-model="subInfoForm.regExplanation" style="width: 100%" placeholder="请输入需备注的信息" clearable></el-input>
+				</el-form-item>
+			</el-col>
+		</el-row>
+				
 		<el-row :gutter="20"
 		v-if="workOrderFullList.length">
 			<el-col :span="24">
@@ -2272,6 +2281,8 @@ export default {
 											cdStandardFee : '', //标准收费（元）//从评估值计算得到
 											cdReceivable : '', //应收评估费（元）
 											cdDiscount : '', //折扣
+											
+											regExplanation:'',
 											
 											//房产数据
 											evalObjCommunity:'', //所在小区

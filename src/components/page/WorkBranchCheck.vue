@@ -708,7 +708,10 @@
 			</el-table-column>
 	        <el-table-column label="项目名称" min-width="180px">
 	          <template slot-scope="scope">
-				{{ scope.row.subProjName }}
+				<el-tooltip class="item" effect="dark" :content="`备注: ${scope.row.regExplanation||'无'}`" placement="top">
+					<span>{{ scope.row.subProjName }}</span>
+				</el-tooltip>
+				
 	          </template>
 	        </el-table-column>
 	        <el-table-column label="项目范围" min-width="180px">
@@ -828,8 +831,8 @@
           :show-overflow-tooltip="true"
         >
           <template slot-scope="scope">
-            <el-badge value="new" class="item" style="margin-top: 5px" v-if="scope.row.projDate > timestamp"></el-badge>
-            {{scope.row.projName}}
+			<el-badge value="new" class="item" style="margin-top: 5px" v-if="scope.row.projDate > timestamp"></el-badge>
+			{{scope.row.projName}}
           </template>
         </el-table-column>
         <el-table-column
