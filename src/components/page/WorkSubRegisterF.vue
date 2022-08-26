@@ -465,12 +465,15 @@
 			</el-col>
 			<el-col :span="12">
 				<el-form-item label="所在小区" prop="evalObjCommunity" class="red-item">
-					<el-input v-model.trim="subInfoForm.evalObjCommunity" style="width: 100%" clearable></el-input>
+					<el-input v-model.trim="subInfoForm.evalObjCommunity" style="width: 100%" placeholder="请输入, 没小区时填:无" clearable></el-input>
+					<el-tag @click="subInfoForm.evalObjCommunity = '无'">
+						没小区
+					</el-tag>
 				</el-form-item>
 			</el-col>
 			<el-col :span="24">
 				<el-form-item label="详细地址" prop="evalObjAddress" class="red-item">
-					<el-input v-model.trim="subInfoForm.evalObjAddress" style="width: 100%" clearable></el-input>
+					<el-input v-model.trim="subInfoForm.evalObjAddress" type="textarea" autosize style="width: 100%" clearable></el-input>
 				</el-form-item>
 			</el-col>
 			<el-col :span="12">
@@ -644,7 +647,7 @@
 				</el-form-item>
 			</el-col>
 			<el-col :span="8">
-				<el-form-item label="房屋剩余使用年限" prop="remainTerm" class="red-item longtext">
+				<el-form-item :label="`房屋剩余\n使用年限`" prop="remainTerm" class="red-item longtext">
 					<el-input v-model="subInfoForm.remainTerm" style="width: 100%" clearable
 					oninput="value=value.replace(/[^\d.]/g,'')"
 					placeholder="请输入"></el-input>
@@ -675,7 +678,24 @@
 				<el-form-item label="土地总价值" prop="landTotalValue">
 					<el-input v-model="subInfoForm.landTotalValue" style="width: 100%" disabled></el-input>
 					<span v-if="subInfoForm.landTotalValue">
+						<el-tag :type="totalValueTag.landTotalValue =='还原'?'success':''" @click="handleCopyTotalValue('还原', 'landTotalValue', parseFloat(subInfoForm.projTotalAcreage||0)*parseFloat(subInfoForm.landAssemUnitPrice||0))">
+							还原
+						</el-tag>
+						<el-tag :type="totalValueTag.landTotalValue =='个位'?'success':''" style="margin-left: 10px;" @click="handleCopyTotalValue('个位', 'landTotalValue', parseFloat(subInfoForm.projTotalAcreage||0)*parseFloat(subInfoForm.landAssemUnitPrice||0))">
+							取个
+						</el-tag>
+						<el-tag :type="totalValueTag.landTotalValue =='十位'?'success':''" style="margin-left: 10px;" @click="handleCopyTotalValue('十位', 'landTotalValue', parseFloat(subInfoForm.projTotalAcreage||0)*parseFloat(subInfoForm.landAssemUnitPrice||0))">
+							取十
+						</el-tag>
+						<el-tag :type="totalValueTag.landTotalValue =='百位'?'success':''" style="margin-left: 10px;" @click="handleCopyTotalValue('百位', 'landTotalValue', parseFloat(subInfoForm.projTotalAcreage||0)*parseFloat(subInfoForm.landAssemUnitPrice||0))">
+							取百
+						</el-tag>
+						<el-tag :type="totalValueTag.landTotalValue =='千位'?'success':''" style="margin-left: 10px;" @click="handleCopyTotalValue('千位', 'landTotalValue', parseFloat(subInfoForm.projTotalAcreage||0)*parseFloat(subInfoForm.landAssemUnitPrice||0))">
+							取千
+						</el-tag>
+						<div>
 						{{changeMoneyToChinese(subInfoForm.landTotalValue)}}
+						</div>
 					</span>
 				</el-form-item>
 			</el-col>		
@@ -704,7 +724,24 @@
 				<el-form-item label="建筑总价值" prop="buildingTotalValue" class="red-item">
 					<el-input v-model="subInfoForm.buildingTotalValue" style="width: 100%" disabled></el-input>
 					<span v-if="subInfoForm.buildingTotalValue">
+						<el-tag :type="totalValueTag.buildingTotalValue =='还原'?'success':''" @click="handleCopyTotalValue('还原', 'buildingTotalValue', parseFloat(subInfoForm.projTotalArea||0)*parseFloat(subInfoForm.buildingAssemUnitPrice||0))">
+							还原
+						</el-tag>
+						<el-tag :type="totalValueTag.buildingTotalValue =='个位'?'success':''" style="margin-left: 10px;" @click="handleCopyTotalValue('个位', 'buildingTotalValue', parseFloat(subInfoForm.projTotalArea||0)*parseFloat(subInfoForm.buildingAssemUnitPrice||0))">
+							取个
+						</el-tag>
+						<el-tag :type="totalValueTag.buildingTotalValue =='十位'?'success':''" style="margin-left: 10px;" @click="handleCopyTotalValue('十位', 'buildingTotalValue', parseFloat(subInfoForm.projTotalArea||0)*parseFloat(subInfoForm.buildingAssemUnitPrice||0))">
+							取十
+						</el-tag>
+						<el-tag :type="totalValueTag.buildingTotalValue =='百位'?'success':''" style="margin-left: 10px;" @click="handleCopyTotalValue('百位', 'buildingTotalValue', parseFloat(subInfoForm.projTotalArea||0)*parseFloat(subInfoForm.buildingAssemUnitPrice||0))">
+							取百
+						</el-tag>
+						<el-tag :type="totalValueTag.buildingTotalValue =='千位'?'success':''" style="margin-left: 10px;" @click="handleCopyTotalValue('千位', 'buildingTotalValue', parseFloat(subInfoForm.projTotalArea||0)*parseFloat(subInfoForm.buildingAssemUnitPrice||0))">
+							取千
+						</el-tag>
+						<div>
 						{{changeMoneyToChinese(subInfoForm.buildingTotalValue)}}
+						</div>
 					</span>
 				</el-form-item>
 			</el-col>			
@@ -738,24 +775,7 @@
 					@change="handleChangeStandardFee"
 					disabled></el-input>		
 					<span v-if="subInfoForm.regEvalConclusionValue">
-						<el-tag @click="handleCopyEvalConclusionValue('还原', parseFloat(subInfoForm.landTotalValue||0)+parseFloat(subInfoForm.buildingTotalValue||0))">
-							还原
-						</el-tag>
-						<el-tag style="margin-left: 10px;" @click="handleCopyEvalConclusionValue('个位', parseFloat(subInfoForm.landTotalValue||0)+parseFloat(subInfoForm.buildingTotalValue||0))">
-							取个
-						</el-tag>
-						<el-tag style="margin-left: 10px;" @click="handleCopyEvalConclusionValue('十位', parseFloat(subInfoForm.landTotalValue||0)+parseFloat(subInfoForm.buildingTotalValue||0))">
-							取十
-						</el-tag>
-						<el-tag style="margin-left: 10px;" @click="handleCopyEvalConclusionValue('百位', parseFloat(subInfoForm.landTotalValue||0)+parseFloat(subInfoForm.buildingTotalValue||0))">
-							取百
-						</el-tag>
-						<el-tag style="margin-left: 10px;" @click="handleCopyEvalConclusionValue('千位', parseFloat(subInfoForm.landTotalValue||0)+parseFloat(subInfoForm.buildingTotalValue||0))">
-							取千
-						</el-tag>
-						<div>
 						{{changeMoneyToChinese(subInfoForm.regEvalConclusionValue)}}
-						</div>
 					</span>
 				</el-form-item>
 			</el-col>
@@ -943,7 +963,24 @@
 					@change="handleChangeDiscount"
 					disabled></el-input>
 					<span v-if="subInfoForm.cdStandardFee">
+						<el-tag :type="totalValueTag.cdStandardFee =='还原'?'success':''" @click="handleCopyEvalConclusionValue('还原', 'cdStandardFee')">
+							还原
+						</el-tag>
+						<el-tag :type="totalValueTag.cdStandardFee =='个位'?'success':''" style="margin-left: 10px;" @click="handleCopyEvalConclusionValue('个位', 'cdStandardFee')">
+							取个
+						</el-tag>
+						<el-tag :type="totalValueTag.cdStandardFee =='十位'?'success':''" style="margin-left: 10px;" @click="handleCopyEvalConclusionValue('十位', 'cdStandardFee')">
+							取十
+						</el-tag>
+						<el-tag :type="totalValueTag.cdStandardFee =='百位'?'success':''" style="margin-left: 10px;" @click="handleCopyEvalConclusionValue('百位', 'cdStandardFee')">
+							取百
+						</el-tag>
+						<el-tag :type="totalValueTag.cdStandardFee =='千位'?'success':''" style="margin-left: 10px;" @click="handleCopyEvalConclusionValue('千位', 'cdStandardFee')">
+							取千
+						</el-tag>
+						<div>
 						{{changeMoneyToChinese(subInfoForm.cdStandardFee)}}
+						</div>
 					</span>
 				</el-form-item>
 			</el-col>
@@ -1596,6 +1633,13 @@ export default {
 			towardsOption:['东','南','西','北','东南','东北','西南','西北','东南双面','西南双面','南北通透双面','其他通透双面','其他非通透双面','其他'],
 			decoDegreeOption:['粗装修','毛坯','精装修'],
 			
+			//totalValueTag评估值默认取百位
+			totalValueTag:{
+				landTotalValue:'百位',
+				buildingTotalValue:'百位',
+				cdStandardFee:'百位',
+			},
+			
 			subProjRuleNoReq:[
 				{
 					validator: (rule, value, callback) => {
@@ -1680,7 +1724,7 @@ export default {
 			 */
 			//评估目的
 			regEvalGoalOption:['房地产转让价格评估','房地产分割、合并估价','房地产纠纷估价','房地产保险估价','土地使用权出让价格评估','房地产拍卖底价评估','房地产抵押价值评估','房地产课税估价','房地产租赁价格评估','企业各种经济活动中涉及的房地产估价','其他目的的房地产估价'],
-			regEvalMethodOption:['成本法','剩余法','市场比较法','收益法','假设开发法','公示地价系数修正法'],
+			regEvalMethodOption:['成本法','剩余法','比较法','收益法','假设开发法','公示地价系数修正法'],
 			regEvalConclusionOption:['确定值','区间值'],
 									
 			//行政区域
@@ -2289,9 +2333,9 @@ export default {
 											evalObjAddress:'', //详细地址
 											valueType:'', //价值类型
 											evalMethodExp:'', //估价方法说明
-											unitUsage:'', //房屋用途
-											unitType:'', //房屋类型
-											unitProperty:'', //房屋性质
+											unitUsage:'住宅', //房屋用途
+											unitType:'住宅', //房屋类型
+											unitProperty:'市场化商品房', //房屋性质
 											houseTypeStructure:'', //户型结构
 											houseType:'', //户型
 											towards:'', //朝向
@@ -2659,8 +2703,7 @@ export default {
 			 */
 			
 			//默认取百位
-			this.handleCopyEvalConclusionValue('百位',parseFloat(this.subInfoForm.landTotalValue||0) + parseFloat(this.subInfoForm.buildingTotalValue||0));
-			
+			this.handleCopyTotalValue('百位', 'landTotalValue', parseFloat(this.subInfoForm.projTotalAcreage||0)*parseFloat(this.subInfoForm.landAssemUnitPrice||0));
 		},
 		
 		//改变建筑总价值
@@ -2683,10 +2726,67 @@ export default {
 			 */
 			
 			//默认取百位
-			this.handleCopyEvalConclusionValue('百位',parseFloat(this.subInfoForm.landTotalValue||0) + parseFloat(this.subInfoForm.buildingTotalValue||0));
-			
+			this.handleCopyTotalValue('百位', 'buildingTotalValue', parseFloat(this.subInfoForm.projTotalArea||0)*parseFloat(this.subInfoForm.buildingAssemUnitPrice||0))
 		},
 		
+		//对土地/建筑总价值取百位处理
+		handleCopyTotalValue(title, item, val){
+			if(title =='还原'){
+				this.subInfoForm[item] = val.toFixed(2);
+			}else{
+				var upto={
+					'个位':1,
+					'十位':2,
+					'百位':3,
+					'千位':4,
+				}[title];
+				this.subInfoForm[item] = Math.round(Math.round(val)/Math.pow(10,upto-1))*Math.pow(10,upto-1)
+				
+			}
+						
+			//改变标记
+			this.totalValueTag[item] = title;
+			
+			//console.log(title, item, this.totalValueTag)
+			
+			//改变评估值
+			this.subInfoForm.regEvalConclusionValue = parseFloat(this.subInfoForm.landTotalValue||0) + parseFloat(this.subInfoForm.buildingTotalValue||0);
+				
+			//改变标准收费
+			this.handleCopyEvalConclusionValue('百位', 'cdStandardFee');
+		},
+		
+		
+		//对标准收费取百位处理
+		handleCopyEvalConclusionValue(title, item){
+			//重新获取收费标准
+			this.handleChangeStandardFee()
+			
+			//对收费标准取值
+			var val = this.subInfoForm[item];
+			
+			if(title =='还原'){
+				//this.subInfoForm[item] = val.toFixed(2);
+			}else{
+				var upto={
+					'个位':1,
+					'十位':2,
+					'百位':3,
+					'千位':4,
+				}[title];
+				this.subInfoForm[item] = Math.round(Math.round(val)/Math.pow(10,upto-1))*Math.pow(10,upto-1)
+				
+			}
+						
+			//改变标记
+			this.totalValueTag[item] = title;
+			
+			//改变折扣
+			this.handleChangeDiscount();
+		},
+		
+		/* 
+		//对评估值取百位处理
 		handleCopyEvalConclusionValue(title, val){
 			if(title =='还原'){
 				this.subInfoForm.regEvalConclusionValue = val.toFixed(2);
@@ -2705,6 +2805,7 @@ export default {
 			//改变标准收费
 			this.handleChangeStandardFee()
 		},
+		 */
 		
 		//委托方修改信息
 		getClientNameChangeInfoData(clientId, successc) {
