@@ -1545,7 +1545,7 @@ export default {
 	  assemMethodOptionsFc: [
 	    '成本法',
 	    '剩余法',
-	    '市场比较法',
+	    '比较法',
 	    '收益法',
 	    '假设开发法',
 	    '公示地价系数修正法'
