@@ -590,6 +590,13 @@
 			<el-row :gutter="4">
 			  <el-col :lg="4" :span="4">
 				<el-input
+				  v-model.trim="searchData.projNum"
+				  placeholder="计划编号"
+				  @keyup.enter.native="getLocalData"
+				></el-input>
+			  </el-col>
+			  <el-col :lg="4" :span="4">
+				<el-input
 				  v-model.trim="searchData.reportNum"
 				  placeholder="报告号"
 				  @keyup.enter.native="getLocalData"
@@ -598,26 +605,26 @@
 			  </el-col>
 			  <el-col :lg="4" :span="4">
 				<el-input
-				  v-model.trim="searchData.projNum"
-				  placeholder="计划编号"
-				  @keyup.enter.native="getLocalData"
-				></el-input>
-			  </el-col>
-			  <el-col :lg="5" :span="5">
-				<el-input
 				  v-model.trim="searchData.projName"
 				  placeholder="项目名称"
 				  @keyup.enter.native="getLocalData"
 				></el-input>
 			  </el-col>
-			  <el-col :lg="5" :span="5">
+			  <el-col :lg="4" :span="4">
 				<el-input
 				  v-model.trim="searchData.projScope"
 				  placeholder="项目范围"
 				  @keyup.enter.native="getLocalData"
 				></el-input>
 			  </el-col>
-			  <el-col :lg="6" :span="6">
+			  <el-col :lg="3" :span="3">
+				<el-input
+				  v-model.trim="searchData.projAsst"
+				  placeholder="助理"
+				  @keyup.enter.native="getLocalData"
+				></el-input>
+			  </el-col>
+			  <el-col :lg="5" :span="5">
 				<el-button-group>
 					<el-button type="primary" size="small" @click="getLocalData">查找</el-button>
 					<el-button type="warning" size="small" @click="resetSearchData">重置</el-button>
@@ -631,7 +638,7 @@
 					ref="exportSubListForm"
 					:model="exportSubListForm"
 					:rules="exportSubListFormRules"
-					label-width="0px"
+					label-width="auto"
 				>  
 					<el-form-item >
 						<el-date-picker
@@ -784,7 +791,14 @@
 	      </el-table>
 	    </template>
 	  </el-table-column>
-	  
+		
+		<el-table-column
+		  prop="projNum"
+		  label="计划编号"
+		  width="120"
+		  sortable="custom"
+		>
+		</el-table-column>
         <el-table-column
           prop="projDate"
           label="编制日期"
@@ -819,13 +833,6 @@
 		>
         </el-table-column>
         <el-table-column
-          prop="projNum"
-          label="计划编号"
-          width="120"
-          sortable="custom"
-        >
-        </el-table-column>
-        <el-table-column
           prop="projName"
           label="项目名称"
           :show-overflow-tooltip="true"
@@ -842,8 +849,8 @@
         >
         </el-table-column>
         <el-table-column
-          prop="projLeader"
-          label="项目负责人"
+          prop="projAsst"
+          label="助理"
           width="110"
         >
 			<template slot-scope="scope">
@@ -858,7 +865,7 @@
 						<span>助理: </span><br>
 						<span>{{scope.row.projAsst}}</span>
 						<div slot="reference" class="name-wrapper">
-							{{scope.row.projLeader}}
+							{{scope.row.projAsst}}
 						</div>
 				    </el-popover>
 				</div>
@@ -971,6 +978,7 @@ export default {
 		reportNum: '',
 		projName: '',
 		projScope: '',  
+		projAsst: '',  
 	  },
 	  
       timestamp: 0,
@@ -1112,6 +1120,7 @@ export default {
 		projNum:'', //计划号
 		projName:'', //项目名称
 		projScope:'', //项目范围
+		projAsst:'', //助理
 	  },
 	  
 	  projType:'',
@@ -1324,12 +1333,47 @@ export default {
 		
     },
 	
+	
+	getQuerySearchKey(query){
+		var str=query.replace(/[ `~!@#$%^&*()_\-+=<>?:"{}|,.\/;'\\[\]·~！@#￥%……&*（）——\-+={}|《》？：“”【】、；‘'，。、]/g,'');
+		
+		if(str){
+			var res=[];
+			var key = "";
+			
+			for(var i=0 ; i<=str.length ;i++){
+			  const newvalue = str.slice(i,i+1); 
+			  if(newvalue.length != 0){
+				if(res.indexOf(newvalue)==-1){
+				  res.push(newvalue);
+				  key+="(?=.*"+newvalue+")";
+				}                
+			  }
+			}
+			
+			key = eval("/"+key+"^.*/g");
+			
+			return key;
+			
+			//匹配方法		
+			//  return item.projName.match(key);
+			
+		}else{
+			return "";
+		}
+	},
 	getLocalData(){
+		//项目名称 和 项目范围 拆分模糊查询key
+		const projNameKey = this.getQuerySearchKey(this.searchData.projName);
+		const projScopeKey = this.getQuerySearchKey(this.searchData.projScope);
+		
 		this.tableData = this.tableDataTemp.filter(item =>{
 			return  (((item.reportNum||'').indexOf(this.searchData.reportNum)!=-1 ) || this.searchData.reportNum == '') 
 					&& (((item.projNum||'').indexOf(this.searchData.projNum)!=-1 ) || this.searchData.projNum == '')
-					&& (((item.projName||'').indexOf(this.searchData.projName)!=-1 ) || this.searchData.projName == '')
-					&& (((item.projScope||'').indexOf(this.searchData.projScope)!=-1 ) || this.searchData.projScope == '')
+					//改为模糊查询
+					&& (item.projName.match(projNameKey) || this.searchData.projName == '')
+					&& (item.projScope.match(projScopeKey) || this.searchData.projScope == '')
+					&& (((item.projAsst||'').indexOf(this.searchData.projAsst)!=-1 ) || this.searchData.projAsst == '')
 		})
 		this.currentPage = 1;
 		this.pageTotal = this.tableData.length;
