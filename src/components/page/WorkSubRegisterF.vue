@@ -2402,7 +2402,10 @@ export default {
 											//更新银行名称, 委托人为银行时处理替换
 											if(dpData.clientType<1000){
 												this.subInfoForm.cdBankName= dpData.clientFullName?dpData.clientFullName:dpData.clientName
-											}											
+											}	
+																					
+											//权属人
+											this.subInfoForm.regIncumbrancer = dpData.incumbrancer											
 										}
 										
 										if(spData){
