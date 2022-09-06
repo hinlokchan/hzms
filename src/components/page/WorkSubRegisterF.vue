@@ -424,9 +424,15 @@
 		
 		<el-row :gutter="20">
 			<el-col :span="12">
-				<el-form-item label="被评估单位" prop="regEvaluatedUnit" :class="projType=='非咨询'?'red-item':''"
+				<el-form-item :label="`被评估单位/\n出报告权属人`" prop="regEvaluatedUnit" :class="projType=='非咨询'?'red-item longtext':'longtext'"
 				:rules="projType=='非咨询'?inputReq:[]">
 					<el-input v-model="subInfoForm.regEvaluatedUnit" style="width: 100%" clearable></el-input>
+				</el-form-item>
+			</el-col>
+			<el-col :span="12">
+				<el-form-item label="旧证权属人" prop="regIncumbrancer" :class="projType=='非咨询'?'red-item':''"
+				:rules="projType=='非咨询'?inputReq:[]">
+					<el-input v-model="subInfoForm.regIncumbrancer" style="width: 100%" clearable></el-input>
 				</el-form-item>
 			</el-col>
 			<!-- 
@@ -443,11 +449,8 @@
 				</el-form-item>
 			</el-col>
 			 -->
-			<el-col :span="12">
-				<el-form-item label="数量" prop="regEvalObjCount" class="red-item">
-					<el-input v-model.trim="subInfoForm.regEvalObjCount" style="width: 100%" clearable></el-input>
-				</el-form-item>
-			</el-col>
+		</el-row>
+		<el-row :gutter="20">
 			<el-col :span="12">
 				<el-form-item :label="`估价对象\n行政区域`" prop="regAdminRegion" class="red-item longtext">
 				  <el-cascader
@@ -465,17 +468,26 @@
 			</el-col>
 			<el-col :span="12">
 				<el-form-item label="所在小区" prop="evalObjCommunity" class="red-item">
-					<el-input v-model.trim="subInfoForm.evalObjCommunity" style="width: 100%" placeholder="请输入, 没小区时填:无" clearable></el-input>
+					<el-input type="textarea" autosize v-model.trim="subInfoForm.evalObjCommunity" style="width: 100%" placeholder="请输入, 没小区时填:无" clearable></el-input>
 					<el-tag @click="subInfoForm.evalObjCommunity = '无'">
 						没小区
 					</el-tag>
 				</el-form-item>
 			</el-col>
-			<el-col :span="24">
+		</el-row>
+		<el-row :gutter="20">
+			<el-col :span="12">
 				<el-form-item label="详细地址" prop="evalObjAddress" class="red-item">
-					<el-input v-model.trim="subInfoForm.evalObjAddress" type="textarea" autosize style="width: 100%" clearable></el-input>
+					<el-input type="textarea" autosize v-model.trim="subInfoForm.evalObjAddress" style="width: 100%" clearable></el-input>
 				</el-form-item>
 			</el-col>
+			<el-col :span="12">
+				<el-form-item label="数量" prop="regEvalObjCount" class="red-item">
+					<el-input v-model.trim="subInfoForm.regEvalObjCount" style="width: 100%" clearable></el-input>
+				</el-form-item>
+			</el-col>
+		</el-row>
+		<el-row :gutter="20">
 			<el-col :span="12">
 				<el-form-item label="贷款人" prop="cdLoaner">
 					<el-input v-model.trim="subInfoForm.cdLoaner" style="width: 100%" clearable></el-input>
@@ -2271,7 +2283,8 @@ export default {
 											regClientFullName:"", 
 											
 											regClientType:"", //委托方性质
-											regEvaluatedUnit:"", //被评估单位
+											regEvaluatedUnit:"", //被评估单位/出报告权属人
+											regIncumbrancer:"", //旧证权属人
 											regEvalObject:[],  //评估对象
 											regEvalObjCount:"", //数量
 											regAdminRegion:[], //行政区域 省市区
@@ -2385,6 +2398,11 @@ export default {
 												this.subInfoForm.regEvalGoal = '房地产抵押价值评估';
 												this.subInfoForm.valueType = '抵押价值';
 											}
+											
+											//更新银行名称, 委托人为银行时处理替换
+											if(dpData.clientType<1000){
+												this.subInfoForm.cdBankName= dpData.clientFullName?dpData.clientFullName:dpData.clientName
+											}											
 										}
 										
 										if(spData){
@@ -3157,6 +3175,12 @@ export default {
 							
 							//更新共同委托方
 							this.subInfoForm.coClientList = dpData.coClientList||[];
+							
+							//更新银行名称, 委托人为银行时处理时替换
+							if(dpData.clientType<1000){
+								this.subInfoForm.cdBankName= dpData.clientFullName?dpData.clientFullName:dpData.clientName
+								this.$message.success("请注意, 银行名称已随之更新")
+							}
 						}
 					});
 					
