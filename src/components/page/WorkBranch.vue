@@ -23,7 +23,7 @@
           <el-card :body-style="{ padding: '0px' }">
             <div class="grid-content grid-con-1">
               <i class="el-icon-lx-edit grid-con-icon"></i>
-              <div class="grid-cont-right" @click="projMissionChange('projState')">
+              <div class="grid-cont-right" >
                 <div class="grid-num">{{missionData.onGoing}}</div>
                 <div>待完成项目</div>
               </div>
@@ -34,7 +34,7 @@
           <el-card :body-style="{ padding: '0px' }">
             <div class="grid-content grid-con-3">
               <i class="el-icon-lx-warn grid-con-icon"></i>
-              <div class="grid-cont-right" @click="projMissionChange('projDegree')">
+              <div class="grid-cont-right" >
                 <div class="grid-num">{{missionData.urgent}}</div>
                 <div>紧急项目</div>
               </div>
@@ -45,7 +45,7 @@
           <el-card :body-style="{ padding: '0px' }">
             <div class="grid-content grid-con-2">
               <i class="el-icon-bell grid-con-icon"></i>
-              <div class="grid-cont-right"  @click="projMissionChange('projNew')">
+              <div class="grid-cont-right" >
                 <div class="grid-num">{{missionData.new}}</div>
                 <div>本日新项目</div>
               </div>
@@ -53,93 +53,149 @@
           </el-card>
         </el-col>
       </el-row>
-      <div class="search">
-		<el-row :gutter="20" style="margin-bottom: 20px;">
-		  <!-- 远程调用改为本地过滤
-		  <el-col :span="6">
-		    <el-switch
-		      v-model="onGoing"
-		      active-text="进行中项目"
-		      inactive-text="所有项目"
-		      @change="getData"
-		    ></el-switch>
-		  </el-col>
-		  -->
-		  
-		  <el-col :span="8">
-		    <el-switch
-		      v-model="searchData.projState"
-		      active-text="待完成项目"
-		      inactive-text="所有项目"
-		      @change="projFilterSwitch"
-		    ></el-switch>
-		  </el-col>
-		  
-		  <el-col :span="8">
-		    <el-switch
-		      v-model="searchData.projDegree"
-		      active-text="紧急项目"
-		      inactive-text="所有项目"
-		      @change="projFilterSwitch"
-		    ></el-switch>
-		  </el-col>
-		  
-		  <el-col :span="8">
-		    <el-switch
-		      v-model="searchData.projNew"
-		      active-text="本日新项目"
-		      inactive-text="所有项目"
-		      @change="projFilterSwitch"
-		    ></el-switch>
-		  </el-col>
-		</el-row>  
-		  
+      <div class="search">		  
         <el-row :gutter="10">
+		  <el-col :span="4">
+		  	<el-select
+		  	  class="select-width-100"
+		  	  v-model.trim="searchData.projState"
+		  	  placeholder="请项目状态"
+		  	  @change="getLocalData"
+		  	  style="width: 100%;"
+		  	>
+		  	  <el-option
+		  		label="项目状态 (不限)"
+		  		value=""
+		  	  ></el-option>
+		  	  <el-option
+		  		label="进行中"
+		  		value="0"
+		  	  ></el-option>
+		  	  <el-option
+		  		label="已完成"
+		  		value="1"
+		  	  ></el-option>
+		  	  <el-option
+		  		label="中止"
+		  		value="2"
+		  	  ></el-option>
+		  	</el-select>
+		  </el-col>
           <el-col :span="4">
             <el-input
-              v-model="searchData.projNum"
+              v-model.trim="searchData.projNum"
               placeholder="计划编号"
-              @keyup.enter.native="getData"
+              @keyup.enter.native="getLocalData"
             ></el-input>
           </el-col>
           <el-col :span="4">
             <el-input
-              v-model="searchData.reportNum"
+              v-model.trim="searchData.reportNum"
               placeholder="报告号"
-              @keyup.enter.native="getData"
+			  oninput="value=value.toUpperCase()"
+              @keyup.enter.native="getLocalData"
             ></el-input>
           </el-col>
-          <el-col :span="5">
+          <el-col :span="6">
             <el-input
-              v-model="searchData.projName"
+              v-model.trim="searchData.projName"
               placeholder="项目名称"
-              @keyup.enter.native="getData"
+              @keyup.enter.native="getLocalData"
             ></el-input>
           </el-col>
-          <el-col :span="5">
+          <el-col :span="6">
             <el-input
-              v-model="searchData.projScope"
+              v-model.trim="searchData.projScope"
               placeholder="项目范围"
-              @keyup.enter.native="getData"
+              @keyup.enter.native="getLocalData"
             ></el-input>
           </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-button
-              icon="el-icon-search"
-              @click="getData"
-              type="text"
-              size="medium"
-            >搜 索</el-button>
-            <el-button
-              @click="reset"
-              type="text"
-              icon="el-icon-refresh-right"
-              size="medium"
-            >重 置</el-button>
+		</el-row>  
+        <el-row :gutter="10" style="margin-top: 10px;">
+		  <el-col :span="4">
+			<el-select
+			  class="select-width-100"
+			  v-model.trim="searchData.projDegree"
+			  placeholder="请选择紧急程度"
+			  @change="getLocalData"
+			  style="width: 100%;"
+			>
+			  <el-option
+				label="紧急程度 (不限)"
+				value=""
+			  ></el-option>
+			  <el-option
+				label="正常"
+				value="1001"
+			  ></el-option>
+			  <el-option
+				label="紧急"
+				value="1002"
+			  ></el-option>
+			</el-select>
+		  </el-col>
+			  
+          <el-col :span="4">
+			<el-select
+			  class="select-width-100"
+			  v-model.trim="searchData.arrgType"
+			  placeholder="请选择轮序/安排"
+			  @change="getLocalData"
+			  style="width: 100%;"
+			>
+			  <el-option
+			    label="轮序/安排 (不限)"
+			    value=""
+			  ></el-option>
+			  <el-option
+			    label="轮序"
+			    value="1001"
+			  ></el-option>
+			  <el-option
+			    label="安排"
+			    value="1002"
+			  ></el-option>
+			</el-select>
           </el-col>
-        </el-row>
+          <el-col :span="4">
+            <el-input
+              v-model.trim="searchData.clientName"
+              placeholder="委托方"
+              @keyup.enter.native="getLocalData"
+            ></el-input>
+          </el-col>
+          <el-col :span="4">
+			<el-select
+			  class="select-width-100"
+			  v-model.trim="searchData.projLeader"
+			  placeholder="项目负责人"
+			  @change="getLocalData"
+			  style="width: 100%;"
+			>
+			  <el-option
+			    label="项目负责人 (不限)"
+			    value=""
+			  ></el-option>
+			  <el-option
+			    label="我负责的项目"
+			    :value="getUserName()"
+			  ></el-option>
+			</el-select>
+          </el-col>
+          <el-col :span="4">
+            <el-input
+              v-model.trim="searchData.teaminfo"
+              placeholder="项目组成员"
+              @keyup.enter.native="getLocalData"
+            ></el-input>
+          </el-col>
+		  <el-col :span="4">
+			<el-button-group>
+				<el-button type="primary" size="small" @click="getLocalData">查找</el-button>
+				<el-button type="warning" size="small" @click="reset">重置</el-button>
+			</el-button-group>
+		  </el-col>
+        </el-row>		
       </div>
       <!-- table -->
       <el-table
@@ -151,17 +207,15 @@
         ref="multipleTable"
         style="width: 100%"
         @row-dblclick="handleHandle"
-		@filter-change="projLeaderFilterChange"		
         stripe
+		:default-sort = "{prop: 'projDate', order: 'descending'}"
+		@sort-change="sortChange"
       >
         <el-table-column
           prop="projState"
           label="项目状态"
           width="90"
           align="center"
-		  :filters="projStateFilter"
-		  :filtered-value="projStateFilterValue"
-		  column-key="projState"
         >		
           <template slot-scope="props">
             <el-tag
@@ -177,17 +231,32 @@
         <el-table-column
           prop="projDate"
           label="编制日期"
-          width="120"
+          width="110"
           :formatter="this.$formatDate"
-          sortable
+		  sortable="custom"
         >
         </el-table-column>
         <el-table-column
           prop="projNum"
           label="计划编号"
           width="120"
+		  sortable="custom"
         >
         </el-table-column>
+		
+		<el-table-column
+		  prop="reportNum"
+		  label="报告号"
+		  width="125"
+		>
+          <template slot-scope="scope">
+			<el-tag type="info"
+			v-if="scope.row.paReportNum">{{scope.row.paReportNum}}</el-tag>
+			<el-tag type="warning"
+			v-if="scope.row.faReportNum">{{scope.row.faReportNum}}</el-tag>
+            
+          </template>
+		</el-table-column>
         <el-table-column
           prop="projName"
           label="项目名称"
@@ -207,10 +276,8 @@
         <el-table-column
           prop="projLeader"
           label="项目负责人"
-          width="110"
-          :filters="projLeaderFilter"
-		  :filtered-value="projLeaderFilterValue"
-		  column-key="projLeader"
+          width="120"
+		  sortable="custom"
         >
         </el-table-column>
         <!-- <el-table-column
@@ -297,14 +364,16 @@ export default {
         toType: ''
       },
 	  searchData:{
+		projState: '',
 		projNum: '',
 		reportNum: '',
 		projName: '',
 		projScope: '',
-		
-		projState: false,
-		projDegree: false,
-		projNew: false,
+		clientName: '', 
+		arrgType: '',
+		teaminfo:'',
+		projLeader:'',
+		projDegree:'',
 	  },
 	  
       midNum: 0,
@@ -312,41 +381,8 @@ export default {
       getNumType: 0,
       getNumData: {},
       getSubNum: '',
-      projLeaderFilter: [{ text: '我负责的项目', value: '' }],
       timestamp: 0,
 	  
-	  projStateFilter:[
-		{
-			text:'进行中',
-			value:"0",
-		},  
-		{
-			text:'已完成',
-			value:"1",
-		},  
-		{
-			text:'中止',
-			value:"2",
-		},  
-	  ],
-	  /* 
-	  filtersitem:{
-	      'projLeader':{
-	        key: 'projLeader',
-	        value:'',
-	      },
-	      'projState':{
-	        key: 'projState',
-	        value:'',
-	      },
-	  },
-	  */
-	  filtersitem:{
-	  	projLeader:'',
-	  	projState:''
-	  },
-	  projLeaderFilterValue:[],
-	  projStateFilterValue:[],
 	  
 	  	  
 	  //211028变动 新增: 多个公司切换	  
@@ -375,87 +411,100 @@ export default {
     let date = new Date()
     this.timestamp = date.getTime() - date.getHours()*60*60*1000
     console.log(this.timestamp)
-    this.projLeaderFilter[0].value = localStorage.getItem('staffName')
   },
   methods: {
-	/* 
-    projLeaderFilterHandler(value, row, column) {
-      const property = column['property'];
-      return row[property] === value;
-    },
-	 */
-	
-	projLeaderFilterChange(filters){
-		//更新过滤字段
-		Object.keys(this.filtersitem).forEach((item, index) =>{
-		  if(filters[item]){
-		    this.filtersitem[item] = filters[item].join(',');
-		  }
-		});
-		
-		var newList = this.tableFullData;
-		Object.keys(this.filtersitem).forEach((item, index) =>{
-		  if(this.filtersitem[item]){
-			//循环过滤多个不为空的条件
-		    newList = newList.filter(item2 => {
-				return this.filtersitem[item].indexOf(item2[item]) !=-1;
-			});
-		  }
-		});		
-		this.tableData = newList;
-		this.currentPage = 1;
-		this.pageTotal = this.tableData.length;
-		
-		//重置其他过滤
-		this.searchData.projState = false;
-		this.searchData.projDegree = false;
-		this.searchData.projNew = false;
+	getUserName(){
+		return localStorage.getItem('staffName')
 	},
 	
-	projFilterSwitch(){		
-		var newList = this.tableFullData;
-				
-		//1. 过滤字段的
-		Object.keys(this.filtersitem).forEach((item, index) =>{
-		  if(this.filtersitem[item]){
-			//循环过滤多个不为空的条件
-		    newList = newList.filter(item2 => {
-				return this.filtersitem[item].indexOf(item2[item]) !=-1;
+	//排序变动
+	sortChange({column,prop,order}){
+		if(order == 'ascending'){
+			this.tableData = this.tableData.sort((a, b)=>{
+				return (""+a[prop]).localeCompare((""+b[prop]), "zh-Hans-CN", {sensitivity: "accent",})
 			});
-		  }
-		});
-		//1. 过滤进行中
-		if(this.searchData.projState){
-			newList = newList.filter(item => {
-				return item.projState=='0'
+		}else if(order == 'descending'){
+			this.tableData = this.tableData.sort((a, b)=>{
+				return (""+b[prop]).localeCompare((""+a[prop]), "zh-Hans-CN", {sensitivity: "accent",})
 			});
-		}			
-		//2. 过滤紧急
-		if(this.searchData.projDegree){
-			newList = newList.filter(item => {
-				return item.projDegree=='1002' && item.projState=='0'
-			});
-		}		
-		//3. 过滤新旧
-		if(this.searchData.projNew){
-			newList = newList.filter(item => {
-				return item.projDate > this.timestamp
+		}else{
+			this.tableData = this.tableData.sort((a, b)=>{
+				return (""+b['projDate']).localeCompare((""+a['projDate']), "zh-Hans-CN", {sensitivity: "accent",})
 			});
 		}
-		
-		this.tableData = newList;
-		this.currentPage = 1;
-		this.pageTotal = this.tableData.length;
-	},
-	projMissionChange(type){
-		this.searchData[type] = true;
-		
-		//清除table过滤
-		this.$refs.multipleTable.clearFilter();
-		
-		this.projFilterSwitch();
 	},
 	
+	
+	getQuerySearchKey(query){
+		var str=query.replace(/[ `~!@#$%^&*()_\-+=<>?:"{}|,.\/;'\\[\]·~！@#￥%……&*（）——\-+={}|《》？：“”【】、；‘'，。、]/g,'');
+		
+		if(str){
+			var res=[];
+			var key = "";
+			
+			for(var i=0 ; i<=str.length ;i++){
+			  const newvalue = str.slice(i,i+1); 
+			  if(newvalue.length != 0){
+				if(res.indexOf(newvalue)==-1){
+				  res.push(newvalue);
+				  key+="(?=.*"+newvalue+")";
+				}                
+			  }
+			}
+			
+			key = eval("/"+key+"^.*/g");
+			
+			return key;
+			
+			//匹配方法		
+			//  return item.projName.match(key);
+			
+		}else{
+			return "";
+		}
+	},
+	
+	getLocalData(){
+		//项目名称 和 项目范围 和委托人 拆分模糊查询key
+		const projNameKey = this.getQuerySearchKey(this.searchData.projName);
+		const projScopeKey = this.getQuerySearchKey(this.searchData.projScope);
+		const clientNameKey = this.getQuerySearchKey(this.searchData.clientName);
+				
+		this.tableData = this.tableFullData.filter(item =>{
+			return  ( (((item.paReportNum||'').indexOf(this.searchData.reportNum)!=-1 ) || this.searchData.reportNum == '') 
+					 || (((item.faReportNum||'').indexOf(this.searchData.reportNum)!=-1 ) || this.searchData.reportNum == '') )
+					&& (((item.projNum||'').indexOf(this.searchData.projNum)!=-1 ) || this.searchData.projNum == '')
+					&& (((item.arrgType||'').indexOf(this.searchData.arrgType)!=-1 ) || this.searchData.arrgType == '')
+					
+					&& ( (((item.projLeader||'').indexOf(this.searchData.teaminfo)!=-1 ) || this.searchData.teaminfo == '')
+					 ||(((item.projProReviewer||'').indexOf(this.searchData.teaminfo)!=-1 ) || this.searchData.teaminfo == '')
+					 ||(((item.projReviewer||'').indexOf(this.searchData.teaminfo)!=-1 ) || this.searchData.teaminfo == '')
+					 ||(((item.projAsst||'').indexOf(this.searchData.teaminfo)!=-1 ) || this.searchData.teaminfo == '')
+					 ||(((item.fieldSrvy||'').indexOf(this.searchData.teaminfo)!=-1 ) || this.searchData.teaminfo == '') )
+					
+					&& (((item.projState||'').indexOf(this.searchData.projState)!=-1 ) || this.searchData.projState == '')
+					&& (((item.projLeader||'').indexOf(this.searchData.projLeader)!=-1 ) || this.searchData.projLeader == '')
+					
+					&& (((item.projLeader||'').indexOf(this.searchData.projLeader)!=-1 ) || this.searchData.projLeader == '')
+					&& (((item.projDegree||'').indexOf(this.searchData.projDegree)!=-1 )  || this.searchData.projDegree == '')
+					
+										
+					//改为模糊查询
+					&& (item.projName.match(projNameKey) || this.searchData.projName == '')
+					&& (item.projScope.match(projScopeKey) || this.searchData.projScope == '')
+					&& ( (item.clientName.match(clientNameKey) || this.searchData.clientName == '')
+						|| (item.clientFullName.match(clientNameKey) || this.searchData.clientFullName == '') )
+					
+		})
+		this.currentPage = 1;
+		this.pageTotal = this.tableData.length;
+		
+		//console.log('tableData', this.tableData)
+		//console.log('tableFullData', this.tableFullData)
+		
+		this.$refs.multipleTable.sort('projDate','descending')
+	},
+		
 	
     // deleteReportNum(reportNum) {
     //   deleteReportNum({ reportNum: reportNum }).then(res => {
@@ -587,6 +636,7 @@ export default {
 		  		  
 		  //清除table过滤
 		  this.$refs.multipleTable.clearFilter();
+		  this.$refs.multipleTable.sort('projDate','descending')
         })
         .catch(err => {
           console.log('field to search myproject');
@@ -638,24 +688,32 @@ export default {
 	  this.onGoing = false;
 	  
 	  this.searchData = {
+		projState: '',
 		projNum: '',
 		reportNum: '',
 		projName: '',
-		projScope: '',		
-		projState: false,
-		projDegree: false,
-		projNew: false,
+		projScope: '',
+		clientName: '', 
+		arrgType: '',
+		teaminfo:'',
+		projLeader:'',
+		projDegree:'',
+		
+		// projState: false,
+		// projDegree: false,
+		// projNew: false,
 	  }
 	  
       searchMyProject(this.searchData, this.companyId)
         .then(res => {
-          console.log(res.data);
+          //console.log(res.data);
 		  this.tableFullData = res.data
           this.tableData = res.data;
           this.pageTotal = res.data.length;
 		  
 		  //清除table过滤
 		  this.$refs.multipleTable.clearFilter();
+		  this.$refs.multipleTable.sort('projDate','descending')
         })
         .catch(err => {
           console.log('field to search');
@@ -725,10 +783,6 @@ export default {
 			this.searchData = workbranch_pageinfo.searchData;
 			
 			this.onGoing = workbranch_pageinfo.onGoing;
-			
-			this.filtersitem = workbranch_pageinfo.filtersitem;
-			this.projLeaderFilterValue = this.filtersitem.projLeader?this.filtersitem.projLeader.split(','):[];
-			this.projStateFilterValue = this.filtersitem.projState?this.filtersitem.projState.split(','):[];
 			
 			this.tableFullData = workbranch_pageinfo.fullData;	
 		  }
