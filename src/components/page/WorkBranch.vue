@@ -784,6 +784,8 @@ export default {
 			
 			this.onGoing = workbranch_pageinfo.onGoing;
 			
+			this.missionData = workbranch_pageinfo.missionData;
+			
 			this.tableFullData = workbranch_pageinfo.fullData;	
 		  }
 		  //删除
@@ -805,7 +807,9 @@ export default {
 		data: this.tableData,
 		onGoing: this.onGoing,
 		fullData: this.tableFullData,
-		filtersitem: this.filtersitem,
+		
+		missionData:this.missionData,
+		//filtersitem: this.filtersitem,
 	    status:0
 	  };
 	  //sessionStorage.setItem('workbranch_pageinfo', JSON.stringify(workbranch_pageinfo));
