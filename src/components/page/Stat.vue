@@ -1,7 +1,8 @@
 <template>
   <div class="container">
     <el-page-header @back="goBack"></el-page-header>
-    <el-card style="width:50%; min-width: 600px; margin-top: 20px">
+	
+    <el-card style="width:50%; min-width: 600px; margin-top: 20px">	  
       <div
         slot="header"
         class="clearfix"
@@ -9,22 +10,39 @@
         <span><b>日计划报表</b></span>
         <el-button
           style="float:right"
-          type="text"
+          type="button"
           @click="printDayReport(dateStr)"
         >导出</el-button>
-      </div>
-      <div>
-        <el-date-picker
-          v-model="dateStr"
-          type="date"
-          placeholder="请选择日期"
-          :editable="false"
-          :picker-options="pickerOptions"
-          value-format="yyyy-MM-dd"
-        >
-        </el-date-picker>
-      </div>
+      </div>	
+	  <el-form label-width="100px">
+		<el-form-item label="选择公司">
+		  <el-select
+			v-model="company"
+			placeholder="选择公司"
+		  >
+			<el-option
+			  v-for="item in companyOptions"
+			  :key="item.value"
+			  :label="item.label"
+			  :value="item.value"
+			>
+			</el-option>
+		  </el-select>
+		</el-form-item>
+	    <el-form-item label="编制日期">
+			<el-date-picker
+			  v-model="dateStr"
+			  type="date"
+			  placeholder="请选择日期"
+			  :editable="false"
+			  :picker-options="pickerOptions"
+			  value-format="yyyy-MM-dd"
+			>
+			</el-date-picker>
+	    </el-form-item>
+	  </el-form>
     </el-card>
+	
     <el-card style="width:50%; min-width: 600px; margin-top: 20px">
       <div
         slot="header"
@@ -33,7 +51,7 @@
         <span><b>周报表</b></span>
         <el-button
           style="float:right"
-          type="text"
+          type="button"
           @click="printWeekReport(week)"
         >导出</el-button>
       </div>
@@ -70,7 +88,7 @@
         <span><b>多条件筛选导出计划报表</b></span>
         <el-button
             style="float:right"
-            type="text"
+            type="button"
             @click="exportPlan"
         >导出</el-button>
       </div>
@@ -342,6 +360,8 @@ export default {
       let path = 'statistics/dayReport'
       const formData = new FormData()
       formData.append('dateStr', val)
+	  formData.append('companyId', this.company)
+	  
       downloadExcel(formData, path, this.companyId)
     },
 
