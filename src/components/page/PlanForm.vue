@@ -3213,7 +3213,7 @@ export default {
 	  if (this.form.clientName == '' && this.form.clientId == '') {
 		this.$message.warning('请填写委托人！')
 		return 0
-	  }else if(!checkClientId){
+	  }else if(!checkClientId && this.form.clientId != '0'){
 		this.$message.warning('委托人与共同委托人重复！')
 		return 0
 	  }else if(this.companyTabsId == 2 && this.form.auditPeriod == '' && this.form.baseDate == ''){
