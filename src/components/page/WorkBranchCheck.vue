@@ -685,12 +685,16 @@
 	  <el-table-column type="expand" width="20">
 	    <template slot-scope="props">
 	      <el-table
+			ref="subTable"
 	        :data="subProjdataList"
 	        align="center"
 	        border
 	        fit
 	       
 			style="margin: 0 10px"
+			@row-click="onSelect"
+			@selection-change="onSelection"
+			@select-all="onSelectAll"
 	        >
 			<el-table-column
 				label="序号"
@@ -731,6 +735,23 @@
 			  width="210"
 			  align="center"
 			>
+			  <template slot="header" slot-scope="scope">
+				<div style="float: left;">
+			  	<el-switch
+			  	  v-model="isMultiple"
+			  	  active-text="批审"
+			  	  inactive-text="取消"
+			  	  active-value="1"
+			  	  inactive-value="0"
+			  	  @change="onChangeSwitch"
+				  style="height: 28px;">
+			  	</el-switch>
+				</div>
+				<div style="float: right;"
+				v-if="isMultiple == 1">
+				  <el-button @click="handleMultiplePass(subData, subProjIdArray, subProjNumArray)" type="success" size="mini">批过</el-button>
+				</div>
+			  </template>
 			  <template slot-scope="scope"> 
 				<!-- 				
 			    <el-button
@@ -777,6 +798,14 @@
 				</el-button-group>
 				
 			  </template>
+			</el-table-column>
+			
+			<el-table-column
+			  type="selection"
+			  :selectable='selectInit'
+			  width="55"
+			  v-if="isMultiple == 1"
+			  >
 			</el-table-column>
 			
 			<el-table-column
@@ -1124,6 +1153,12 @@ export default {
 	  },
 	  
 	  projType:'',
+	  
+	  //批处理审核
+	  isMultiple:false,
+	  subProjIdArray:'',
+	  subProjNumArray:'',
+	  subData:'',
 	  
     };
   },
@@ -1545,7 +1580,8 @@ export default {
 	  this.$refs.table.toggleRowExpansion(row)
 	},
 	
-	expandChange(row,expandedRows) {		
+	expandChange(row,expandedRows) {	
+	  this.subData = [];
 	  if (expandedRows.length) {
 	    this.expands = []
 	    if (row) {
@@ -1556,10 +1592,13 @@ export default {
 		  
 		  //保存类型, 跳转审核模板
 		  this.projType = row.projType;
+		  
+		  this.subData = row;
 	    }
 	  } else {
 	    this.expands = []// 默认不展开
 	  }
+	  
 	},	
 	/* 
 	getRowKeys(row) {
@@ -2262,6 +2301,100 @@ export default {
 	  }else{
 		return '';
 	  }
+	},
+	
+	onChangeSwitch(){
+		console.log('onChangeSwitch')
+	},
+	handleMultiplePass(subData, subProjIdArray, subProjNumArray){
+		
+		if(subProjIdArray){
+			const h = this.$createElement
+			this.$confirm('提示',{
+				title: '提示',
+				message: h('div', [h('p', '确认通过以下登记信息?'), h('p', ''.concat("计划编号:", subData.projId, "-"+subProjNumArray))]),
+				type: 'success' })
+			.then(() => {
+				const registerCheckForm = {
+					subProjIdArray: subProjIdArray,
+					mainStatus:3,
+				}
+				this.auditSubProjectRegisterData( registerCheckForm, (auditData)=>{
+					//提交成功
+					
+					//刷新表单
+					//this.getTableInfo(subData.projId);
+					this.getData()
+				});
+			})
+		}else{
+			this.$message.warning('请先勾选')
+		}
+		
+		//提交
+		console.log('handleMultiplePass', subData, subProjIdArray)
+		
+		/* 
+		this.$confirm('确认通过该登记信息?', '提示: '.concat("计划编号:", subData.projId, subData.subProjNum?"-"+subData.subProjNum:""), { type: 'success' })
+		.then(() => {
+			const registerCheckForm = {
+				subProjIdArray: subProjIdArray,
+				mainStatus:3,
+			}
+			this.auditSubProjectRegisterData( registerCheckForm, (auditData)=>{
+				//提交成功
+				
+				//刷新表单
+				this.getTableInfo(subData.projId);
+			});
+		})
+		 */
+	},
+	
+	
+	selectInit(row,index){
+		if(row.subProjStatus.mainStatus!=1){
+			//状态不为1, 不能选中
+			return false;
+		}else{
+			return true;
+		}
+		
+	},
+	onSelect(row){//点击行选中复选框
+		if(row.subProjStatus.mainStatus!=1){
+			//状态不为1, 不能选中
+			return;
+		}else{
+			//this.$refs.subTable.clearSelection()
+			this.$refs.subTable.toggleRowSelection(row);
+		}
+	
+	},
+	onSelection(row){//选中复选框操作	
+		var subProjIdList = [];
+		var subProjNumList = [];
+		row.forEach((item, index) =>{
+			subProjIdList.push(item.subProjId);
+			subProjNumList.push(item.subProjNum);
+		});
+		
+		this.subProjIdArray = subProjIdList?subProjIdList.join(','):'';
+		this.subProjNumArray = subProjNumList?subProjNumList.join(','):'';
+	},
+	
+	onSelectAll(row,param){
+		if(row.subProjStatus){
+			//状态不为1, 不能选中
+			if(row.subProjStatus.mainStatus!=1){
+				return;
+			}else{
+				this.$refs.subTable.toggleRowSelection(row);
+			}
+			
+		}else{
+			return;
+		}
 	},
   }
 }
