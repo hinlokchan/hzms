@@ -247,7 +247,7 @@
 		<el-table-column
 		  prop="reportNum"
 		  label="报告号"
-		  width="125"
+		  width="135px"
 		>
           <template slot-scope="scope">
 			<el-tag type="info"
@@ -482,7 +482,7 @@ export default {
 					 ||(((item.projAsst||'').indexOf(this.searchData.teaminfo)!=-1 ) || this.searchData.teaminfo == '')
 					 ||(((item.fieldSrvy||'').indexOf(this.searchData.teaminfo)!=-1 ) || this.searchData.teaminfo == '') )
 					
-					&& (((item.projState||'').indexOf(this.searchData.projState)!=-1 ) || this.searchData.projState == '')
+					&& (((''+item.projState||'').indexOf(this.searchData.projState)!=-1 ) || this.searchData.projState == '')
 					&& (((item.projLeader||'').indexOf(this.searchData.projLeader)!=-1 ) || this.searchData.projLeader == '')
 					
 					&& (((item.projLeader||'').indexOf(this.searchData.projLeader)!=-1 ) || this.searchData.projLeader == '')
