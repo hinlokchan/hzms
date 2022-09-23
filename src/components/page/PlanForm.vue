@@ -586,7 +586,7 @@
 			  </el-form-item>
 			</el-col>
 			<el-col :span="6">
-        <el-form-item label="计划完成天数">
+        <el-form-item label="计划完成天数" class="red-item" prop="compSchedule">
           <el-input
               type="number"
               clearable
@@ -941,8 +941,7 @@
               <el-form-item label="接洽类型">
                 <el-select 
 				  class="select-width-100"
-				  v-model="form.projContactType" :disabled="userRole>2"
-				  @change="onProjContactTypeChange">
+				  v-model="form.projContactType" :disabled="userRole>2">
                   <el-option
                     v-for="item in contactTypeOption[companyTabsId]"
                     :key="item"
@@ -1231,7 +1230,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="计划完成天数">
+              <el-form-item label="计划完成天数" class="red-item" prop="compSchedule">
                 <el-input
 				  type="number"
 				  clearable
@@ -1939,7 +1938,7 @@
           </el-row>
           <el-row :gutter="20">
             <el-col :span="6">
-              <el-form-item label="计划完成天数">
+              <el-form-item label="计划完成天数" class="red-item" prop="compSchedule">
                 <el-input
 				  type="number"
 				  clearable
@@ -2526,6 +2525,9 @@ export default {
 			// projDate: [
 			//   { required: true, message: '请选择编制日期', trigger: 'blur' }
 			// ],
+			compSchedule: [
+			  { required: true, message: '请输入计划完成天数', trigger: 'blur' }
+			],
 			baseDate: [
 			  { required: true, message: '请选择基准日', trigger: 'blur' }
 			],
@@ -2542,6 +2544,9 @@ export default {
 			],
 			assemGoal: [
 			  { required: true, message: '请选择项目目的', trigger: 'blur' }
+			],
+			compSchedule: [
+			  { required: true, message: '请输入计划完成天数', trigger: 'blur' }
 			],
 			baseDate: [
 			  { required: true, message: '请选择基准日', trigger: 'blur' }
@@ -2562,6 +2567,9 @@ export default {
 			],
 			assemGoal: [
 			  { required: true, message: '请选择审计目的', trigger: 'blur' }
+			],
+			compSchedule: [
+			  { required: true, message: '请输入计划完成天数', trigger: 'blur' }
 			],
 			baseDate: [
 			  { required: true, message: '请选择基准日', trigger: 'blur' }
