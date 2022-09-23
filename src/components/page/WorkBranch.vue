@@ -490,10 +490,10 @@ export default {
 					
 										
 					//改为模糊查询
-					&& (item.projName.match(projNameKey) || this.searchData.projName == '')
-					&& (item.projScope.match(projScopeKey) || this.searchData.projScope == '')
-					&& ( (item.clientName.match(clientNameKey) || this.searchData.clientName == '')
-						|| (item.clientFullName.match(clientNameKey) || this.searchData.clientFullName == '') )
+					&& ((item.projName||'').match(projNameKey) || this.searchData.projName == '')
+					&& ((item.projScope||'').match(projScopeKey) || this.searchData.projScope == '')
+					&& ( ((item.clientName||'').match(clientNameKey) || this.searchData.clientName == '')
+						|| ((item.clientFullName||'').match(clientNameKey) || this.searchData.clientFullName == '') )
 					
 		})
 		this.currentPage = 1;
