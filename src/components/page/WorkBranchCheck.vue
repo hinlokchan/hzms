@@ -1281,6 +1281,12 @@ export default {
 	
   },
   created() {
+	
+	//暂改成惠正
+	this.companyId = 'HZ';
+	this.companyTabsId = 0;
+	  
+	/*  
 	//211028变动 新增: 多个公司切换
 	const value = localStorage.getItem('companyId');
 	if(value){
@@ -1290,6 +1296,9 @@ export default {
 		this.companyId = this.companyRange[0];
 		this.companyTabsId = 0;
 	}
+	 */
+	
+	
 	//console.log('初始化公司id', this.companyId);  
 	
 	//211202 处理页面跳转返回
