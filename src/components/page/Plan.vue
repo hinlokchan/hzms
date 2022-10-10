@@ -301,7 +301,7 @@
                 type="text"
                 icon="el-icon-s-home"
                 size="medium"
-                :disabled="scope.row.projType !== 1010"
+                :disabled="scope.row.projType !== 1010 && scope.row.projType !== 1041"
                 @click="evalObjDialogOpen(scope.row)"
             >估价对象</el-button>
             <el-button
