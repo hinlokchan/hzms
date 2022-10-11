@@ -196,6 +196,11 @@
 		          </el-button>
 		        </template>
 		      </el-table-column>
+			  <el-table-column
+			      prop="contractPrice"
+			      label="合同金额"
+			      width="100">
+			  </el-table-column>
 		    </el-table>
 		    <el-pagination
 		        hide-on-single-page
@@ -235,6 +240,9 @@
                 </el-form-item>
                 <el-form-item label="归档经办人">
                   <el-input v-model="editForm.archiveOperator" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="合同金额">
+                  <el-input v-model="editForm.contractPrice"></el-input>
                 </el-form-item>
                 <el-form-item label="备注">
                   <el-input type="textarea" v-model="editForm.notes" autocomplete="off"></el-input>
@@ -284,7 +292,8 @@ export default {
         recoverDate: '',
         archiveOperator: '',
         notes: '',
-        signingDate: ''
+        signingDate: '',
+        contractPrice: ''
       },
       searchData: {
         contractNum: '',
@@ -357,6 +366,7 @@ export default {
       this.editForm.archiveOperator = row.archiveOperator;
       this.editForm.notes = row.notes;
       this.editForm.signingDate = this.formatDate(row.signingDate);
+      this.editForm.contractPrice = row.contractPrice;
       console.log(this.editForm);
     },
     formatDate(date) {
