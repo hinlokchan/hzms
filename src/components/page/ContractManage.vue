@@ -400,6 +400,8 @@ export default {
 			this.tableFullData = res.data;
 	        this.tableData = res.data;
 	        this.pageTotal = res.data.length;
+			
+			this.getLocalData('no');
 	      }
 	  );
     },
@@ -434,7 +436,7 @@ export default {
 		}
 	},
 	
-	getLocalData(){
+	getLocalData(changepange){
 		//项目名称 和 项目范围 和委托人 拆分模糊查询key
 		const projNameKey = this.getQuerySearchKey(this.searchData.projName);
 		const clientNameKey = this.getQuerySearchKey(this.searchData.clientName);
@@ -449,7 +451,9 @@ export default {
 						|| (item.clientFullName.match(clientNameKey) || this.searchData.clientFullName == '') )
 					
 		})
-		this.currentPage = 1;
+		if(changepange != 'no'){
+			this.currentPage = 1;
+		}
 		this.pageTotal = this.tableData.length;
 		
 		//console.log('tableData', this.tableData)
