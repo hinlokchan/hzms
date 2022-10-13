@@ -23,7 +23,7 @@
 						<el-input
 						  v-model.trim="searchData.contractNum"
 						  placeholder="合同号"
-						  @keyup.enter.native="getLocalData"
+						  @keyup.enter.native="getLocalData(1)"
 						  oninput="value=value.toUpperCase()"
 						></el-input>
 					  </el-col>
@@ -31,26 +31,26 @@
 						<el-input
 						  v-model.trim="searchData.projName"
 						  placeholder="项目名称"
-						  @keyup.enter.native="getLocalData"
+						  @keyup.enter.native="getLocalData(1)"
 						></el-input>
 					  </el-col>
 					  <el-col :lg="5" :span="5">
 						<el-input
 						  v-model.trim="searchData.externalContractNum"
 						  placeholder="外部合同号"
-						  @keyup.enter.native="getLocalData"
+						  @keyup.enter.native="getLocalData(1)"
 						></el-input>
 					  </el-col>
 					  <el-col :lg="5" :span="5">
 						<el-input
 						  v-model.trim="searchData.clientName"
 						  placeholder="委托方"
-						  @keyup.enter.native="getLocalData"
+						  @keyup.enter.native="getLocalData(1)"
 						></el-input>
 					  </el-col>
 					  <el-col :lg="5" :span="5">
 						<el-button-group>
-							<el-button type="primary" size="small" @click="getLocalData">查找</el-button>
+							<el-button type="primary" size="small" @click="getLocalData(1)">查找</el-button>
 							<el-button type="warning" size="small" @click="resetSearch">重置</el-button>
 						</el-button-group>
 					  </el-col>
@@ -401,7 +401,7 @@ export default {
 	        this.tableData = res.data;
 	        this.pageTotal = res.data.length;
 			
-			this.getLocalData('no');
+			this.getLocalData();
 	      }
 	  );
     },
@@ -451,7 +451,7 @@ export default {
 						|| (item.clientFullName.match(clientNameKey) || this.searchData.clientFullName == '') )
 					
 		})
-		if(changepange != 'no'){
+		if(changepange){
 			this.currentPage = 1;
 		}
 		this.pageTotal = this.tableData.length;
@@ -516,9 +516,7 @@ export default {
     },
     resetSearch() {
 	  //重置
-      this.searchData.projName = ''
-      this.searchData.externalContractNum = ''
-      this.searchData.contractNum = ''
+	  Object.keys(this.searchData).forEach(key => (this.searchData[key] = ''))
 	  
 	  this.currentPage = 1
 	  this.pageTotal = 0;
