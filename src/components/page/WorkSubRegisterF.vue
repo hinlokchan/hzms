@@ -2774,7 +2774,7 @@ export default {
 			this.subInfoForm.regEvalConclusionValue = parseFloat(this.subInfoForm.landTotalValue||0) + parseFloat(this.subInfoForm.buildingTotalValue||0);
 				
 			//改变标准收费
-			this.handleCopyEvalConclusionValue('百位', 'cdStandardFee');
+			this.handleCopyEvalConclusionValue('还原', 'cdStandardFee');
 		},
 		
 		
