@@ -191,7 +191,7 @@
 				type="primary"
 				@click="exportSubProj('三审', projId,subProjId)"
 			>三审</el-button>
-			
+			<!-- 
 			<el-button
 				size="medium"
 				type="primary"
@@ -203,6 +203,7 @@
 				type="primary"
 				@click="exportSubProj('底单', projId,subProjId)"
 			>底单</el-button>
+			 -->
 		</el-button-group>
 		<!-- 
 		<el-button-group style="margin-left: 10px;" v-else-if="draftData">
@@ -1810,7 +1811,7 @@ export default {
 			totalValueTag:{
 				landTotalValue:'百位',
 				buildingTotalValue:'百位',
-				cdStandardFee:'百位',
+				cdStandardFee:'还原',
 			},
 			
 			subProjRuleNoReq:[
@@ -2944,7 +2945,7 @@ export default {
 			this.subInfoForm.regEvalConclusionValue = parseFloat(this.subInfoForm.landTotalValue||0) + parseFloat(this.subInfoForm.buildingTotalValue||0);
 				
 			//改变标准收费
-			this.handleCopyEvalConclusionValue('百位', 'cdStandardFee');
+			this.handleCopyEvalConclusionValue('还原位', 'cdStandardFee');
 		},
 		
 		

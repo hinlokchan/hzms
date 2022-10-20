@@ -104,11 +104,11 @@ export default new Router({
                     component: () => import('../components/page/WorkSubRegisterCheckF.vue'),
                     meta: { title: '房地产项目登记审核' }
                 },
-                // {
-                //     path: '/worksubregistercheckd',
-                //     component: () => import('../components/page/WorkSubRegisterCheckD.vue'),
-                //     meta: { title: '土地项目登记审核' }
-                // },
+                {
+                    path: '/worksubregistercheckd',
+                    component: () => import('../components/page/WorkSubRegisterCheckD.vue'),
+                    meta: { title: '土地项目登记审核' }
+                },
                 {
                     path: '/worksubregistercheckz',
                     component: () => import('../components/page/WorkSubRegisterCheckZ.vue'),

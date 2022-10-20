@@ -1285,6 +1285,7 @@ export default {
 	//暂改成惠正
 	this.companyId = 'HZ';
 	this.companyTabsId = 0;
+	localStorage.setItem('companyId', this.companyId);
 	  
 	/*  
 	//211028变动 新增: 多个公司切换
@@ -1457,6 +1458,7 @@ export default {
 	},
 	
     reset() {
+		
 		//重置分页信息
 	  this.currentPage = 1;
 	  this.tableData=[];
@@ -1466,18 +1468,18 @@ export default {
 	  
       //刷新项目处理列表
       this.getManageRegisterListData({}, (mrRes)=>{
-      	this.tableData = mrRes.data;
-		this.tableDataTemp = mrRes.data;
-      	this.pageTotal = mrRes.data.length;
+      	this.tableData = mrRes;
+      	this.tableDataTemp = mrRes;
+      	this.pageTotal = mrRes.length;
       });
 		
     },
 	
 	refresh(){
 		this.getManageRegisterListData({}, (mrRes)=>{
-			this.tableData = mrRes.data;
-			this.tableDataTemp = mrRes.data;
-			this.pageTotal = mrRes.data.length;
+			this.tableData = mrRes;
+			this.tableDataTemp = mrRes;
+			this.pageTotal = mrRes.length;
 		});
 	},
 	
@@ -1676,9 +1678,9 @@ export default {
 			}else if(projType==1010 || projType==1041){
 				//房产
 				this.$router.push({ path: '/worksubregistercheckf', query: { projId: subData.projId, data: subData.subProjId } })
-			// }else if(projType==1030 || projType==1043){
-			// 	//土地
-			// 	this.$router.push({ path: '/worksubregistercheckd', query: { projId: subData.projId, data: subData.subProjId } })
+			}else if(projType==1030 || projType==1043){
+				//土地
+				this.$router.push({ path: '/worksubregistercheckd', query: { projId: subData.projId, data: subData.subProjId } })
 			}else{
 				this.$message.warning('该项目类型还没开放信息录入');
 			}
