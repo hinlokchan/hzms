@@ -162,7 +162,7 @@
 				type="primary"
 				@click="exportSubProj('三审', projId,subProjId)"
 			>三审</el-button>
-			
+			<!-- 
 			<el-button
 				size="medium"
 				type="primary"
@@ -174,13 +174,14 @@
 				type="primary"
 				@click="exportSubProj('底单', projId,subProjId)"
 			>底单</el-button>
+			 -->
 		</el-button-group>
 		<el-button-group style="margin-left: 10px;" v-else-if="draftData">
 			<el-button type="primary" size="medium" plain disabled>导出</el-button>
 			
 			<el-button
 				size="medium"
-				type="primary"
+				type="warning"
 				@click="exportSubProj('临时三审', projId,subProjId)"
 			>临时三审</el-button>
 		</el-button-group>
@@ -577,10 +578,10 @@
 					@change="handleChangeStandardFee"
 					disabled></el-input>		
 					<span v-if="subInfoForm.regTotalAssets && subInfoForm.regOwnersEquity && registerStatus!=3">
-					<el-tag @click="handleCopyEvalConclusionValue('资产总值', subInfoForm.regTotalAssets)">
+					<el-tag @click="handleSetEvalConclusionValue('资产总值', subInfoForm.regTotalAssets)">
 						资产总值
 					</el-tag>
-					<el-tag style="margin-left: 10px;" @click="handleCopyEvalConclusionValue('所有者权益', subInfoForm.regOwnersEquity)">
+					<el-tag style="margin-left: 10px;" @click="handleSetEvalConclusionValue('所有者权益', subInfoForm.regOwnersEquity)">
 						所有者权益
 					</el-tag>
 					</span>
@@ -770,7 +771,24 @@
 					@change="handleChangeDiscount"
 					:disabled="projType=='非咨询'?true:(isNaN(subInfoForm.regEvalConclusionValue)?false:true)"></el-input>
 					<span v-if="subInfoForm.cdStandardFee">
+						<el-tag :type="totalValueTag.cdStandardFee =='还原'?'success':''" @click="handleCopyEvalConclusionValue('还原', 'cdStandardFee')">
+							还原
+						</el-tag>
+						<el-tag :type="totalValueTag.cdStandardFee =='个位'?'success':''" style="margin-left: 10px;" @click="handleCopyEvalConclusionValue('个位', 'cdStandardFee')">
+							取个
+						</el-tag>
+						<el-tag :type="totalValueTag.cdStandardFee =='十位'?'success':''" style="margin-left: 10px;" @click="handleCopyEvalConclusionValue('十位', 'cdStandardFee')">
+							取十
+						</el-tag>
+						<el-tag :type="totalValueTag.cdStandardFee =='百位'?'success':''" style="margin-left: 10px;" @click="handleCopyEvalConclusionValue('百位', 'cdStandardFee')">
+							取百
+						</el-tag>
+						<!-- <el-tag :type="totalValueTag.cdStandardFee =='千位'?'success':''" style="margin-left: 10px;" @click="handleCopyEvalConclusionValue('千位', 'cdStandardFee')">
+							取千
+						</el-tag> -->
+						<div>
 						{{changeMoneyToChinese(subInfoForm.cdStandardFee)}}
+						</div>
 					</span>
 				</el-form-item>
 			</el-col>
@@ -1304,6 +1322,11 @@ export default {
 			},
 						
 			clientProperty:[{ required: true, message: '请点修改按钮, 修改委托方信息', trigger: 'blur' }],
+			
+			//totalValueTag评估值默认取百位
+			totalValueTag:{
+				cdStandardFee:'还原',
+			},
 			
 			subProjRuleNoReq:[
 				{
@@ -2334,14 +2357,17 @@ export default {
 				this.subInfoForm.regEvalConclusionValue = ''
 				this.subInfoForm.cdStandardFee = ''
 				this.subInfoForm.cdDiscount = ''
+				this.totalValueTag.cdStandardFee = '还原'
 			}else if(this.subInfoForm.regTotalAssets){
 				this.subInfoForm.regEvalConclusionValue = this.subInfoForm.regTotalAssets;
 				//改变标准收费
 				this.handleChangeStandardFee();
+				this.totalValueTag.cdStandardFee = '还原'
 			}else if(this.subInfoForm.regOwnersEquity){
 				this.subInfoForm.regEvalConclusionValue = this.subInfoForm.regOwnersEquity;
 				//改变标准收费
 				this.handleChangeStandardFee();
+				this.totalValueTag.cdStandardFee = '还原'
 			}else{
 				this.subInfoForm.regEvalConclusionValue = ''
 				this.subInfoForm.cdStandardFee = ''
@@ -2351,12 +2377,40 @@ export default {
 			
 		},
 		
-		handleCopyEvalConclusionValue(title, val){
+		handleSetEvalConclusionValue(title, val){
 			this.subInfoForm.regEvalConclusionValue = val
 			this.$message.success("使用"+title+"作为评估值")
 			
 			//改变标准收费
+			this.handleCopyEvalConclusionValue('还原', 'cdStandardFee')
+		},
+		
+		//对标准收费取百位处理
+		handleCopyEvalConclusionValue(title, item){
+			//重新获取收费标准
 			this.handleChangeStandardFee()
+			
+			//对收费标准取值
+			var val = this.subInfoForm[item];
+			
+			if(title =='还原'){
+				//this.subInfoForm[item] = val.toFixed(2);
+			}else{
+				var upto={
+					'个位':1,
+					'十位':2,
+					'百位':3,
+					'千位':4,
+				}[title];
+				this.subInfoForm[item] = Math.round(Math.round(val)/Math.pow(10,upto-1))*Math.pow(10,upto-1)
+				
+			}
+						
+			//改变标记
+			this.totalValueTag[item] = title;
+			
+			//改变折扣
+			this.handleChangeDiscount();
 		},
 		
 		//委托方修改信息

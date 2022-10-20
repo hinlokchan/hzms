@@ -162,7 +162,7 @@
 				type="primary"
 				@click="exportSubProj('三审', projId,subProjId)"
 			>三审</el-button>
-			
+			<!-- 
 			<el-button
 				size="medium"
 				type="primary"
@@ -174,13 +174,14 @@
 				type="primary"
 				@click="exportSubProj('底单', projId,subProjId)"
 			>底单</el-button>
+			 -->
 		</el-button-group>
 		<el-button-group style="margin-left: 10px;" v-else-if="draftData">
 			<el-button type="primary" size="medium" plain disabled>导出</el-button>
 			
 			<el-button
 				size="medium"
-				type="primary"
+				type="warning"
 				@click="exportSubProj('临时三审', projId,subProjId)"
 			>临时三审</el-button>
 		</el-button-group>
