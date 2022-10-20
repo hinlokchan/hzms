@@ -191,7 +191,7 @@
 				type="primary"
 				@click="exportSubProj('三审', projId,subProjId)"
 			>三审</el-button>
-			
+			<!-- 
 			<el-button
 				size="medium"
 				type="primary"
@@ -203,6 +203,7 @@
 				type="primary"
 				@click="exportSubProj('底单', projId,subProjId)"
 			>底单</el-button>
+			 -->
 		</el-button-group>		
 		<!-- 
 		<el-button-group style="margin-left: 10px;" v-else-if="draftData">
