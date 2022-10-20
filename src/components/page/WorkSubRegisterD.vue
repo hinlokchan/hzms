@@ -477,6 +477,8 @@
 					<el-input v-model.trim="subInfoForm.parcelLocation" style="width: 100%" clearable></el-input>
 				</el-form-item>
 			</el-col>
+		</el-row>
+		<el-row :gutter="20">
 			<el-col :span="12">
 				<el-form-item label="贷款人" prop="cdLoaner">
 					<el-input v-model.trim="subInfoForm.cdLoaner" style="width: 100%" clearable></el-input>
@@ -551,15 +553,26 @@
 		<el-row :gutter="20">
 			<el-col :span="8">
 				<el-form-item label="开发程度" prop="devDegree" class="blue-item red-item">
-					<el-select	v-model.trim="subInfoForm.devDegree" allow-create filterable placeholder="请选择或自行输入" style="width: 100%;">
+					<el-select	v-model.trim="subInfoForm.devDegree" multiple allow-create filterable placeholder="请选择或自行输入" style="width: 100%;">
 						<el-option
 							v-for="item, index in devDegreeOption"
 							:key="index"
-							:label="item"
+							:label="item=='其他'?'其他, 请自行输入':item"
 							:value="item"
+							:disabled="item=='其他'?true:false"
 						>
 						</el-option>
+						
 					</el-select>
+					<el-tag @click="handleChangeLandUsage(3)">
+						三通一平
+					</el-tag>
+					<el-tag @click="handleChangeLandUsage(5)" style="margin-left: 4px;">
+						五通一平
+					</el-tag>
+					<el-tag @click="handleChangeLandUsage(7)" style="margin-left: 4px;">
+						七通一平
+					</el-tag>
 				</el-form-item>
 			</el-col>		
 			<el-col :span="8">
@@ -582,6 +595,8 @@
 					placeholder="请输入"></el-input>
 				</el-form-item>
 			</el-col>
+		</el-row>
+		<el-row :gutter="20">
 			<el-col :span="8">
 				<el-form-item label="土地形状" prop="landShape" class="blue-item red-item">
 					<el-select	v-model="subInfoForm.landShape"  style="width: 100%;">
@@ -597,7 +612,7 @@
 			</el-col>
 			<el-col :span="8">
 				<el-form-item label="地形地质" prop="geology" class="blue-item red-item">
-					<el-select	v-model="subInfoForm.geology"  style="width: 100%;">
+					<el-select	v-model.trim="subInfoForm.geology" allow-create  style="width: 100%;">
 						<el-option
 							v-for="item, index in geologyOption"
 							:key="index"
@@ -620,25 +635,72 @@
 					<el-input v-model="subInfoForm.parcelAcreage" style="width: 100%" clearable
 					placeholder="请输入"
 					oninput="value=value.replace(/[^\-\d.]/g,'')"
-					@change="handleChangeAssemTotalPrice"></el-input>
+					@change="handleResetLandTotalValue"></el-input>
 				</el-form-item>
 			</el-col>
 			<el-col :span="8">
-				<el-form-item label="评估单价" prop="assemUnitPrice" class="blue-item">
-					<el-input v-model="subInfoForm.assemUnitPrice" style="width: 100%" clearable
+				<el-form-item label="评估单价" prop="landAssemUnitPrice" class="red-item">
+					<el-input v-model="subInfoForm.landAssemUnitPrice" style="width: 100%" clearable
 					placeholder="请输入(元/㎡)"
 					oninput="value=value.replace(/[^\-\d.]/g,'')"
-					@change="handleChangeAssemTotalPrice"></el-input>
-					<span v-if="subInfoForm.assemUnitPrice">
-						{{changeMoneyToChinese(subInfoForm.assemUnitPrice)}}
+					@change="handleResetLandTotalValue"></el-input>
+					<span v-if="subInfoForm.landAssemUnitPrice">
+						{{changeMoneyToChinese(subInfoForm.landAssemUnitPrice)}}
 					</span>
 				</el-form-item>
 			</el-col>
 			<el-col :span="8">
-				<el-form-item label="评估总额" prop="assemTotalPrice" class="blue-item">
-					<el-input v-model="subInfoForm.assemTotalPrice" style="width: 100%" disabled></el-input>
-					<span v-if="subInfoForm.assemTotalPrice">
-						{{changeMoneyToChinese(subInfoForm.assemTotalPrice)}}
+				<el-form-item label="评估总额" prop="landTotalValue" class="red-item">
+					<el-input v-model="subInfoForm.landTotalValue" style="width: 100%" disabled></el-input>
+					<div>
+						<el-tag :type="totalValueTag.landTotalType =='宗地'?'success':''" @click="handleChangeLandTotalValue(1)">
+							使用:宗地x单价
+						</el-tag>
+						<el-tag :type="totalValueTag.landTotalType =='建筑'?'success':''" @click="handleChangeLandTotalValue(2)" style="margin-left: 10px;">
+							使用:建筑x楼面
+						</el-tag>
+					</div>
+					
+					<span>
+						<el-tag :type="totalValueTag.landTotalValue =='还原'?'success':''" @click="handleCopyTotalValue('还原', 'landTotalValue', totalValueTag.landTotalType)">
+							还原
+						</el-tag>
+						<el-tag :type="totalValueTag.landTotalValue =='个位'?'success':''" style="margin-left: 10px;" @click="handleCopyTotalValue('个位', 'landTotalValue', totalValueTag.landTotalType)">
+							取个
+						</el-tag>
+						<el-tag :type="totalValueTag.landTotalValue =='十位'?'success':''" style="margin-left: 10px;" @click="handleCopyTotalValue('十位', 'landTotalValue', totalValueTag.landTotalType)">
+							取十
+						</el-tag>
+						<el-tag :type="totalValueTag.landTotalValue =='百位'?'success':''" style="margin-left: 10px;" @click="handleCopyTotalValue('百位', 'landTotalValue', totalValueTag.landTotalType)">
+							取百
+						</el-tag>
+						<!-- <el-tag :type="totalValueTag.landTotalValue =='千位'?'success':''" style="margin-left: 10px;" @click="handleCopyTotalValue('千位', 'landTotalValue', totalValueTag.landTotalType)">
+							取千
+						</el-tag> -->
+						<div>
+						{{changeMoneyToChinese(subInfoForm.landTotalValue)}}
+						</div>
+					</span>
+				</el-form-item>
+			</el-col>
+		</el-row>
+		<el-row :gutter="20">	
+			<el-col :span="8">
+				<el-form-item label="建筑面积(㎡)" prop="projTotalArea" >
+					<el-input v-model="subInfoForm.projTotalArea" style="width: 100%" clearable
+					placeholder="请输入"
+					oninput="value=value.replace(/[^\-\d.]/g,'')"
+					@change="handleResetLandTotalValue"></el-input>
+				</el-form-item>
+			</el-col>
+			<el-col :span="8">
+				<el-form-item label="楼面地价" prop="landPricePerFloorArea" >
+					<el-input v-model="subInfoForm.landPricePerFloorArea" style="width: 100%" clearable
+					placeholder="请输入(元/㎡)"
+					oninput="value=value.replace(/[^\-\d.]/g,'')"
+					@change="handleResetLandTotalValue"></el-input>
+					<span v-if="subInfoForm.landPricePerFloorArea">
+						{{changeMoneyToChinese(subInfoForm.landPricePerFloorArea)}}
 					</span>
 				</el-form-item>
 			</el-col>
@@ -847,7 +909,24 @@
 					@change="handleChangeDiscount"
 					:disabled="projType=='非咨询'?true:(isNaN(subInfoForm.regEvalConclusionValue)?false:true)"></el-input>
 					<span v-if="subInfoForm.cdStandardFee">
+						<el-tag :type="totalValueTag.cdStandardFee =='还原'?'success':''" @click="handleCopyEvalConclusionValue('还原', 'cdStandardFee')">
+							还原
+						</el-tag>
+						<el-tag :type="totalValueTag.cdStandardFee =='个位'?'success':''" style="margin-left: 10px;" @click="handleCopyEvalConclusionValue('个位', 'cdStandardFee')">
+							取个
+						</el-tag>
+						<el-tag :type="totalValueTag.cdStandardFee =='十位'?'success':''" style="margin-left: 10px;" @click="handleCopyEvalConclusionValue('十位', 'cdStandardFee')">
+							取十
+						</el-tag>
+						<el-tag :type="totalValueTag.cdStandardFee =='百位'?'success':''" style="margin-left: 10px;" @click="handleCopyEvalConclusionValue('百位', 'cdStandardFee')">
+							取百
+						</el-tag>
+						<!-- <el-tag :type="totalValueTag.cdStandardFee =='千位'?'success':''" style="margin-left: 10px;" @click="handleCopyEvalConclusionValue('千位', 'cdStandardFee')">
+							取千
+						</el-tag> -->
+						<div>
 						{{changeMoneyToChinese(subInfoForm.cdStandardFee)}}
+						</div>
 					</span>
 				</el-form-item>
 			</el-col>
@@ -876,15 +955,8 @@
 				</el-form-item>
 			</el-col>
 			<el-col :span="8">
-				<el-form-item label="合同号" prop="regContractNum" class="red-item">
-					<div
-					v-if="subInfoForm.regContractNum">
-						<el-input v-model="subInfoForm.regContractNum" disabled style="width: 100%" clearable></el-input>
-					</div>
-					<el-tooltip class="item" effect="dark" content="请先返回, 取合同号" placement="top-end"
-					v-else>
-						<el-input v-model="subInfoForm.regContractNum" disabled style="width: 100%" clearable></el-input>
-					</el-tooltip>
+				<el-form-item label="合同号" prop="regContractNum">
+					<el-input v-model="subInfoForm.regContractNum" disabled style="width: 100%" clearable></el-input>
 				</el-form-item>
 			</el-col>		
 			<el-col :span="8">
@@ -1329,7 +1401,7 @@ export default {
 				
 				//subOtherInfoRules其他信息
 				//regRecordNum:[{ required: true, message: '请输入备案号', trigger: 'blur' }],
-				regContractNum:[{ required: true, message: '请在前页面取合同号', trigger: 'blur' }],
+				//regContractNum:[{ required: true, message: '请在前页面取合同号', trigger: 'blur' }],
 				regArrgType:[{ required: true, message: '请联系计划部门选择安排类型', trigger: 'blur' }],
 				
 				//subTeamInfoRules项目组信息
@@ -1409,9 +1481,25 @@ export default {
 				
 				devDegree:[{ required: true, message: '请选择开发程度', trigger: 'blur' }],
 				landUsage:[{ required: true, message: '请选择土地用途', trigger: 'blur' }],
-				plotRatio:[{ required: true, message: '请输入容积率', trigger: 'blur' }],
 				landShape:[{ required: true, message: '请选择土地形状', trigger: 'blur' }],
 				geology:[{ required: true, message: '请选择地形地质', trigger: 'blur' }],
+				
+				plotRatio:[
+				    { required: true, message: '请输入容积率', trigger: 'blur' },
+				    {
+				        validator: (rule, value, callback) => {
+				            if(value){
+				                if (/^(([1-9]{1}\d*)|(0{1}))(\.\d{0,2})?$/.test(value) == false) {
+				                    callback(new Error("请输入正确容积率"));
+				                } else {
+				                    callback();
+				                }
+				            }else{
+				                callback();
+				            }
+				        }, trigger: 'blur',
+				    }
+				],
 				remainTerm:[
 					{ required: true, message: '请输入剩余使用年限', trigger: 'blur' },
 					{
@@ -1433,7 +1521,7 @@ export default {
 					{
 						validator: (rule, value, callback) => {
 							if(value){
-								if (/^(([1-9]{1}\d*)|(0{1}))(\.\d{0,2})?$/.test(value) == false) {
+								if (/^(([1-9]{1}\d*)|(0{1}))(\.\d{0,4})?$/.test(value) == false) {
 									callback(new Error("请输入正确面积"));
 								} else {
 									callback();
@@ -1444,7 +1532,7 @@ export default {
 						}, trigger: 'blur',
 					}
 				],
-				assemUnitPrice:[
+				landAssemUnitPrice:[
 					{ required: true, message: '请输入评估单价', trigger: 'blur' },
 					{
 						validator: (rule, value, callback) => {
@@ -1460,13 +1548,43 @@ export default {
 						}, trigger: 'blur',
 					}
 				],
-				assemTotalPrice:[
-					{ required: true, message: '请输入评估单价', trigger: 'blur' },
+				landTotalValue:[
+					{ required: true, message: '请输入评估总额', trigger: 'blur' },
 					{
 						validator: (rule, value, callback) => {
 							if(value){
 								if (/^(([1-9]{1}\d*)|(0{1}))(\.\d{0,2})?$/.test(value) == false) {
 									callback(new Error("请输入正确单价"));
+								} else {
+									callback();
+								}
+							}else{
+								callback();
+							}
+						}, trigger: 'blur',
+					}
+				],
+				projTotalArea:[
+					{
+						validator: (rule, value, callback) => {
+							if(value){
+								if (/^(([1-9]{1}\d*)|(0{1}))(\.\d{0,4})?$/.test(value) == false) {
+									callback(new Error("请输入正确面积"));
+								} else {
+									callback();
+								}
+							}else{
+								callback();
+							}
+						}, trigger: 'blur',
+					}
+				],
+				landPricePerFloorArea:[
+					{
+						validator: (rule, value, callback) => {
+							if(value){
+								if (/^(([1-9]{1}\d*)|(0{1}))(\.\d{0,2})?$/.test(value) == false) {
+									callback(new Error("请输入正确楼面地价"));
 								} else {
 									callback();
 								}
@@ -1481,10 +1599,20 @@ export default {
 			clientProperty:[{ required: true, message: '请点修改按钮, 修改委托方信息', trigger: 'blur' }],
 						
 			//土地信息选项
-			devDegreeOption:['三通一平','五通一平','七通一平'],
-			landUsageOption:['土地用途'],
-			landShapeOption:['土地形状'],
-			geologyOption:['地形地质'],
+			//devDegreeOption:['场地平整','通水','通电','通路','排水','通讯','通气','通暖','其他'],
+			devDegreeOption:['场地平整','通水','通电','通路','排水','通讯','通气','通暖','其他'],
+			//'三通一平','五通一平','七通一平'
+			landUsageOption:['耕地','园地','林地','草地','商服用地','工矿仓储用地','住宅用地','公共管理与公共服务用地','特殊用地','交通运输用地','水域及水利设施用地','其他土地'],
+			landShapeOption:['规则','较规则','一般', '较不规则','不规则'],
+			geologyOption:['优','较优','一般','较差','差'],
+			
+			//totalValueTag评估值默认取百位
+			totalValueTag:{
+				landTotalValue:'还原',
+				buildingTotalValue:'还原',
+				cdStandardFee:'还原',
+				landTotalType:'',
+			},
 						
 			subProjRuleNoReq:[
 				{
@@ -1820,6 +1948,8 @@ export default {
 								
 					subData.regEvalMethod  = subData.regEvalMethod?subData.regEvalMethod.join(','):'';	
 					
+					subData.devDegree  = subData.devDegree?subData.devDegree.join(','):'';
+					
 					subData.regProjLeader  = subData.regProjLeader?subData.regProjLeader.join(','):'';	
 					subData.regSignedAppraiser  = subData.regSignedAppraiser?subData.regSignedAppraiser.join(','):'';	
 					subData.regProjProReviewer  = subData.regProjProReviewer?subData.regProjProReviewer.join(','):'';				
@@ -1862,6 +1992,8 @@ export default {
 						subData.regEvalObject  = subData.regEvalObject?subData.regEvalObject.join(','):'';	
 									
 						subData.regEvalMethod  = subData.regEvalMethod?subData.regEvalMethod.join(','):'';	
+						
+						subData.devDegree  = subData.devDegree?subData.devDegree.join(','):'';
 						
 						subData.regProjLeader  = subData.regProjLeader?subData.regProjLeader.join(','):'';	
 						subData.regSignedAppraiser  = subData.regSignedAppraiser?subData.regSignedAppraiser.join(','):'';	
@@ -1945,6 +2077,8 @@ export default {
 									spFullData.regEvalObject = spFullData.regEvalObject?spFullData.regEvalObject.split(','):'';
 									spFullData.regAdminRegion = spFullData.regAdminRegion?spFullData.regAdminRegion.split(','):'';
 									spFullData.regEvalMethod = spFullData.regEvalMethod?spFullData.regEvalMethod.split(','):'';
+									
+									spFullData.devDegree = spFullData.devDegree?spFullData.devDegree.split(','):'';
 															
 									spFullData.regProjLeader = spFullData.regProjLeader?spFullData.regProjLeader.split(','):'';
 									spFullData.regSignedAppraiser = spFullData.regSignedAppraiser?spFullData.regSignedAppraiser.split(','):'';
@@ -2033,6 +2167,9 @@ export default {
 								spFullData.regEvalObject = spFullData.regEvalObject?spFullData.regEvalObject.split(','):'';
 								spFullData.regAdminRegion = spFullData.regAdminRegion?spFullData.regAdminRegion.split(','):'';
 								spFullData.regEvalMethod = spFullData.regEvalMethod?spFullData.regEvalMethod.split(','):'';
+								
+								spFullData.devDegree = spFullData.devDegree?spFullData.devDegree.split(','):'';
+								
 														
 								spFullData.regProjLeader = spFullData.regProjLeader?spFullData.regProjLeader.split(','):'';
 								spFullData.regSignedAppraiser = spFullData.regSignedAppraiser?spFullData.regSignedAppraiser.split(','):'';
@@ -2182,10 +2319,13 @@ export default {
 											geology: '', //地形地质,
 											remainTerm: '', //剩余使用年限,
 											parcelAcreage: '', //宗地总面积(㎡),
-											assemUnitPrice: '', //评估单价,
-											assemTotalPrice: '', //评估总额,
+											landAssemUnitPrice: '', //评估单价,
+											landTotalValue: '', //评估总额,
 											declareTime: '', //申报时间,
 											propertyReportNum: '', //相应的房产报告编号,
+											
+											projTotalArea:'', //建筑面积
+											landPricePerFloorArea: '', //楼面地价
 											
 											
 										}
@@ -2517,6 +2657,17 @@ export default {
 			}
 		},
 		
+		//改变土地用途
+		handleChangeLandUsage(val){
+			if(val == 3){
+				this.subInfoForm.devDegree=['场地平整','通水','通电','通路'];
+			}else if(val == 5){
+				this.subInfoForm.devDegree=['场地平整','通水','通电','通路','排水','通讯'];
+			}else if(val == 7){
+				this.subInfoForm.devDegree=['场地平整','通水','通电','通路','排水','通讯','通气','通暖'];
+			}
+		},
+		
 		handleInputRegTotalAssets(val){
 			if(this.projType=='非咨询'){
 				this.subInfoForm.regTotalAssets = val.replace(/[^\-\d.]/g,'')
@@ -2545,46 +2696,132 @@ export default {
 			}
 		},
 		
+		//复位评估总额
+		handleResetLandTotalValue(){
+			//评估总额, 评估值, 标准收费
+			this.subInfoForm.landTotalValue = '';
+			this.subInfoForm.regEvalConclusionValue = '';		
+			this.subInfoForm.cdStandardFee = '';
+			this.subInfoForm.cdDiscount = '';	
+			this.totalValueTag.landTotalType = '';
+			this.totalValueTag.landTotalValue = '还原';
+		},
+		
 		//改变评估总额
-		handleChangeAssemTotalPrice(){
-			if(this.subInfoForm.parcelAcreage && this.subInfoForm.assemUnitPrice){
-				//改变土地总价值
-				var fees = this.subInfoForm.parcelAcreage*this.subInfoForm.assemUnitPrice;
-				this.subInfoForm.assemTotalPrice = fees.toFixed(2);
-				
-				//改变评估值
-				this.subInfoForm.regEvalConclusionValue = this.subInfoForm.assemTotalPrice;
-				
-				//改变标准收费
-				this.handleChangeStandardFee();
-			}else{
-				this.subInfoForm.assemTotalPrice = ''
+		handleChangeLandTotalValue(val){
+			if(val == 1){
+				if(this.subInfoForm.parcelAcreage && this.subInfoForm.landAssemUnitPrice){
+					//改变评估总额
+					this.totalValueTag.landTotalType = '宗地';
+						
+					var fees = this.subInfoForm.parcelAcreage*this.subInfoForm.landAssemUnitPrice;
+					this.subInfoForm.landTotalValue = fees.toFixed(2);
+					
+					//默认取百位
+					this.handleCopyTotalValue('还原', 'landTotalValue', this.totalValueTag.landTotalType)
+					this.$message.success('已使用宗地总面积x评估单价, 作为评估总额');
+				}else{
+					this.$message.warning('请先输入宗地总面积和评估单价');
+				}
+			}else if(val == 2){
+				if(this.subInfoForm.projTotalArea && this.subInfoForm.landPricePerFloorArea){
+					//改变评估总额
+					this.totalValueTag.landTotalType = '建筑';
+					
+					var fees = this.subInfoForm.projTotalArea*this.subInfoForm.landPricePerFloorArea;
+					this.subInfoForm.landTotalValue = fees.toFixed(2);
+					
+					//默认取百位
+					this.handleCopyTotalValue('还原', 'landTotalValue', this.totalValueTag.landTotalType)
+					this.$message.success('已使用建筑面积x楼面地价价, 作为评估总额');
+				}else{
+					this.$message.warning('请先输入建筑面积和楼面地价');
+				}
 			}
 		},
 		
-		//改变建筑总价值
-		handleChangejzzjz(){
-			if(this.subInfoForm.jzmj && this.subInfoForm.jzpgdj){
+		/* 
+		handleChangeLandTotalValue(){
+			if(this.subInfoForm.parcelAcreage && this.subInfoForm.landAssemUnitPrice){
 				//改变土地总价值
-				var fees = this.subInfoForm.jzmj*this.subInfoForm.jzpgdj;
-				this.subInfoForm.jzzjz = fees.toFixed(2);
+				var fees = this.subInfoForm.parcelAcreage*this.subInfoForm.landAssemUnitPrice;
+				this.subInfoForm.landTotalValue = fees.toFixed(2);
 				
-				//改变评估值
-				this.subInfoForm.regEvalConclusionValue = this.subInfoForm.tdzjz + this.subInfoForm.jzzjz;
-				
-				//改变标准收费
-				this.handleChangeStandardFee();
 			}else{
-				this.subInfoForm.jzzjz = ''
+				this.subInfoForm.landTotalValue = ''
 			}
+			//默认取百位
+			this.handleCopyTotalValue('还原', 'landTotalValue', parseFloat(this.subInfoForm.parcelAcreage||0)*parseFloat(this.subInfoForm.landAssemUnitPrice||0))
 		},
+		 */
 		
-		handleCopyEvalConclusionValue(title, val){
-			this.subInfoForm.regEvalConclusionValue = val
-			this.$message.success("使用"+title+"作为评估值")
+		//对土地/建筑总价值取百位处理
+		handleCopyTotalValue(title, item, type){
 			
+			var val = 0;
+			if(type == '宗地'){
+				val = parseFloat(this.subInfoForm.parcelAcreage||0)*parseFloat(this.subInfoForm.landAssemUnitPrice||0);
+			}else if(type == '建筑'){
+				val = parseFloat(this.subInfoForm.projTotalArea||0)*parseFloat(this.subInfoForm.landPricePerFloorArea||0);
+			}else{	
+				this.$message.warning("请先点击上面按钮, 选择评估总额的计算方式")
+				return;
+			}
+			
+			
+			
+			
+			if(title =='还原'){
+				this.subInfoForm[item] = val.toFixed(2);
+			}else{
+				var upto={
+					'个位':1,
+					'十位':2,
+					'百位':3,
+					'千位':4,
+				}[title];
+				this.subInfoForm[item] = Math.round(Math.round(val)/Math.pow(10,upto-1))*Math.pow(10,upto-1)
+				
+			}
+						
+			//改变标记
+			this.totalValueTag[item] = title;
+			
+			//console.log(title, item, this.totalValueTag)
+			
+			//改变评估值
+			this.subInfoForm.regEvalConclusionValue = parseFloat(this.subInfoForm.landTotalValue||0);
+				
 			//改变标准收费
+			this.handleCopyEvalConclusionValue('还原', 'cdStandardFee');
+		},
+		
+		//对标准收费取百位处理
+		handleCopyEvalConclusionValue(title, item){
+			//重新获取收费标准
 			this.handleChangeStandardFee()
+			
+			//对收费标准取值
+			var val = this.subInfoForm[item];
+			
+			if(title =='还原'){
+				//this.subInfoForm[item] = val.toFixed(2);
+			}else{
+				var upto={
+					'个位':1,
+					'十位':2,
+					'百位':3,
+					'千位':4,
+				}[title];
+				this.subInfoForm[item] = Math.round(Math.round(val)/Math.pow(10,upto-1))*Math.pow(10,upto-1)
+				
+			}
+						
+			//改变标记
+			this.totalValueTag[item] = title;
+			
+			//改变折扣
+			this.handleChangeDiscount();
 		},
 		
 		//委托方修改信息
