@@ -4964,37 +4964,45 @@ export default {
 	jumpToSubHandle(subData) {
 		console.log(this.projDetail.projType);
 		
-		if(this.projDetail.reportNumList.length > 0){
-			if(subData.workAssignment){
-				
-				//跳转不同页面
-				if(this.projDetail.projType==1020 || this.projDetail.projType==1042){
-					//资产
-					this.$router.push({ path: '/worksubregisterz', query: { projId: subData.projId, data: subData.subProjId } })
-				}else if(this.projDetail.projType==1010 || this.projDetail.projType==1041){
-					//房产
-					this.$router.push({ path: '/worksubregisterf', query: { projId: subData.projId, data: subData.subProjId } })
-				}else if(this.projDetail.projType==1030 || this.projDetail.projType==1043){
-					//土地
-					this.$router.push({ path: '/worksubregisterd', query: { projId: subData.projId, data: subData.subProjId } })
+		//if(this.projDetail.reportNumList.length > 0){
+			//获取正评报告号
+			const iszp = (this.projDetail.reportNumList||[]).filter(item=>item.reportNumLevel == 2)			
+			
+			if(iszp.length>0){
+				if(subData.workAssignment){
+					
+					//跳转不同页面
+					if(this.projDetail.projType==1020 || this.projDetail.projType==1042){
+						//资产
+						this.$router.push({ path: '/worksubregisterz', query: { projId: subData.projId, data: subData.subProjId } })
+					}else if(this.projDetail.projType==1010 || this.projDetail.projType==1041){
+						//房产
+						this.$router.push({ path: '/worksubregisterf', query: { projId: subData.projId, data: subData.subProjId } })
+					}else if(this.projDetail.projType==1030 || this.projDetail.projType==1043){
+						//土地
+						this.$router.push({ path: '/worksubregisterd', query: { projId: subData.projId, data: subData.subProjId } })
+					}else{
+						this.$message.warning('该项目类型还没开放信息录入');
+					}
+					
+					//this.$router.push({ path: '/worksubregister', query: { projId: subData.projId, data: subData.subProjId } })
+					/* 更新: 220418不用取合同号也能录入信息
+					if(this.contractNum){
+						this.$router.push({ path: '/worksubregister', query: { projId: subData.projId, data: subData.subProjId } })
+					}else{
+						this.$message.warning('请先取合同号')
+					}
+					 */
 				}else{
-					this.$message.warning('该项目类型还没开放信息录入');
+					this.$message.warning('请先完成项目安排')
 				}
-				
-				//this.$router.push({ path: '/worksubregister', query: { projId: subData.projId, data: subData.subProjId } })
-				/* 更新: 220418不用取合同号也能录入信息
-				if(this.contractNum){
-					this.$router.push({ path: '/worksubregister', query: { projId: subData.projId, data: subData.subProjId } })
-				}else{
-					this.$message.warning('请先取合同号')
-				}
-				 */
 			}else{
-				this.$message.warning('请先完成项目安排')
+				this.$message.warning('请先取正评报告号')
 			}
-		}else{
-				this.$message.warning('请先取报告号')
-		}
+			
+		// }else{
+		// 	this.$message.warning('请先取报告号')
+		// }
 		
 	},
 	
