@@ -329,6 +329,25 @@ export function deleteClient(data, companyId) {
   });
 }
 
+
+export function editClientInfo(data, companyId) {
+  return request({
+    url: `${ProManageAPIServer}client/editClientInfo`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
+export function getClientInfo(data, companyId) {
+  return request({
+    url: `${ProManageAPIServer}client/getClientInfo`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
 export function changeClientType(data, companyId) {
   return request({
     url: `${ProManageAPIServer}client/changeClientType`,
