@@ -54,10 +54,10 @@
       <el-dialog
         title="新增委托人"
         :visible.sync="showAddClient"
-        width="40%"
+        width="700px"
       >
-        <el-form :model="clientForm">
-          <el-form-item label="类别">
+        <el-form :model="clientForm" ref="clientForm" :rules="clientFormRules" label-width="100px">
+          <el-form-item label="类别" prop="clientType">
             <el-cascader
               clearable
               ref="clientType"
@@ -66,31 +66,141 @@
             >
             </el-cascader>
           </el-form-item>
-          <el-form-item label="名称">
-            <el-input
-              ref="clientName"
-              v-model.trim="clientForm.clientName"
-              @input="checkClientName(clientForm.clientName)"
-            ></el-input>
-            <h4 style="color: #ed1941">银行委托人添加格式:类别选择银行名称，名称填写分（支）行名字</h4>
-            <h4>例:中国银行惠州分行 -> 类别选择中国银行，名称填写惠州分行</h4>
-            <el-tree
-              ref="tree"
-              :data="clientList"
-              :props="defaultProps"
-              :filter-node-method="filterNode"
-            ></el-tree>
-          </el-form-item>
+		  <el-form-item label="名称" prop="clientName">
+		    <el-input
+		      ref="clientName"
+		      v-model.trim="clientForm.clientName"
+		      @input="checkClientName(clientForm.clientName)"
+		    ></el-input>
+		  </el-form-item>
+		  <el-form-item
+		    label="行政区域"
+		    prop="clientRegion"
+		  >
+			<el-cascader
+			  v-model="clientForm.clientRegion"
+			  style="width: 100%"
+			  :props="{ expandTrigger: 'hover', value:'label', label:'label' }"
+			  filterable
+			  :options="clientRegionOption"
+			>
+			</el-cascader>
+		  </el-form-item>
+		  <el-form-item label="性质" prop="clientProperty">
+		  	<el-select	v-model="clientForm.clientProperty" clearable
+			  style="width: 100%">
+		  		<el-option
+		  			v-for="item, index in clientPropertyOption"
+		  			:key="index"
+		  			:label="item"
+		  			:value="item"
+		  		>
+		  		</el-option>
+		  	</el-select>
+		  </el-form-item>
+		  <div style="width: 96%; margin: 0 auto;">
+			<h4 style="color: #ed1941">银行委托人添加格式:类别选择银行名称，名称填写分（支）行名字</h4>
+			<h4>例:中国银行惠州分行 -> 类别选择中国银行，名称填写惠州分行</h4>
+			<el-tree
+			  ref="tree"
+			  :data="clientList"
+			  :props="defaultProps"
+			  :filter-node-method="filterNode"
+			></el-tree>
+			  
+		  </div>
         </el-form>
-        <el-button
-          type="primary"
-          @click="submitAddClient"
-        >提交</el-button>
-        <el-button
-          type="text"
-          @click="showAddClient = false"
-        >取消</el-button>
+		<div slot="footer" class="dialog-footer">
+			<el-button
+			  type="primary"
+			  @click="submitAddClient"
+			>提交</el-button>
+			<el-button
+			  type="text"
+			  @click="showAddClient = false"
+			>取消</el-button>
+		</div>
       </el-dialog>
+	  
+	  <el-dialog
+	    title="修改委托人"
+	    :visible.sync="showEditClient"
+	    width="700px"
+	  >
+	    <el-form :model="clientEditForm" ref="clientEditForm" :rules="clientEditFormRules" label-width="100px">
+	      <el-form-item label="类别" prop="clientType">
+	        <!-- 
+			<el-cascader
+	          clearable
+	          ref="clientType"
+	          v-model="clientEditForm.clientType"
+	          :options="clientTypeOptions"
+			  disabled
+	        >
+	        </el-cascader>
+			 -->
+			<el-select v-model="clientEditForm.clientType" placeholder="请选择" disabled>
+			  <el-option
+			      v-for="item in clientTypeList"
+			      :key="item.clientType"
+			      :label="item.clientTypeName"
+			      :value="item.clientType">
+			    <template slot-scope="scope">
+			      <el-tag type="primary">{{item.clientType}}</el-tag>&nbsp;{{item.clientTypeName}}
+			    </template>
+			  </el-option>
+			</el-select>
+	      </el-form-item>
+		  
+		  <el-form-item label="名称" prop="clientName">
+		    <el-input
+		      ref="clientName"
+		      v-model.trim="clientEditForm.clientName"
+		  			  disabled
+		    ></el-input>
+		  </el-form-item>
+		  <!-- 
+		  <el-form-item label="全称" prop="clientFullName">
+		    <el-input
+		      v-model.trim="clientEditForm.clientFullName"
+		  			  disabled
+		    ></el-input>
+		  </el-form-item>
+		  -->
+		  <el-form-item label="行政区域" prop="clientRegion">
+			<el-cascader
+			  v-model="clientEditForm.clientRegion"
+			  style="width: 100%"
+			  :props="{ expandTrigger: 'hover', value:'label', label:'label' }"
+			  filterable
+			  :options="clientRegionOption"
+			>
+			</el-cascader>
+		  </el-form-item>
+		  <el-form-item label="性质" prop="clientProperty">
+			<el-select	v-model="clientEditForm.clientProperty" clearable
+			  style="width: 100%">
+				<el-option
+					v-for="item, index in clientPropertyOption"
+					:key="index"
+					:label="item"
+					:value="item"
+				>
+				</el-option>
+			</el-select>
+		  </el-form-item>
+	    </el-form>
+	  		<div slot="footer" class="dialog-footer">
+	  			<el-button
+	  			  type="primary"
+	  			  @click="submitEditClient"
+	  			>修改</el-button>
+	  			<el-button
+	  			  type="text"
+	  			  @click="showEditClient = false"
+	  			>取消</el-button>
+	  		</div>
+	  </el-dialog>
 	  
 	  <!-- 211029变动 新增: 多个公司切换 -->
 	  <el-tabs v-model="companyId" type="card" @tab-click="handleTabsClick">
@@ -226,6 +336,7 @@
                   :props="{ expandTrigger: 'hover' }"
                   style="width: 90%"
                   filterable
+				  @change="handleChangeClientName"
                 >
                 </el-cascader>
                 <el-input
@@ -292,6 +403,23 @@
             </el-col>		
 		</el-row>
 		<el-row :gutter="20">
+			<el-col :span="12">
+			  <el-form-item
+			    label="委托人区域"
+			    prop="clientRegion"
+				:rules="(form.clientId!='' && form.clientId!='0' && userRole<3)?clientRegion:[]"
+			  >
+				<el-input v-model="form.clientRegion" disabled></el-input>
+				<div v-if="userRole<3 && form.clientId!='' && form.clientId!='0'">
+				<el-button :type="form.clientRegion?'primary':'warning'" icon="el-icon-edit" circle
+				    @click="showEditClientDialog(form.clientId)"
+					style="margin-top: 20px;"
+				>
+				</el-button>
+				修改
+				</div>
+			  </el-form-item>
+			</el-col>
 			<el-col :span="12">
 			  <el-form-item
 				v-for="(item, index) in form.coClientList"
@@ -570,10 +698,26 @@
             </el-col>
 			
 			<el-col :span="6">
+			  <el-form-item label="计划完成天数" class="red-item" prop="compSchedule">
+				<el-input
+				  type="number"
+				  clearable
+				  v-model="form.compSchedule"
+				  :min="1"
+				  label="完成天数"
+				  :disabled="userRole>2"
+				  oninput="value=value.replace(/[^\d.]/g,'')"
+		  
+				></el-input>
+			  </el-form-item>				  
+			</el-col>
+			
+			<el-col :span="6">
 			  <el-form-item label="创新类型">
 				<el-select
 				  class="select-width-100"
 				  v-model="form.innovationType"
+				  :disabled="userRole>2"
 				  placeholder="请选择"
 				>
 				  <el-option
@@ -586,20 +730,24 @@
 			  </el-form-item>
 			</el-col>
 			<el-col :span="6">
-        <el-form-item label="计划完成天数" class="red-item" prop="compSchedule">
-          <el-input
-              type="number"
-              clearable
-              v-model="form.compSchedule"
-              :min="1"
-              label="完成天数"
-              :disabled="userRole>2"
-              oninput="value=value.replace(/[^\d.]/g,'')"
-
-          ></el-input>
-        </el-form-item>
-      </el-col>
-            <el-col :span="12">
+			  <el-form-item label="是否新客户">
+			    <el-select 
+				  class="select-width-100"
+				  v-model="form.isNewClient" 
+				  :disabled="userRole>2"
+				  placeholder="请选择"
+				  >
+			      <el-option
+			        v-for="item in isNewClientOptions"
+			        :key="item.index"
+			        :label="item.label"
+			        :value="item.value"
+			      ></el-option>
+			    </el-select>
+			  </el-form-item>
+			</el-col>
+			
+            <el-col :span="24">
               <el-form-item label="补充说明">
                 <el-input
                   type="textarea"
@@ -2370,9 +2518,10 @@
 </template>
 
 <script>
+import cityOptions from '../../../public/cityclient.json'
 import CryptoJS from 'crypto-js'
 import { createNewProject, editProject,createEvalObj, getAllAbstractProject } from '@/api/index'
-import { getDetailProjInfo, getUserList, userQuery, getClientList, addClient } from '@/api/index'
+import { getDetailProjInfo, getUserList, userQuery, getClientList, addClient, editClientInfo, getClientInfo, getClientTypeList } from '@/api/index'
 import clientOptions from '../../../public/clientName.json'
 import projTypeOption from '../../../public/projTypeOption.json'
 
@@ -2391,8 +2540,19 @@ export default {
       showAddClient: false,
       clientForm: {
         clientType: '',
-        clientName: ''
-      },
+        clientName: '',
+		clientRegion:[],
+		clientProperty:'',
+      },	  
+	  showEditClient: false,
+      clientEditForm: {
+		clientId:'',
+        clientType: '',
+        clientName: '',
+		clientRegion:[],
+		clientProperty:'',
+      },	
+	  
       searchClientType: '',
       form: {
         projType: '',
@@ -2430,11 +2590,16 @@ export default {
         //lendingBank: [],
         projTypeOption: [],
         evalObjArray:[],
+		
+		
+		
 		//惠正
 		innovationType:'常规',
+		isNewClient:0,
 		bankBusinessType:'',
 		coClientId:'', //多个委托人, 逗号分隔
 		coClientList:[{ clientId: '' }], //多个委托人信息, 数组
+		clientRegion:'', //委托人行政区域
 		
 		//智明
 		mappingObjLocation:'',
@@ -2533,7 +2698,7 @@ export default {
 			],
 			fldSrvySchedule: [
 			  { required: true, message: '请选择现勘日期', trigger: 'blur' }
-			]
+			],
 		},
 		{
 			projType: [
@@ -2581,6 +2746,9 @@ export default {
 			  { required: true, message: '请选择审计日期', trigger: 'blur' }
 			]
 		}
+	  ],
+	  clientRegion: [
+	  	{ required: true, message: '请选择委托人行政区域', trigger: 'blur' }
 	  ],
       assemGoalList: [
 		['抵押', '交易', '资产处置（司法鉴定）', '出让', '挂牌出让', '补出让', '转让', '盘整收回', '征收补偿', '活立木拍卖', '出租', '置换', '股权转让', '作价入股', '增资扩股', '入账', '征收、完税', '企业改制', '清算', '复审', '评价', '咨询'],
@@ -2687,40 +2855,50 @@ export default {
       },
 	  
 	  innovationTypeOptions:['常规','技术创新型','新型业务'],
+	  isNewClientOptions:[
+		{
+		  label:'否',
+		  value:0
+		},  
+		{
+		  label:'是',
+		  value:1
+		},    
+	  ],
 	  bankBusinessTypeOptions:[
-      {
-        label:'无',
-        value:''
-      },
-      {
-        label:'对公',
-        value:'对公'
-      },
-      {
-        label:'对私',
-        value:'对私'
-      },
-      {
-        label:'普惠金融',
-        value:'普惠金融'
-      },
-      {
-        label:'农行小微企业普惠贷款',
-        value:'农行小微企业普惠贷款'
-      },
-      {
-        label:'农行其他法人贷款',
-        value:'农行其他法人贷款'
-      },
-      {
-        label:'农行二手房贷款',
-        value:'农行二手房贷款'
-      },
-      {
-        label:'农行个人非住房贷款',
-        value:'农行个人非住房贷款'
-      },
-    ],
+		  {
+			label:'无',
+			value:''
+		  },
+		  {
+			label:'对公',
+			value:'对公'
+		  },
+		  {
+			label:'对私',
+			value:'对私'
+		  },
+		  {
+			label:'普惠金融',
+			value:'普惠金融'
+		  },
+		  {
+			label:'农行小微企业普惠贷款',
+			value:'农行小微企业普惠贷款'
+		  },
+		  {
+			label:'农行其他法人贷款',
+			value:'农行其他法人贷款'
+		  },
+		  {
+			label:'农行二手房贷款',
+			value:'农行二手房贷款'
+		  },
+		  {
+			label:'农行个人非住房贷款',
+			value:'农行个人非住房贷款'
+		  },
+      ],
 	  
 	  //211130新增 项目名称和项目范围本地搜索
 	  tableData:[],
@@ -2731,6 +2909,21 @@ export default {
 	  //211228新增 范围搜索防误点, 可重新粘贴
 	  newProjName:'',
 	  newProjScope:'',
+	  
+	  //221022新增 委托方行政区域范围	 /委托方性质
+	  clientRegionOption:[],
+	  clientPropertyOption:['国有企业','集体所有制企业','民营企业','外资企业','政府机构','事业单位','社会组织','个人','国有控股','国有参股'],
+	  
+	  clientFormRules:{
+		clientType: [{ required: true, message: '请选择', trigger: 'blur' }],
+		clientRegion: [{ required: true, message: '请选择', trigger: 'blur' }],
+		clientName: [{ required: true, message: '请输入', trigger: 'blur' }],
+	  },
+	  
+	  clientEditFormRules:{
+		clientRegion: [{ required: true, message: '请选择', trigger: 'blur' }],
+	  },
+	  clientTypeList:[],
 	  
 	  //211101变动 新增: 多个公司切换
 	  companyRange:['HZ', 'ZM','HZKJ'],
@@ -2752,6 +2945,9 @@ export default {
 		this.companyTabsId = 0;
 	}
 	//console.log('初始化公司id', this.companyId);  
+	
+	//行政区域
+	this.clientRegionOption = cityOptions;
 	
 	//211202 处理页面跳转返回
 	this.pageInfoEdit();  
@@ -2924,9 +3120,6 @@ export default {
           this.clientList = res.data
         })
         .catch(err => { })
-    },
-    showAddClientDialog() {
-      this.showAddClient = true
     },
     // test() {
     //   let a = this.form.supInstruction.split(';')
@@ -3481,34 +3674,184 @@ export default {
         this.$refs['clientName'].focus()
       }
     },
+	
+	handleChangeClientName(clientId){
+		if(clientId!='' && clientId!='0' && (clientId||[]).length>0 ){
+			
+			//clientid不为0时			
+			//获取最后一个数组元素作为委托人id
+			const clientdata = {
+				clientId : clientId[clientId.length-1],
+			}
+			getClientInfo(clientdata, this.companyId)
+			  .then(res => {
+				const data = res.data;
+				
+				//写入委托人区域
+				this.form.clientRegion = data.clientRegion;
+			  })
+			  .catch(err => {
+				this.$message.warning(err)
+				console.log(err)
+			  })
+		}
+		
+		
+	},
+	
+	showAddClientDialog() {
+	  this.showAddClient = true
+	},
+	
     submitAddClient() {
-      if (this.clientForm.clientName == '' || this.clientForm.clientType == '') {
-        this.$message.warning('类别、名称不能为空')
-        return 0
-      }
-      if (this.clientForm.clientType instanceof Array) {
-        let clientTypeMid = this.clientForm.clientType[this.clientForm.clientType.length - 1]
-        this.clientForm.clientType = clientTypeMid
-      }
-      console.log(this.clientForm)
-      addClient(this.clientForm, this.companyId)
-        .then(res => {
-          this.$message.success('添加成功！')
-          let client = res.data
-          console.log(res, client)
-          this.getClientList()
-          this.form.clientId = client
-          this.showAddClient = false
-
-        })
-        .catch(err => {
-          if (err.statusCode == 5002) {
-            this.$message.warning('该委托人已存在！')
-            this.clientForm.clientName = ''
-          }
-          console.log(err)
-        })
+		this.$refs.clientForm.validate((valid) => {
+			if (valid) {
+				const addForm = {
+					clientType: this.clientForm.clientType instanceof Array?this.clientForm.clientType[this.clientForm.clientType.length - 1]:this.clientForm.clientType,
+					clientRegion: this.clientForm.clientRegion?this.clientForm.clientRegion.join(','):'',
+					clientName: this.clientForm.clientName,
+					clientProperty: this.clientForm.clientProperty,
+				}
+				console.log('addForm', addForm);
+				
+				addClient(addForm, this.companyId)
+				  .then(res => {
+				    this.$message.success('添加成功！')
+				    let client = res.data
+				    console.log(res, client)
+				    this.getClientList()
+				    this.form.clientId = client
+				    this.form.clientRegion = addForm.clientRegion
+				    this.showAddClient = false
+				
+				  })
+				  .catch(err => {
+				    if (err.statusCode == 5002) {
+				      this.$message.warning('该委托人已存在！')
+				      this.clientForm.clientName = ''
+				    }
+				    console.log(err)
+				  })
+			}else{
+				this.$message('请填写必填信息');
+			}
+		})
+		
     },
+	
+	showEditClientDialog(clientId) {
+	  	if(clientId!='' && clientId!='0'){
+			
+			//获取列表
+			getClientTypeList({}, this.companyId)
+			  .then(listres => {
+				this.clientTypeList = listres.data
+				
+					//获取最后一个数组元素作为委托人id
+					const clientdata = {
+						clientId : clientId instanceof Array?clientId[clientId.length-1]:clientId,
+					}
+					//console.log(clientId);
+					
+					getClientInfo(clientdata, this.companyId)
+					  .then(res => {
+						const data = res.data;
+						
+						var clientEditForm = {
+							clientId:data.clientId,
+							clientName:data.clientName,
+							clientFullName:data.clientFullName,
+							clientType:data.clientType,
+							clientProperty:data.clientProperty,
+							clientRegion:data.clientRegion?data.clientRegion.split(','):[],
+						}
+						this.clientEditForm = clientEditForm;
+						
+						console.log(this.clientForm)
+						
+						this.showEditClient = true
+					  })
+					  .catch(err => {
+						this.$message.warning(err)
+						console.log(err)
+					  })
+				
+			  });
+			
+		}else{
+			this.$message.warning('请先选择正确的当前委托人');
+		}
+		
+		
+	},
+	submitEditClient(){
+		//console.log('edit', this.clientEditForm)
+		
+		this.$refs.clientEditForm.validate((valid) => {
+			if (valid) {
+				
+				console.log('edit')
+				
+				const editForm = {
+					clientId: this.clientEditForm.clientId,
+					//clientName: this.clientEditForm.clientName,
+					//clientFullName: this.clientEditForm.clientFullName,
+					//clientType: this.clientEditForm.clientType,
+					clientRegion: this.clientEditForm.clientRegion?this.clientEditForm.clientRegion.join(','):'',
+					clientProperty: this.clientEditForm.clientProperty,
+				}
+				console.log('editForm', editForm);
+				
+				editClientInfo(editForm, this.companyId)
+				  .then(res => {
+				    this.$message.success('修改成功！')
+					
+				    this.showEditClient = false
+					
+					//更新form的行政区域
+					this.form.clientRegion = editForm.clientRegion;
+				  })
+				  .catch(err => {
+				    console.log(err)
+				  })
+				
+			}else{
+				this.$message('请填写必填信息');
+			}
+		})
+		
+		/* 
+		const clientdata = {
+			clientId : clientId[clientId.length-1],
+		}
+		//console.log(clientId);
+		
+		getClientInfo(clientdata, this.companyId)
+		  .then(res => {
+			const data = res.data;
+			
+			var clientEditForm = {
+				clientId:data.clientId,
+				clientName:data.clientName,
+				clientFullName:data.clientFullName,
+				clientType:data.clientType,
+				clientProperty:data.clientProperty,
+				clientRegion:(data.clientRegion||'').split(','),
+			}
+			this.clientEditForm = clientEditForm;
+			
+			console.log(this.clientForm)
+			
+			this.showEditClient = true
+		  })
+		  .catch(err => {
+		    this.$message.warning(err)
+		    console.log(err)
+		  })
+		
+		console.log('here', this.clientEditForm);
+		 */
+	},
     // btKeyUp(e) {
     //   e.target.value = e.target.value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g, "")
     // },
