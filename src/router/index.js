@@ -47,13 +47,13 @@ export default new Router({
                 {
                     path: '/workbranchcheck',
                     component: () => import('../components/page/WorkBranchCheck.vue'),
-                    meta: { title: '工作台处理' }
+                    meta: { title: '工作台处理'  , permission: true }
                 },
-                {
-                    path: '/oldplanform',
-                    component: () => import('../components/page/OldPlanForm.vue'),
-                    meta: { title: '旧项目录入' }
-                },
+                // {
+                //     path: '/oldplanform',
+                //     component: () => import('../components/page/OldPlanForm.vue'),
+                //     meta: { title: '旧项目录入' }
+                // },
                 // {
                 //     path: '/formalreg',
                 //     component: () => import('../components/page/FormalReg.vue'),
@@ -62,7 +62,7 @@ export default new Router({
                 {
                     path: '/projstat',
                     component: () => import('../components/page/ProjStateStat.vue'),
-                    meta: { title: '成员项目状态'  }
+                    meta: { title: '成员项目状态'   , permission: true }
                 },
                 {
                     path: '/workhandle',
@@ -97,22 +97,22 @@ export default new Router({
                 {
                     path: '/worksubregistercheck',
                     component: () => import('../components/page/WorkSubRegisterCheck.vue'),
-                    meta: { title: '项目登记信息审核' }
+                    meta: { title: '项目登记信息审核' , permission: true  }
                 },
                 {
                     path: '/worksubregistercheckf',
                     component: () => import('../components/page/WorkSubRegisterCheckF.vue'),
-                    meta: { title: '房地产项目登记审核' }
+                    meta: { title: '房地产项目登记审核'  , permission: true }
                 },
                 {
                     path: '/worksubregistercheckd',
                     component: () => import('../components/page/WorkSubRegisterCheckD.vue'),
-                    meta: { title: '土地项目登记审核' }
+                    meta: { title: '土地项目登记审核'  , permission: true }
                 },
                 {
                     path: '/worksubregistercheckz',
                     component: () => import('../components/page/WorkSubRegisterCheckZ.vue'),
-                    meta: { title: '资产项目登记审核' }
+                    meta: { title: '资产项目登记审核'  , permission: true }
                 },
 				
                 // {
@@ -133,7 +133,7 @@ export default new Router({
                 {
                     path: '/contract',
                     component: () => import('../components/page/ContractManage.vue'),
-                    meta: { title: '合同管理' }
+                    meta: { title: '合同管理'  , permission: true }
                 },
                 {
                     path: '/casesearchdock',
@@ -148,17 +148,17 @@ export default new Router({
                 {
                     path: '/usermanage',
                     component: () => import('../components/page/UserManage.vue'),
-                    meta: { title: '用户管理' }
+                    meta: { title: '用户管理'  , permission: true }
                 },
                 {
                     path: '/cloudfieldsurvey',
                     component: () => import('../components/page/CloudFieldSurvey.vue'),
-                    meta: { title: '云现勘' }
+                    meta: { title: '云现勘'  , permission: true }
                 },
                 {
                     path: '/clientmanagement',
                     component: () => import('../components/page/ClientManagement.vue'),
-                    meta: { title: '委托人管理' }
+                    meta: { title: '委托人管理'  , permission: true }
                 },
                 {
                     path: '/casecheck',
