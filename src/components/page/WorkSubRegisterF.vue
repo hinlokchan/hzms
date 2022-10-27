@@ -1573,7 +1573,7 @@ export default {
 					{
 						validator: (rule, value, callback) => {
 							if(value){
-								if (/^(([1-9]{1}\d*)|(0{1}))(\.\d{0,2})?$/.test(value) == false) {
+								if (/^(([1-9]{1}\d*)|(0{1}))(\.\d{0,3})?$/.test(value) == false) {
 									callback(new Error("请输入正确单价"));
 								} else {
 									callback();
@@ -1605,7 +1605,7 @@ export default {
 					{
 						validator: (rule, value, callback) => {
 							if(value){
-								if (/^(([1-9]{1}\d*)|(0{1}))(\.\d{0,2})?$/.test(value) == false) {
+								if (/^(([1-9]{1}\d*)|(0{1}))(\.\d{0,3})?$/.test(value) == false) {
 									callback(new Error("请输入正确单价"));
 								} else {
 									callback();
