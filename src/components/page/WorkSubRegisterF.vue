@@ -2322,7 +2322,7 @@ export default {
 											regFinalReview:"", //"总审"
 											
 											
-											cdDoSignAgreement : '', //是否签协议
+											cdDoSignAgreement : '是', //是否签协议
 											cdAdvReceivedAmount : '', //预收款金额
 											cdAdvReceivedDate : '', //预收款日期
 											
@@ -2333,7 +2333,7 @@ export default {
 											
 											cdInvoiceTitle: "", //付款单位\个人（开票抬头
 											cdLoaner: "", //贷款人
-											cdReceiptType: "普通发票", //开具收费凭证
+											cdReceiptType: "无", //开具收费凭证
 											cdReceivableNum: "", //应收账款编号
 											
 											cdStandardFee : '', //标准收费（元）//从评估值计算得到
