@@ -164,7 +164,7 @@
               @keyup.enter.native="getLocalData"
             ></el-input>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="3">
 			<el-select
 			  class="select-width-100"
 			  v-model.trim="searchData.projLeader"
@@ -182,14 +182,32 @@
 			  ></el-option>
 			</el-select>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="3">
             <el-input
               v-model.trim="searchData.teaminfo"
               placeholder="项目组成员"
               @keyup.enter.native="getLocalData"
             ></el-input>
           </el-col>
-		  <el-col :span="4">
+		  <el-col :span="3">
+			<el-select
+			  class="select-width-100"
+			  v-model.trim="searchData.needRegister"
+			  placeholder="需登记正评"
+			  @change="getLocalData"
+			  style="width: 100%;"
+			>
+			  <el-option
+				label="登记正评(不限)"
+				value=""
+			  ></el-option>
+			  <el-option
+				label="待登记"
+				value="1"
+			  ></el-option>
+			</el-select>
+		  </el-col>
+		  <el-col :span="3">
 			<el-button-group>
 				<el-button type="primary" size="small" @click="getLocalData">查找</el-button>
 				<el-button type="warning" size="small" @click="reset">重置</el-button>
@@ -280,6 +298,20 @@
 		  sortable="custom"
         >
         </el-table-column>
+		
+		<el-table-column
+		  prop="needRegister"
+		  label="待登记"
+		  width="90"
+		  sortable="custom"
+		  align="center"
+		  v-if="companyId == 'HZ'"
+		>
+          <template slot-scope="scope">
+			<el-tag :type="needRegisterType(scope.row.needRegister)">{{needRegister(scope.row.needRegister)}}</el-tag>
+          </template>
+		</el-table-column>
+		
         <!-- <el-table-column
           prop="projState"
           label="项目进度"
@@ -374,6 +406,7 @@ export default {
 		teaminfo:'',
 		projLeader:'',
 		projDegree:'',
+		needRegister:'',
 	  },
 	  
       midNum: 0,
@@ -390,6 +423,28 @@ export default {
 	  companyId:'',
 	  companyTabsId: 0,
     };
+  },
+  computed:{
+	  
+	needRegisterType(){
+		return (data)=>{
+			if(data){
+				return "warning";			
+			}else{
+				return "success";
+			}
+		}
+	},
+	needRegister(){
+		return (data)=>{
+			if(data){
+				return "待登记: "+data;
+			}else{
+				return "已登记";
+			}
+		}
+	},
+	
   },
   created() {
 	//211028变动 新增: 多个公司切换
@@ -487,6 +542,10 @@ export default {
 					
 					&& (((item.projLeader||'').indexOf(this.searchData.projLeader)!=-1 ) || this.searchData.projLeader == '')
 					&& (((item.projDegree||'').indexOf(this.searchData.projDegree)!=-1 )  || this.searchData.projDegree == '')
+					
+					//&& (((''+item.needRegister||'').indexOf(this.searchData.needRegister)!=-1 )  || this.searchData.needRegister == '')
+					
+					&& (item.needRegister >= this.searchData.needRegister || this.searchData.needRegister == '')
 					
 										
 					//改为模糊查询
@@ -615,8 +674,12 @@ export default {
 	  this.pageTotal = 0;
 	  
 	  
-      searchMyProject(this.searchData, this.companyId)
+      searchMyProject({}, this.companyId)
         .then(res => {
+		  (res.data||[]).forEach((item, index) =>{
+			res.data[index]['needRegister'] = item.mainStatus0Count + item.mainStatus2Count + item.mainStatus4Count;
+		  })
+		  console.log('data', res.data)
 			
 		  if(this.onGoing){
 			let arr = []
@@ -639,7 +702,7 @@ export default {
 		  this.$refs.multipleTable.sort('projDate','descending')
         })
         .catch(err => {
-          console.log('field to search myproject');
+          console.log('failed to search myproject');
         })
 		
 		//211029变动 新增: 多个公司切换
@@ -698,15 +761,21 @@ export default {
 		teaminfo:'',
 		projLeader:'',
 		projDegree:'',
+		needRegister:'',
 		
 		// projState: false,
 		// projDegree: false,
 		// projNew: false,
 	  }
 	  
-      searchMyProject(this.searchData, this.companyId)
+      searchMyProject({}, this.companyId)
         .then(res => {
           //console.log(res.data);
+		  (res.data||[]).forEach((item, index) =>{
+		  	res.data[index]['needRegister'] = item.mainStatus0Count + item.mainStatus2Count + item.mainStatus4Count;
+		  })
+		  
+		  
 		  this.tableFullData = res.data
           this.tableData = res.data;
           this.pageTotal = res.data.length;
@@ -716,7 +785,7 @@ export default {
 		  this.$refs.multipleTable.sort('projDate','descending')
         })
         .catch(err => {
-          console.log('field to search');
+          console.log('failed to search');
         });
     },
 	/* 
