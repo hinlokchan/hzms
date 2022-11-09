@@ -2898,6 +2898,10 @@ export default {
 			label:'农行个人非住房贷款',
 			value:'农行个人非住房贷款'
 		  },
+		  {
+			label:'农行非信贷资产评估',
+			value:'农行非信贷资产评估'
+		  },
       ],
 	  
 	  //211130新增 项目名称和项目范围本地搜索
@@ -4105,7 +4109,14 @@ export default {
 		//sessionStorage.removeItem('workbranch_pageinfo');
 		
 		this.global.plan_pageinfo = null;
-		this.global.workbranch_pageinfo = null;
+		
+		//this.global.workbranch_pageinfo = null;
+		
+		var workbranch_pageinfo = JSON.parse(this.global.workbranch_pageinfo);
+		if(workbranch_pageinfo){
+		  workbranch_pageinfo.status = 2; //更新状态, 静态刷新列表
+		  this.global.workbranch_pageinfo = JSON.stringify(workbranch_pageinfo);
+		}
 	}, 
 		
 	//211210变动 query解密

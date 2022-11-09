@@ -460,6 +460,8 @@ export default {
 	
 	//211202 处理页面跳转返回
 	if(!this.pageInfoLoad()){
+		console.log('Load')
+		
 		this.getData()
 	}	
 	
@@ -679,23 +681,11 @@ export default {
 		  (res.data||[]).forEach((item, index) =>{
 			res.data[index]['needRegister'] = item.mainStatus0Count + item.mainStatus2Count + item.mainStatus4Count;
 		  })
-		  console.log('data', res.data)
+		  //console.log('data', res.data)
 			
-		  if(this.onGoing){
-			let arr = []
-			for(let i of res.data) {
-			  if(i.projState == 0) {
-			    arr.push(i)
-			  }
-			}
-			this.tableFullData = arr;
-			this.tableData = arr;
-			this.pageTotal = arr.length;  
-		  }else{
 			this.tableFullData = res.data;
 			this.tableData = res.data;
 			this.pageTotal = res.data.length;  
-		  }
 		  		  
 		  //清除table过滤
 		  this.$refs.multipleTable.clearFilter();
@@ -717,6 +707,49 @@ export default {
             console.log('error', err)
           })
     },
+	
+	refreshData(workbranch_pageinfo) {
+	  searchMyProject({}, this.companyId)
+	    .then(res => {
+			//1. 重新读取
+			(res.data||[]).forEach((item, index) =>{
+				res.data[index]['needRegister'] = item.mainStatus0Count + item.mainStatus2Count + item.mainStatus4Count;
+			})
+		  //console.log('data', res.data)
+		  
+		  	//2. 获取缓存
+		  	this.searchData = workbranch_pageinfo.searchData;
+		  	this.missionData = workbranch_pageinfo.missionData;
+		  	
+			
+			this.tableFullData = res.data;
+			//this.tableData = res.data;
+			this.pageTotal = res.data.length;  
+			
+			//3. 执行过滤
+			this.getLocalData();
+			
+			this.currentPage = workbranch_pageinfo.pageData.currentPage;
+			
+			console.log('refreshData')
+			
+			//211029变动 新增: 多个公司切换
+			const missionData = {
+			} 
+			getCurrentMission(missionData, this.companyId)
+			  .then(res => {
+			    this.missionData = res.data
+			    console.log(this.missionData)
+			  })
+			  .catch(err => {
+			    console.log('error', err)
+			  })
+	    })
+	    .catch(err => {
+	      console.log('failed to search myproject');
+		  return false;
+	    })
+	},
 	/* 
     getOnGoingProj() {
       if (this.onGoing == true) {
@@ -841,7 +874,7 @@ export default {
 		//const workbranch_pageinfo = JSON.parse(sessionStorage.getItem('workbranch_pageinfo'));
 		const workbranch_pageinfo = JSON.parse(this.global.workbranch_pageinfo);
 		if(workbranch_pageinfo){
-		  if(workbranch_pageinfo.status){
+		  if(workbranch_pageinfo.status == 1){
 			//赋值		
 			this.tableData = workbranch_pageinfo.data;
 			
@@ -856,10 +889,17 @@ export default {
 			this.missionData = workbranch_pageinfo.missionData;
 			
 			this.tableFullData = workbranch_pageinfo.fullData;	
+			
+			//删除
+			this.global.workbranch_pageinfo = null;
+			return true;  
+		  }else if(workbranch_pageinfo.status == 2){
+			this.refreshData(workbranch_pageinfo);
+			
+			//删除
+			this.global.workbranch_pageinfo = null;
+			return true;
 		  }
-		  //删除
-		  this.global.workbranch_pageinfo = null;
-		  return true;
 		}else{
 		  return false;
 		}
