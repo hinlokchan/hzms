@@ -712,6 +712,11 @@
 				{{formatDate(scope.row.creationTime)}}
 	          </template>
 	        </el-table-column>
+	        <el-table-column label="修改日期" width="90">
+	          <template slot-scope="scope">
+				{{formatDate(scope.row.changeTime)}}
+	          </template>
+	        </el-table-column>
 			<el-table-column label="基准日" width="90">
 			  <template slot-scope="scope">
 				{{formatDate(scope.row.subBaseDate)}}
@@ -837,13 +842,13 @@
         >
         </el-table-column>
         <el-table-column
-          prop="creationTime"
+          prop="changeTime"
           label="更新日期"
           width="100"
           sortable="custom"
         >
 			<template slot-scope="scope">
-				{{formatDate(scope.row.creationTime)}}
+				{{formatDate(scope.row.changeTime)}}
 			</template>
         </el-table-column>
         <el-table-column
@@ -1335,9 +1340,10 @@ export default {
 				//1.循环获取projId列表获取该projId列表下最新的subProjId的日期 和 总的待审核数
 				if(typeof(rawProjIdList[item.projId]) == "undefined"){
 					//不存在时, 添加
-					//console.log('添加', item.projId, item.creationTime);					
+					//console.log('添加', item.projId, item.creationTime);
+					//优先使用修改日期
 					const newItem = {
-						creationTime: item.creationTime,
+						changeTime: item.changeTime || item.creationTime,
 						checkNum: item.mainStatus===1?1:0,
 					}
 					
@@ -1345,8 +1351,9 @@ export default {
 				}else{
 					//存在时, 更新
 					//更新 更新日期
-					if(rawProjIdList[item.projId].creationTime < item.creationTime){
-						rawProjIdList[item.projId].creationTime = item.creationTime
+					const changeTime = item.changeTime || item.creationTime;
+					if(rawProjIdList[item.projId].changeTime < changeTime){
+						rawProjIdList[item.projId].changeTime = changeTime
 					}					
 					//更新 待审核数
 					if(item.mainStatus===1){
@@ -1359,10 +1366,10 @@ export default {
 			//2. 循环项目列表 增加更新日期到项目列表
 			mrRes.forEach((item, index) =>{
 				if(typeof(rawProjIdList[item.projId]) == "undefined"){
-					mrRes[index].creationTime = '';
+					mrRes[index].changeTime = '';
 					mrRes[index].checkNum = '';
 				}else{
-					mrRes[index].creationTime = rawProjIdList[item.projId].creationTime;
+					mrRes[index].changeTime = rawProjIdList[item.projId].changeTime;
 					mrRes[index].checkNum = rawProjIdList[item.projId].checkNum;
 				}
 			});
@@ -1507,7 +1514,7 @@ export default {
 	 
 	}, 
 	
-	
+	/* 
 	//211202 处理页面跳转返回
 	pageInfoLoad(){
 		//const workbranch_pageinfo = JSON.parse(sessionStorage.getItem('workbranch_pageinfo'));
@@ -1548,6 +1555,7 @@ export default {
 	  //sessionStorage.setItem('workbranch_pageinfo', JSON.stringify(workbranch_pageinfo));
 	  this.global.workbranch_pageinfo = JSON.stringify(workbranch_pageinfo);
 	},
+	 */
 		
 	//211210变动 query加密
 	newCode(data){
@@ -1571,18 +1579,34 @@ export default {
 	
 	//排序变动
 	sortChange({column,prop,order}){
-		if(order == 'ascending'){
-			this.tableData = this.tableData.sort((a, b)=>{
-				return (""+a[prop]).localeCompare((""+b[prop]), "zh-Hans-CN", {sensitivity: "accent",})
-			});
-		}else if(order == 'descending'){
-			this.tableData = this.tableData.sort((a, b)=>{
-				return (""+b[prop]).localeCompare((""+a[prop]), "zh-Hans-CN", {sensitivity: "accent",})
-			});
+		if(prop == 'checkNum'){
+			//处理数字排序
+			if(order == 'ascending'){
+				this.tableData = this.tableData.sort((a, b)=>{
+					return a[prop]-b[prop]
+				});
+			}else if(order == 'descending'){
+				this.tableData = this.tableData.sort((a, b)=>{
+					return b[prop]-a[prop]
+				});
+			}
+			
 		}else{
-			this.tableData = this.tableData.sort((a, b)=>{
-				return (""+b['checkNum']).localeCompare((""+a['checkNum']), "zh-Hans-CN", {sensitivity: "accent",})
-			});
+			//处理字符串排序
+			if(order == 'ascending'){
+				this.tableData = this.tableData.sort((a, b)=>{
+					return (""+a[prop]).localeCompare((""+b[prop]), "zh-Hans-CN", {sensitivity: "accent",})
+				});
+			}else if(order == 'descending'){
+				this.tableData = this.tableData.sort((a, b)=>{
+					return (""+b[prop]).localeCompare((""+a[prop]), "zh-Hans-CN", {sensitivity: "accent",})
+				});
+			}else{
+				this.tableData = this.tableData.sort((a, b)=>{
+					//默认排序
+					return b['checkNum']-a['checkNum']
+				});
+			}
 		}
 	},
 	
@@ -1640,11 +1664,12 @@ export default {
 		    this.subProjdataList = splData
 			console.log('splData', splData)
 		})
-		
+		/* 
 		this.getRegisterListData(projId, (relData)=>{
 		    //this.subProjdataList = relData
 			console.log('relData', relData)
 		})
+		 */
 	},
 	
 	//子项目列表
