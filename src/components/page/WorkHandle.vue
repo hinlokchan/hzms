@@ -1555,7 +1555,14 @@
 				:disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
 			  >录信息</el-button>
 			  <div style="height: 1px;"></div>
-			  <el-button plain size="mini" disabled :type="newButtonTypeRegister(scope.row.subProjStatus)">{{newButtonValueRegister(scope.row.subProjStatus)}}</el-button>
+			  <div style="text-align: center;">
+				  <div>
+					<el-button plain size="mini" disabled :type="newButtonTypeRegister(scope.row.subProjStatus)">{{newButtonValueRegister(scope.row.subProjStatus)}}</el-button>
+				  </div>
+				  <div>
+					<el-button plain size="mini" disabled :type="newButtonTypeReviewStatus(scope.row.finalReviewInfo||[])">{{newButtonValueReviewStatus(scope.row.finalReviewInfo||[])}}</el-button>
+				  </div>
+			  </div>
 			<!-- 
 			<el-button-group>
 				<el-button type="primary" size="mini"
@@ -3417,6 +3424,50 @@ export default {
 				}
 			}else{
 				return "未提交";
+			}
+		}
+	},
+	
+	
+	newButtonTypeReviewStatus(){
+		return (data)=>{
+			if(data){
+				if(data.isStamped == 1){
+					//已盖章
+					return "success";
+				}else if(data.reviewStatus == 1){
+					//已审核, 并通过
+					return "";
+				}else if(data.reviewStatus == 2){
+					//已审核, 但不通过
+					return "danger";
+				}else{
+					//其他状态
+					return "info";
+				}
+			}else{
+				return "info";
+			}
+		}
+	},
+	newButtonValueReviewStatus(){
+		return (data)=>{
+			if(data){
+				if(data.isStamped == 1){
+					//已盖章
+					return "已盖章";
+				}else if(data.reviewStatus == 1){
+					//已审核, 并出报告
+					return "待盖章";
+				}else if(data.reviewStatus == 2){
+					//已审核, 但不出报告
+					return "不出报告";
+				}else{
+					//其他状态
+					return "未审核";
+				}
+			}else{
+				return "未审核";
 			}
 		}
 	},
@@ -5320,18 +5371,23 @@ export default {
 	},	
 	
 	pageInfoEdit(){
-		//var workbranch_pageinfo = JSON.parse(sessionStorage.getItem('workbranch_pageinfo'));
 		var workbranch_pageinfo = JSON.parse(this.global.workbranch_pageinfo);
 		if(workbranch_pageinfo){
-		  workbranch_pageinfo.status = 1; //更新状态
-		  //sessionStorage.setItem('workbranch_pageinfo', JSON.stringify(workbranch_pageinfo));
-		  this.global.workbranch_pageinfo = JSON.stringify(workbranch_pageinfo);
+		  if(workbranch_pageinfo.status !=2 ){
+			workbranch_pageinfo.status = 1; //更新状态
+			this.global.workbranch_pageinfo = JSON.stringify(workbranch_pageinfo);  
+		  }
 		}	
 	},
 	pageInfoDel(){
-		//sessionStorage.removeItem('workbranch_pageinfo');
+		//221109 变更会静态刷新
+		//this.global.workbranch_pageinfo = null;
 		
-		this.global.workbranch_pageinfo = null;
+		var workbranch_pageinfo = JSON.parse(this.global.workbranch_pageinfo);
+		if(workbranch_pageinfo){
+		  workbranch_pageinfo.status = 2; //更新状态, 静态刷新列表
+		  this.global.workbranch_pageinfo = JSON.stringify(workbranch_pageinfo);
+		}	
 	}, 
 	
 	//211207变动 修改projid刷新操作记录
