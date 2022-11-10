@@ -1369,7 +1369,7 @@
 	  </el-table-column>
 	  <el-table-column
 	    label="基准日"
-	    width="90"
+	    width="85"
 	    prop="subBaseDate"
 	  >
 		<template slot-scope="scope">
@@ -1377,7 +1377,7 @@
 		</template>	
 	  </el-table-column>
 	  <el-table-column
-	    label="项目名称"
+	    label='项目名称 (右侧"修改")'
 		min-width="160px"
 	    prop="subProjName"
 	  ></el-table-column>
@@ -1511,7 +1511,7 @@
 	  </el-table-column>
 	  	  
 	  <el-table-column
-	    label="操作"
+	    label="操作 (改名称/组员等)"
 	    width="150"
 		fixed="right"
 	  >
@@ -1551,8 +1551,7 @@
 	  >
 	    <template slot-scope="scope">
 			  <el-button type="primary" size="mini"
-				@click="jumpToSubHandle(scope.row)"				
-				:disabled="!!(projDetail.projState == 2 || projDetail.projState == 1 )"
+				@click="jumpToSubHandle(scope.row)"
 			  >录信息</el-button>
 			  <div style="height: 1px;"></div>
 			  <div style="text-align: center;">

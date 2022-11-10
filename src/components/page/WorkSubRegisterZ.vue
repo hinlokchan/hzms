@@ -2,6 +2,9 @@
   <div class="container">
     <el-page-header @back="goBack"></el-page-header>
 	
+	<!-- 子项目名称对话框 -->
+	<subProjNameDialog v-if="editSubProjVisible" ref="subProjNameDialog" @subProjNameFormCallback="subProjNameFormCallback"/>
+	
 	<el-dialog title="修改委托方" :visible.sync="clientNameVisible" :modal="false" v-dialogDrag width="800px"	  >
 		<el-form
 			ref="clientNameForm"
@@ -360,6 +363,21 @@
 		v-if="subInfoForm"
 	>
 		<el-divider>委托方信息</el-divider>
+		<el-row :gutter="20">
+			<el-col :span="12">
+				<el-form-item label="项目名称" prop="subProjName" >
+					<el-input v-model="subInfoForm.subProjName" type="textarea" autosize  disabled style="width: 100%" clearable></el-input>
+					<el-tag type="warning" @click="openSubProjNameForm(subInfoForm)">
+						修改
+					</el-tag>
+				</el-form-item>
+			</el-col>
+			<el-col :span="12">
+				<el-form-item label="项目范围" prop="subProjScope" >
+					<el-input v-model="subInfoForm.subProjScope" type="textarea" autosize disabled style="width: 100%" clearable></el-input>
+				</el-form-item>
+			</el-col>
+		</el-row>
 		<el-row :gutter="20">
 			<el-col :span="12">
 				<el-form-item label="委托方" prop="regClientName" class="red-item">
@@ -1154,8 +1172,13 @@ import { getSubProjectInfoList, editSubProject, getSubProjectInfo,
 		getWorkOrderList, getWorkOrderInfo, updateWorkOrderInfo} from '@/api/subReport'
 import {downloadExcel} from '../../utils/download';
 
+//引入对话框页
+import subProjNameDialog from './dialog/subProjNameDialog'
+
 export default {
 	name: 'worksubregister',
+	components: {subProjNameDialog},
+	
 	data() {
 		return {
 			projId:'',
@@ -1506,6 +1529,10 @@ export default {
 			showWorkOrderList:false,
 			woChangeOption:true,
 			
+			
+			//子项目名称对话框信息
+			editSubProjVisible:false,
+			
 			//211101变动 新增: 多个公司切换
 			companyRange:['HZ', 'ZM','HZKJ'],
 			companyId:'',
@@ -1831,8 +1858,6 @@ export default {
 										this.handleChangeInvoiceTitle(spFullData.cdInvoiceTitle);
 									}
 									
-									//this.subInfoForm = spFullData;
-									this.subInfoForm = Object.assign({}, spFullData)
 															
 									//2. 生成各字段option
 									this.getSubProjectData(projId, subProjId, (spData)=>{
@@ -1840,6 +1865,12 @@ export default {
 										const teamOptionInfo = (spData.subProjLeader+","+spData.subProjReviewer+","+spData.subProjProReviewer+","+spData.subProjAsst+","+spData.subFieldSrvy).replace(",,",",")
 										this.subTeamOption = Array.from(new Set(teamOptionInfo.split(',')));
 										this.regFeeFollowUpOption =this.subTeamOption.concat(this.subInfoForm.cdProjContact?this.subInfoForm.cdProjContact.split(','):[]);
+										
+										//子项目名称和范围
+										spFullData.subProjName = spData.subProjName; //项目名称
+										spFullData.subProjScope = spData.subProjScope; //项目范围
+										
+										this.subInfoForm = Object.assign({}, spFullData)
 									});
 								});
 								
@@ -1919,15 +1950,20 @@ export default {
 									this.handleChangeInvoiceTitle(spFullData.cdInvoiceTitle);
 									console.log('2',spFullData.cdInvoiceTitle)
 								}
-								
-								this.subInfoForm = Object.assign({}, spFullData)
-														
+																						
 								//2. 生成各字段option
 								this.getSubProjectData(projId, subProjId, (spData)=>{
 									//设置项目组选项
 									const teamOptionInfo = (spData.subProjLeader+","+spData.subProjReviewer+","+spData.subProjProReviewer+","+spData.subProjAsst+","+spData.subFieldSrvy).replace(",,",",")
 									this.subTeamOption = Array.from(new Set(teamOptionInfo.split(',')));
 									this.regFeeFollowUpOption =this.subTeamOption.concat(this.subInfoForm.cdProjContact?this.subInfoForm.cdProjContact.split(','):[]);
+									
+									
+									//子项目名称和范围
+									spFullData = spData.subProjName; //项目名称
+									spFullData = spData.subProjScope; //项目范围
+									
+									this.subInfoForm = Object.assign({}, spFullData)
 								});							
 							});
 						}else{
@@ -3185,6 +3221,20 @@ export default {
 				this.workOrderList = this.workOrderFullList
 			}
 		},
+		
+		//子项目对话框打开和回调
+		openSubProjNameForm(subData){
+			console.log('opendialog', subData)
+			this.editSubProjVisible = true;
+			this.$nextTick(() => {
+			    this.$refs.subProjNameDialog.openSubProjNameForm(subData);
+			});
+		},
+		subProjNameFormCallback(newData){
+			console.log('dialogCallback', newData)			
+			this.subInfoForm.subProjName = newData.subProjName;
+			this.subInfoForm.subProjScope = newData.subProjScope;
+		}
 	}
 }
 </script>
