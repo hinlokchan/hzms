@@ -49,10 +49,14 @@ export default {
         if (valid) {
           login({ staffId: parseInt(this.param.username), password: this.param.password }).then(res => {
             this.$message.success('登录成功');
-            console.log(res)
+            console.log('login', res)
             localStorage.setItem('staffId', res.data.staffId);
             localStorage.setItem('staffName', res.data.staffName);
             localStorage.setItem('role', res.data.role);
+			
+            localStorage.setItem('finalReviewAuth', res.data.finalReviewAuth);
+            localStorage.setItem('isSuperFinalReview', res.data.isSuperFinalReview);
+            localStorage.setItem('isStampHandler', res.data.isStampHandler);
             this.$router.push('/');
           }).catch(err => {
             this.$message.warning('账号密码错误')

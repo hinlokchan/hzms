@@ -47,7 +47,12 @@ export default new Router({
                 {
                     path: '/workbranchcheck',
                     component: () => import('../components/page/WorkBranchCheck.vue'),
-                    meta: { title: '工作台处理'  , permission: true }
+                    meta: { title: '工作台处理' , permission: true}
+                },
+                {
+                    path: '/workchief',
+                    component: () => import('../components/page/WorkChief.vue'),
+                    meta: { title: '总审审核'}
                 },
                 // {
                 //     path: '/oldplanform',
@@ -62,7 +67,7 @@ export default new Router({
                 {
                     path: '/projstat',
                     component: () => import('../components/page/ProjStateStat.vue'),
-                    meta: { title: '成员项目状态'   , permission: true }
+                    meta: { title: '成员项目状态'  , permission: true}
                 },
                 {
                     path: '/workhandle',
@@ -94,25 +99,25 @@ export default new Router({
                     component: () => import('../components/page/WorkSubReceipt.vue'),
                     meta: { title: '项目凭证信息' }
                 },				
-                {
-                    path: '/worksubregistercheck',
-                    component: () => import('../components/page/WorkSubRegisterCheck.vue'),
-                    meta: { title: '项目登记信息审核' , permission: true  }
-                },
+                // {
+                //     path: '/worksubregistercheck',
+                //     component: () => import('../components/page/WorkSubRegisterCheck.vue'),
+                //     meta: { title: '项目登记信息审核' }
+                // },
                 {
                     path: '/worksubregistercheckf',
                     component: () => import('../components/page/WorkSubRegisterCheckF.vue'),
-                    meta: { title: '房地产项目登记审核'  , permission: true }
+                    meta: { title: '房地产项目登记审核' , permission: true}
                 },
                 {
                     path: '/worksubregistercheckd',
                     component: () => import('../components/page/WorkSubRegisterCheckD.vue'),
-                    meta: { title: '土地项目登记审核'  , permission: true }
+                    meta: { title: '土地项目登记审核' , permission: true}
                 },
                 {
                     path: '/worksubregistercheckz',
                     component: () => import('../components/page/WorkSubRegisterCheckZ.vue'),
-                    meta: { title: '资产项目登记审核'  , permission: true }
+                    meta: { title: '资产项目登记审核' , permission: true}
                 },
 				
                 // {
@@ -133,7 +138,7 @@ export default new Router({
                 {
                     path: '/contract',
                     component: () => import('../components/page/ContractManage.vue'),
-                    meta: { title: '合同管理'  , permission: true }
+                    meta: { title: '合同管理' , permission: true}
                 },
                 {
                     path: '/casesearchdock',
@@ -148,17 +153,17 @@ export default new Router({
                 {
                     path: '/usermanage',
                     component: () => import('../components/page/UserManage.vue'),
-                    meta: { title: '用户管理'  , permission: true }
+                    meta: { title: '用户管理' }
                 },
                 {
                     path: '/cloudfieldsurvey',
                     component: () => import('../components/page/CloudFieldSurvey.vue'),
-                    meta: { title: '云现勘'  , permission: true }
+                    meta: { title: '云现勘' , permission: true}
                 },
                 {
                     path: '/clientmanagement',
                     component: () => import('../components/page/ClientManagement.vue'),
-                    meta: { title: '委托人管理'  , permission: true }
+                    meta: { title: '委托人管理' , permission: true}
                 },
                 {
                     path: '/casecheck',

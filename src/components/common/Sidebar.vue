@@ -114,6 +114,11 @@ export default {
           title: '工作台处理'
         },
         {
+          index: 'workchief',
+          icon: 'el-icon-s-flag',
+          title: '总审审核'
+        },
+        {
           index: 'casesearchdock',
           icon: 'el-icon-discover',
           title: '案例数据库'
@@ -260,6 +265,11 @@ export default {
 		  icon: 'el-icon-s-check',
 		  title: '工作台处理'
 		},
+        {
+          index: 'workchief',
+          icon: 'el-icon-s-flag',
+          title: '总审审核'
+        },
         // {
         //   index: 'oldplanform',
         //   icon: 'el-icon-document-add',
@@ -342,6 +352,11 @@ export default {
           index: 'stat4Common',
           icon: 'el-icon-data-analysis',
           title: '业务统计'
+        },
+        {
+          index: 'workchief',
+          icon: 'el-icon-s-flag',
+          title: '总审审核'
         },
         {
           index: 'casesearchdock',
