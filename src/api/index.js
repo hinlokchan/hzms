@@ -454,9 +454,20 @@ export function delWorkAssignment(data, companyId) {
   });
 }
 
+//计划项目操作记录
 export function opRecord(data, companyId) {
   return request({
     url: `${ProManageAPIServer}record/getProjOpRec`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
+//总审模块操作记录
+export function chiefRecord(data, companyId) {
+  return request({
+    url: `${ProManageAPIServer}record/getSubProjOpRec`,
     headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
     method: 'post',
     data: qs.stringify(data)

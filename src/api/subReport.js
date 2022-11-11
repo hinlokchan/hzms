@@ -348,3 +348,55 @@ export function getInvoiceTitleInfo(data, companyId) {
     data: qs.stringify(data)
   });
 }
+
+
+//总审审核列表, 按projId分组
+export function getFinalReviewList(data, companyId) {
+  return request({
+    url: `${ProManageAPIServer}finalReview/getFinalReviewList`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
+//总审审核列表, 不分组
+export function getRawFinalReviewList(data, companyId) {
+  return request({
+    url: `${ProManageAPIServer}finalReview/getRawFinalReviewList`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
+//总审审核子列表
+export function getSubProjListWithReviewInfo(data, companyId) {
+  return request({
+    url: `${ProManageAPIServer}finalReview/getSubProjListWithReviewInfo`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
+
+//总审审核
+export function auditReview(data, companyId) {
+  return request({
+    url: `${ProManageAPIServer}finalReview/auditReview`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
+
+//盖章
+export function doStamp(data, companyId) {
+  return request({
+    url: `${ProManageAPIServer}finalReview/doStamp`,
+    headers: { cookie: 'JSESSIONID' + Cookies.get('JSESSIONID') , companyId: companyId},
+    method: 'post',
+    data: qs.stringify(data)
+  });
+}
