@@ -2714,9 +2714,9 @@ export default {
 						feesInfo.push(counter_fees);
 						fees += counter_fees;
 					});
-					//费用少于2000时, 按2000标准
-					if(fees<2000){
-						fees = 2000;
+					//费用少于200时, 按200标准
+					if(fees<200){
+						fees = 200;
 					}
 					this.subInfoForm.cdStandardFee =  fees.toFixed(2);
 				}else{
