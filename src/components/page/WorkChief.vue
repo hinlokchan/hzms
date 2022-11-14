@@ -439,7 +439,7 @@
 		
 		@row-click="rowClick"
 		row-key="projId"
-		:default-sort = "{prop: 'creationTime', order: 'descending'}"
+		:default-sort = "{prop: 'changeTime', order: 'descending'}"
 		@sort-change="sortChange"
       >	  
 	  <!-- 展开行  v-loading="expandLoading"element-loading-text="Loading"-->
@@ -1143,7 +1143,7 @@ export default {
 					//console.log('添加', item.projId, item.creationTime);					
 					//优先使用修改日期
 					var newItem = {
-						creationTime: item.changeTime || item.creationTime,
+						changeTime: item.changeTime || item.creationTime,
 						//checkNum: item.mainStatus===1?1:0,
 						checkNum: item.reviewStatus===0?1:0,   //待审数
 						stampedNum: (item.isStamped===0 && item.reviewStatus===1)?1:0, //待盖章数
