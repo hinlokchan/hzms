@@ -11,54 +11,59 @@
       router
     >
       <template v-for="item in roleItem">
-        <template v-if="item.subs">
-          <!-- index为字符串格式，加一个''可避免报错type check failed -->
-          <el-submenu
-            :index="item.index + ''"
-            :key="item.index"
-          >
-            <template slot="title">
-              <i
-                :class="item.icon"
-                style="color: #000"
-              ></i>
-              <span slot="title">{{ item.title }}</span>
-            </template>
-            <template v-for="subItem in item.subs">
-              <el-submenu
-                v-if="subItem.subs"
-                :index="subItem.index"
-                :key="subItem.index"
-              >
-                <template slot="title">{{ subItem.title }}</template>
-                <el-menu-item
-                  v-for="(threeItem,i) in subItem.subs"
-                  :key="i"
-                  :index="threeItem.index"
-                >{{ threeItem.title }}</el-menu-item>
-              </el-submenu>
-              <el-menu-item
-                v-else
-                :index="subItem.index"
-                :key="subItem.index"
-              >{{ subItem.title }}</el-menu-item>
-            </template>
-          </el-submenu>
-        </template>
-        <template v-else>
-          <el-menu-item
-            :index="item.index"
-            :key="item.index"
-          >
-            <i
-              :class="item.icon"
-              style="color: #000"
-            ></i>
-            <span slot="title">
-              {{ item.title }}
-            </span>
-          </el-menu-item>
-        </template>
+		<!-- 判断总审 -->
+		<template v-if="item.title == '总审审核' && (chiefRole.canCheckAll==false && chiefRole.checkType =='' && chiefRole.canStamp ==false)" />
+		
+		<template v-else>
+			<template v-if="item.subs">
+			  <!-- index为字符串格式，加一个''可避免报错type check failed -->
+			  <el-submenu
+				:index="item.index + ''"
+				:key="item.index"
+			  >
+				<template slot="title">
+				  <i
+					:class="item.icon"
+					style="color: #000"
+				  ></i>
+				  <span slot="title">{{ item.title }}</span>
+				</template>
+				<template v-for="subItem in item.subs">
+				  <el-submenu
+					v-if="subItem.subs"
+					:index="subItem.index"
+					:key="subItem.index"
+				  >
+					<template slot="title">{{ subItem.title }}</template>
+					<el-menu-item
+					  v-for="(threeItem,i) in subItem.subs"
+					  :key="i"
+					  :index="threeItem.index"
+					>{{ threeItem.title }}</el-menu-item>
+				  </el-submenu>
+				  <el-menu-item
+					v-else
+					:index="subItem.index"
+					:key="subItem.index"
+				  >{{ subItem.title }}</el-menu-item>
+				</template>
+			  </el-submenu>
+			</template>
+			<template v-else>
+			  <el-menu-item
+				:index="item.index"
+				:key="item.index"
+			  >
+				<i
+				  :class="item.icon"
+				  style="color: #000"
+				></i>
+				<span slot="title">
+				  {{ item.title }}
+				</span>
+			  </el-menu-item>
+			</template>
+		</template>
       </template>
     </el-menu>
   </div>
@@ -368,7 +373,16 @@ export default {
           icon: 'el-icon-attract',
           title: '其他系统入口'
         }
-      ]
+      ],
+	  
+	  chiefRole:{
+	  	canCheckAll:false,
+	  	checkType:'',
+	  	canStamp:false,
+	  	showCheckAll:false,
+	  	showCheck:false,
+	  	showStamp:false,	
+	  }	
     };
   },
   computed: {
@@ -400,6 +414,14 @@ export default {
       this.collapse = msg;
       bus.$emit('collapse-content', msg);
     });
+		
+	//获取总审权限
+	this.chiefRole.canCheckAll = localStorage.getItem('isSuperFinalReview')=='1'?true:false;
+	const checkType = localStorage.getItem('finalReviewAuth');
+	this.chiefRole.checkType = checkType?checkType:''; 
+	this.chiefRole.canStamp = localStorage.getItem('isStampHandler')=='1'?true:false;
+	this.chiefRole.showCheck = (this.chiefRole.canCheckAll||this.chiefRole.checkType)?true:false;
+	this.chiefRole.showStamp = this.chiefRole.canStamp?true:false;
   }
 };
 </script>
