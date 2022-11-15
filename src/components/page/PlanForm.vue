@@ -4109,9 +4109,9 @@ export default {
 		//sessionStorage.removeItem('workbranch_pageinfo');
 		
 		this.global.plan_pageinfo = null;
-		
+
 		//this.global.workbranch_pageinfo = null;
-		
+
 		var workbranch_pageinfo = JSON.parse(this.global.workbranch_pageinfo);
 		if(workbranch_pageinfo){
 		  workbranch_pageinfo.status = 2; //更新状态, 静态刷新列表
