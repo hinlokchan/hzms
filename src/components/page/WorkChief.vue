@@ -1224,7 +1224,7 @@ export default {
 			this.tableDataTemp = mrRes;
 			this.pageTotal = mrRes.length;
 			
-			this.$refs.table.sort('creationTime','descending')
+			this.$refs.table.sort('changeTime','descending')
 			
 			//console.log('处理列表', this.tableData)
 	  	});
