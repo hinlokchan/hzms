@@ -1960,8 +1960,8 @@ export default {
 									
 									
 									//子项目名称和范围
-									spFullData = spData.subProjName; //项目名称
-									spFullData = spData.subProjScope; //项目范围
+									spFullData.subProjName = spData.subProjName; //项目名称
+									spFullData.subProjScope = spData.subProjScope; //项目范围
 									
 									this.subInfoForm = Object.assign({}, spFullData)
 								});							
