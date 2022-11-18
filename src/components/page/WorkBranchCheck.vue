@@ -996,7 +996,7 @@ export default {
       pageSize: 20, // 每页的数据条数
       pageTotal: 0, // 数据数
       tableData: [],
-      tableDataTemp: [],
+      tableFullData: [],
       missionData: {},
       onGoing: false,
       typeOptions: [
@@ -1307,11 +1307,12 @@ export default {
 	
 	//console.log('初始化公司id', this.companyId);  
 	
-	//211202 处理页面跳转返回
-	
-	//if(!this.pageInfoLoad()){
+	//211202 处理页面跳转返回	
+	if(!this.pageInfoLoad()){
+		console.log('Load')
+		
 		this.getData()
-	//}
+	}
 		
 	
     let date = new Date()
@@ -1375,7 +1376,7 @@ export default {
 			});
 		
 			this.tableData = mrRes;
-			this.tableDataTemp = mrRes;
+			this.tableFullData = mrRes;
 			this.pageTotal = mrRes.length;
 			
 			this.$refs.table.sort('checkNum','descending')
@@ -1419,7 +1420,7 @@ export default {
 		const projNameKey = this.getQuerySearchKey(this.searchData.projName);
 		const projScopeKey = this.getQuerySearchKey(this.searchData.projScope);
 		
-		this.tableData = this.tableDataTemp.filter(item =>{
+		this.tableData = this.tableFullData.filter(item =>{
 			return  (((item.reportNum||'').indexOf(this.searchData.reportNum)!=-1 ) || this.searchData.reportNum == '') 
 					&& (((item.projNum||'').indexOf(this.searchData.projNum)!=-1 ) || this.searchData.projNum == '')
 					//改为模糊查询
@@ -1476,7 +1477,7 @@ export default {
       //刷新项目处理列表
       this.getManageRegisterListData({}, (mrRes)=>{
       	this.tableData = mrRes;
-      	this.tableDataTemp = mrRes;
+      	this.tableFullData = mrRes;
       	this.pageTotal = mrRes.length;
       });
 		
@@ -1485,7 +1486,7 @@ export default {
 	refresh(){
 		this.getManageRegisterListData({}, (mrRes)=>{
 			this.tableData = mrRes;
-			this.tableDataTemp = mrRes;
+			this.tableFullData = mrRes;
 			this.pageTotal = mrRes.length;
 		});
 	},
@@ -1514,26 +1515,28 @@ export default {
 	 
 	}, 
 	
-	/* 
+	
 	//211202 处理页面跳转返回
 	pageInfoLoad(){
-		//const workbranch_pageinfo = JSON.parse(sessionStorage.getItem('workbranch_pageinfo'));
-		const workbranch_pageinfo = JSON.parse(this.global.workbranch_pageinfo);
-		if(workbranch_pageinfo){
-		  if(workbranch_pageinfo.status){
+		//const workbranchcheck_pageinfo = JSON.parse(sessionStorage.getItem('workbranchcheck_pageinfo'));
+		const workbranchcheck_pageinfo = JSON.parse(this.global.workbranchcheck_pageinfo);
+		if(workbranchcheck_pageinfo){
+		  if(workbranchcheck_pageinfo.status){
 			//赋值		
-			this.tableData = workbranch_pageinfo.data;
+			this.tableData = workbranchcheck_pageinfo.data;
 			
-			this.pageTotal = workbranch_pageinfo.pageData.pageTotal;
-			this.currentPage = workbranch_pageinfo.pageData.currentPage;
-			this.pageSize = workbranch_pageinfo.pageData.pageSize;
+			this.pageTotal = workbranchcheck_pageinfo.pageData.pageTotal;
+			this.currentPage = workbranchcheck_pageinfo.pageData.currentPage;
+			this.pageSize = workbranchcheck_pageinfo.pageData.pageSize;
 			
-			this.searchData = workbranch_pageinfo.searchData;
+			this.searchData = workbranchcheck_pageinfo.searchData;
 			
-			this.onGoing = workbranch_pageinfo.onGoing;
+			//this.onGoing = workbranchcheck_pageinfo.onGoing;
+			
+			this.tableFullData = workbranchcheck_pageinfo.fullData;	
 		  }
 		  //删除
-		  this.global.workbranch_pageinfo = null;
+		  this.global.workbranchcheck_pageinfo = null;
 		  return true;
 		}else{
 		  return false;
@@ -1541,7 +1544,7 @@ export default {
 	},
 	
 	pageInfoSave(){
-	  const workbranch_pageinfo ={
+	  const workbranchcheck_pageinfo ={
 		searchData: this.searchData,
 		pageData: {
 			pageTotal: this.pageTotal,
@@ -1549,13 +1552,13 @@ export default {
 			pageSize: this.pageSize,
 		},
 		data: this.tableData,
-		onGoing: this.onGoing,
+		//onGoing: this.onGoing,
+		fullData: this.tableFullData,
 	    status:0
 	  };
-	  //sessionStorage.setItem('workbranch_pageinfo', JSON.stringify(workbranch_pageinfo));
-	  this.global.workbranch_pageinfo = JSON.stringify(workbranch_pageinfo);
+	  //sessionStorage.setItem('workbranchcheck_pageinfo', JSON.stringify(workbranchcheck_pageinfo));
+	  this.global.workbranchcheck_pageinfo = JSON.stringify(workbranchcheck_pageinfo);
 	},
-	 */
 		
 	//211210变动 query加密
 	newCode(data){
@@ -1696,16 +1699,25 @@ export default {
 	//跳转正评审核页
 	jumpToSubHandleCheck(subData, projType) {
 		if(subData.subProjStatus.mainStatus >= 1){
+		
+				
 			//跳转不同页面
 			if(projType==1020 || projType==1042){
 				//资产
+				this.pageInfoSave();
 				this.$router.push({ path: '/worksubregistercheckz', query: { projId: subData.projId, data: subData.subProjId } })
 			}else if(projType==1010 || projType==1041){
 				//房产
+				this.pageInfoSave();
 				this.$router.push({ path: '/worksubregistercheckf', query: { projId: subData.projId, data: subData.subProjId } })
 			}else if(projType==1030 || projType==1043){
 				//土地
+				this.pageInfoSave();
 				this.$router.push({ path: '/worksubregistercheckd', query: { projId: subData.projId, data: subData.subProjId } })
+			}else if(projType==1061 || projType==1062 || projType==1063){
+				//复审
+				this.pageInfoSave();
+				this.$router.push({ path: '/worksubregisterchecks', query: { projId: subData.projId, data: subData.subProjId } })
 			}else{
 				this.$message.warning('该项目类型还没开放信息录入');
 			}
