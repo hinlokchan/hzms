@@ -207,7 +207,7 @@
 				@click="exportSubProj('底单', projId,subProjId)"
 			>底单</el-button>
 			 -->
-		</el-button-group>		
+		</el-button-group>
 		<!-- 
 		<el-button-group style="margin-left: 10px;" v-else-if="draftData">
 			<el-button type="primary" size="medium" plain disabled>导出</el-button>
@@ -224,7 +224,7 @@
 	
 	
 	<el-dialog
-	  title="新增发票信息"
+	  title="新增发票抬头"
 	  :visible.sync="addInvoiceDialogVisible"
 	  width="800px"
 	  :close-on-click-modal = "false"
@@ -484,28 +484,14 @@
 		
 		<el-row :gutter="20">
 			<el-col :span="12">
-				<el-form-item label="被评估单位" prop="regEvaluatedUnit" class="red-item">
+				<el-form-item :label="`被评估单位/\n出报告权属人`" prop="regEvaluatedUnit" :class="projType?'red-item longtext':'longtext'">
 					<span slot="label" @click="handleAddItem('regEvaluatedUnit', '被评估单位')">被评估单位</span>
 					
 					<el-input v-model="subInfoForm.regEvaluatedUnit" style="width: 100%" clearable></el-input>
 				</el-form-item>
 			</el-col>
 			<el-col :span="12">
-				<el-form-item label="评估对象" prop="regEvalObject" class="red-item">
-					<span slot="label" @click="handleAddItem('regEvalObject', '评估对象')">评估对象</span>
-					
-					<el-cascader
-						v-model="subInfoForm.regEvalObject"
-						style="width: 100%"
-						:props="{ expandTrigger: 'hover', value:'label', label:'label' }"
-						filterable
-						:options="regEvalObjectOption"
-					>
-					</el-cascader>
-				</el-form-item>
-			</el-col>
-			<el-col :span="12">
-				<el-form-item label="行政区域" prop="regAdminRegion" class="red-item">
+				<el-form-item :label="`估价对象\n行政区域`" prop="regAdminRegion" class="red-item longtext">
 				  <span slot="label" @click="handleAddItem('regAdminRegion', '行政区域')">行政区域</span>
 					
 				  <el-cascader
@@ -516,21 +502,13 @@
 				    :options="regAdminRegionOption"
 				  >
 				  </el-cascader>
+				  <el-tag>
+				  	注意:惠州仲恺、大亚湾请选市辖区
+				  </el-tag>
 				</el-form-item>
 			</el-col>
-			<el-col :span="12">
-				<el-form-item label="数量" prop="regEvalObjCount" class="red-item">
-					<!-- 
-					<el-input v-model="subInfoForm.regEvalObjCount" style="width: 100%" clearable
-					oninput="value=value.replace(/[^\d]/g,'')"
-					:min="1"
-					type="number"></el-input>
-					 -->
-					<span slot="label" @click="handleAddItem('regEvalObjCount', '数量')">数量</span>
-									
-					<el-input v-model.trim="subInfoForm.regEvalObjCount" style="width: 100%" clearable></el-input>
-				</el-form-item>
-			</el-col>
+		</el-row>
+		<el-row :gutter="20">
 			<el-col :span="12">
 				<el-form-item label="贷款人" prop="cdLoaner">
 					<span slot="label" @click="handleAddItem('cdLoaner', '贷款人')">贷款人</span>
@@ -562,7 +540,7 @@
 						</el-option>
 					</el-select>
 				</el-form-item>
-			</el-col>
+			</el-col>				
 			<el-col :span="12">
 				<el-form-item label="评估方法" prop="regEvalMethod" class="red-item">
 					<span slot="label" @click="handleAddItem('regEvalMethod', '评估方法')">评估方法</span>
@@ -573,6 +551,7 @@
 						filterable
 						allow-create
 						style="width: 100%;"
+						placeholder="请选择, 可自行输入新增"
 					>
 						<el-option
 							v-for="item, index in regEvalMethodOption"
@@ -585,48 +564,97 @@
 				</el-form-item>
 			</el-col>
 		</el-row>
+		
+		
+		<!-- 房产start -->
 		<el-row :gutter="20">
 			<el-col :span="8">
-				<el-form-item label="资产总值(元)" prop="regTotalAssets"
-				:rules="subInfoForm.regOwnersEquity?subProjRuleNoReq:subProjRuleReq">
-					<span slot="label" @click="handleAddItem('regTotalAssets', '资产总值(元)')">资产总值(元)</span>
-				
-					<el-input v-model="subInfoForm.regTotalAssets" style="width: 100%" clearable
-					placeholder="资产总值和所有者权益二者不能同时为空"
-					oninput="value=value.replace(/[^\-\d.]/g,'')"
-					@change="handleChangeEvalConclusionValue"></el-input>
-					<span v-if="subInfoForm.regTotalAssets">
-						{{changeMoneyToChinese(subInfoForm.regTotalAssets)}}
+				<el-form-item label="原值(元)" prop="originEvalConclusionValue" class="red-item">
+					<span slot="label" @click="handleAddItem('originEvalConclusionValue', '原值')">原值</span>
+					
+					<el-input v-model.trim="subInfoForm.originEvalConclusionValue" placeholder="请输入" style="width: 100%" clearable></el-input>
+					<span v-if="subInfoForm.originEvalConclusionValue">
+						{{changeMoneyToChinese(subInfoForm.originEvalConclusionValue)}}
 					</span>
 				</el-form-item>
 			</el-col>
 			<el-col :span="8">
-				<el-form-item label="负债总值(元)" prop="regTotalDebts">
-					<span slot="label" @click="handleAddItem('regTotalDebts', '负债总值(元)')">负债总值(元)</span>
-									
-					<el-input v-model="subInfoForm.regTotalDebts" style="width: 100%" clearable
-					oninput="value=value.replace(/[^\-\d.]/g,'')"></el-input>
-					<span v-if="subInfoForm.regTotalDebts">
-						{{changeMoneyToChinese(subInfoForm.regTotalDebts)}}
-					</span>
+				<el-form-item label="审查机构" prop="underReviewFirm" class="red-item">
+					<span slot="label" @click="handleAddItem('underReviewFirm', '审查机构')">审查机构</span>
+					<el-input v-model.trim="subInfoForm.underReviewFirm" style="width: 100%" clearable></el-input>
 				</el-form-item>
 			</el-col>
 			<el-col :span="8">
-				<el-form-item label="所有者权益(元)" prop="regOwnersEquity"
-				:rules="subInfoForm.regTotalAssets?subProjRuleNoReq:subProjRuleReq">
-					<span slot="label" @click="handleAddItem('regOwnersEquity', '所有者权益(元)')">所有者权益(元)</span>
-				
-					<el-input v-model="subInfoForm.regOwnersEquity" style="width: 100%" clearable
-					placeholder="资产总值和所有者权益二者不能同时为空"
-					oninput="value=value.replace(/[^\-\d.]/g,'')"
-					@change="handleChangeEvalConclusionValue"></el-input>
-					<span v-if="subInfoForm.regOwnersEquity">
-						{{changeMoneyToChinese(subInfoForm.regOwnersEquity)}}
-					</span>
+				<el-form-item label="审查编号" prop="underReviewReportNum" class="red-item">
+					<span slot="label" @click="handleAddItem('underReviewReportNum', '审查编号')">审查编号</span>
+					<el-input v-model.trim="subInfoForm.underReviewReportNum" style="width: 100%" clearable></el-input>
 				</el-form-item>
 			</el-col>
 		</el-row>
+		<el-row :gutter="20">	
+			<el-col :span="8">
+				<el-form-item label="土地面积" prop="projTotalAcreage">
+					<span slot="label" @click="handleAddItem('projTotalAcreage', '土地面积')">土地面积</span>
+					<el-input v-model.trim="subInfoForm.projTotalAcreage" style="width: 100%" clearable
+					placeholder="请输入(㎡)"
+					@change="handleChangeLandTotalValue"></el-input>
+				</el-form-item>
+			</el-col>
+			<el-col :span="8">
+				<el-form-item label="土地评估单价" prop="landAssemUnitPrice">
+					<span slot="label" @click="handleAddItem('landAssemUnitPrice', '土地评估单价')">土地评估单价</span>
+					<el-input v-model.trim="subInfoForm.landAssemUnitPrice" style="width: 100%" clearable
+					placeholder="请输入"
+					@change="handleChangeLandTotalValue"></el-input>
+					<span v-if="subInfoForm.landAssemUnitPrice">
+						{{changeMoneyToChinese(subInfoForm.landAssemUnitPrice)}}
+					</span>
+				</el-form-item>
+			</el-col>
+			<el-col :span="8">
+				<el-form-item label="土地总价值" prop="landTotalValue">
+					<span slot="label" @click="handleAddItem('landTotalValue', '土地总价值')">土地总价值</span>
+					<el-input v-model.trim="subInfoForm.landTotalValue" style="width: 100%" disabled></el-input>
+					<span v-if="subInfoForm.landTotalValue && !isNaN(subInfoForm.landTotalValue)">
+						{{changeMoneyToChinese(subInfoForm.landTotalValue)}}
+					</span>
+				</el-form-item>
+			</el-col>		
+		</el-row>
+		<el-row :gutter="20">	
+			<el-col :span="8">
+				<el-form-item label="建筑面积" prop="projTotalArea">
+					<span slot="label" @click="handleAddItem('projTotalArea', '建筑面积')">建筑面积</span>
+					<el-input v-model.trim="subInfoForm.projTotalArea" style="width: 100%" clearable
+					placeholder="请输入(㎡)"
+					@change="handleChangeBuildingTotalValue"></el-input>
+				</el-form-item>
+			</el-col>
+			<el-col :span="8">
+				<el-form-item label="建筑评估单价" prop="buildingAssemUnitPrice">
+					<span slot="label" @click="handleAddItem('buildingAssemUnitPrice', '建筑评估单价')">建筑评估单价</span>
+					<el-input v-model.trim="subInfoForm.buildingAssemUnitPrice" style="width: 100%" clearable
+					placeholder="请输入(元/㎡)"
+					@change="handleChangeBuildingTotalValue"></el-input>
+					<span v-if="subInfoForm.buildingAssemUnitPrice">
+						{{changeMoneyToChinese(subInfoForm.buildingAssemUnitPrice)}}
+					</span>
+				</el-form-item>
+			</el-col>
+			<el-col :span="8">
+				<el-form-item label="建筑总价值" prop="buildingTotalValue">
+					<span slot="label" @click="handleAddItem('buildingTotalValue', '建筑总价值')">建筑总价值</span>
+					<el-input v-model.trim="subInfoForm.buildingTotalValue" style="width: 100%" clearable></el-input>
+					<span v-if="subInfoForm.buildingTotalValue">
+						{{changeMoneyToChinese(subInfoForm.buildingTotalValue)}}
+					</span>
+				</el-form-item>
+			</el-col>			
+		</el-row>
+		<!-- 房产end -->
+		
 		<el-row :gutter="20">
+			<!-- 
 			<el-col :span="8">
 				<el-form-item label="评估结论" prop="regEvalConclusion" class="red-item">
 					<span slot="label" @click="handleAddItem('regEvalConclusion', '评估结论')">评估结论</span>
@@ -645,24 +673,34 @@
 					</el-select>
 				</el-form-item>
 			</el-col>
+			 -->
 			<el-col :span="8">
-				<el-form-item label="评估值(元)" prop="regEvalConclusionValue" class="red-item"
-				:rules="projType=='非咨询'?inputReq:[]">
+				<el-form-item label="评估值(元)" prop="regEvalConclusionValue" class="red-item">
 					<span slot="label" @click="handleAddItem('regEvalConclusionValue', '评估值(元)')">评估值(元)</span>
 					
-					<el-input v-model="subInfoForm.regEvalConclusionValue" style="width: 100%" clearable
-					oninput="value=value.replace(/[^\-\d.]/g,'')"
-					@change="handleChangeStandardFee"
-					disabled></el-input>		
-					<span v-if="subInfoForm.regTotalAssets && subInfoForm.regOwnersEquity && registerStatus!=3">
-					<!-- 
-					<el-tag @click="handleCopyEvalConclusionValue('资产总值', subInfoForm.regTotalAssets)">
-						资产总值
-					</el-tag>
-					<el-tag style="margin-left: 10px;" @click="handleCopyEvalConclusionValue('所有者权益', subInfoForm.regOwnersEquity)">
-						所有者权益
-					</el-tag>
-					 -->
+					<el-input v-model.trim="subInfoForm.regEvalConclusionValue" style="width: 100%" clearable
+					@change="handleChangeStandardFee"></el-input>		
+					<span v-if="subInfoForm.regEvalConclusionValue">
+						<!-- 
+						<el-tag @click="handleCopyEvalConclusionValue('还原', parseFloat(subInfoForm.landTotalValue||0)+parseFloat(subInfoForm.buildingTotalValue||0))">
+							还原
+						</el-tag>
+						<el-tag style="margin-left: 10px;" @click="handleCopyEvalConclusionValue('个位', parseFloat(subInfoForm.landTotalValue||0)+parseFloat(subInfoForm.buildingTotalValue||0))">
+							取个
+						</el-tag>
+						<el-tag style="margin-left: 10px;" @click="handleCopyEvalConclusionValue('十位', parseFloat(subInfoForm.landTotalValue||0)+parseFloat(subInfoForm.buildingTotalValue||0))">
+							取十
+						</el-tag>
+						<el-tag style="margin-left: 10px;" @click="handleCopyEvalConclusionValue('百位', parseFloat(subInfoForm.landTotalValue||0)+parseFloat(subInfoForm.buildingTotalValue||0))">
+							取百
+						</el-tag>
+						<el-tag style="margin-left: 10px;" @click="handleCopyEvalConclusionValue('千位', parseFloat(subInfoForm.landTotalValue||0)+parseFloat(subInfoForm.buildingTotalValue||0))">
+							取千
+						</el-tag>
+						 -->
+						<div>
+						{{changeMoneyToChinese(subInfoForm.regEvalConclusionValue)}}
+						</div>
 					</span>
 				</el-form-item>
 			</el-col>
@@ -871,8 +909,7 @@
 					
 					<el-input v-model="subInfoForm.cdStandardFee" style="width: 100%" clearable
 					oninput="value=value.replace(/[^\d.]/g,'')"
-					@change="handleChangeDiscount"
-					:disabled="projType=='非咨询'?true:(isNaN(subInfoForm.regEvalConclusionValue)?false:true)"></el-input>
+					@change="handleChangeDiscount"></el-input>
 					<span v-if="subInfoForm.cdStandardFee">
 						{{changeMoneyToChinese(subInfoForm.cdStandardFee)}}
 					</span>
@@ -909,7 +946,7 @@
 				</el-form-item>
 			</el-col>
 			<el-col :span="8">
-				<el-form-item label="合同号" prop="regContractNum" class="red-item">
+				<el-form-item label="合同号" prop="regContractNum">
 					<span slot="label" @click="handleAddItem('regContractNum', '合同号')">合同号</span>
 					
 					<div
@@ -1202,7 +1239,7 @@
 				</el-form-item>
 			</el-col>
 		</el-row>
-		
+				
 		<el-divider>登记内容说明</el-divider>
 		<el-row :gutter="20">
 			<el-col :span="24">
@@ -1332,7 +1369,7 @@ import {downloadExcel} from '../../utils/download';
 import subProjNameDialog from './dialog/subProjNameDialog'
 
 export default {
-	name: 'worksubregistercheckz',
+	name: 'worksubregisterchecks',
 	components: {subProjNameDialog},
 	data() {
 		return {
@@ -1347,7 +1384,7 @@ export default {
 			//表单验证规则
 			subInfoRules:{
 				//subSpecialInfoRules特有信息
-				regEvaluatedUnit:[{ required: true, message: '请输入被评估单位', trigger: 'blur' }],
+				//regEvaluatedUnit:[{ required: true, message: '请输入被评估单位', trigger: 'blur' }],
 				regEvalObject:[{ required: true, message: '请选择评估对象', trigger: 'blur' }],
 				regClientName:[{ required: true, message: '请输入委托方', trigger: 'blur' }],
 				regClientType:[{ required: true, message: '请点修改按钮, 修改委托方信息', trigger: 'blur' }],
@@ -1355,25 +1392,25 @@ export default {
 				regEvalObjCount:[{ required: true, message: '请输入数量', trigger: 'blur' }],
 				
 				//subReportInfoRules报告信息
-				regEvalGoal:[{ required: true, message: '请选择评估目的', trigger: 'blur' }],
-				regEvalMethod:[{ required: true, message: '请输入评估方法', trigger: 'blur' }],
+				//regEvalGoal:[{ required: true, message: '请选择评估目的', trigger: 'blur' }],
+				//regEvalMethod:[{ required: true, message: '请输入评估方法', trigger: 'blur' }],
 				regReportIssueDate:[{ required: true, message: '请选择出报告日期', trigger: 'blur' }],
 				regEvalConclusion:[{ required: true, message: '请选择评估结论', trigger: 'blur' }],
 				regEvalConclusionValue:[
 					{ required: true, message: '请选择评估值', trigger: 'blur' },
-					{
-						validator: (rule, value, callback) => {
-							if(value){
-								if (/^(\-{0,1})(([1-9]{1}\d*)|(0{1}))(\.\d{0,2})?$/.test(value) == false) {
-									callback(new Error("请输入正确金额"));
-								} else {
-									callback();
-								}
-							}else{
-								callback();
-							}
-						}, trigger: 'blur',
-					}
+					// {
+					// 	validator: (rule, value, callback) => {
+					// 		if(value){
+					// 			if (/^(\-{0,1})(([1-9]{1}\d*)|(0{1}))(\.\d{0,2})?$/.test(value) == false) {
+					// 				callback(new Error("请输入正确金额"));
+					// 			} else {
+					// 				callback();
+					// 			}
+					// 		}else{
+					// 			callback();
+					// 		}
+					// 	}, trigger: 'blur',
+					// }
 				],
 				regTotalAssets:[
 					{ required: true, message: '请输入资产总值', trigger: 'blur' },
@@ -1424,7 +1461,7 @@ export default {
 				
 				//subOtherInfoRules其他信息
 				//regRecordNum:[{ required: true, message: '请输入备案号', trigger: 'blur' }],
-				regContractNum:[{ required: true, message: '请在前页面取合同号', trigger: 'blur' }],
+				//regContractNum:[{ required: true, message: '请在前页面取合同号', trigger: 'blur' }],
 				regArrgType:[{ required: true, message: '请联系计划部门选择安排类型', trigger: 'blur' }],
 				
 				//subTeamInfoRules项目组信息
@@ -1497,9 +1534,118 @@ export default {
 				],
 				cdReceiptType:[{ required: true, message: '请选择开具收费凭证', trigger: 'blur' }],
 				cdDiscount:[{ required: true, message: '请选择折扣', trigger: 'blur' }],
+				
+				
+				//复审
+				originEvalConclusionValue:[
+					{ required: true, message: '请输入原值', trigger: 'blur' },
+					{
+						validator: (rule, value, callback) => {
+							if(value){
+								if (/^(\-{0,1})(([1-9]{1}\d*)|(0{1}))(\.\d{0,2})?$/.test(value) == false) {
+									callback(new Error("请输入正确金额"));
+								} else {
+									callback();
+								}
+							}else{
+								callback();
+							}
+						}, trigger: 'blur',
+					}
+				], //原值
+				underReviewFirm:[{ required: true, message: '请输入审查机构', trigger: 'blur' }],  //审查机构
+				underReviewReportNum:[{ required: true, message: '请输入审查编号', trigger: 'blur' }],  //审查编号
+				
+				// projTotalAcreage:[
+				// 	{
+				// 		validator: (rule, value, callback) => {
+				// 			if(value){
+				// 				if (/^(([1-9]{1}\d*)|(0{1}))(\.\d{0,4})?$/.test(value) == false) {
+				// 					callback(new Error("请输入正确面积"));
+				// 				} else {
+				// 					callback();
+				// 				}
+				// 			}else{
+				// 				callback();
+				// 			}
+				// 		}, trigger: 'blur',
+				// 	}
+				// ],
+				// landAssemUnitPrice:[
+				// 	{
+				// 		validator: (rule, value, callback) => {
+				// 			if(value){
+				// 				if (/^(([1-9]{1}\d*)|(0{1}))(\.\d{0,2})?$/.test(value) == false) {
+				// 					callback(new Error("请输入正确单价"));
+				// 				} else {
+				// 					callback();
+				// 				}
+				// 			}else{
+				// 				callback();
+				// 			}
+				// 		}, trigger: 'blur',
+				// 	}
+				// ],
+				// projTotalArea:[
+				// 	{ required: true, message: '请输入建筑面积', trigger: 'blur' },
+				// 	{
+				// 		validator: (rule, value, callback) => {
+				// 			if(value){
+				// 				if (/^(([1-9]{1}\d*)|(0{1}))(\.\d{0,4})?$/.test(value) == false) {
+				// 					callback(new Error("请输入正确面积"));
+				// 				} else {
+				// 					callback();
+				// 				}
+				// 			}else{
+				// 				callback();
+				// 			}
+				// 		}, trigger: 'blur',
+				// 	}
+				// ],
+				// buildingAssemUnitPrice:[
+				// 	{ required: true, message: '请输入建筑评估单价', trigger: 'blur' },
+				// 	{
+				// 		validator: (rule, value, callback) => {
+				// 			if(value){
+				// 				if (/^(([1-9]{1}\d*)|(0{1}))(\.\d{0,2})?$/.test(value) == false) {
+				// 					callback(new Error("请输入正确单价"));
+				// 				} else {
+				// 					callback();
+				// 				}
+				// 			}else{
+				// 				callback();
+				// 			}
+				// 		}, trigger: 'blur',
+				// 	}
+				// ],
+				// buildingTotalValue:[
+				// 	{ required: true, message: '请输入建筑总价值', trigger: 'blur' },
+				// 	{
+				// 		validator: (rule, value, callback) => {
+				// 			if(value){
+				// 				if (/^(([1-9]{1}\d*)|(0{1}))(\.\d{0,2})?$/.test(value) == false) {
+				// 					callback(new Error("请输入正确总价值"));
+				// 				} else {
+				// 					callback();
+				// 				}
+				// 			}else{
+				// 				callback();
+				// 			}
+				// 		}, trigger: 'blur',
+				// 	}
+				// ],
 			},
 			
 			clientProperty:[{ required: true, message: '请点修改按钮, 修改委托方信息', trigger: 'blur' }],
+						
+			//复审信息选项
+			
+			//totalValueTag评估值默认取还原
+			totalValueTag:{
+				landTotalValue:'还原',
+				buildingTotalValue:'还原',
+				cdStandardFee:'还原',
+			},
 			
 			subProjRuleNoReq:[
 				{
@@ -1584,8 +1730,10 @@ export default {
 			},
 			 */
 			//评估目的
-			regEvalGoalOption:['IPO上市','公司制改建','对外投资','接受投资','合并、分立、破产、清算、解散','股东股权比例变动','产权转让','上市公司发行股份购买资产','资产转让、置换、拍卖','资产抵押/质押','资产捐赠','资产租赁','资产补偿/损失补偿','资产偿债','资产涉讼','资产收购','接受抵债资产','债转股','债务重组及其他','追溯评估','复核报告','了解价值','财务会计报告目的','计税价格评估','认定报关价格','其他'],
-			regEvalMethodOption:['成本法', '收益法', '市场法', '实物期权法'],
+			// regEvalGoalOption:['房地产转让价格评估','房地产分割、合并估价','房地产纠纷估价','房地产保险估价','土地使用权出让价格评估','房地产拍卖底价评估','房地产抵押价值评估','房地产课税估价','房地产租赁价格评估','企业各种经济活动中涉及的房地产估价','其他目的的房地产估价'],
+			// regEvalMethodOption:['成本法','剩余法','比较法','收益法','假设开发法','公示地价系数修正法'],
+			regEvalGoalOption:[],
+			regEvalMethodOption:[],
 			regEvalConclusionOption:['确定值','区间值'],
 			
 			//行政区域
@@ -1781,10 +1929,10 @@ export default {
 		},
 		newTitleValue(){
 			return (data)=>{
-				if(data == '非咨询'){
-					return "资产子项目信息";
+				if(data){
+					return data+"子项目信息";
 				}else{
-					return "资产咨询子项目信息";
+					return "";
 				}
 			}
 		},
@@ -1891,7 +2039,7 @@ export default {
 		subInfoFormSubmit(){
 			const confirmText = this.registerStatus==2?'审核不通过的问题已处理, 确认再次提交?':'确认提交正评信息?';
 			const confirmType = this.registerStatus==2?'warning':'info';
-			
+						
 			this.$refs.subInfoForm.validate((valid) => {
 				if (valid) {
 					this.$confirm(confirmText, '提示', { type: confirmType })
@@ -1977,7 +2125,15 @@ export default {
 								this.getDetailProjData(projId, (dpData)=>{
 									console.log('dpData', dpData);
 									
-									this.projType = dpData.projType==1020?'非咨询':'资产咨询';
+									if(dpData.projType==1061){
+										this.projType = '房地产复审';
+									}else if(dpData.projType==1062){
+										this.projType = '资产复审';
+									}else if(dpData.projType==1063){
+										this.projType = '土地复审';
+									}else{
+										this.projType = '';
+									}
 									
 									//1. 传值
 									//var spFullData = Object.assign({}, res.data)
@@ -2030,7 +2186,7 @@ export default {
 									if(spFullData.cdInvoiceTitle){
 										this.handleChangeInvoiceTitle(spFullData.cdInvoiceTitle);
 									}
-									
+															
 									//2. 生成各字段option
 									this.getSubProjectData(projId, subProjId, (spData)=>{
 										//设置项目组选项
@@ -2069,8 +2225,15 @@ export default {
 							this.getDetailProjData(projId, (dpData)=>{
 								console.log('dpData', dpData);
 							
-								this.projType = dpData.projType==1020?'非咨询':'资产咨询';
-														
+								if(dpData.projType==1061){
+									this.projType = '房地产复审';
+								}else if(dpData.projType==1062){
+									this.projType = '资产复审';
+								}else if(dpData.projType==1063){
+									this.projType = '土地复审';
+								}else{
+									this.projType = '';
+								}
 								//1. 传值
 								var spFullData = ddData
 								
@@ -2122,7 +2285,7 @@ export default {
 									this.handleChangeInvoiceTitle(spFullData.cdInvoiceTitle);
 									console.log('2',spFullData.cdInvoiceTitle)
 								}
-										
+														
 								//2. 生成各字段option
 								this.getSubProjectData(projId, subProjId, (spData)=>{
 									//设置项目组选项
@@ -2148,7 +2311,15 @@ export default {
 										console.log('spData', spData);
 										console.log('waData', waData);
 										
-										this.projType = dpData.projType==1020?'非咨询':'资产咨询';
+										if(dpData.projType==1061){
+											this.projType = '房地产复审';
+										}else if(dpData.projType==1062){
+											this.projType = '资产复审';
+										}else if(dpData.projType==1063){
+											this.projType = '土地复审';
+										}else{
+											this.projType = '';
+										}
 										
 										//初始化表单
 										this.subInfoForm={
@@ -2166,9 +2337,10 @@ export default {
 											regClientFullName:"", 
 											
 											regClientType:"", //委托方性质
-											regEvaluatedUnit:"", //被评估单位
+											regEvaluatedUnit:"", //被评估单位/出报告权属人
+											//regIncumbrancer:"", //旧证权属人
 											regEvalObject:[],  //评估对象
-											regEvalObjCount:"", //数量
+											//regEvalObjCount:"", //数量
 											regAdminRegion:[], //行政区域 省市区
 										
 											//subReportInfo
@@ -2214,7 +2386,7 @@ export default {
 											
 											cdInvoiceTitle: "", //付款单位\个人（开票抬头
 											cdLoaner: "", //贷款人
-											cdReceiptType: "普通发票", //开具收费凭证
+											cdReceiptType: "无", //开具收费凭证
 											cdReceivableNum: "", //应收账款编号
 											
 											cdStandardFee : '', //标准收费（元）//从评估值计算得到
@@ -2222,6 +2394,19 @@ export default {
 											cdDiscount : '', //折扣
 											
 											regExplanation:'',
+											
+											//复审数据
+											projTotalAcreage:'', //土地面积
+											landAssemUnitPrice:'', //土地评估单价
+											landTotalValue:'', //土地总价值
+											projTotalArea:'', //建筑面积
+											buildingAssemUnitPrice:'', //建筑评估单价
+											buildingTotalValue:'', //建筑总价值
+											
+											originEvalConclusionValue:'', //原值
+											underReviewFirm:'', //审查机构
+											underReviewReportNum:'', //审查编号
+											
 										}
 										
 										
@@ -2252,8 +2437,23 @@ export default {
 											this.subInfoForm.cdProjContact = dpData.projContact											
 											
 											//项目类型
-											this.subInfoForm.cdChargeType = this.projType=='非咨询'?'资产类':'咨询评价'
+											if(this.projType == '房地产复审'){
+												this.subInfoForm.cdChargeType = '房地产类';
+											}else if(this.projType == '资产复审'){
+												this.subInfoForm.cdChargeType = '资产类';
+											}else if(this.projType == '土地类'){
+												this.subInfoForm.cdChargeType = '土地类';
+											}else{
+												this.subInfoForm.cdChargeType = '';
+											}
 											
+											//更新银行名称, 委托人为银行时处理替换
+											if(dpData.clientType<1000){
+												this.subInfoForm.cdBankName= dpData.clientFullName?dpData.clientFullName:dpData.clientName
+											}	
+											
+											//权属人
+											this.subInfoForm.regIncumbrancer = dpData.incumbrancer
 										}
 										
 										if(spData){
@@ -2287,8 +2487,9 @@ export default {
 													regFieldSrvy:spData.subFieldSrvy?spData.subFieldSrvy.split(','):[], //"现勘"
 													regInfoVerification:waData.fldSrvyPic?waData.fldSrvyPic.split(','):[], //"资料收集及验证",
 													regMarketEnquiry:waData.mktSrvyPic?waData.mktSrvyPic.split(','):[], //"市场询价调查"
-													//regTechExpDrafter:waData.assemEstPic?waData.assemEstPic.split(','):[], //"技术说明",
-													regTechExpDrafter:spData.subProjLeader?spData.subProjLeader.split(','):[], //"技术说明",
+													//regTechExpDrafter:waData.assemEstPic?waData.assemEstPic.split(','):[], //"技术说明___旧",
+													//regTechExpDrafter:spData.subProjLeader?spData.subProjLeader.split(','):[], //"技术说明___旧",
+													regTechExpDrafter:spData.subProjAsst?spData.subProjAsst.split(','):[], //"技术说明___使用助理",
 													regReportDrafter:waData.issueValPic?waData.issueValPic.split(','):[], //"报告拟稿",
 													regProjArchive:spData.subProjAsst?spData.subProjAsst.split(','):[], //"助理(归档)",
 													regFeeFollowUp: waData.assemChargePic?waData.assemChargePic.split(','):[], //"收费跟进"
@@ -2301,7 +2502,7 @@ export default {
 												this.subInfoForm.regInfoVerification = newSubTeamInfo.regInfoVerification;
 												this.subInfoForm.regMarketEnquiry = newSubTeamInfo.regMarketEnquiry;
 												this.subInfoForm.regTechExpDrafter = newSubTeamInfo.regTechExpDrafter;
-												this.subInfoForm.regReportDrafter = newSubTeamInfo.regProjLeader;
+												this.subInfoForm.regReportDrafter = newSubTeamInfo.regReportDrafter;
 												this.subInfoForm.regProjArchive = newSubTeamInfo.regProjArchive;
 												this.subInfoForm.regFeeFollowUp = newSubTeamInfo.regFeeFollowUp;
 												this.subInfoForm.regFinalReview = newSubTeamInfo.regFinalReview;
@@ -2316,12 +2517,14 @@ export default {
 													regInfoVerification:[], //"资料收集及验证",
 													regMarketEnquiry:[], //"市场询价调查"
 													//regTechExpDrafter:[], //"技术说明",
-													regTechExpDrafter:spData.subProjLeader?spData.subProjLeader.split(','):[], //"技术说明",
+													//regTechExpDrafter:spData.subProjLeader?spData.subProjLeader.split(','):[], //"技术说明___旧",
+													regTechExpDrafter:spData.subProjAsst?spData.subProjAsst.split(','):[], //"技术说明",
 													regReportDrafter:[], //"报告拟稿",
 													regProjArchive:spData.subProjAsst?spData.subProjAsst.split(','):[], //"助理(归档)",
 													regFeeFollowUp: [], //"收费跟进"
 													regFinalReview: "", //"总审"
 												}
+												
 												this.subInfoForm.regProjLeader = newSubTeamInfo.regProjLeader;
 												this.subInfoForm.regSignedAppraiser = newSubTeamInfo.regSignedAppraiser;
 												this.subInfoForm.regProjProReviewer = newSubTeamInfo.regProjProReviewer;
@@ -2329,7 +2532,7 @@ export default {
 												this.subInfoForm.regInfoVerification = newSubTeamInfo.regInfoVerification;
 												this.subInfoForm.regMarketEnquiry = newSubTeamInfo.regMarketEnquiry;
 												this.subInfoForm.regTechExpDrafter = newSubTeamInfo.regTechExpDrafter;
-												this.subInfoForm.regReportDrafter = newSubTeamInfo.regProjLeader;
+												this.subInfoForm.regReportDrafter = newSubTeamInfo.regReportDrafter;
 												this.subInfoForm.regProjArchive = newSubTeamInfo.regProjArchive;
 												this.subInfoForm.regFeeFollowUp = newSubTeamInfo.regFeeFollowUp;
 												this.subInfoForm.regFinalReview = newSubTeamInfo.regFinalReview;
@@ -2549,42 +2752,114 @@ export default {
 			}
 		},
 		
-		handleInputRegTotalAssets(val){
-			if(this.projType=='非咨询'){
-				this.subInfoForm.regTotalAssets = val.replace(/[^\-\d.]/g,'')
-			}
-		},
-		
-		//改变评估值
-		handleChangeEvalConclusionValue(val){
-			if(this.subInfoForm.regTotalAssets && this.subInfoForm.regOwnersEquity){
-				//两个值都有时, 清空值, 自行选择
-				this.subInfoForm.regEvalConclusionValue = ''
-				this.subInfoForm.cdStandardFee = ''
-				this.subInfoForm.cdDiscount = ''
-			}else if(this.subInfoForm.regTotalAssets){
-				this.subInfoForm.regEvalConclusionValue = this.subInfoForm.regTotalAssets;
-				//改变标准收费
-				this.handleChangeStandardFee();
-			}else if(this.subInfoForm.regOwnersEquity){
-				this.subInfoForm.regEvalConclusionValue = this.subInfoForm.regOwnersEquity;
-				//改变标准收费
-				this.handleChangeStandardFee();
+		//改变土地总价值
+		handleChangeLandTotalValue(){
+			if(this.subInfoForm.projTotalAcreage && this.subInfoForm.landAssemUnitPrice && !isNaN(this.subInfoForm.projTotalAcreage) && !isNaN(this.subInfoForm.landAssemUnitPrice)){
+				//改变土地总价值
+				var fees = this.subInfoForm.projTotalAcreage*this.subInfoForm.landAssemUnitPrice;
+				this.subInfoForm.landTotalValue = fees.toFixed(2);
+				
+				//默认取还原
+				this.handleCopyTotalValue('还原', 'landTotalValue', parseFloat(this.subInfoForm.projTotalAcreage||0)*parseFloat(this.subInfoForm.landAssemUnitPrice||0));
+				
 			}else{
-				this.subInfoForm.regEvalConclusionValue = ''
-				this.subInfoForm.cdStandardFee = ''
-				this.subInfoForm.cdDiscount = ''
+				this.subInfoForm.landTotalValue = ''
+				this.handleCopyTotalValue('还原', 'landTotalValue', '');
+				
 			}
-			
-			
 		},
 		
-		handleCopyEvalConclusionValue(title, val){
-			this.subInfoForm.regEvalConclusionValue = val
-			this.$message.success("使用"+title+"作为评估值")
+		//改变建筑总价值
+		handleChangeBuildingTotalValue(){
+			if(this.subInfoForm.projTotalArea && this.subInfoForm.buildingAssemUnitPrice && !isNaN(this.subInfoForm.projTotalArea) && !isNaN(this.subInfoForm.buildingAssemUnitPrice)){
+				//改变土地总价值
+				var fees = this.subInfoForm.projTotalArea*this.subInfoForm.buildingAssemUnitPrice;
+				this.subInfoForm.buildingTotalValue = fees.toFixed(2);
+				
+				//默认取还原
+				this.handleCopyTotalValue('还原', 'buildingTotalValue', parseFloat(this.subInfoForm.projTotalArea||0)*parseFloat(this.subInfoForm.buildingAssemUnitPrice||0))
+				
+			}else{
+				this.subInfoForm.buildingTotalValue = ''
+				this.handleCopyTotalValue('还原', 'buildingTotalValue', '')
+				
+			}
+		},
+		
+		//对土地/建筑总价值取百位处理
+		handleCopyTotalValue(title, item, val){
+			
+			//改变子值及标签
+			if(title =='还原'){
+				if(val){
+					this.subInfoForm[item] = val.toFixed(2);
+				}else{
+					this.subInfoForm[item] = '';
+				}
+			}else{
+				var upto={
+					'个位':1,
+					'十位':2,
+					'百位':3,
+					'千位':4,
+				}[title];
+				if(val){
+					this.subInfoForm[item] = Math.round(Math.round(val)/Math.pow(10,upto-1))*Math.pow(10,upto-1)
+				}else{
+					this.subInfoForm[item] = ''
+				}
+				
+			}
+				//改变标记
+			this.totalValueTag[item] = title;
+			
+			
+			
+			//改变评估值
+			if(this.subInfoForm.landTotalValue && !isNaN(this.subInfoForm.landTotalValue) && this.subInfoForm.buildingTotalValue  && !isNaN(this.subInfoForm.buildingTotalValue)){
+				//情况1: 同时为数字
+				this.subInfoForm.regEvalConclusionValue = (parseFloat(this.subInfoForm.landTotalValue) + parseFloat(this.subInfoForm.buildingTotalValue)).toFixed(2);
+			}else if(this.subInfoForm.landTotalValue && !isNaN(this.subInfoForm.landTotalValue) && !this.subInfoForm.buildingTotalValue ){
+				//情况2: 土地为数字, 建筑为空
+				this.subInfoForm.regEvalConclusionValue = this.subInfoForm.landTotalValue;
+			}else if(this.subInfoForm.buildingTotalValue && !isNaN(this.subInfoForm.buildingTotalValue) && !this.subInfoForm.landTotalValue ){
+				//情况3: 建筑为数字, 土地为空
+				this.subInfoForm.regEvalConclusionValue = this.subInfoForm.buildingTotalValue;
+			}else{
+				this.subInfoForm.regEvalConclusionValue = "";
+			}
 			
 			//改变标准收费
+			this.handleCopyEvalConclusionValue('还原', 'cdStandardFee');
+		},
+		
+		
+		//对标准收费取百位处理
+		handleCopyEvalConclusionValue(title, item){
+			//重新获取收费标准
 			this.handleChangeStandardFee()
+			
+			//对收费标准取值
+			var val = this.subInfoForm[item];
+			
+			if(title =='还原'){
+				//this.subInfoForm[item] = val.toFixed(2);
+			}else{
+				var upto={
+					'个位':1,
+					'十位':2,
+					'百位':3,
+					'千位':4,
+				}[title];
+				this.subInfoForm[item] = Math.round(Math.round(val)/Math.pow(10,upto-1))*Math.pow(10,upto-1)
+				
+			}
+						
+			//改变标记
+			this.totalValueTag[item] = title;
+			
+			//改变折扣
+			this.handleChangeDiscount();
 		},
 		
 		//委托方修改信息
@@ -2937,6 +3212,12 @@ export default {
 							
 							//更新共同委托方
 							this.subInfoForm.coClientList = dpData.coClientList||[];
+							
+							//更新银行名称, 委托人为银行时处理时替换
+							if(dpData.clientType<1000){
+								this.subInfoForm.cdBankName= dpData.clientFullName?dpData.clientFullName:dpData.clientName
+								this.$message.success("请注意, 银行名称已随之更新")
+							}
 						}
 					});
 					
@@ -2999,6 +3280,7 @@ export default {
 				'regClientName': '委托方',
 				'regClientType': '委托方性质',
 				'regEvaluatedUnit': '被评估单位',
+				'regIncumbrancer': '旧证权属人',
 				'regEvalObject': '评估对象',
 				'regAdminRegion': '行政区域',
 				'regEvalObjCount': '数量',
@@ -3041,6 +3323,27 @@ export default {
 				'regFeeFollowUp': '收费跟进',
 				'cdProjContact': '接洽人',
 				'regFinalReview': '总审',
+				
+				//房地产
+				'evalObjCommunity': '所在小区',
+				'evalObjAddress': '详细地址',
+				'valueType': '价值类型',
+				'evalMethodExp': '价值类型',				
+				'unitUsage': '房屋用途',
+				'unitType': '房屋类型',
+				'unitProperty': '房屋性质',
+				'houseTypeStructure': '户型结构',
+				'houseType': '户型',
+				'towards': '朝向',
+				'buildingNum': '所在楼层',
+				'decoDegree': '装修程度',
+				'remainTerm': '剩余使用年限',
+				'projTotalAcreage': '土地面积',
+				'landAssemUnitPrice': '土地评估单价',
+				'landTotalValue': '土地总价值',							
+				'projTotalArea': '建筑面积',
+				'buildingAssemUnitPrice': '建筑评估单价',
+				'buildingTotalValue': '建筑总价值',				
 			};
 			
 			const newList = this.registerCheckForm.filter(item => {
@@ -3181,7 +3484,7 @@ export default {
 			var parts; //分离金额后用的数组，预定义  
 			if( money == "" || money == "-" || isNaN(money)){
 				return "";  
-			}  
+			} 
 			money = parseFloat(money);  
 			
 			if( money >= maxNum ){  
@@ -3546,7 +3849,7 @@ export default {
 				this.workOrderList = this.workOrderFullList
 			}
 		},
-		
+				
 		//子项目对话框打开和回调
 		openSubProjNameForm(subData){
 			console.log('opendialog', subData)
@@ -3734,10 +4037,10 @@ export default {
 	  color: #ed1941;
 	}	
 		
-		/deep/ .longtext .el-form-item__label {
-		  line-height: 20px;
-		  white-space: pre-line;
-		}
+	/deep/ .longtext .el-form-item__label {
+	  line-height: 20px;
+	  white-space: pre-line;
+	}
 </style>
 
 <style>

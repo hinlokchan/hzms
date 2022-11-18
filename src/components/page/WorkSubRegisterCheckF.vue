@@ -2,6 +2,9 @@
   <div class="container">
     <el-page-header @back="goBack"></el-page-header>
 	
+	<!-- 子项目名称对话框 -->
+	<subProjNameDialog v-if="editSubProjVisible" ref="subProjNameDialog" @subProjNameFormCallback="subProjNameFormCallback"/>
+	
 	<el-drawer
 	  title="登记审核"
 	  :before-close="handleDelItem"
@@ -391,6 +394,21 @@
 		v-if="subInfoForm"
 	>	
 		<el-divider>委托方信息</el-divider>
+		<el-row :gutter="20">
+			<el-col :span="12">
+				<el-form-item label="项目名称" prop="subProjName" >
+					<el-input v-model="subInfoForm.subProjName" type="textarea" autosize  disabled style="width: 100%" clearable></el-input>
+					<el-tag type="warning" @click="openSubProjNameForm(subInfoForm)">
+						修改
+					</el-tag>
+				</el-form-item>
+			</el-col>
+			<el-col :span="12">
+				<el-form-item label="项目范围" prop="subProjScope" >
+					<el-input v-model="subInfoForm.subProjScope" type="textarea" autosize disabled style="width: 100%" clearable></el-input>
+				</el-form-item>
+			</el-col>
+		</el-row>
 		<el-row :gutter="20">
 			<el-col :span="12">
 				<el-form-item label="委托方" prop="regClientName" class="red-item">
@@ -1520,8 +1538,12 @@ import { getSubProjectInfoList, editSubProject, getSubProjectInfo, auditSubProje
 		getWorkOrderList, getWorkOrderInfo, updateWorkOrderInfo, delWorkOrderInfo} from '@/api/subReport'
 import {downloadExcel} from '../../utils/download';
 
+//引入对话框页
+import subProjNameDialog from './dialog/subProjNameDialog'
+
 export default {
-	name: 'worksubregister',
+	name: 'worksubregistercheckf',
+	components: {subProjNameDialog},
 	data() {
 		return {
 			projId:'',
@@ -2002,6 +2024,9 @@ export default {
 			showWorkOrderList:false,
 			woChangeOption:true,
 			
+			//子项目名称对话框信息
+			editSubProjVisible:false,
+			
 			//211101变动 新增: 多个公司切换
 			companyRange:['HZ', 'ZM','HZKJ'],
 			companyId:'',
@@ -2111,6 +2136,9 @@ export default {
 		}
 		//console.log('初始化公司id', this.companyId);   
 		
+		//211202 处理页面跳转返回
+		this.pageInfoEdit();
+		
 		//读取传参
 		this.projId = this.$route.query.projId;
 		this.subProjId = this.$route.query.data;
@@ -2132,6 +2160,17 @@ export default {
 	methods: {
 		goBack() {
 			this.$router.go(-1)
+		},
+		
+		pageInfoEdit(){
+			console.log('edit')
+			var workbranchcheck_pageinfo = JSON.parse(this.global.workbranchcheck_pageinfo);
+			if(workbranchcheck_pageinfo){
+			  if(workbranchcheck_pageinfo.status !=2 ){
+				workbranchcheck_pageinfo.status = 1; //更新状态
+				this.global.workbranchcheck_pageinfo = JSON.stringify(workbranchcheck_pageinfo);  
+			  }
+			}	
 		},
 		
 		formatDate(now) {
@@ -2326,16 +2365,19 @@ export default {
 									if(spFullData.cdInvoiceTitle){
 										this.handleChangeInvoiceTitle(spFullData.cdInvoiceTitle);
 									}
-									
-									//this.subInfoForm = spFullData;
-									this.subInfoForm = Object.assign({}, spFullData)
-															
+											
 									//2. 生成各字段option
 									this.getSubProjectData(projId, subProjId, (spData)=>{
 										//设置项目组选项
 										const teamOptionInfo = (spData.subProjLeader+","+spData.subProjReviewer+","+spData.subProjProReviewer+","+spData.subProjAsst+","+spData.subFieldSrvy).replace(",,",",")
 										this.subTeamOption = Array.from(new Set(teamOptionInfo.split(',')));
 										this.regFeeFollowUpOption =this.subTeamOption.concat(this.subInfoForm.cdProjContact?this.subInfoForm.cdProjContact.split(','):[]);
+										
+										//子项目名称和范围
+										spFullData.subProjName = spData.subProjName; //项目名称
+										spFullData.subProjScope = spData.subProjScope; //项目范围
+										
+										this.subInfoForm = Object.assign({}, spFullData)
 									});
 								});
 								
@@ -2415,15 +2457,19 @@ export default {
 									this.handleChangeInvoiceTitle(spFullData.cdInvoiceTitle);
 									console.log('2',spFullData.cdInvoiceTitle)
 								}
-								
-								this.subInfoForm = Object.assign({}, spFullData)
-														
+									
 								//2. 生成各字段option
 								this.getSubProjectData(projId, subProjId, (spData)=>{
 									//设置项目组选项
 									const teamOptionInfo = (spData.subProjLeader+","+spData.subProjReviewer+","+spData.subProjProReviewer+","+spData.subProjAsst+","+spData.subFieldSrvy).replace(",,",",")
 									this.subTeamOption = Array.from(new Set(teamOptionInfo.split(',')));
 									this.regFeeFollowUpOption =this.subTeamOption.concat(this.subInfoForm.cdProjContact?this.subInfoForm.cdProjContact.split(','):[]);
+									
+									//子项目名称和范围
+									spFullData.subProjName = spData.subProjName; //项目名称
+									spFullData.subProjScope = spData.subProjScope; //项目范围
+									
+									this.subInfoForm = Object.assign({}, spFullData)
 								});							
 							});
 						}else{
@@ -2945,7 +2991,7 @@ export default {
 			this.subInfoForm.regEvalConclusionValue = parseFloat(this.subInfoForm.landTotalValue||0) + parseFloat(this.subInfoForm.buildingTotalValue||0);
 				
 			//改变标准收费
-			this.handleCopyEvalConclusionValue('还原位', 'cdStandardFee');
+			this.handleCopyEvalConclusionValue('还原', 'cdStandardFee');
 		},
 		
 		
@@ -3985,6 +4031,20 @@ export default {
 				//完整列表
 				this.workOrderList = this.workOrderFullList
 			}
+		},
+		
+		//子项目对话框打开和回调
+		openSubProjNameForm(subData){
+			console.log('opendialog', subData)
+			this.editSubProjVisible = true;
+			this.$nextTick(() => {
+			    this.$refs.subProjNameDialog.openSubProjNameForm(subData);
+			});
+		},
+		subProjNameFormCallback(newData){
+			console.log('dialogCallback', newData)			
+			this.subInfoForm.subProjName = newData.subProjName;
+			this.subInfoForm.subProjScope = newData.subProjScope;
 		},
 		
 		//财务修改审核不通过工单内容

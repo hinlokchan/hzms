@@ -5031,6 +5031,9 @@ export default {
 					}else if(this.projDetail.projType==1030 || this.projDetail.projType==1043){
 						//土地
 						this.$router.push({ path: '/worksubregisterd', query: { projId: subData.projId, data: subData.subProjId } })
+					}else if(this.projDetail.projType==1061 || this.projDetail.projType==1062 || this.projDetail.projType==1063){
+						//复审
+						this.$router.push({ path: '/worksubregisters', query: { projId: subData.projId, data: subData.subProjId } })
 					}else{
 						this.$message.warning('该项目类型还没开放信息录入');
 					}
