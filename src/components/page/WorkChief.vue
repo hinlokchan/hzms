@@ -129,12 +129,32 @@
 					</el-form-item>
 				</el-col>
 				<el-col :span="12">
+					<el-form-item label="差评责任人" prop="mistakeDutyStaffs" class="red-item">
+						<el-select
+						  style="width: 100%;" 
+						  v-model="chiefInfoForm.mistakeDutyStaffs"
+						  placeholder="请选择"
+						  filterable
+						  multiple
+						  clearable
+						  @change="handleChangeMistakeDutyStaffs"
+						>
+						  <el-option
+						    v-for="item in mistakeDutyStaffOptions"
+						    :key="item"
+						    :value="item"
+						    :label="item"
+						  ></el-option>
+						</el-select>
+					</el-form-item>
+				</el-col>
+				<el-col :span="12">
 					<el-form-item label="审核备注" prop="reviewComment"  class="red-item">
 					  <el-input v-model="chiefInfoForm.reviewComment" style="width: 100%" clearable placeholder="如需要, 请输入"
 						type="textarea" autosize maxlength="240"></el-input>
 					</el-form-item>
 				</el-col>
-				<el-col :span="12">
+				<el-col :span="24">
 					<el-form-item label="审核情况" prop="reviewStatus" class="red-item">
 					  <el-select
 						style="width: 100%;" 
@@ -497,7 +517,7 @@
 	          </template>
 	        </el-table-column>
 			 -->
-	        <el-table-column label="评估值" width="100px">
+	        <el-table-column label="评估值" width="120px">
 	          <template slot-scope="scope">
 				<div style="text-align: right;">
 				{{ newPrice(scope.row.regEvalConclusionValue) }}
@@ -864,6 +884,8 @@ export default {
 	  
 	  technicalRatingOptions:['优','良','中','差','不作统计'],
 	  draftingRatingOptions:['优','良','中','差','不作统计'],
+	  mistakeDutyStaffOptions:[],
+	  
 	  reviewStatusOptions:[
 		{
 		  label:'审核通过, 可出报告',
@@ -1762,11 +1784,13 @@ export default {
 			
 			regProjLeader: subData.regProjLeader, //项目负责人
 			regSignedAppraiser: subData.regSignedAppraiser, //签字估价师
+			mistakeDutyStaffs:subData.mistakeDutyStaff?subData.mistakeDutyStaff.split(','):[], //差评负责人arr
+			mistakeDutyStaff:subData.mistakeDutyStaff, //差评负责人
 			
 			regTechExpDrafter: subData.regTechExpDrafter, //技术说明
 			technicalRating: subData.technicalRating, //技术评分
 			regReportDrafter: subData.regReportDrafter, //报告拟稿		
-			draftingRating: subData.draftingRating, //拟稿评分		
+			draftingRating: subData.draftingRating, //拟稿评分
 			reviewComment: subData.reviewComment||null, //审核备注		
 			reviewStatus: subData.reviewStatus==0?'':subData.reviewStatus, //审核情况
 			reviewStatustemp: subData.reviewStatus==0?'':subData.reviewStatus,
@@ -1774,7 +1798,17 @@ export default {
 			
 			isStamped: subData.isStamped==0?'':subData.isStamped,
 			stampedTime: subData.stampedTime, //盖章日期
-		}		
+		}
+		
+		//差评负责人
+			//选项 = 负责人+技术助理+质量助理
+		const regProjLeaderArr = chiefInfoForm.regProjLeader?chiefInfoForm.regProjLeader.split(','):[];
+		const regTechExpDrafterArr = chiefInfoForm.regTechExpDrafter?chiefInfoForm.regTechExpDrafter.split(','):[];
+		const regReportDrafterArr = chiefInfoForm.regReportDrafter?chiefInfoForm.regReportDrafter.split(','):[];
+		const mistakeDutyStaffArrFull = [].concat(regProjLeaderArr).concat(regTechExpDrafterArr).concat(regReportDrafterArr);
+		const mistakeDutyStaffOptionsArr = Array.from(new Set((mistakeDutyStaffArrFull.join(',')).split(',')));
+		this.mistakeDutyStaffOptions = mistakeDutyStaffOptionsArr;
+		
 		this.chiefInfoForm = chiefInfoForm;
 				
 		this.chiefInfoVisible = true
@@ -1811,9 +1845,10 @@ export default {
 		const dataform = {
 			subProjId: this.chiefInfoForm.subProjId, //子项目id
 			technicalRating: this.chiefInfoForm.technicalRating, //技术评分
-			draftingRating: this.chiefInfoForm.draftingRating, //拟稿评分		
+			draftingRating: this.chiefInfoForm.draftingRating, //拟稿评分
+			mistakeDutyStaff: this.chiefInfoForm.mistakeDutyStaff, //差评责任人
 			reviewComment: this.chiefInfoForm.reviewComment, //审核备注		
-			reviewStatus: this.chiefInfoForm.reviewStatus, //审核情况
+			reviewStatus: this.chiefInfoForm.reviewStatus, //审核情况	
 			//isStamped: (this.chiefInfoForm.reviewStatus==1 && this.chiefInfoForm.reviewStatustemp==1)?0:(this.chiefInfoForm.isStamped||0),
 		}
 		
@@ -1844,9 +1879,15 @@ export default {
 	},
 	
 	handleChangeReviewStatus(){
-		//重置评分
-		this.chiefInfoForm.technicalRating = '';
-		this.chiefInfoForm.draftingRating = '';
+		if(this.chiefInfoForm.reviewStatus == 2){
+			//重置评分
+			this.chiefInfoForm.technicalRating = '';
+			this.chiefInfoForm.draftingRating = '';
+		}
+	},
+	
+	handleChangeMistakeDutyStaffs(){
+		this.chiefInfoForm.mistakeDutyStaff = (this.chiefInfoForm.mistakeDutyStaffs||[]).join(',');
 	},
 	
 	
