@@ -1176,7 +1176,7 @@ import {downloadExcel} from '../../utils/download';
 import subProjNameDialog from './dialog/subProjNameDialog'
 
 export default {
-	name: 'worksubregister',
+	name: 'worksubregisterz',
 	components: {subProjNameDialog},
 	
 	data() {
